@@ -310,8 +310,11 @@ export class Game {
       if (!s.solved.includes(id)) s.solved.push(id);
       for (const effect of def.onSolve) minutes += this.apply(effect).minutes;
       text = this.paragraphs(def.solvedText, 'result');
-    } else {
+    } else if (result.failed) {
+      for (const effect of def.onFail ?? []) minutes += this.apply(effect).minutes;
       text = this.paragraphs(def.failedText, 'result');
+    } else {
+      text = this.paragraphs(def.leftText, 'result');
     }
     s.display = [...text, ...this.notices];
     if (s.ending) return;

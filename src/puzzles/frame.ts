@@ -21,12 +21,19 @@ export interface FrameOptions {
   act: Act;
   reduceMotion: boolean;
   data?: unknown;
+  /**
+   * Minutes already spent in this attempt, worked out from its saved data,
+   * so a reload or a language switch (both remount) never hands them back.
+   */
+  restoredMinutes?: number;
   t(key: string, params?: Params): string;
   /** Reveal the next tier; returns the tier now revealed (1–3). */
   onHint(): number;
-  onFinish(result: { solved: boolean; minutes: number }): void;
+  onFinish(result: { solved: boolean; minutes: number; failed?: boolean }): void;
   onSaveData(data: unknown): void;
   cue(id: 'solve' | 'fail' | 'hint' | 'chirp'): void;
+  /** The clock moved inside the puzzle (so the rest of the UI can follow). */
+  onMinutes?(minute: number): void;
 }
 
 export interface FrameHandle {
@@ -37,7 +44,7 @@ export interface FrameHandle {
 
 export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandle {
   const id = o.puzzleId;
-  let spent = 0;
+  let spent = Math.max(0, Math.floor(o.restoredMinutes ?? 0));
   let hintsUsed = Math.max(0, Math.min(3, o.hintsUsed));
   let finished = false;
 
@@ -88,14 +95,14 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
     renderHints();
   };
 
-  const finish = (solved: boolean) => {
+  const finish = (solved: boolean, failed = false) => {
     if (finished) return;
     finished = true;
     o.cue(solved ? 'solve' : 'fail');
     handle?.destroy();
     untrap();
     element.remove();
-    o.onFinish({ solved, minutes: spent });
+    o.onFinish(failed && !solved ? { solved, minutes: spent, failed: true } : { solved, minutes: spent });
   };
 
   const api: PuzzleApi = {
@@ -107,6 +114,7 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
       if (finished) return;
       spent = Math.max(0, Math.floor(total));
       renderClock();
+      o.onMinutes?.(Math.min(LOOP_LENGTH, o.startMinute + spent));
       // The lights go out on everyone, mid-puzzle or not.
       if (o.startMinute + spent >= LOOP_LENGTH) finish(false);
     },
@@ -131,6 +139,7 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   let handle: PuzzleViewHandle | null = null;
   handle = o.view.mount(body, api, o.data);
   title.focus();
+  if (spent > 0) api.setMinutes(spent);
 
   return {
     element,

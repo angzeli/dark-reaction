@@ -11,6 +11,8 @@ import { piScenes } from './locations/pi.ts';
 import { roofScenes } from './locations/roof.ts';
 import { stairsScenes } from './locations/stairs.ts';
 import { synthScenes } from './locations/synth.ts';
+import { NOTEBOOK } from './notebook.ts';
+import { PUZZLE_DEFS } from './puzzles.ts';
 import { EDGES, LOCATIONS } from './world.ts';
 
 export const CONTENT: Content = {
@@ -23,8 +25,8 @@ export const CONTENT: Content = {
   ],
   obsession: { decay1: 4, decay2: 7, infinite: 10, infiniteFromLoop: 4 },
   scenes: [...officeScenes, ...synthScenes, ...gloveboxScenes, ...piScenes, ...stairsScenes, ...nmrScenes, ...coldScenes, ...roofScenes],
-  notebook: [],
-  puzzles: [],
+  notebook: NOTEBOOK,
+  puzzles: PUZZLE_DEFS,
   events: [],
   phantoms: [],
   lightsOut: [],

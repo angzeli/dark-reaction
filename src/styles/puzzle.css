@@ -97,3 +97,199 @@
 .demo { display: flex; flex-wrap: wrap; gap: 1rem; }
 .demo__dial { display: flex; align-items: center; gap: 0.5rem; }
 .demo__value { font-family: var(--font-mono); font-size: 1.5rem; min-width: 1.5ch; text-align: center; color: var(--tube); }
+
+/* ── P3 · TLC plate ─────────────────────────────────────────────────────── */
+.tlc__rule { font-size: 0.9em; color: var(--text-dim); margin: 0 0 0.75rem; }
+.tlc__plate {
+  padding: 0.5rem 0.5rem 0.6rem;
+  background: linear-gradient(#e9e4d6, #ded8c7);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 6px 18px rgba(0, 0, 0, 0.4);
+  color: #2f2a22;
+}
+.tlc__plate--uv { background: radial-gradient(ellipse at 50% 40%, #7fe3a6, #3a9a64); color: #0c2416; }
+/* The sheet is the plate's 8 cm; lines and spots share its coordinates. */
+.tlc__sheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  height: clamp(14rem, 40vh, 21rem);
+}
+.tlc__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px dashed rgba(60, 50, 40, 0.55);
+  pointer-events: none;
+}
+.tlc__line span {
+  position: absolute;
+  right: 0;
+  bottom: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  opacity: 0.75;
+}
+.tlc__line--base { border-top-style: solid; }
+.tlc__track { position: relative; }
+.tlc__spot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: 1.5rem !important;
+  min-width: 0 !important;
+  height: 1.1rem !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background: radial-gradient(ellipse, rgba(98, 50, 92, 0.95), rgba(98, 50, 92, 0.35) 70%, transparent 72%) !important;
+  cursor: pointer;
+}
+/* A larger invisible hit area around each spot for touch. */
+.tlc__spot::after { content: ''; position: absolute; inset: -0.7rem; }
+.tlc__plate--uv .tlc__spot { background: radial-gradient(ellipse, rgba(12, 30, 20, 0.95), rgba(12, 30, 20, 0.4) 70%, transparent 72%) !important; }
+.tlc__spot:focus-visible { outline: 2px solid var(--copper) !important; outline-offset: 3px; }
+.tlc__lanes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.2rem; margin-top: 0.3rem; }
+.tlc__lane { display: grid; justify-items: center; gap: 0.3rem; }
+.tlc__label { font-family: var(--font-mono); font-size: 0.7rem; }
+.tlc__take {
+  width: 100%;
+  min-height: 40px !important;
+  min-width: 0 !important;
+  padding: 0.2rem 0.1rem !important;
+  font-size: 0.72rem !important;
+  background: rgba(20, 37, 54, 0.88) !important;
+}
+.tlc__take[aria-pressed='true'] { background: var(--copper) !important; color: #1a120b !important; border-color: #f0c9a6 !important; }
+.tlc__take--none { min-height: 40px; background: transparent !important; }
+.tlc__controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.tlc__uv[aria-pressed='true'] { border-color: #7fe3a6; color: #7fe3a6; }
+.tlc__readout { min-height: 3em; margin: 0.75rem 0 0; color: #e6d7c0; line-height: 1.55; }
+
+/* ── P2 · Glovebox antechamber ──────────────────────────────────────────── */
+.gb__top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 0.75rem 1.5rem; }
+.gb__meter {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  letter-spacing: 0.06em;
+  color: #9fe3b5;
+  text-shadow: 0 0 12px rgba(159, 227, 181, 0.35);
+}
+.gb__meter[data-level='amber'] { color: #e8c36a; text-shadow: 0 0 12px rgba(232, 195, 106, 0.35); }
+.gb__meter[data-level='red'] { color: #ff7b6b; text-shadow: 0 0 12px rgba(255, 123, 107, 0.4); }
+.gb__sop {
+  margin: 0;
+  max-width: 21rem;
+  padding: 0.6rem 0.75rem;
+  background: #ece6d6;
+  color: #23303f;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  transform: rotate(-0.6deg);
+}
+.gb__sop p { margin: 0; }
+.gb__pencil { margin-top: 0.35rem !important; font-style: italic; color: #46506a; font-size: 0.95rem; transform: rotate(-2deg); }
+:root[data-motion='reduce'] .gb__sop, :root[data-motion='reduce'] .gb__pencil { transform: none; }
+.gb__diagram {
+  display: grid;
+  grid-template-columns: 1fr 0.5rem 2.2fr 0.5rem 3fr;
+  height: 6rem;
+  margin: 1rem 0 0.5rem;
+  align-items: stretch;
+}
+.gb__lab { background: repeating-linear-gradient(90deg, transparent 0 10px, rgba(255, 255, 255, 0.03) 10px 11px); }
+.gb__door { background: #6c7c8c; transition: transform 0.25s; transform-origin: top; }
+.gb__door--open { transform: scaleY(0.12); background: #2a3846; }
+:root[data-motion='reduce'] .gb__door { transition: none; }
+.gb__chamber {
+  position: relative;
+  background: #1d2c3b;
+  border-top: 3px solid #3b4c5d;
+  border-bottom: 3px solid #3b4c5d;
+}
+.gb__chamber--vacuum { background: #0c141d; }
+.gb__box { background: #17222e; border: 3px solid #3b4c5d; border-left: 0; position: relative; }
+.gb__box::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 0;
+  height: 40%;
+  border-radius: 50% 50% 0 0;
+  border: 2px solid #11171d;
+  border-bottom: 0;
+}
+.gb__box--green { box-shadow: inset 0 0 30px rgba(120, 200, 110, 0.25); }
+.gb__vial {
+  position: absolute;
+  bottom: 0.6rem;
+  width: 0.9rem;
+  height: 1.8rem;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(transparent 35%, #e6c84a 35%);
+  border: 1px solid #cfd8df;
+  transition: left 0.3s;
+}
+.gb__vial--green { background: linear-gradient(transparent 35%, #5fa865 35%); }
+.gb__diagram[data-vial='outside'] .gb__vial { display: none; }
+.gb__diagram[data-vial='chamber'] .gb__vial { left: calc(50% - 0.45rem); }
+.gb__diagram[data-vial='box'] .gb__vial { display: none; }
+.gb__readouts p { margin: 0.2rem 0; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); }
+.gb__actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
+.gb__status { min-height: 3em; margin: 0.75rem 0 0; color: #e6d7c0; line-height: 1.55; }
+
+/* ── P1 · NMR console ───────────────────────────────────────────────────── */
+.con { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.85rem; }
+.con__screen { background: #050b07; border: 1px solid #1f3a2a; padding: 0.6rem; box-shadow: inset 0 0 40px rgba(159, 227, 181, 0.06); }
+.con__log {
+  height: clamp(12rem, 34vh, 20rem);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #b8f0c9;
+}
+.con__line { margin: 0 0 0.35rem; white-space: pre-wrap; font: inherit; }
+.con__line--out { white-space: pre; overflow-x: auto; }
+.con__line--in { color: #e7fff0; }
+.con__form { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+.con__prompt { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: #7fd39b; }
+.con__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  font: inherit;
+  color: #e7fff0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #2d5a3e;
+  caret-color: #9fe3b5;
+}
+.con__input:focus-visible { outline: none; border-bottom-color: #9fe3b5; }
+.con__chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.con__chip { font-family: var(--font-mono) !important; font-size: 0.72rem !important; min-height: 36px !important; padding: 0.2rem 0.6rem !important; }
+.con__card {
+  margin: 0;
+  padding: 0.75rem;
+  background: #ece6d6;
+  color: #23303f;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  transform: rotate(0.4deg);
+  order: -1;
+  justify-self: start;
+  max-width: 30rem;
+}
+:root[data-motion='reduce'] .con__card { transform: none; }
+.con__done { grid-column: 1 / -1; }
+.con__note { font-style: italic; color: var(--text-dim); margin: 0 0 0.5rem; }
+@media (max-width: 40rem) {
+  .tlc__plate { padding-inline: 0.25rem; }
+  .con__log { font-size: 0.7rem; }
+}
