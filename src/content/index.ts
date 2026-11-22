@@ -11,6 +11,7 @@ import { piScenes } from './locations/pi.ts';
 import { roofScenes } from './locations/roof.ts';
 import { stairsScenes } from './locations/stairs.ts';
 import { synthScenes } from './locations/synth.ts';
+import { ENDINGS } from './endings.ts';
 import { ACTS, EVENTS, LIGHTS_OUT, PHANTOMS } from './night.ts';
 import { NOTEBOOK } from './notebook.ts';
 import { PUZZLE_DEFS } from './puzzles.ts';
@@ -34,5 +35,5 @@ export const CONTENT: Content = {
   phantoms: PHANTOMS,
   lightsOut: LIGHTS_OUT,
   acts: ACTS,
-  endings: [],
+  endings: ENDINGS,
 };

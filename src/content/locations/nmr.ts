@@ -35,9 +35,10 @@ export const nmrScenes: SceneDef[] = [
         id: 'nmr.load',
         label: 'nmr.load',
         cost: 1,
-        if: { all: [{ item: 'item.tube.own' }, { not: { know: 'nb.priority' } }] },
+        // Act I: the code is refused until holder 13 has run (i.e. until you have lived a 03:33).
+        if: { all: [{ item: 'item.tube.own' }, { any: [{ act: 1 }, { not: { know: 'nb.priority' } }] }] },
         once: 'loop',
-        text: [{ key: 'nmr.load.r' }],
+        text: [{ key: 'nmr.load.r' }, { key: 'nmr.load.code', if: { know: 'nb.priority' } }],
         effects: [{ learn: 'nb.queue.locked' }],
       },
       {
@@ -46,7 +47,7 @@ export const nmrScenes: SceneDef[] = [
         label: 'nmr.run',
         cost: 8,
         once: 'loop',
-        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }] },
+        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }] },
         effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }],
         text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
       },

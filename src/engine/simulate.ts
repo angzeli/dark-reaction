@@ -113,5 +113,12 @@ export function simulate(content: Content, logic: LogicTable, route: Route, marg
   if (game.state.ending !== route.ending) {
     throw new RouteError(`route ended with ${game.state.ending ?? 'no ending'} (loop ${game.state.loop}, ${game.state.scene}), expected ${route.ending}`, route.steps.length);
   }
+  // The epilogue is read too: record it as the last screen, so it is rendered,
+  // checked for missing keys and placeholders, and counted in the playtime.
+  const ending = content.endings.find((e) => e.id === game.state.ending);
+  if (ending) {
+    const s = game.state;
+    screens.push({ act: s.act, loop: s.loop, minute: s.minute, paragraphs: game.paragraphs(ending.epilogue, 'text') });
+  }
   return { game, screens, solved, steps: route.steps.length };
 }

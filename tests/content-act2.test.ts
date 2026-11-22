@@ -206,6 +206,8 @@ describe('rest, obsession and the doors', () => {
     expect(ids(g)).toContain('stairs.exitb.open');
     g.choose('stairs.exitb.open');
     expect(known(g)).toEqual(expect.arrayContaining(['nb.entrance', 'nb.exitb']));
+    expect(g.state.scene).toBe('stairs.door');
+    g.choose('stairs.door.close');
     waitUntil(g, 37);
     expect(ids(g)).not.toContain('stairs.exitb.open');
   });

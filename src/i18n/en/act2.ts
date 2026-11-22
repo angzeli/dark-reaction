@@ -33,9 +33,10 @@ export const act2 = {
   'office.declare.own.text':
     'You drag your spectrum into the portal and it uploads in a bar of grey: your noise, your bump at 6.9, your nothing at 8.41. Under *Reviewer 2, comment 4* the response box is still empty. At the bottom of the page, above the button, the box: *I confirm that these data are complete and unaltered.*',
   'office.declare.printout.text':
-    'You scan the printout on the copier by the door and it goes into the portal as a crisp PDF: the peak, the satellites, the timestamp nobody will check. Under *Reviewer 2, comment 4* you could write a single line now. At the bottom of the page, above the button, the box: *I confirm that these data are complete and unaltered.*',
+    'You scan the printout on the copier by the door and it goes into the portal as a crisp PDF: the peak, the flat baseline, the timestamp nobody will check. Under *Reviewer 2, comment 4* you could write a single line now. At the bottom of the page, above the button, the box: *I confirm that these data are complete and unaltered.*',
   'office.declare.blocked': 'Your hand stops over it. Somewhere in your notebook there is a page that says otherwise, and you know which one.',
   'office.declare.clear': 'Nothing in your notebook stands against it. The box is there to be ticked, if you are going to tick it.',
+  'office.upload': 'Tick the box and upload',
 
   // ── B.03 NMR suite, Act II ────────────────────────────────────────────────
   'nmr.run': 'Run your sample with the priority code',
@@ -48,7 +49,7 @@ export const act2 = {
   'nmr.printout': 'Take the printout',
   'nmr.printout.r': 'You lift the page out of the tray. It is warm, as if it has been held.',
   'perfect.describe':
-    '*PROTON_DARK · holder 13 · ar4217 · acquired 23/11/2026 03:33:00.* {n} {n:minute:minutes} from now. A single peak at 8.41, tall and clean as a struck match, its satellites placed as if with a ruler. It is Figure 3. It is better than Figure 3. It is everything reviewer 2 asked for, and it is in your hands.',
+    '*PROTON_DARK · holder 13 · ar4217 · acquired 23/11/2026 03:33:00.* {n} {n:minute:minutes} from now. A single peak at 8.41, tall and clean as a struck match, alone on a baseline as straight as a ruled line. It is Figure 3. It is better than Figure 3. It is everything reviewer 2 asked for, and it is in your hands.',
 
   // ── Stairwell and lobby ───────────────────────────────────────────────────
   'stairs.desk': 'Look at the porter’s desk',
@@ -65,6 +66,13 @@ export const act2 = {
     'The bar doesn’t move, not even the little give a bar usually has. A sticker at eye level: *ALARMED — RELEASED BY SECURITY ONLY*. Beyond the door, the faint sound of rain on a metal roof.',
   'stairs.exitb.open.r':
     'This time the bar gives. The door swings out onto the service yard and the night comes in all at once: rain on your face, the smell of wet bins, the street lamp lying in the puddles. The big wheelie bins stand in a row by the kerb like people waiting for a bus. Nobody is there. The door would let you go.',
+  'stairs.door.text': 'The door stands open on its closer. Rain blows in across the threshold, and the bins wait by the kerb.',
+  'stairs.door.close': 'Let the door swing shut',
+  'stairs.leave': 'Step out into the rain',
+  'stairs.leave.notyet':
+    'You stand in the doorway with the rain on your face, and you don’t move. There is a sample upstairs, a deadline at nine, a queue with your name on it. Not yet. You let the door swing shut, and the bar clunks home.',
+  'stairs.leave.cant':
+    'You put one foot on the wet step and stop. The spectrum. The deadline. One more run, and it might be there. Your hand finds the door frame and holds on, and you can’t, not tonight, not like this. The door swings shut. The bar clunks home.',
   'stairs.callpoint': 'Look at the fire alarm call point',
   'stairs.callpoint.r':
     'A red box at shoulder height with a little pane and the words *FIRE — BREAK GLASS — PRESS HERE*. A label under it: *WEEKLY TEST: TUESDAYS 11:00*. Someone has added in biro: *it is never Tuesday*.',

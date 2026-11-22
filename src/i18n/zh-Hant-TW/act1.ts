@@ -98,6 +98,7 @@ export const act1: Record<keyof typeof en, string> = {
   'nmr.load': '把你的 NMR 管放進自動進樣盤',
   'nmr.load.r':
     '你把管子插進轉子，放進樣品槽 2。主控台立刻拒絕：QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER。Ian 的電話寫在門邊的牌子上。現在是凌晨三點。',
+  'nmr.load.code': '你還是試了 Ian 的代碼。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.*它還沒跑過。還沒。',
   'nmr.magnet': '站到磁鐵旁邊',
   'nmr.magnet.r':
     '靠近了看，磁鐵是一根淺色烤漆的大柱子，梯子折起來靠在它身上，像一隻累了的手臂。地上貼著一道黃黑相間的膠帶，標出你的金融卡從哪裡開始不再是金融卡。它發出的聲音其實不算嗡嗡聲。那是一個非常冷的東西被刻意維持在非常冷的聲音，每一天的每一秒，不管有沒有人在看。',

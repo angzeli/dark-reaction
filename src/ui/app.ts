@@ -306,6 +306,15 @@ export class App {
       }
       return;
     }
+    if (this.screen === 'ending') {
+      // As everywhere else, Space or Enter finishes the reveal; then the way back is one more press.
+      if ((e.key === ' ' || e.key === 'Enter') && this.currentReveal?.running) {
+        e.preventDefault();
+        this.currentReveal.complete();
+        (this.root.querySelector('.ending .title__btn') as HTMLElement | null)?.focus({ preventScroll: true });
+      }
+      return;
+    }
     if (this.screen !== 'play' || !this.game || this.game.state.puzzle || typing) return;
 
     if (this.currentReveal?.running && (e.key === ' ' || e.key === 'Enter' || /^[0-9]$/.test(e.key))) {
@@ -599,12 +608,17 @@ export class App {
     const art = h('div', { class: 'ending__art' });
     const body = h('div', { class: 'ending__text' }, ...(ending && game ? game.paragraphs(ending.epilogue, 'text').map((p) => this.paragraph(p)) : []));
     const back = h('button', { type: 'button', class: 'title__btn', onclick: () => this.quitToTitle() }, t('ending.return'));
-    this.shell('ending', h('article', { class: 'ending' }, art, h('h1', { class: 'ending__title' }, ending ? t(ending.title) : ''), body, back));
+    const title = h('h1', { class: 'ending__title', tabindex: '-1' }, ending ? t(ending.title) : '');
+    // Infinite Loop: the clock has stopped (decorative; the epilogue says so).
+    const stopped = ending?.id === 'infinite' ? h('p', { class: 'ending__clock', 'aria-hidden': 'true' }, '03:33') : null;
+    const article = h('article', { class: 'ending', dataset: { ending: ending?.id ?? '' } }, art, stopped, title, body, back);
+    this.shell('ending', article);
     if (ending) this.mountStage(art, ending.art, { act: 3, minute: 46 });
     const r = reveal([...body.children] as HTMLElement[], revealDelay(this.settings));
     this.currentReveal = r;
     body.addEventListener('click', () => r.complete());
-    back.focus({ preventScroll: true });
+    // Start at the title, so a reader starts at the top and a stray Enter can't skip the epilogue.
+    title.focus({ preventScroll: true });
   }
 
   // ── Overlays ─────────────────────────────────────────────────────────────
