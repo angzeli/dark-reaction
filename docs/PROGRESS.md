@@ -4,9 +4,9 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Milestone:** M1 Foundation
-- **Last merged:** #28 project scaffold (closes #3)
-- **In flight:** #4 self-hosted fonts with build-time subsetting
+- **Milestone:** M2 Engine (M1 Foundation complete: #1, #3, #4 closed)
+- **Last merged:** #31 locale tables (closes #6)
+- **In flight:** #30 engine core (cold-reviewed, fixes in), #33 audio (this PR), #32 gitignore fix
 
 ## Next
 
@@ -28,6 +28,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #13 audio: procedural Web Audio engine (`src/audio/audio.ts`), created only on an explicit opt-in. Noise beds (white, pink, brown), oscillators, LFOs, convolution reverb, rain drops, radio murmur, compressor pulse, cryocooler chirps. Ten ambience mixes (eight locations, title, dark) and thirteen cues (lights-out, loop start, phantom, solve, hint, fail, chirp, six endings) defined as sound-design data in `src/audio/presets/`. `chirpSchedule()` shared by the chirp puzzle's LED and audio. Unit tests for presets and timing; a Playwright test bundles the module and plays everything in real Chromium.
 - #6 i18n: `t()` with placeholders, English plurals and `@key` params; tables split by area with the 繁中 modules typed against the English keys; `compareTables()` for the validator; locale listeners for live switching. The font check caught `⟦⟧` missing-key markers with no glyph, so they are now `[[key]]`.
 - #4 fonts: Source Serif 4 (400, 400 italic, 600), Noto Serif TC 400, IBM Plex Mono (400, 500) from version-pinned `@expo-google-fonts` packages, subset at build time by `scripts/subset-fonts.ts` (a built-in cmap reader checks coverage; build fails if a player-visible character has no glyph or the payload exceeds 1.5 MiB). Projected final size with ~3,500 CJK glyphs ≈ 700 KiB. Chinese text uses Noto first so CJK punctuation keeps full-width metrics. `CREDITS.md` added. PR screenshots live on the orphan branch `pr-assets`.
 - Merged #28 (scaffold).
