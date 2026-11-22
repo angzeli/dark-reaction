@@ -615,6 +615,21 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 :lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:nth-child(n + 13) { letter-spacing: 0.06em; }
 :lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:last-child { font-style: normal; }
 :root[data-contrast='high'] .ending[data-ending='infinite'] .ending__text .para { opacity: 1; }
+/* The same choice, three times, each fainter: not buttons, nothing to press. */
+.ending__again { margin: 1.5rem 0 1rem; padding: 0; list-style: none; }
+.ending__again li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.6rem;
+  padding: 0.7rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+.ending__again-n { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); }
+.ending__again li:nth-child(1) { opacity: 0.55; }
+.ending__again li:nth-child(2) { opacity: 0.35; }
+.ending__again li:nth-child(3) { opacity: 0.18; }
+/* High contrast: the fade is the point, but the words still have to be readable. */
+:root[data-contrast='high'] .ending__again li { opacity: 1; }
 /* Focused on arrival so reading starts at the top; like the overlay titles, it isn't a control, so no ring. */
 .ending__title:focus { outline: none; }
 .ending__title {

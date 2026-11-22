@@ -109,7 +109,8 @@ describe('Act I: 03:33', () => {
     const cards = endLoop(g);
     expect(cards[0]).toMatchObject({ kind: 'lightsout', loop: 1 });
     expect(g.state.loop).toBe(2);
-    expect(keys(g)).toEqual(['lo.first', 'ui.noted', 'loop.start.second', 'ui.phantom.notice', 'ph.tea.body', 'office.hub.act1']);
+    // What 03:33 wrote comes after you come to, under the same notice as 02:47's own pages.
+    expect(keys(g)).toEqual(['lo.first', 'loop.start.second', 'ui.noted', 'ui.phantom.notice', 'ph.tea.body', 'office.hub.act1']);
     expect(known(g)).toEqual(expect.arrayContaining(['nb.reset', 'ph.tea']));
     endLoop(g);
     expect(keys(g)).not.toContain('lo.first');

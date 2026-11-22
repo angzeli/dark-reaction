@@ -13,6 +13,16 @@ export const act3puzzles = {
   'nmr.ups.r':
     'The UPS that keeps the console alive through a power cut stands beside the compressor, with a small keypad and a label in Ian’s capitals: *ACQUISITION HOLD · PIN REQUIRED · DO NOT GUESS*. Behind you the compressor chirps, and its light blinks along.',
   'nmr.ups.again': 'Key in her rhythm on the UPS panel',
+  'nmr.holder13': 'Load her tube into holder 13',
+  'nmr.holder13.r':
+    'At the top of the magnet, where no light reaches, you slide the foil off her tube, set it in a spinner and drop it into holder 13, the one place in the carousel without dust. The console doesn’t refuse it. *HOLDER 13 · PROTON_DARK · SAMPLE PRESENT · 03:33.* It has waited a long time for this tube.',
+  'nmr.console.loaded.r': 'Holder 13. 03:33. ar4217. PROTON_DARK. *Sample present.* For the first time the line has changed, and now it is only waiting for the clock.',
+  'nmr.carousel.loaded.r':
+    'You climb two rungs of the ladder to see it. Twenty-four holders in a ring: Tom’s tube in 4, Ian’s test sample in 7, and in 13, the only holder without dust, the spinner you set there, her tube in it, keeping its own dark.',
+  'lo.dark.nopower':
+    'At 03:33 everything goes out at once, the console with it. In the dark you hear nothing drop into the magnet. Holder 13 keeps its tube, and the night keeps you.',
+  'lo.dark.noise':
+    'At 03:33 the lights go out and the console stays lit on its battery. Holder 13 drops; the run goes in the dark. What comes back is noise and only noise: not her peak, not even the solvent. Then the screen goes grey, and it is 02:47.',
   'nmr.ups.again.r': 'Two, four, one, three. The amber display turns green: *UPS ARMED · ACQUISITION WILL CONTINUE*.',
   'office.compare': 'Lay the printout beside your spectrum and Figure 3',
   'office.compare.r':

@@ -121,8 +121,8 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
       spent = Math.max(0, Math.floor(total));
       renderClock();
       o.onMinutes?.(Math.min(LOOP_LENGTH, o.startMinute + spent));
-      // The lights go out on everyone, mid-puzzle or not.
-      if (o.startMinute + spent >= LOOP_LENGTH) finish(false);
+      // The lights go out on everyone, mid-puzzle or not (a puzzle opened at 03:33 itself is past that).
+      if (o.startMinute < LOOP_LENGTH && o.startMinute + spent >= LOOP_LENGTH) finish(false);
     },
     finish,
     saveData: (data) => o.onSaveData(data),

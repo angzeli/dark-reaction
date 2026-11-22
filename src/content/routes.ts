@@ -81,6 +81,21 @@ export const CHASE_LOOP: RouteStep[] = [
   { do: 'office.stare' },
 ];
 
+/** The true ending's last night (Act III, with her traces, Figure 3 proved and the PIN known): her tube filled in the dark, holder 13, the UPS, 03:33, her peak. */
+export const DARK_NIGHT: RouteStep[] = [
+  { go: 'glovebox' },
+  { do: 'glovebox.mini.open' },
+  { go: 'synth' },
+  { do: 'synth.foil' },
+  { do: 'synth.kraken.fill' },
+  { solve: 'schlenk' },
+  { go: 'nmr' },
+  { do: 'nmr.ups.again' },
+  { do: 'nmr.holder13' },
+  { night: true },
+  { solve: 'peakmatch' },
+];
+
 const steps = (...parts: RouteStep[][]): RouteStep[] => parts.flat();
 
 export const ROUTES: Partial<Record<EndingId, Route>> = {
@@ -112,6 +127,68 @@ export const ROUTES: Partial<Record<EndingId, Route>> = {
     ending: 'clocking',
     summary: 'Act I, then in Act II be at fire exit B when the bins go out at 03:21, and leave.',
     steps: steps(ACT_ONE, [{ go: 'stairs' }, { until: 34 }, { do: 'stairs.exitb.open' }, { do: 'stairs.leave' }]),
+  },
+  dark: {
+    ending: 'dark',
+    summary: 'The true ending, and the critical path: Act I with her mug, drawer and SOP; her office at 03:15 and your own run; the freezer, her raw data, the door log and the rain log; Act III: the flask, the chirp and Figure 3 proved; then her tube, filled in the dark, in holder 13 at 03:33.',
+    steps: steps(
+      // Loop 1, Act I: her mug and drawer, the SOP's pencil, and the three puzzles.
+      [{ do: 'office.desk7' }, { do: 'office.mug' }, { do: 'office.drawer' }, { do: 'meta:back' }],
+      ACT_ONE.slice(0, 6),
+      [{ do: 'glovebox.sop' }],
+      ACT_ONE.slice(6),
+      // Loop 2, Act II: your sample made up, her office at 03:15 (the code, her email, her box, her notebook), and your run, which
+      // ends as the lights go; the night offers its printout at 03:25 while it runs.
+      [
+        { go: 'synth' },
+        { do: 'synth.combine' },
+        { do: 'synth.rotavap' },
+        { go: 'glovebox' },
+        { do: 'glovebox.purge' },
+        { go: 'office' },
+        { until: 28 },
+        { go: 'pi' },
+        { do: 'pi.sticky' },
+        { do: 'pi.email' },
+        { do: 'pi.box' },
+        { do: 'pi.box.close' },
+        { do: 'pi.notebook' },
+        { solve: 'cipher' },
+        { go: 'nmr' },
+        { do: 'nmr.run' },
+      ],
+      // Loop 3: rack one and her raw data; the porter's log; her rain log.
+      [
+        { go: 'cold' },
+        { do: 'cold.rack1' },
+        { solve: 'freezer' },
+        { go: 'office' },
+        { do: 'office.microsd' },
+        { go: 'stairs' },
+        { do: 'stairs.terminal' },
+        { solve: 'doorlog' },
+        { go: 'roof' },
+        { do: 'roof.deckchair' },
+        { night: true },
+      ],
+      // Loop 4, Act III: the flask on port 4, Tom's Post-it and the chirp; at 03:25 the printout, and Figure 3 proved.
+      [
+        { go: 'synth' },
+        { do: 'synth.port4' },
+        { go: 'nmr' },
+        { do: 'nmr.postit' },
+        { do: 'nmr.ups' },
+        { solve: 'chirp' },
+        { go: 'office' },
+        { until: 38 },
+        { do: 'office.print' },
+        { do: 'office.compare' },
+        { solve: 'fabrication' },
+        { night: true },
+      ],
+      // Loop 5: her tube, foil, the Kraken; the UPS and holder 13; 03:33 in the dark, and her peak.
+      DARK_NIGHT,
+    ),
   },
   fire: {
     ending: 'fire',

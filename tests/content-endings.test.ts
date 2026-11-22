@@ -357,6 +357,203 @@ describe('the call point', () => {
   });
 });
 
+describe('the dark run at 03:33', () => {
+  const HER = ['yc.email', 'yc.raw', 'yc.flask', 'yc.tube', 'yc.chirp', 'yc.mug', 'yc.desk', 'yc.sop', 'yc.notebook'];
+  /** Act III, her tube in holder 13, waiting in the NMR suite for 03:33; each option takes one thing away. */
+  function inTheDark(
+    o: { ups?: boolean; fudge?: boolean | 'corrected'; proved?: boolean; fragments?: string[]; at?: LocationId; obsessed?: boolean } = {},
+  ): Game {
+    const g = new Game(CONTENT);
+    drainCards(g);
+    g.state.solved.push('tlc', 'glovebox', 'console');
+    waitUntil(g, 46);
+    drainCards(g);
+    for (const id of ['nb.raw', 'nb.email']) g.state.known.push({ id, loop: g.state.loop, minute: 0 });
+    g.state.flags.push('perfect.offered', 'ran.own');
+    waitUntil(g, 46);
+    drainCards(g);
+    expect(g.state.act).toBe(3);
+    g.state.fragments.push(...(o.fragments ?? HER));
+    if (o.proved ?? true) g.state.known.push({ id: 'nb.fabrication', loop: g.state.loop, minute: 0 });
+    if (o.fudge) {
+      g.state.fudges.push({ id: 'fudge.yield', corrected: o.fudge === 'corrected', loop: 1 });
+      g.state.fudgesEver += 1;
+    }
+    if (o.obsessed) {
+      // Late enough, and chased hard enough, for 03:33 to keep you (Infinite Loop).
+      g.state.loop = 6;
+      g.state.obsession = 12;
+    }
+    goTo(g, 'nmr');
+    g.state.inventory.push('item.tube.dark');
+    g.choose('nmr.holder13');
+    expect(g.state.inventory).not.toContain('item.tube.dark');
+    if (o.ups ?? true) g.state.lflags.push('ups.armed');
+    if (o.at) goTo(g, o.at);
+    waitUntil(g, 46);
+    return g;
+  }
+  const known = (g: Game) => g.state.known.map((k) => k.id);
+
+  it('with everything in place, the lights go out and the peak match opens in the dark; finding her peak is Dark Reaction', () => {
+    const g = inTheDark();
+    expect(g.state.puzzle).toBe('peakmatch');
+    expect(g.state.darkRun).toBe(true);
+    const loop = g.state.loop;
+    expect(drainCards(g)).toEqual([expect.objectContaining({ kind: 'lightsout', dark: true })]);
+    g.completePuzzle({ solved: true, minutes: 0 });
+    expect(g.state.ending).toBe('dark');
+    expect(g.state.loop).toBe(loop); // no 02:47 this time
+    expect(drainCards(g)).toEqual([{ kind: 'ending', ending: 'dark' }]);
+    expect(epilogueKeys(g)).toEqual(EPILOGUES.dark.map((p) => p.key));
+  });
+
+  it('stepping away from the peak in the dark lets the night end as usual', () => {
+    const g = inTheDark();
+    const loop = g.state.loop;
+    g.completePuzzle({ solved: false, minutes: 0 });
+    expect(g.state.ending).toBeNull();
+    expect(g.state.loop).toBe(loop + 1);
+    expect(g.state.minute).toBe(0);
+    expect(g.state.darkRun).toBe(false);
+  });
+
+  it('without the UPS armed the console goes out too: no run, no page, just 02:47', () => {
+    const g = inTheDark({ ups: false });
+    expect(g.state.puzzle).toBeNull();
+    expect(g.state.minute).toBe(0);
+    expect(keys(g)[0]).toBe('lo.dark.nopower');
+    expect(known(g).filter((k) => ['ph.pages', 'ph.figure', 'ph.her'].includes(k))).toEqual([]);
+  });
+
+  it('a standing fudge: only noise, and a page in your hand about those pages', () => {
+    const g = inTheDark({ fudge: true });
+    expect(g.state.puzzle).toBeNull();
+    expect(keys(g)[0]).toBe('lo.dark.noise');
+    expect(known(g)).toContain('ph.pages');
+  });
+
+  it('Figure 3 not yet proved: only noise, and a page saying so', () => {
+    const g = inTheDark({ proved: false });
+    expect(g.state.puzzle).toBeNull();
+    expect(known(g)).toContain('ph.figure');
+  });
+
+  it('not knowing her well enough: eight traces are not nine, and nine without her email are not enough', () => {
+    const eight = inTheDark({ fragments: HER.slice(0, 8) });
+    expect(eight.state.puzzle).toBeNull();
+    expect(known(eight)).toContain('ph.her');
+    const noEmail = inTheDark({ fragments: [...HER.slice(1), 'yc.box', 'yc.badge'] });
+    expect(noEmail.state.fragments).toHaveLength(10);
+    expect(noEmail.state.puzzle).toBeNull();
+    expect(known(noEmail)).toContain('ph.her');
+  });
+
+  it('her tube in holder 13 means nothing if you are somewhere else at 03:33', () => {
+    const g = inTheDark({ at: 'office' });
+    expect(g.state.puzzle).toBeNull();
+    expect(g.state.minute).toBe(0);
+    expect(keys(g)).not.toContain('lo.dark.noise');
+  });
+
+  it('holder 13 takes only her dark tube, and only in Act III', () => {
+    const g = actTwo();
+    g.state.inventory.push('item.tube.dark');
+    goTo(g, 'nmr');
+    expect(ids(g)).not.toContain('nmr.holder13');
+    // Act III without the tube: nothing to load.
+    const three = inTheDark();
+    drainCards(three);
+    three.completePuzzle({ solved: false, minutes: 0 });
+    drainCards(three);
+    goTo(three, 'nmr');
+    expect(three.state.act).toBe(3);
+    expect(ids(three)).not.toContain('nmr.holder13');
+    three.state.inventory.push('item.tube.dark');
+    expect(ids(three)).toContain('nmr.holder13');
+  });
+
+  it('the rules go in order: no power before the pages, the pages before Figure 3, Figure 3 before her', () => {
+    const noPower = inTheDark({ ups: false, fudge: true, proved: false, fragments: HER.slice(0, 8) });
+    expect(keys(noPower)[0]).toBe('lo.dark.nopower');
+    expect(known(noPower).filter((k) => k.startsWith('ph.') && ['ph.pages', 'ph.figure', 'ph.her'].includes(k))).toEqual([]);
+    const pages = inTheDark({ fudge: true, proved: false, fragments: HER.slice(0, 8) });
+    expect(known(pages)).toContain('ph.pages');
+    expect(known(pages)).not.toContain('ph.figure');
+    expect(known(pages)).not.toContain('ph.her');
+    const figure = inTheDark({ proved: false, fragments: HER.slice(0, 8) });
+    expect(known(figure)).toContain('ph.figure');
+    expect(known(figure)).not.toContain('ph.her');
+  });
+
+  it('a fudge struck through no longer stands in the way', () => {
+    const g = inTheDark({ fudge: 'corrected' });
+    expect(g.state.puzzle).toBe('peakmatch');
+    expect(known(g)).not.toContain('ph.pages');
+  });
+
+  it('nine traces are not enough without her flask', () => {
+    const g = inTheDark({ fragments: [...HER.filter((f) => f !== 'yc.flask'), 'yc.box'] });
+    expect(g.state.fragments).toHaveLength(9);
+    expect(g.state.puzzle).toBeNull();
+    expect(known(g)).toContain('ph.her');
+  });
+
+  it('a failed run writes its page after you come to, and a second failure for the same reason shows it again', () => {
+    const g = inTheDark({ proved: false });
+    const first = keys(g);
+    expect(first[0]).toBe('lo.dark.noise');
+    expect(first.indexOf('ph.figure.body')).toBeGreaterThan(first.indexOf('loop.start.act3'));
+    expect(first.filter((k) => k === 'ui.phantom.notice')).toHaveLength(1);
+    drainCards(g);
+    goTo(g, 'nmr');
+    g.state.inventory.push('item.tube.dark');
+    g.choose('nmr.holder13');
+    g.state.lflags.push('ups.armed');
+    waitUntil(g, 46);
+    const again = keys(g);
+    expect(again.slice(0, 2)).toEqual(['lo.dark.noise', 'ph.figure.body']);
+    expect(g.state.display[1]?.style).toBe('phantom');
+    // Shown once, and not written again (02:47 may bring other pages of its own).
+    expect(again.filter((k) => k === 'ph.figure.body')).toHaveLength(1);
+    expect(known(g).filter((k) => k === 'ph.figure')).toHaveLength(1);
+  });
+
+  it('stepping away keeps what you saw: the dark comes in close, then 02:47', () => {
+    const g = inTheDark();
+    g.completePuzzle({ solved: false, minutes: 0 });
+    expect(keys(g).slice(0, 2)).toEqual(['puzzle.peakmatch.left', 'loop.start.act3']);
+  });
+
+  it('a solved dark run beats Infinite Loop; stepping away from it does not', () => {
+    const solved = inTheDark({ obsessed: true });
+    expect(solved.state.puzzle).toBe('peakmatch');
+    solved.completePuzzle({ solved: true, minutes: 0 });
+    expect(solved.state.ending).toBe('dark');
+    const left = inTheDark({ obsessed: true });
+    left.completePuzzle({ solved: false, minutes: 0 });
+    expect(left.state.ending).toBe('infinite');
+  });
+
+  it('once her tube is in, the room no longer says holder 13 is empty', () => {
+    const g = inTheDark({ at: 'cold' });
+    // Back to the NMR suite next loop with the tube loaded again, and before 03:33 look round.
+    drainCards(g);
+    goTo(g, 'nmr');
+    expect(keys(g)).toContain('nmr.hub.act3');
+    g.state.inventory.push('item.tube.dark');
+    g.choose('nmr.holder13');
+    goTo(g, 'cold');
+    goTo(g, 'nmr');
+    expect(keys(g)).toContain('nmr.hub.act3.loaded');
+    expect(keys(g)).not.toContain('nmr.hub.act3');
+    g.choose('nmr.carousel');
+    expect(keys(g)[0]).toBe('nmr.carousel.loaded.r');
+    g.choose('nmr.console.again');
+    expect(keys(g)[0]).toBe('nmr.console.loaded.r');
+  });
+});
+
 describe('epilogues', () => {
   const words = (key: string) => t(key, { clock: '03:30' }, 'en').replace(/\*/g, '').split(/\s+/).filter(Boolean).length;
   const hanzi = (key: string) => [...t(key, { clock: '03:30' }, 'zh-Hant-TW')].filter((c) => /\p{Script=Han}/u.test(c)).length;

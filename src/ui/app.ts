@@ -538,7 +538,7 @@ export class App {
       this.shownAt = where;
       window.scrollTo(0, 0);
     }
-    this.mountStage(art, location.art, { act: s.act, minute: s.minute });
+    this.mountStage(art, location.art, { act: s.act, minute: s.minute, dark: s.darkRun });
 
     const drawChoices = () => {
       const list = game.choices();
@@ -580,7 +580,8 @@ export class App {
       drawChoices();
     }
 
-    if (s.puzzle && !this.busy) this.openPuzzle(narrative);
+    // Not while a card is still to play: a puzzle a card opens (the dark run) mounts once, after it.
+    if (s.puzzle && !this.busy && s.cards.length === 0) this.openPuzzle(narrative);
   }
 
   /** Track the sticky HUD's height in `--hud-h` (it wraps on phones and grows with text size). */
@@ -665,7 +666,12 @@ export class App {
     const title = h('h1', { class: 'ending__title', tabindex: '-1' }, ending ? t(ending.title) : '');
     // Infinite Loop: the clock has stopped (decorative; the epilogue says so).
     const stopped = ending?.id === 'infinite' ? h('p', { class: 'ending__clock', 'aria-hidden': 'true' }, '03:33') : null;
-    const article = h('article', { class: 'ending', dataset: { ending: ending?.id ?? '' } }, art, stopped, title, body, back);
+    // …and the same choice, made again, and again (decorative, still; the epilogue says it in words).
+    const again =
+      ending?.id === 'infinite'
+        ? h('ol', { class: 'ending__again', 'aria-hidden': 'true' }, ...[1, 2, 3].map((n) => h('li', {}, h('span', { class: 'ending__again-n' }, String(n)), h('span', {}, t('nmr.rerun')))))
+        : null;
+    const article = h('article', { class: 'ending', dataset: { ending: ending?.id ?? '' } }, art, stopped, title, body, again, back);
     this.shell('ending', article);
     if (ending) this.mountStage(art, ending.art, { act: 3, minute: 46 });
     const r = reveal([...body.children] as HTMLElement[], revealDelay(this.settings));

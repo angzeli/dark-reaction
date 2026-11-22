@@ -1,8 +1,7 @@
 /**
  * The endings (docs/DESIGN.md §12): what triggers them lives in the scenes
  * and rules that offer them; this is how each one is told. All six
- * epilogues are written and checked here; an ending joins ENDINGS (and the
- * game) once its trigger exists: Dark Reaction with Act III's dark run.
+ * epilogues are written and checked here, and all six are in the game.
  */
 import { clockLabel } from '../engine/clock.ts';
 import type { EndingDef, EndingId, TextRef } from '../engine/types.ts';
@@ -56,4 +55,4 @@ const ending = (id: EndingId): EndingDef => ({
   epilogue: EPILOGUES[id],
 });
 
-export const ENDINGS: EndingDef[] = (['perfect', 'honest', 'clocking', 'infinite', 'fire'] as const).map(ending);
+export const ENDINGS: EndingDef[] = (['perfect', 'honest', 'clocking', 'infinite', 'dark', 'fire'] as const).map(ending);

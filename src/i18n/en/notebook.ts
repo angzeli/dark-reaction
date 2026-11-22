@@ -115,6 +115,12 @@ export const notebook = {
   'ph.port4.body': 'Port four. Don’t let it see the light.',
   'ph.booking.title': '03:33',
   'ph.booking.body': '03:33 isn’t a deadline. It’s a booking.',
+  'ph.pages.title': 'Those pages',
+  'ph.pages.body': 'Not with those pages still standing. Strike them through first.',
+  'ph.figure.title': 'Figure 3',
+  'ph.figure.body': 'Not while Figure 3 still stands. Prove what it is first.',
+  'ph.her.title': 'Her',
+  'ph.her.body': 'You don’t know her yet.',
 
   // Act II: what the puzzles teach you
   'nb.porter.title': 'The porter’s Monday',

@@ -104,6 +104,10 @@ test('Infinite Loop, in 繁中: three nights of chasing, then the fourth 03:33 k
   await expect(page.locator('article.ending[data-ending="infinite"]')).toBeVisible();
   await expect(page.locator('.ending__title')).toHaveText('無限迴圈');
   await expect(page.locator('.ending__clock')).toHaveText('03:33');
+  // …and the same choice, made again, and again: three of them, fading, nothing to press.
+  await expect(page.locator('.ending__again li')).toHaveCount(3);
+  await expect(page.locator('.ending__again li').first()).toContainText('再跑一次');
+  await expect(page.locator('.ending__again button')).toHaveCount(0);
   await expect(paragraphs(page)).toHaveCount(15);
   await expect(page.locator('.ending__text')).toContainText('先泡茶。垃圾桶推出去的時候就回家。');
   // The decay only ever loosens the 繁中 spacing, and never fakes an italic.
@@ -112,6 +116,10 @@ test('Infinite Loop, in 繁中: three nights of chasing, then the fourth 03:33 k
   expect(spacing.at(-1)!).toBeGreaterThan(spacing[0]!);
   expect(await paragraphs(page).last().evaluate((el) => getComputedStyle(el).fontStyle)).toBe('normal');
   expect((await gallery(page))?.endings['infinite']?.count).toBe(1);
+  // In high contrast the fade goes: every repeat stays readable.
+  await page.evaluate(() => (document.documentElement.dataset['contrast'] = 'high'));
+  const faded = await page.locator('.ending__again li').evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
+  expect(faded).toEqual(['1', '1', '1']);
 });
 
 test('at full speed, Enter on the ending finishes the epilogue instead of leaving it; the next Enter goes back', async ({ page }) => {

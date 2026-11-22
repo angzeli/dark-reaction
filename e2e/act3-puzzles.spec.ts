@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { build } from 'vite';
 import { clockLabel } from '../src/engine/clock.ts';
 import { inTheDark, kraken, resume, spectra, ups } from './act3.ts';
-import { settle, SOLVERS } from './bot.ts';
+import { SOLVERS } from './bot.ts';
 
 /**
  * Act III's puzzles through the real game: the Kraken by keyboard (and, in
@@ -287,7 +287,7 @@ test('the three spectra: noise means nothing alone and the coffee ring nothing a
 
 // ── P10 · Peak match in the dark ───────────────────────────────────────────
 
-test('in 繁中, at 03:33: the peak match opens in the game as the dark run will open it, and 8.41 goes into the notebook', async ({ page }) => {
+test('in 繁中, at 03:33: the peak match in the game, and finding 8.41 in the dark is Dark Reaction', async ({ page }) => {
   await resume(page, inTheDark('zh-Hant-TW'), 'zh-Hant-TW');
   const d = page.getByRole('dialog', { name: '黑暗中' });
   await expect(d).toBeVisible();
@@ -295,12 +295,9 @@ test('in 繁中, at 03:33: the peak match opens in the game as the dark run will
   expect(await noSideScroll(page)).toBe(true);
   await SOLVERS['peakmatch']!(page);
   await expect(page.locator('.pz')).toHaveCount(0);
-  // Whatever happens in the dark, the night ends there.
-  await settle(page);
-  await page.keyboard.press('n');
-  const nb = page.getByRole('dialog', { name: '筆記本' });
-  await nb.getByRole('tab', { name: '數據' }).click();
-  await expect(nb).toContainText('8.41，在黑暗中');
+  // The dark run's wiring is e2e/dark.spec.ts; here, the puzzle's own answer ends the night for good.
+  await expect(page.locator('article.ending[data-ending="dark"]')).toBeVisible();
+  await expect(page.locator('.ending__title')).toHaveText('暗反應');
 });
 
 // ── In the puzzle harness ──────────────────────────────────────────────────
