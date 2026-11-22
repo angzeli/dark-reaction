@@ -116,7 +116,6 @@ export const cipherView: PuzzleView = {
             type: 'button',
             class: `ci__el${row >= 9 ? ' ci__el--f' : ''}${col === 18 ? ' ci__el--noble' : ''}`,
             style: `grid-row: ${row}; grid-column: ${col}`,
-            'aria-label': api.t('puzzle.cipher.element', { z, symbol: symbolOf(z) }),
             disabled: solved,
             dataset: { focusKey: `ci-el-${z}`, z: String(z) },
             onclick: () => {
@@ -124,8 +123,9 @@ export const cipherView: PuzzleView = {
               move({ v: 'en', type: 'pick', z }, `ci-el-${z}`);
             },
           },
-          h('span', { class: 'ci__z', 'aria-hidden': 'true' }, String(z)),
-          h('span', { class: 'ci__s', 'aria-hidden': 'true' }, symbolOf(z)),
+          // Named by what it shows ("1 H"), so the accessible name always contains the visible text.
+          h('span', { class: 'ci__z' }, String(z)),
+          h('span', { class: 'ci__s' }, symbolOf(z)),
         );
       });
       setTabStop(tiles, tableAt - 1);
@@ -212,13 +212,14 @@ export const cipherView: PuzzleView = {
             {
               type: 'button',
               class: 'ci__radical',
-              'aria-label': api.t('puzzle.cipher.strip', { radical: `@puzzle.cipher.radical.${r}` }),
               disabled: solved,
               dataset: { focusKey: `ci-radical-${r}`, radical: r },
               onclick: () => move({ v: 'zh', type: 'strip', radical: r }, `ci-radical-${r}`),
             },
+            // Named by its visible name, after a word only a screen reader hears ("Take off the metal radical").
+            h('span', { class: 'sr-only' }, api.t('puzzle.cipher.strip')),
             h('span', { class: 'ci__rglyph', 'aria-hidden': 'true' }, RADICAL_GLYPH[r]),
-            h('span', { class: 'ci__rname', 'aria-hidden': 'true' }, api.t(`puzzle.cipher.radical.${r}`)),
+            h('span', { class: 'ci__rname' }, api.t(`puzzle.cipher.radical.${r}`)),
           ),
         ),
       );

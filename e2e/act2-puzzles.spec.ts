@@ -204,21 +204,21 @@ test('her notebook: a language switch half-way keeps both pages, and either one 
   const status = d.locator('.ci__status');
 
   // The table is one Tab stop; the arrow keys walk its real layout. H, down six, is francium.
-  await table.getByRole('button', { name: '1, H' }).focus();
+  await table.getByRole('button', { name: '1 H' }).focus();
   for (let i = 0; i < 6; i++) await page.keyboard.press('ArrowDown');
-  await expect(table.getByRole('button', { name: '87, Fr' })).toBeFocused();
+  await expect(table.getByRole('button', { name: '87 Fr' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(status).toHaveText('You pencil Fr in under the 88, then rub it out. It doesn’t fit.');
   await page.keyboard.press('ArrowRight');
-  await expect(table.getByRole('button', { name: '88, Ra' })).toBeFocused();
+  await expect(table.getByRole('button', { name: '88 Ra' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(d.getByRole('radio', { name: 'Gap 1 of 8, under 88: Ra' })).toBeVisible();
   // The next gap comes up by itself: 74, tungsten, three along from barium (the lanthanides' gap is skipped).
   await expect(d.getByRole('radio', { name: 'Gap 2 of 8, under 74' })).toHaveAttribute('aria-checked', 'true');
   await page.keyboard.press('ArrowUp');
-  await expect(table.getByRole('button', { name: '56, Ba' })).toBeFocused();
+  await expect(table.getByRole('button', { name: '56 Ba' })).toBeFocused();
   for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight');
-  await expect(table.getByRole('button', { name: '74, W' })).toBeFocused();
+  await expect(table.getByRole('button', { name: '74 W' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(d.getByRole('radio', { name: 'Gap 2 of 8, under 74: W' })).toBeVisible();
 
@@ -227,7 +227,7 @@ test('her notebook: a language switch half-way keeps both pages, and either one 
   const zh = page.getByRole('dialog', { name: '最後一頁' });
   await expect(zh.locator('.ci__sticky')).toHaveText('偏旁拿掉就好。');
   await expect(zh.getByRole('radio', { name: '鉈' })).toHaveAttribute('aria-checked', 'true');
-  await zh.getByRole('button', { name: '拿掉金字旁' }).click();
+  await zh.getByRole('button', { name: '拿掉 金字旁' }).click();
   await expect(zh.getByRole('radio', { name: '鉈，拿掉金字旁：它' })).toBeVisible();
   await expect(zh.locator('.ci__status')).toHaveText('鉈拿掉金字旁，剩下「它」。');
 
@@ -243,9 +243,9 @@ test('her notebook: a language switch half-way keeps both pages, and either one 
   const again = page.getByRole('dialog', { name: '最後一頁' });
   await expect(again.getByRole('radio', { name: '鉈，拿掉金字旁：它' })).toBeVisible();
   await expect(again.getByRole('radio', { name: '氡' })).toHaveAttribute('aria-checked', 'true');
-  await again.getByRole('button', { name: '拿掉气字頭' }).click();
-  await again.getByRole('button', { name: '拿掉金字旁' }).click();
-  await again.getByRole('button', { name: '拿掉金字旁' }).click();
+  await again.getByRole('button', { name: '拿掉 气字頭' }).click();
+  await again.getByRole('button', { name: '拿掉 金字旁' }).click();
+  await again.getByRole('button', { name: '拿掉 金字旁' }).click();
   await expect(again.locator('.ci__decoded')).toHaveText('它 · 冬內 · 甲');
   await expect(again.getByRole('button', { name: '抄進筆記本' })).toBeFocused();
   // 1 walk + 1 choice + 2 minutes reading; a single wrong pick costs nothing yet.
