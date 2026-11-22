@@ -66,9 +66,17 @@ export function escapeXml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-/** A soft glow behind a light source (blurred ellipse). */
+/**
+ * A soft glow behind a light source (blurred ellipse), for pools of light.
+ * Its blur is wide, and SVG clips a blur to twice the shape's size, so keep
+ * both radii at 20 or more; a small light gets a `halo` instead.
+ */
 export const glow = (cx: number, cy: number, rx: number, ry: number, color: string, opacity = 0.35, cls = '') =>
   `<ellipse ${attrs({ cx, cy, rx, ry, fill: color, opacity, filter: 'url(#dr-blur-lg)', class: cls || undefined })}/>`;
+
+/** A small soft halo round a point light: an LED, a warning lamp, a lit dial. */
+export const halo = (cx: number, cy: number, r: number, color: string, opacity = 0.5) =>
+  `<circle ${attrs({ cx, cy, r, fill: color, opacity, filter: 'url(#dr-blur-sm)' })}/>`;
 
 /**
  * A ceiling fluorescent tube with its pool of light. `flicker` adds the
@@ -87,10 +95,11 @@ export function tube(x: number, y: number, w: number, opts: { flicker?: boolean;
 
 /**
  * Rain on a window pane: falling streaks clipped to the pane plus a few
- * drops sliding down the glass. Animated with CSS (paused by reduce motion).
- * Deterministic: the same pane always gets the same rain.
+ * drops sliding down the glass (`drops: false` for rain in the open air).
+ * Animated with CSS (paused by reduce motion). Deterministic: the same pane
+ * always gets the same rain.
  */
-export function rain(id: string, x: number, y: number, w: number, h: number, density = 1): string {
+export function rain(id: string, x: number, y: number, w: number, h: number, density = 1, opts: { drops?: boolean } = {}): string {
   const rnd = seeded(hash(id));
   const streaks: string[] = [];
   const n = Math.round((w * h) / 9000 * density);
@@ -104,7 +113,7 @@ export function rain(id: string, x: number, y: number, w: number, h: number, den
     );
   }
   const drops: string[] = [];
-  const m = Math.round((w * h) / 26000 * density);
+  const m = opts.drops === false ? 0 : Math.round((w * h) / 26000 * density);
   for (let i = 0; i < m; i++) {
     const dx = x + rnd() * w;
     const dy = y + rnd() * h * 0.7;
@@ -115,6 +124,18 @@ export function rain(id: string, x: number, y: number, w: number, h: number, den
     );
   }
   return `<clipPath id="clip-${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath><g clip-path="url(#clip-${id})">${streaks.join('')}${drops.join('')}</g>`;
+}
+
+/** Clock hands at the loop's time (minute 0 is 02:47), for the wall clocks. */
+export function clockHands(cx: number, cy: number, minute: number): string {
+  const total = 2 * 60 + 47 + minute;
+  const h = ((total / 60) % 12) / 12;
+  const m = (total % 60) / 60;
+  const hand = (frac: number, len: number, w: number) => {
+    const a = frac * Math.PI * 2 - Math.PI / 2;
+    return line(cx, cy, cx + Math.cos(a) * len, cy + Math.sin(a) * len, '#c9d3da', w, { 'stroke-linecap': 'round' });
+  };
+  return hand(h, 20, 4) + hand(m, 30, 2.5);
 }
 
 /** Shared definitions every scene needs: blurs and the ordered-dither pattern. */

@@ -7,7 +7,7 @@
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
 import type { ArtContext } from '../types.ts';
-import { C, circle, ellipse, glow, group, hash, line, path, poly, rect, seeded, svg, tube } from '../svg.ts';
+import { C, circle, ellipse, glow, group, halo, hash, line, path, poly, rect, seeded, svg, tube } from '../svg.ts';
 
 /** A laminated A4 sign: a header bar, lines of capitals, a sheen. */
 function sign(x: number, y: number, w: number, h: number, opts: { tilt?: number; header?: string; rows?: number } = {}): string {
@@ -55,7 +55,7 @@ function door(): string {
     rect(176, 506, 8, 30, '#3b4c5d', { rx: 2 }),
     // The running man, forever on his way out.
     rect(96, 282, 78, 24, '#0e2a1c', { rx: 2 }),
-    glow(135, 294, 60, 26, C.tube, 0.3),
+    glow(135, 294, 66, 44, C.tube, 0.22),
     rect(104, 288, 62, 12, C.tube, { opacity: 0.5 }),
     // Ian's number, by the door.
     sign(222, 404, 52, 66, { tilt: 2, header: '#2a3440', rows: 4 }),
@@ -74,7 +74,7 @@ function compressor(): string {
     // Tom's Post-it, from years ago.
     rect(412, 534, 34, 30, '#c9b458', { opacity: 0.55, transform: 'rotate(6 429 549)' }),
     // The LED keeps time with the cryocooler.
-    group('dr-blink', glow(446, 500, 16, 16, C.tube, 0.6), circle(446, 500, 4, C.tube)),
+    group('dr-blink', halo(446, 500, 12, C.tube, 0.55), circle(446, 500, 4, C.tube)),
   );
 }
 

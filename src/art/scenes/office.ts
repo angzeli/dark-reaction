@@ -6,18 +6,7 @@
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
 import type { ArtContext } from '../types.ts';
-import { C, circle, glow, group, label, line, path, poly, rain, rect, svg, tube } from '../svg.ts';
-
-function clockHands(cx: number, cy: number, minute: number): string {
-  const total = 2 * 60 + 47 + minute;
-  const h = ((total / 60) % 12) / 12;
-  const m = (total % 60) / 60;
-  const hand = (frac: number, len: number, w: number) => {
-    const a = frac * Math.PI * 2 - Math.PI / 2;
-    return line(cx, cy, cx + Math.cos(a) * len, cy + Math.sin(a) * len, '#c9d3da', w, { 'stroke-linecap': 'round' });
-  };
-  return hand(h, 20, 4) + hand(m, 30, 2.5);
-}
+import { C, circle, clockHands, glow, group, label, line, path, poly, rain, rect, svg, tube } from '../svg.ts';
 
 export function office(ctx: ArtContext): string {
   const dim = ctx.act === 3;
