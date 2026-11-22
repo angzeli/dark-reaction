@@ -1,3 +1,9 @@
+/**
+ * 4.01 Prof. Ridley's office: locked except while the porter cleans it
+ * (Mondays 03:15–03:18); the push-bar lets you out at any time. The framed
+ * paper, her last email, her box, the 2018 photo, Ian's priority code.
+ * docs/DESIGN.md §9.
+ */
 import type { SceneDef } from '../../engine/types.ts';
 
 export const piScenes: SceneDef[] = [
@@ -7,13 +13,40 @@ export const piScenes: SceneDef[] = [
     location: 'pi',
     hub: true,
     text: [{ key: 'pi.door.text' }],
-    choices: [],
+    choices: [{ id: 'pi.knock', label: 'pi.knock', cost: 1, once: 'loop', text: [{ key: 'pi.knock.r' }] }],
   },
   {
     id: 'pi.hub',
     location: 'pi',
     hub: true,
     text: [{ key: 'pi.hub.text' }],
-    choices: [],
+    choices: [
+      { id: 'pi.paper', label: 'pi.paper', cost: 1, once: 'loop', effects: [{ learn: 'nb.framed' }], text: [{ key: 'pi.paper.r' }] },
+      {
+        id: 'pi.email',
+        label: 'pi.email',
+        cost: 1,
+        once: 'loop',
+        effects: [{ fragment: 'yc.email' }, { learn: 'nb.email' }],
+        text: [{ key: 'pi.email.r.1' }, { key: 'pi.email.r.2' }],
+      },
+      { id: 'pi.box', label: 'pi.box', cost: 1, effects: [{ fragment: 'yc.box' }], to: 'pi.box' },
+      { id: 'pi.photo', label: 'pi.photo', cost: 1, once: 'loop', effects: [{ fragment: 'yc.photo' }, { learn: 'nb.photo' }], text: [{ key: 'pi.photo.r' }] },
+      { id: 'pi.sticky', label: 'pi.sticky', cost: 1, once: 'loop', effects: [{ learn: 'nb.priority' }], text: [{ key: 'pi.sticky.r' }] },
+    ],
+  },
+  {
+    // Inside the office the door may already have locked behind you, so this
+    // scene leads back to the room itself rather than to the entry scene.
+    id: 'pi.box',
+    location: 'pi',
+    noBack: true,
+    text: [{ key: 'pi.box.text' }],
+    choices: [
+      { id: 'pi.tin', label: 'pi.tin', cost: 1, once: 'loop', text: [{ key: 'pi.tin.r' }] },
+      { id: 'pi.cardigan', label: 'pi.cardigan', cost: 1, once: 'loop', text: [{ key: 'pi.cardigan.r' }] },
+      { id: 'pi.drafts', label: 'pi.drafts', cost: 1, once: 'loop', effects: [{ learn: 'nb.drafts' }], text: [{ key: 'pi.drafts.r' }] },
+      { id: 'pi.box.close', label: 'pi.box.close', to: 'pi.hub' },
+    ],
   },
 ];
