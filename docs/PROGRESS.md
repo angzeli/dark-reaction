@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M4 Act II and M5 Act III/endings in parallel (M3 closed)
-- **Last merged:** #51 two tabs (closes #38)
-- **In flight:** #53 Act II art (this PR, closes #19); #49 endings part 1 (cold review); #18 Act II puzzles awaiting its PR
+- **Last merged:** #53 Act II art (closes #19)
+- **In flight:** #54 Act II puzzles (this PR, closes #18); #49 endings part 1 (cold review)
 
 ## Next
 
-1. Merge #53. 2. Open, review and merge the Act II puzzles (#18); then the M4 gate. 3. Merge #49 after its cold review, then #23 gallery and endings part 2 (Fire Alarm). 4. Ending illustrations and port 4's flask in the Act III art. 5. #21 Act III puzzles, then Act III part B with endings part 3.
+1. Merge #54, then the M4 gate (play Acts I–II in both languages; read the screenshots) and close M4. 2. Merge #49 after its cold review; then endings part 2 (Fire Alarm, now that nb.keeps exists) and #23 gallery. 3. Ending illustrations and port 4's flask in the Act III art. 4. #21 Act III puzzles, then Act III part B with endings part 3.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #18 Act II puzzles (built by the puzzle subagent; reviewed, rebased over #45's rooms and merged here). **Door log** (stairwell terminal): seven nights generated from the porter's routine and `PI_OPEN`/`EXIT_B_OPEN`, filters by night and door, an "older entries" archive back to her first 03:33 on 14/03/2019 with no exit since, and tonight's two windows set on timelines by tap, ±1/±5 or arrow keys; grants `nb.porter`, `nb.keeps`, `yc.badge`. **Cipher** (her notebook in Dan's office): English fills atomic-number slots from a full 118-element table (RAW IN RACK ONE); 繁中 strips radicals from 鉈 · 氡 鈉 · 鉀 to 它 · 冬內 · 甲; each language keeps its own progress in the same save and either finishes it; grants `nb.cipher`, `yc.notebook`. **Freezer** (rack 1 in B.05, once the cipher is known): a 9×9 box, lifts cost a minute and a degree, E5 holds the microSD, the alarm at −74 °C shuts the lid for the loop; DESIGN.md's layout bug fixed (black caps C8, D7, G4, G2) and a test derives E5 as the only cell the lid notes allow. `trapFocus` now skips `tabindex="-1"` controls. 82 unit tests and 5 Playwright tests added. Merge: the three hubs keep #45's looks with the puzzle choices beside them (`stairs.terminal` by the desk, `pi.notebook` by her box, `cold.rack1`/`cold.e5` with the freezer).
+- Merged #53 (Act II art, closes #19).
 - #19 Act II art (drawn by the art subagent; reviewed and merged here). Every location now has its picture. **Stairwell:** concrete flights, sodium bars across the steps, green running men, the red call point, the porter's empty desk (radio, flask, crossword, name plate, the terminal glowing), the glass main entrance. **Dan's office:** books flat on books, the framed 2020 paper with Figure 3, the 2018 photo, a wall clock on the loop's time, her box behind the desk, the sticky note, rain on the window; the copper lamp is drawn off, matching what you see through the frosted glass from the corridor (the same picture serves the locked door). **Cold room:** the −80 chest with frost at the seal, the dewar breathing a plume, yellow cabinets, Tom's boxes, cold blue light. **Roof:** the door propped with an extinguisher, London lit on both banks and dark at the river, cranes with blinking red lights, the plant units, the deckchair with a carrier bag under it, rain that stays visible with motion off. A new `halo()` replaces `glow()` for point lights (a wide blur was clipping into a visible square, also on two Act I lights, fixed here). Art tests 18 → 39. Opened #52 from the subagent's report (scroll position carries over between rooms).
 - Merged #50 (Act III part A) and #51 (two tabs, closes #38).
 - #38 two tabs. A tab now listens for `storage` events on the autosave key. When another tab saves the same night, this one stops autosaving and asks, in a dialog that can't be waved away: load the newer save, or keep playing here and save over it. A tab sitting on the title screen just refreshes, so Continue appears. A Playwright test drives two pages on one origin through both answers and checks what is actually stored.

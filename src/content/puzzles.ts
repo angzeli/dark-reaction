@@ -33,4 +33,35 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
     leftText: [{ key: 'puzzle.console.left' }],
     margin: 'puzzle.console.margin',
   },
+  // ── Act II ──────────────────────────────────────────────────────────────
+  {
+    id: 'doorlog',
+    par: 3.5,
+    hints: hints('doorlog'),
+    onSolve: [{ learn: 'nb.porter' }, { learn: 'nb.keeps' }, { fragment: 'yc.badge' }],
+    solvedText: [{ key: 'puzzle.doorlog.solved' }],
+    leftText: [{ key: 'puzzle.doorlog.left' }],
+    margin: 'puzzle.doorlog.margin',
+  },
+  {
+    id: 'cipher',
+    par: 3,
+    hints: hints('cipher'),
+    onSolve: [{ learn: 'nb.cipher' }, { fragment: 'yc.notebook' }],
+    solvedText: [{ key: 'puzzle.cipher.solved' }],
+    leftText: [{ key: 'puzzle.cipher.left' }],
+    margin: 'puzzle.cipher.margin',
+  },
+  {
+    id: 'freezer',
+    par: 3,
+    hints: hints('freezer'),
+    onSolve: [{ learn: 'nb.freezer' }, { give: 'item.microsd' }],
+    // The alarm: the lid stays shut for the rest of the night.
+    onFail: [{ lflag: 'freezer.alarm' }],
+    solvedText: [{ key: 'puzzle.freezer.solved' }],
+    failedText: [{ key: 'puzzle.freezer.failed' }],
+    leftText: [{ key: 'puzzle.freezer.left' }],
+    margin: 'puzzle.freezer.margin',
+  },
 ];

@@ -34,6 +34,15 @@ export const piScenes: SceneDef[] = [
         text: [{ key: 'pi.email.r.1' }, { key: 'pi.email.r.2' }],
       },
       { id: 'pi.box', label: 'pi.box', cost: 1, effects: [{ fragment: 'yc.box' }], to: 'pi.box' },
+      {
+        // P7: the last page of her notebook.
+        id: 'pi.notebook',
+        label: 'pi.notebook',
+        cost: 1,
+        if: { not: { solved: 'cipher' } },
+        text: [{ key: 'pi.notebook.r' }],
+        effects: [{ puzzle: 'cipher' }],
+      },
       { id: 'pi.photo', label: 'pi.photo', cost: 1, once: 'loop', effects: [{ fragment: 'yc.photo' }, { learn: 'nb.photo' }], text: [{ key: 'pi.photo.r' }] },
       { id: 'pi.sticky', label: 'pi.sticky', cost: 1, once: 'loop', effects: [{ learn: 'nb.priority' }], text: [{ key: 'pi.sticky.r' }] },
     ],

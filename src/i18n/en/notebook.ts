@@ -115,4 +115,17 @@ export const notebook = {
   'ph.port4.body': 'Port four. Don’t let it see the light.',
   'ph.booking.title': '03:33',
   'ph.booking.body': '03:33 isn’t a deadline. It’s a booking.',
+
+  // Act II: what the puzzles teach you
+  'nb.porter.title': 'The porter’s Monday',
+  'nb.porter.body':
+    'Femi Adeyemi, the night porter, does the same round every night: Dan’s office open 03:12–03:15 for cleaning. On Mondays the bins go out and everything runs three minutes late: 4.01 open 03:15–03:18, fire exit B released 03:21–03:24. Tonight is Monday.',
+  'nb.keeps.title': 'LIN Y C',
+  'nb.keeps.body':
+    'Her card expired in 2019. Every night since 14 March 2019 it has been refused at the main entrance at 02:47 and let into Lab 4.12 at 03:33. There is no exit. Not once. Whoever is inside at 03:33, the building keeps.',
+  'nb.cipher.title': 'Her last page',
+  'nb.cipher.body': '“If anyone reads this: 88 74 · 49 · 88 6 19 · 8 10.” Atomic numbers. Ra W · In · Ra C K · O Ne: RAW IN RACK ONE. The −80 in B.05 has racks.',
+  'nb.freezer.title': 'Rack 1, E5',
+  'nb.freezer.body':
+    'Her box in rack 1 of the −80: YCL — DO NOT DEFROST. Not on the edge, a red cap, no black cap anywhere round it, row and column adding up to ten: E5. A microSD card in a cryovial. Her raw data.',
 } as const;

@@ -3,7 +3,10 @@
  * simulator solve puzzles through these; the UI registry (registry.ts)
  * pairs each with its view.
  */
+import { cipherLogic } from './cipher/logic.ts';
 import { consoleLogic } from './console/logic.ts';
+import { doorlogLogic } from './doorlog/logic.ts';
+import { freezerLogic } from './freezer/logic.ts';
 import { gloveboxLogic } from './glovebox/logic.ts';
 import { tlcLogic } from './tlc/logic.ts';
 import type { PuzzleLogic } from './types.ts';
@@ -13,4 +16,7 @@ export const PUZZLE_LOGIC: Record<string, PuzzleLogic<any, any>> = {
   tlc: tlcLogic,
   glovebox: gloveboxLogic,
   console: consoleLogic,
+  freezer: freezerLogic,
+  doorlog: doorlogLogic,
+  cipher: cipherLogic,
 };
