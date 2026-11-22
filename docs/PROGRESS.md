@@ -5,8 +5,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #35 art system (closes #12)
-- **In flight:** #34 gitignore fix (this PR), #7 saves; next #10 puzzle framework, #11 validator, #8 UI shell, #9 settings
+- **Last merged:** #34 gitignore fix (closes #32)
+- **In flight:** #37 puzzle framework (this PR), #36 saves (cold review); next #8 UI shell, #9 settings, #11 validator
 
 ## Next
 
@@ -28,6 +28,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #10 puzzle framework: the contract (`src/puzzles/types.ts`: pure `logic` with init/apply/isSolved/isFailed/minutes/solution, and a DOM `view` with rerender), the shared frame (`src/puzzles/frame.ts`: title, intro, a clock that moves as minutes are spent, three-tier hints revealed in order, Step away, 03:33 ends the attempt, modal dialog with focus trap, live re-render on language switch), DOM helpers (`src/ui/dom.ts`), a `puzzles` locale area, a reusable contract test (`tests/helpers/puzzle-contract.ts`), and a sample dial lock proving it end to end in Playwright.
 - #32: `.gitignore` now ignores `node_modules` as a symlink too (worktrees share one install); a symlink slipped into #31 and was removed before merge.
 - #12 art system: SVG helpers and palette (`src/art/svg.ts`), deterministic rain on glass and drops, tube flicker, LED blink, ordered dither, a grain canvas, a stage that only re-renders when the picture changes, and the 03:33 lights-out transition (stutter, black with the clock, cold 02:47, fade back; steady fade with flicker off; plain fades with reduced motion; dark-run variant; skippable). First illustration: the office, used as the title backdrop. Playwright checks every scene parses as SVG and the transition in all modes.
 - Merged #30 (engine core, after two rounds of cold review).

@@ -1,0 +1,99 @@
+/* The puzzle frame: a bench sheet laid over the scene. */
+.pz {
+  --pz-line: rgba(159, 227, 181, 0.06);
+  position: relative;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 1rem;
+  color: var(--text);
+  background-color: #0c1824;
+  background-image:
+    linear-gradient(var(--pz-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pz-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-top: 2px solid var(--copper);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.pz__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.pz__title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.25em;
+}
+.pz__title:focus { outline: none; }
+.pz__title:focus-visible { outline: 2px solid var(--tube); outline-offset: 4px; }
+.pz__clock {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--text-dim);
+}
+.pz__clock-time { color: var(--tube); letter-spacing: 0.08em; }
+.pz__intro { color: var(--text); margin: 0.75rem 0 1rem; line-height: 1.6; }
+.pz__body { margin: 1rem 0; }
+.pz__hints {
+  border-top: 1px dashed rgba(176, 122, 79, 0.45);
+  padding-top: 0.75rem;
+  margin-top: 1rem;
+}
+.pz__hints-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8em;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.pz__hint-list { margin: 0 0 0.75rem; padding: 0; list-style: none; }
+.pz__hint {
+  font-style: italic;
+  color: #d9c9ad;
+  margin: 0.35rem 0;
+  line-height: 1.5;
+}
+.pz__hint-label { font-style: normal; color: var(--copper); margin-right: 0.25rem; }
+:lang(zh-Hant-TW) .pz__hint { font-style: normal; }
+.pz__foot { display: flex; justify-content: flex-end; margin-top: 0.75rem; }
+.pz__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Buttons inside puzzles share one plain, tactile style. */
+.pz button {
+  font: inherit;
+  color: var(--text);
+  background: #142536;
+  border: 1px solid #2c4357;
+  border-radius: 3px;
+  padding: 0.55rem 0.9rem;
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+}
+.pz button:hover:not(:disabled) { border-color: var(--tube); }
+.pz button:focus-visible { outline: 2px solid var(--tube); outline-offset: 2px; }
+.pz button:disabled { opacity: 0.5; cursor: default; }
+.pz__leave { background: transparent !important; }
+
+:root[data-contrast='high'] .pz {
+  background-image: none;
+  background-color: #000;
+  border-top-color: #ffb27a;
+}
+:root[data-contrast='high'] .pz button { border-color: #9fb3c4; background: #0d1a26; }
+
+/* The sample dial lock (tests only). */
+.demo { display: flex; flex-wrap: wrap; gap: 1rem; }
+.demo__dial { display: flex; align-items: center; gap: 0.5rem; }
+.demo__value { font-family: var(--font-mono); font-size: 1.5rem; min-width: 1.5ch; text-align: center; color: var(--tube); }
