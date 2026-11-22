@@ -10,6 +10,11 @@ export const ui = {
   'ui.gallery': 'Endings',
   'ui.settings': 'Settings',
   'ui.notebook': 'Notebook',
+  'gallery.title': 'Endings',
+  'gallery.count': '{n} of {total} found',
+  'gallery.unfound': 'Not yet found',
+  'gallery.reached': 'Reached {n} {n:time:times}, first on {date}',
+  'gallery.reached.undated': 'Reached {n} {n:time:times}',
   'ui.menu': 'Menu',
   'ui.close': 'Close',
 

@@ -7,6 +7,7 @@
 import { audio } from '../audio/audio.ts';
 import type { AmbienceId } from '../audio/presets/ambience.ts';
 import { playLightsOut } from '../art/lightsout.ts';
+import { SCENES } from '../art/scenes/index.ts';
 import { createStage, type Stage } from '../art/stage.ts';
 import { clockLabel } from '../engine/clock.ts';
 import { Game, newGameState, uncorrectedFudges } from '../engine/engine.ts';
@@ -15,7 +16,7 @@ import { getLocale, onLocaleChange, t, type Locale } from '../i18n/i18n.ts';
 import { mountPuzzleFrame, type FrameHandle } from '../puzzles/frame.ts';
 import type { PuzzleModule } from '../puzzles/types.ts';
 import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
-import { Gallery } from '../save/gallery.ts';
+import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
 import type { KV } from '../save/storage.ts';
 import { h, inline, trapFocus } from './dom.ts';
@@ -23,11 +24,18 @@ import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
 import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
 
-type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict';
+type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
 const SECTIONS: NotebookSection[] = ['tonight', 'people', 'places', 'data', 'anomalies'];
 const NUMERALS: Record<Act, string> = { 1: 'I', 2: 'II', 3: 'III' };
+
+/** A stored ISO date as the reader's language writes it (empty if unreadable). */
+function longDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString(getLocale() === 'zh-Hant-TW' ? 'zh-TW' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
 export interface AppOptions {
   content: Content;
@@ -453,6 +461,7 @@ export class App {
           },
           t('ui.newgame'),
         ),
+        h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-gallery' }, onclick: () => this.openOverlay('gallery') }, t('ui.gallery')),
         h('button', { type: 'button', class: 'title__btn', onclick: () => void this.importSave() }, t('ui.import')),
         h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-settings' }, onclick: () => this.openOverlay('settings') }, t('ui.settings')),
       );
@@ -633,7 +642,9 @@ export class App {
             ? contentNote(this.settingsApi(), () => this.closeOverlay())
             : this.overlay === 'conflict'
               ? this.conflictPanel()
-              : this.menuPanelEl();
+              : this.overlay === 'gallery'
+                ? this.galleryPanel()
+                : this.menuPanelEl();
     const close = this.overlay === 'conflict' ? null : h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
     const dialog = h(
       'section',
@@ -646,6 +657,35 @@ export class App {
     this.root.querySelector('.app')!.appendChild(dialog);
     this.untrap = trapFocus(dialog);
     if (!dialog.contains(document.activeElement)) (dialog.querySelector('#overlay-title') as HTMLElement | null)?.focus({ preventScroll: true });
+  }
+
+  /** 結局一覽: endings found show their title and picture; the rest, a silhouette and their clue. */
+  private galleryPanel(): HTMLElement {
+    const data = this.gallery.data();
+    const found = ENDING_ORDER.filter((id) => data.endings[id]).length;
+    const items = ENDING_ORDER.map((id) => {
+      const entry = data.endings[id];
+      const scene = SCENES[`ending.${id}`];
+      // An image, not inline SVG: a still picture, and no clash between six scenes' ids.
+      const art = h('div', { class: 'gal__art', 'aria-hidden': 'true' });
+      if (scene) art.append(h('img', { class: 'gal__img', alt: '', src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(scene({ act: 3, minute: 46 }))}` }));
+      return h(
+        'li',
+        { class: `gal__item${entry ? '' : ' gal__item--unfound'}`, dataset: { ending: id } },
+        art,
+        h('h3', { class: 'gal__title' }, entry ? t(`ending.${id}.title`) : t('gallery.unfound')),
+        entry
+          ? h('p', { class: 'gal__meta' }, t(longDate(entry.first) ? 'gallery.reached' : 'gallery.reached.undated', { n: entry.count, date: longDate(entry.first) }))
+          : h('p', { class: 'gal__clue' }, t(`ending.${id}.clue`)),
+      );
+    });
+    return h(
+      'div',
+      { class: 'gal' },
+      h('h2', { id: 'overlay-title', class: 'gal__heading', tabindex: '-1' }, t('gallery.title')),
+      h('p', { class: 'gal__count' }, t('gallery.count', { n: found, total: ENDING_ORDER.length })),
+      h('ul', { class: 'gal__list' }, ...items),
+    );
   }
 
   private conflictPanel(): HTMLElement {
@@ -764,6 +804,7 @@ export class App {
       title,
       btn(t('ui.resume'), () => this.closeOverlay()),
       btn(t('ui.notebook'), () => this.openOverlay('notebook')),
+      btn(t('ui.gallery'), () => this.openOverlay('gallery')),
       btn(t('ui.save'), () => ((this.menuPanel = 'save'), this.render())),
       btn(t('ui.load'), () => ((this.menuPanel = 'load'), this.render())),
       btn(t('ui.settings'), () => this.openOverlay('settings')),

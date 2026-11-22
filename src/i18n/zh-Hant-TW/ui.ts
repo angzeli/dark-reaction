@@ -12,6 +12,11 @@ export const ui: Record<keyof typeof en, string> = {
   'ui.gallery': '結局一覽',
   'ui.settings': '設定',
   'ui.notebook': '筆記本',
+  'gallery.title': '結局一覽',
+  'gallery.count': '已找到 {n}／{total}',
+  'gallery.unfound': '尚未找到',
+  'gallery.reached': '達成過 {n} 次，第一次是 {date}',
+  'gallery.reached.undated': '達成過 {n} 次',
   'ui.menu': '選單',
   'ui.close': '關閉',
 
