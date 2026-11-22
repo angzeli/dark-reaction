@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #37 puzzle framework (closes #10)
-- **In flight:** #36 save system (this PR, cold-reviewed, fixes in)
+- **Last merged:** #36 save system (closes #7)
+- **In flight:** #39 UI shell (this PR)
 
 ## Next
 
-1. #8 UI shell (title, play screen, notebook, menu, saves, cards, puzzle overlay), #9 settings and content note, #11 validator and playtime. Then M3 Act I.
+1. #9 settings panel and content note, #11 validator and playtime. Then M3 Act I: #14 content, #15 puzzles, #16 art + ambience.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #8 UI shell: `App` (title with language and sound toggles, Continue/New game/Import; play screen with HUD, illustration, revealed narrative, numbered choices by key or tap; notebook on ruled paper with sections, phantom pages, strike-through for fudges, margin notes, the loop log; menu with save/load slots, export/import, language and sound; act and lights-out cards; ending screen; puzzle overlay wired to the engine; autosave after every action). Settings model (separate key, OS-aware defaults). Content skeleton: eight rooms with their Act I descriptions in both languages. 8 Playwright tests drive the real build.
+- Merged #36 (saves, after cold review) and #37 (puzzle framework).
 - #7 saves: `SaveStore` (autosave + slots 1–3 under `dark-reaction.save.*`), a versioned envelope (`game`, `schema`, `savedAt`, `locale`, `summary`, `state`) with ordered migrations (v0 → v1: the bare prototype state without `actLoop`), shape validation that refuses corrupt, foreign or newer saves with a reason, `latest()` for Continue, export/import as text and file helpers. `Gallery` under its own key (`dark-reaction.gallery.v1`) records endings and solved puzzles before the epilogue; margins only after a first ending. Storage access never throws (blocked, full or missing localStorage). Cold-reviewed: 7 bugs fixed (content-id drift, quota at startup, element shapes, gallery wipe, silent import errors, unserialisable writes, weak tests); #38 opened for two-tab autosave clashes.
 - Merged #35 (art system).
 - #10 puzzle framework: the contract (`src/puzzles/types.ts`: pure `logic` with init/apply/isSolved/isFailed/minutes/solution, and a DOM `view` with rerender), the shared frame (`src/puzzles/frame.ts`: title, intro, a clock that moves as minutes are spent, three-tier hints revealed in order, Step away, 03:33 ends the attempt, modal dialog with focus trap, live re-render on language switch), DOM helpers (`src/ui/dom.ts`), a `puzzles` locale area, a reusable contract test (`tests/helpers/puzzle-contract.ts`), and a sample dial lock proving it end to end in Playwright.
