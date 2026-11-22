@@ -1,0 +1,45 @@
+/** 介面文字：選單、引擎提示、地點名稱。國語、臺灣用法。 */
+import type { ui as en } from '../en/ui.ts';
+
+export const ui: Record<keyof typeof en, string> = {
+  'ui.title': 'Dark Reaction',
+  'ui.title.zh': '暗反應',
+  'ui.tagline': '光合作用裡，暗反應是光熄滅之後，仍然繼續進行的那一段。',
+  'ui.continue': '繼續',
+  'ui.newgame': '新遊戲',
+  'ui.load': '讀取',
+  'ui.save': '存檔',
+  'ui.gallery': '結局一覽',
+  'ui.settings': '設定',
+  'ui.notebook': '筆記本',
+  'ui.menu': '選單',
+  'ui.close': '關閉',
+
+  'ui.travel': '去別的地方……',
+  'ui.wait': '等一下……',
+  'ui.back': '返回',
+  'ui.stay': '留在這裡',
+  'ui.wait.minutes': '等 {n} 分鐘',
+  'ui.waited': '你等著。整棟大樓自顧自地嗡嗡響了 {n} 分鐘。',
+  'ui.cost': '{n} 分鐘',
+  'ui.loop': '第 {n} 輪',
+  'ui.noted': '寫進筆記本：{entry}。',
+  'ui.phantom.notice': '筆記本裡多了一頁，是你的字跡。你不記得自己寫過。',
+  'ui.fudge.corrected': '你在「{entry}」上畫一條線，旁邊簽上縮寫和日期。',
+
+  'loc.office.name': '4.08 研究生辦公室',
+  'loc.synth.name': '4.12 合成實驗室',
+  'loc.glovebox.name': '4.14 手套箱室',
+  'loc.pi.name': '4.01 老闆辦公室',
+  'loc.stairs.name': '樓梯間',
+  'loc.nmr.name': 'B.03 NMR 室',
+  'loc.cold.name': 'B.05 冷藏室',
+  'loc.roof.name': '頂樓',
+
+  'nb.section.tonight': '今晚',
+  'nb.section.people': '人',
+  'nb.section.places': '地點',
+  'nb.section.data': '數據',
+  'nb.section.anomalies': '異常',
+  'nb.section.loops': '迴圈',
+};
