@@ -48,7 +48,7 @@ async function intoOffice(page: Page) {
   await waitUntil(page, '03:14');
   await go(page, '4.01');
   await expect(clock(page)).toHaveText('03:15');
-  await expect(page.locator('.hud__place')).toHaveText("4.01 Prof. Ridley's office");
+  await expect(page.locator('.hud__place')).toHaveText('4.01 Prof. Ridley’s office');
 }
 
 async function switchTo(page: Page, language: 'English' | '繁體中文') {

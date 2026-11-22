@@ -111,7 +111,7 @@ export const act2 = {
   'pi.box.close': 'Put the lid back on the box',
   'pi.photo': 'Look at the group photo',
   'pi.photo.r':
-    'The Ridley group, summer 2018, squinting on the front steps. Dan in the middle with his arms out as if presenting them. Tom with a beard he has since regretted. And at the very end of the row, a young woman in a grey cardigan who isn’t looking at the camera: her face is turned up toward the windows of Lab 4.12, as if someone has just called her name from inside.',
+    'The Ridley group, summer 2018, squinting on the front steps. Dan in the middle with his arms out as if presenting them. Tom with a beard he has since regretted. And at the very end of the row, a young woman in a grey cardigan who isn’t looking at the camera: her face is turned up towards the windows of Lab 4.12, as if someone has just called her name from inside.',
   'pi.sticky': 'Read the sticky note on Dan’s monitor',
   'pi.sticky.r':
     'Yellow, curling, in capitals you would know anywhere: *NMR PRIORITY: RIDLEY-4. DON’T ABUSE IT. — I.O.* Underneath Dan has added, in biro, *!!*, which is either agreement or a plan.',

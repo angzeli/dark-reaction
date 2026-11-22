@@ -85,6 +85,12 @@ describe('locale checks', () => {
     const problems = checkLocales({ en: { a: 'x', b: 'y' }, 'zh-Hant-TW': { a: '他說"好"', b: '你好,世界' } }, new Map());
     expect(problems.filter((p) => p.level === 'warning')).toHaveLength(2);
   });
+
+  it('warn about straight quotes in English, and not about typeset ones (#26)', () => {
+    const problems = checkLocales({ en: { a: "you don't", b: 'say "now"', c: 'you don’t say “now”' }, 'zh-Hant-TW': { a: '甲', b: '乙', c: '丙' } }, new Map());
+    const warnings = problems.filter((p) => p.level === 'warning').map((p) => p.message);
+    expect(warnings).toEqual(['en "a" uses a straight apostrophe; prefer ’', 'en "b" uses a straight double quote; prefer “ ”']);
+  });
 });
 
 describe('routes', () => {

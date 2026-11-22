@@ -192,7 +192,10 @@ export function checkLocales(tables: Record<Locale, Table>, used: Map<string, st
     if (CJK_COMMA.test(value)) problems.push(warn('style', `zh "${key}" has a half-width comma between Chinese characters`));
   }
   for (const [key, value] of Object.entries(tables.en)) {
-    if (/\b(color|colors|program|realize|realized|analyze|organize)\b/i.test(value)) problems.push(warn('style', `en "${key}" may use American spelling`));
+    if (/\b(color|colors|colored|program|realize|realized|analyze|organize|gray|center|centered|favor|favorite|behavior|labeled|traveled|canceled|toward|honor|neighbor|aluminum|gotten)\b/i.test(value)) problems.push(warn('style', `en "${key}" may use American spelling`));
+    // Typeset quotes: ’ for apostrophes, “ ” for quotation marks (straight ones read as code).
+    if (value.includes("'")) problems.push(warn('style', `en "${key}" uses a straight apostrophe; prefer ’`));
+    if (value.includes('"')) problems.push(warn('style', `en "${key}" uses a straight double quote; prefer “ ”`));
   }
   return problems;
 }
