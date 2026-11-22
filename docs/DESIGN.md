@@ -177,6 +177,8 @@ Who is Y.C.? The access log shows her badge refused at the main entrance at 02:4
 
 Endings that become reachable: Perfect Spectrum, Honest Noise, Clocking Off, Fire Alarm (and Infinite Loop, if you chase).
 
+Timed events added in Act II's half of the building (once a loop each): 02:57 Femi whistles somewhere below (stairwell); 03:15 a lock clicks back along the corridor as Dan's office opens (any other Level 4 room); 03:21 fire exit B's bar is released and the bins rumble out (stairwell); 03:25, from Act II and only once you have run your own sample, the night's spectrum prints in the NMR suite or arrives by email at your desk (`perfect.offered`). Taking it is a chase action. The portal's declaration can't be ticked while a fudge stands; the text says so and the notebook shows which page. The final upload, the step out of fire exit B and the call point's glass are wired with the endings (#22).
+
 ### Act III: In the Dark
 
 A flask appears on port 4 of the Kraken, a port that has never had a flask on it. The compressor's chirp changes into a rhythm Tom once wrote down. The mini-antechamber yields a tube she prepared and labelled for whoever came next. You prove the 2020 figure was the night's (its noise is identical to the 03:33 printout). In the last loop you fill her tube in the dark, load it into holder 13, keep the console alive on the UPS, and wait for 03:33. The lights go out. The magnet doesn't need them.
