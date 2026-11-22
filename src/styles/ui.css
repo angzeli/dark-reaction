@@ -586,6 +586,27 @@ button {
   padding: 0 1rem 4rem;
 }
 .ending__art .dr-stage { max-height: 50vh; }
+
+/* Infinite Loop: the page itself starts to go, in three steps, and the clock has stopped.
+   Static, so it holds with motion off. Chinese starts from its own wider spacing. */
+.ending__clock {
+  margin: 1rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--tube, #9fe3b5);
+}
+.ending[data-ending='infinite'] .ending__text .para:nth-child(n + 5) { letter-spacing: 0.01em; }
+.ending[data-ending='infinite'] .ending__text .para:nth-child(n + 9) { letter-spacing: 0.025em; opacity: 0.92; }
+.ending[data-ending='infinite'] .ending__text .para:nth-child(n + 13) { letter-spacing: 0.04em; opacity: 0.85; }
+.ending[data-ending='infinite'] .ending__text .para:last-child { font-style: italic; opacity: 0.75; }
+:lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:nth-child(n + 5) { letter-spacing: 0.03em; }
+:lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:nth-child(n + 9) { letter-spacing: 0.045em; }
+:lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:nth-child(n + 13) { letter-spacing: 0.06em; }
+:lang(zh-Hant-TW) .ending[data-ending='infinite'] .ending__text .para:last-child { font-style: normal; }
+:root[data-contrast='high'] .ending[data-ending='infinite'] .ending__text .para { opacity: 1; }
+/* Focused on arrival so reading starts at the top; like the overlay titles, it isn't a control, so no ring. */
+.ending__title:focus { outline: none; }
 .ending__title {
   font-weight: 400;
   font-size: clamp(1.75rem, 6vw, 2.75rem);

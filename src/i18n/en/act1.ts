@@ -104,6 +104,7 @@ export const act1 = {
   'nmr.load': 'Load your NMR tube into the carousel',
   'nmr.load.r':
     'You drop the tube into its spinner and set it in holder 2. The console refuses it at once: QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER. Ian’s number is on a sign by the door. It is three in the morning.',
+  'nmr.load.code': 'You try Ian’s code anyway. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
   'nmr.magnet': 'Stand by the magnet',
   'nmr.magnet.r':
     'Up close the magnet is a column of pale enamel with a ladder folded against it like a tired arm. A line of yellow and black tape on the floor marks where your bank card would stop being a bank card. The sound it makes is not really a hum. It is the sound of something very cold being kept very cold, on purpose, every second of every day, whether anybody is watching or not.',

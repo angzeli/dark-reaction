@@ -137,7 +137,7 @@ export const officeScenes: SceneDef[] = [
     ],
   },
   {
-    // The portal's last page, with your spectrum attached. The upload itself is an ending (#22).
+    // The portal's last page, with your spectrum attached. Uploading it ends the night.
     id: 'office.declare.own',
     location: 'office',
     text: [
@@ -145,7 +145,15 @@ export const officeScenes: SceneDef[] = [
       { key: 'office.declare.blocked', if: { uncorrectedGte: 1 } },
       { key: 'office.declare.clear', if: { not: { uncorrectedGte: 1 } } },
     ],
-    choices: [],
+    choices: [
+      {
+        id: 'office.upload.own',
+        label: 'office.upload',
+        if: { all: [{ actGte: 2 }, { not: { uncorrectedGte: 1 } }] },
+        effects: [{ ending: 'honest' }],
+        tags: ['ending', 'honest'],
+      },
+    ],
   },
   {
     id: 'office.declare.printout',
@@ -155,7 +163,15 @@ export const officeScenes: SceneDef[] = [
       { key: 'office.declare.blocked', if: { uncorrectedGte: 1 } },
       { key: 'office.declare.clear', if: { not: { uncorrectedGte: 1 } } },
     ],
-    choices: [],
+    choices: [
+      {
+        id: 'office.upload.printout',
+        label: 'office.upload',
+        if: { all: [{ actGte: 2 }, { not: { uncorrectedGte: 1 } }] },
+        effects: [{ ending: 'perfect' }],
+        tags: ['ending'],
+      },
+    ],
   },
   {
     id: 'office.desk7',

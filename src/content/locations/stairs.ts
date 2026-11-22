@@ -39,9 +39,48 @@ export const stairsScenes: SceneDef[] = [
       },
       { id: 'stairs.entrance', label: 'stairs.entrance', cost: 1, once: 'loop', effects: [{ learn: 'nb.entrance' }], text: [{ key: 'stairs.entrance.r' }] },
       { id: 'stairs.exitb', label: 'stairs.exitb', cost: 1, if: { not: exitOpen }, text: [{ key: 'stairs.exitb.r' }] },
-      { id: 'stairs.exitb.open', label: 'stairs.exitb', cost: 1, if: exitOpen, effects: [{ learn: 'nb.exitb' }], text: [{ key: 'stairs.exitb.open.r' }] },
+      {
+        id: 'stairs.exitb.open',
+        label: 'stairs.exitb',
+        cost: 1,
+        if: exitOpen,
+        effects: [{ learn: 'nb.exitb' }],
+        text: [{ key: 'stairs.exitb.open.r' }],
+        to: 'stairs.door',
+      },
       { id: 'stairs.callpoint', label: 'stairs.callpoint', cost: 1, once: 'loop', effects: [{ learn: 'nb.callpoint' }], text: [{ key: 'stairs.callpoint.r' }] },
       { id: 'stairs.window', label: 'stairs.window', cost: 1, once: 'loop', text: [{ key: 'stairs.window.r' }] },
+    ],
+  },
+  {
+    // In the open doorway. Nothing here checks the clock: once the bar has
+    // given, the step out is there however late in the window you pushed it.
+    id: 'stairs.door',
+    location: 'stairs',
+    noBack: true,
+    text: [{ key: 'stairs.door.text' }],
+    choices: [
+      {
+        // Clocking Off: from Act II, if you can still make yourself go.
+        id: 'stairs.leave',
+        label: 'stairs.leave',
+        if: { all: [{ actGte: 2 }, { obsessionLt: 5 }] },
+        effects: [{ ending: 'clocking' }],
+        tags: ['ending'],
+      },
+      {
+        // Not yet, or not any more: you let the door go, every time you try.
+        id: 'stairs.leave.cant',
+        label: 'stairs.leave',
+        cost: 1,
+        if: { any: [{ act: 1 }, { obsessionGte: 5 }] },
+        text: [
+          { key: 'stairs.leave.notyet', if: { all: [{ act: 1 }, { obsessionLt: 5 }] } },
+          { key: 'stairs.leave.cant', if: { obsessionGte: 5 } },
+        ],
+        to: 'stairs.hub',
+      },
+      { id: 'stairs.door.close', label: 'stairs.door.close', to: 'stairs.hub' },
     ],
   },
 ];
