@@ -22,7 +22,7 @@ export const ui = {
   'ui.cost': '{n} min',
   'ui.loop': 'Loop {n}',
   'ui.noted': 'Added to your notebook: {entry}.',
-  'ui.phantom.notice': "There is a page in your notebook, in your handwriting, that you don't remember writing.",
+  'ui.phantom.notice': "There {n:is a page:are pages} in your notebook, in your handwriting, that you don't remember writing.",
   'ui.fudge.corrected': 'You strike “{entry}” through with a single line, then initial and date it.',
 
   'loc.office.name': '4.08 Write-up office',

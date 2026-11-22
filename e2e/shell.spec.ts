@@ -53,20 +53,22 @@ test('title screen, then a new game at 02:47 in the office', async ({ page }) =>
   expect(outside).toEqual([]);
 });
 
-test('choices work by number keys and by tap; walking and waiting cost minutes', async ({ page }) => {
+test('choices work by number keys and by tap; walking and waiting cost minutes; events cut waits short', async ({ page }) => {
   await start(page);
   await newGame(page);
   // Keyboard: the hub's last two choices are "Go somewhere else…" and "Wait…".
   const labels = await page.locator('.choice__label').allTextContents();
   const waitIndex = labels.indexOf('Wait…') + 1;
   await page.keyboard.press(String(waitIndex));
-  await page.keyboard.press('2'); // Wait 5 minutes
-  await expect(clock(page)).toHaveText('02:52');
-  await expect(page.locator('.para--system')).toContainText('5 minutes');
+  await page.keyboard.press('2'); // Wait 5 minutes…
+  // …but Dan's email lands at 02:50 and the wait stops there.
+  await expect(clock(page)).toHaveText('02:50');
+  await expect(page.locator('.para--system')).toContainText('3 minutes');
+  await expect(page.locator('.narrative__text')).toContainText('Your monitor chimes');
   // Tap: walk to the NMR suite (3 minutes).
   await choose(page, 'Go somewhere else…');
   await choose(page, 'B.03 NMR suite');
-  await expect(clock(page)).toHaveText('02:55');
+  await expect(clock(page)).toHaveText('02:53');
   await expect(page.locator('.hud__place')).toHaveText('B.03 NMR suite');
   await expect(page.locator('.narrative__text')).toContainText('cryocooler chirps');
 });
@@ -87,31 +89,39 @@ test('the notebook opens with N and closes with Escape, returning focus', async 
 test('03:33: the lights go out and it is 02:47 again, loop 2', async ({ page }) => {
   await start(page);
   await newGame(page);
-  for (let i = 0; i < 5; i++) {
-    await choose(page, 'Wait…');
+  // Wait out the night; the building's own events cut some waits short.
+  for (let i = 0; i < 15; i++) {
+    if ((await page.locator('.hud__loop').textContent()) === 'Loop 2') break;
+    const wait = page.locator('.choice').filter({ hasText: 'Wait…' });
+    if ((await wait.count()) === 0) {
+      await page.waitForTimeout(250); // the lights-out card is playing
+      continue;
+    }
+    await wait.first().click();
     await choose(page, 'Wait 10 minutes');
   }
   await expect(page.locator('.dr-lightsout')).toHaveCount(0, { timeout: 10_000 });
   await expect(clock(page)).toHaveText('02:47');
   await expect(page.locator('.hud__loop')).toHaveText('Loop 2');
-  await expect(page.locator('.narrative__text')).toContainText('exactly as long as before');
+  await expect(page.locator('.narrative__text')).toContainText('The kettle is cold');
+  await expect(page.locator('.narrative__text')).toContainText('Make tea first');
 });
 
 test('save to a slot, quit, and load it back from the title', async ({ page }) => {
   await start(page);
   await newGame(page);
-  await choose(page, 'Wait…');
-  await choose(page, 'Wait 10 minutes');
+  await choose(page, 'Look out of the window');
+  await expect(clock(page)).toHaveText('02:48');
   await page.keyboard.press('m');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await page.locator('.slot[data-slot="1"] .slot__btn').click();
   await expect(page.locator('.app__status')).toHaveText('Saved to Slot 1.');
-  await expect(page.locator('.slot[data-slot="1"] .slot__label')).toContainText('loop 1 · 02:57 · 4.08 Write-up office');
+  await expect(page.locator('.slot[data-slot="1"] .slot__label')).toContainText('loop 1 · 02:48 · 4.08 Write-up office');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Quit to title' }).click();
   await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await expect(clock(page)).toHaveText('02:57');
+  await expect(clock(page)).toHaveText('02:48');
 });
 
 test('switching language mid-game keeps the night exactly where it was', async ({ page }) => {

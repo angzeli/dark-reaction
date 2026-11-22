@@ -1,4 +1,11 @@
-import type { SceneDef } from '../../engine/types.ts';
+/**
+ * 4.12 Synthesis lab: tonight's fractions (TLC puzzle), the rotavap and the
+ * yield you write down, the fume hoods, the Kraken, the poster. docs/DESIGN.md §9.
+ */
+import type { Cond, SceneDef } from '../../engine/types.ts';
+
+/** The yield is written down once, honestly or not, and never offered again. */
+const yieldOpen: Cond = { all: [{ lflag: 'synth.weighed' }, { not: { know: 'nb.yield' } }, { not: { know: 'fudge.yield' } }] };
 
 export const synthScenes: SceneDef[] = [
   {
@@ -29,9 +36,28 @@ export const synthScenes: SceneDef[] = [
         label: 'synth.rotavap',
         cost: 5,
         if: { item: 'item.fractions' },
-        text: [{ key: 'synth.rotavap.r' }],
-        effects: [{ take: 'item.fractions' }, { give: 'item.vial' }],
+        text: [{ key: 'synth.rotavap.r' }, { key: 'synth.rotavap.r.weigh' }],
+        effects: [{ take: 'item.fractions' }, { give: 'item.vial' }, { lflag: 'synth.weighed' }],
       },
+      {
+        id: 'synth.yield.honest',
+        label: 'synth.yield.honest',
+        if: yieldOpen,
+        text: [{ key: 'synth.yield.honest.r' }],
+        effects: [{ learn: 'nb.yield' }],
+        tags: ['honest'],
+      },
+      {
+        id: 'synth.yield.fudge',
+        label: 'synth.yield.fudge',
+        if: yieldOpen,
+        text: [{ key: 'synth.yield.fudge.r' }],
+        effects: [{ fudge: 'fudge.yield' }],
+        tags: ['fudge'],
+      },
+      { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }] },
+      { id: 'synth.kraken', once: 'loop', label: 'synth.kraken', cost: 1, text: [{ key: 'synth.kraken.r' }] },
+      { id: 'synth.poster', once: 'loop', label: 'synth.poster', cost: 1, text: [{ key: 'synth.poster.r' }] },
     ],
   },
 ];

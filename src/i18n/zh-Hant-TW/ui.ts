@@ -24,7 +24,7 @@ export const ui: Record<keyof typeof en, string> = {
   'ui.cost': '{n} 分鐘',
   'ui.loop': '第 {n} 輪',
   'ui.noted': '寫進筆記本：{entry}。',
-  'ui.phantom.notice': '筆記本裡多了一頁，是你的字跡。你不記得自己寫過。',
+  'ui.phantom.notice': '筆記本裡多了{n:一頁:幾頁}，是你的字跡。你不記得自己寫過。',
   'ui.fudge.corrected': '你在「{entry}」上畫一條線，旁邊簽上縮寫和日期。',
 
   'loc.office.name': '4.08 研究生辦公室',
