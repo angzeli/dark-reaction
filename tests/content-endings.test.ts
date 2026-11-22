@@ -265,6 +265,97 @@ describe('fire exit B', () => {
   });
 });
 
+describe('the call point', () => {
+  const keeps = (g: Game) => g.state.known.push({ id: 'nb.keeps', loop: g.state.loop, minute: 0 });
+  const looked = (g: Game) => g.state.known.push({ id: 'nb.callpoint', loop: g.state.loop, minute: 0 });
+
+  it('offers the glass only once the door log has shown you what the building keeps, and you have looked at the box', () => {
+    const g = actTwo();
+    goTo(g, 'stairs');
+    expect(ids(g)).not.toContain('stairs.glass');
+    keeps(g); // the log alone isn't enough…
+    expect(ids(g)).not.toContain('stairs.glass');
+    g.choose('stairs.callpoint'); // …until you have looked at the box
+    expect(ids(g)).toContain('stairs.glass');
+  });
+
+  it('looking at the box alone isn’t enough either', () => {
+    const g = actTwo();
+    goTo(g, 'stairs');
+    g.choose('stairs.callpoint');
+    expect(ids(g)).not.toContain('stairs.glass');
+  });
+
+  it('a thumb on the glass can still be taken away, and that is the first choice; breaking it gets everybody out, at no cost', () => {
+    const g = actTwo();
+    keeps(g);
+    looked(g);
+    goTo(g, 'stairs');
+    const before = g.state.minute;
+    g.choose('stairs.glass');
+    expect(g.state.scene).toBe('stairs.alarm');
+    // The way back first, so keyboard focus and key 1 land on it; no waiting with your thumb on it.
+    expect(g.choices().map((c) => [c.id, c.cost])).toEqual([
+      ['stairs.alarm.leave', 0],
+      ['stairs.alarm.break', 0],
+    ]);
+    g.choose('stairs.alarm.leave');
+    expect(g.state.scene).toBe('stairs.hub');
+    expect(g.state.ending).toBeNull();
+    g.choose('stairs.glass');
+    g.choose('stairs.alarm.break');
+    expect(g.state.ending).toBe('fire');
+    expect(g.state.minute).toBe(before);
+    expect(drainCards(g)).toEqual([{ kind: 'ending', ending: 'fire' }]);
+    expect(epilogueKeys(g)).toEqual(EPILOGUES.fire.map((p) => p.key));
+  });
+
+  it('still there at 03:32, and breaking it then is the ending, not the dark', () => {
+    const g = actTwo();
+    keeps(g);
+    looked(g);
+    goTo(g, 'stairs');
+    waitUntil(g, 45);
+    expect(g.state.minute).toBe(45);
+    g.choose('stairs.glass');
+    g.choose('stairs.alarm.break');
+    expect(g.state.ending).toBe('fire');
+    expect(drainCards(g).map((c) => c.kind)).toEqual(['ending']);
+  });
+
+  it('and in Act III', () => {
+    const g = actTwo();
+    g.state.act = 3;
+    keeps(g);
+    looked(g);
+    goTo(g, 'stairs');
+    expect(ids(g)).toContain('stairs.glass');
+  });
+
+  it('not in Act I: even having read the door log, before your first 03:33 the box stays a box', () => {
+    const g = new Game(CONTENT);
+    drainCards(g);
+    goTo(g, 'stairs');
+    expect(ids(g)).toContain('stairs.terminal'); // the log can be read early
+    keeps(g);
+    g.choose('stairs.callpoint');
+    expect(ids(g)).not.toContain('stairs.glass');
+  });
+
+  it('not in Act I’s later loops either: a lived 03:33 without the three puzzles keeps you in Act I', () => {
+    const g = new Game(CONTENT);
+    drainCards(g);
+    waitUntil(g, 46);
+    drainCards(g);
+    expect(g.state.loop).toBe(2);
+    expect(g.state.act).toBe(1);
+    keeps(g);
+    looked(g);
+    goTo(g, 'stairs');
+    expect(ids(g)).not.toContain('stairs.glass');
+  });
+});
+
 describe('epilogues', () => {
   const words = (key: string) => t(key, { clock: '03:30' }, 'en').replace(/\*/g, '').split(/\s+/).filter(Boolean).length;
   const hanzi = (key: string) => [...t(key, { clock: '03:30' }, 'zh-Hant-TW')].filter((c) => /\p{Script=Han}/u.test(c)).length;

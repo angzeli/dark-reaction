@@ -1,7 +1,8 @@
 /**
  * Stairwell and ground-floor lobby: the porter's desk and radio (rest), the
  * main entrance that won't let you out, fire exit B (released for the bins
- * on Mondays, 03:21–03:24), the fire alarm call point. docs/DESIGN.md §9.
+ * on Mondays, 03:21–03:24), the fire alarm call point (Fire Alarm, once
+ * the door log has shown you what the building keeps). docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
 import { EXIT_B_OPEN } from '../world.ts';
@@ -49,6 +50,15 @@ export const stairsScenes: SceneDef[] = [
         to: 'stairs.door',
       },
       { id: 'stairs.callpoint', label: 'stairs.callpoint', cost: 1, once: 'loop', effects: [{ learn: 'nb.callpoint' }], text: [{ key: 'stairs.callpoint.r' }] },
+      {
+        // Fire Alarm: from Act II (like every ending), once you know the building
+        // keeps whoever is inside at 03:33 (the door log, which can be read
+        // earlier) and have looked at the call point.
+        id: 'stairs.glass',
+        label: 'stairs.glass',
+        if: { all: [{ actGte: 2 }, { know: 'nb.keeps' }, { know: 'nb.callpoint' }] },
+        to: 'stairs.alarm',
+      },
       { id: 'stairs.window', label: 'stairs.window', cost: 1, once: 'loop', text: [{ key: 'stairs.window.r' }] },
     ],
   },
@@ -81,6 +91,18 @@ export const stairsScenes: SceneDef[] = [
         to: 'stairs.hub',
       },
       { id: 'stairs.door.close', label: 'stairs.door.close', to: 'stairs.hub' },
+    ],
+  },
+  {
+    // Thumb on the glass of the one thing in the building built to get everybody out.
+    id: 'stairs.alarm',
+    location: 'stairs',
+    noBack: true,
+    text: [{ key: 'stairs.alarm.text' }],
+    // The way back comes first: keyboard focus and key 1 land on it, so a stray Enter can't end the run.
+    choices: [
+      { id: 'stairs.alarm.leave', label: 'stairs.alarm.leave', to: 'stairs.hub' },
+      { id: 'stairs.alarm.break', label: 'stairs.alarm.break', effects: [{ ending: 'fire' }], tags: ['ending'] },
     ],
   },
 ];

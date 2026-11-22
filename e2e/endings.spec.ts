@@ -59,6 +59,32 @@ test('Honest Noise, in English: a figure bent in loop 1 stops the box being tick
   expect((await gallery(page))?.endings['honest']?.count).toBe(1);
 });
 
+test('Fire Alarm, in 繁中: the door log shows what the building keeps; the call point gets everybody out', async ({ page }) => {
+  test.setTimeout(120_000);
+  await newGame(page, 'zh-Hant-TW');
+  await play(page, ROUTES.fire!.steps.slice(0, -2));
+
+  // By keyboard, the first thing under your thumb is the way back: a stray Enter can't end the run.
+  await page.locator('.choice[data-choice="stairs.glass"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.choice')).toHaveCount(2);
+  await expect(page.locator('.narrative__text')).toContainText('唯一一個設計來讓所有人都出去的東西');
+  await expect(page.locator('.choice[data-choice="stairs.alarm.leave"]')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.choice[data-choice="stairs.glass"]')).toBeVisible();
+  await expect(page.locator('article.ending')).toHaveCount(0);
+
+  // Then deliberately: thumb on the glass, and break it.
+  await pick(page, 'stairs.glass');
+  await pick(page, 'stairs.alarm.break');
+
+  await expect(page.locator('article.ending[data-ending="fire"]')).toBeVisible();
+  await expect(page.locator('.ending__title')).toHaveText('火災警報');
+  await expect(paragraphs(page)).toHaveCount(10);
+  await expect(page.locator('.ending__text')).toContainText('LIN Y.C.——到。');
+  expect((await gallery(page))?.endings['fire']?.count).toBe(1);
+});
+
 test('Infinite Loop, in 繁中: three nights of chasing, then the fourth 03:33 keeps you; the clock stops and the page decays', async ({ page }) => {
   test.setTimeout(180_000);
   await newGame(page, 'zh-Hant-TW');

@@ -76,6 +76,11 @@ export const act2 = {
   'stairs.callpoint': 'Look at the fire alarm call point',
   'stairs.callpoint.r':
     'A red box at shoulder height with a little pane and the words *FIRE — BREAK GLASS — PRESS HERE*. A label under it: *WEEKLY TEST: TUESDAYS 11:00*. Someone has added in biro: *it is never Tuesday*.',
+  'stairs.glass': 'Put your thumb on the call point',
+  'stairs.alarm.text':
+    'The little pane is cool under your thumb. *FIRE — BREAK GLASS — PRESS HERE*. You know now what the building does with whoever is still inside at 03:33. It occurs to you that this red box is the one thing in it built to get everybody out.',
+  'stairs.alarm.break': 'Break the glass',
+  'stairs.alarm.leave': 'Take your thumb away',
   'stairs.window': 'Look out of the landing window',
   'stairs.window.r':
     'From the landing you can see the car park: three cars beaded with rain and a fourth that has been there since September. The sodium lamp makes everything the colour of weak tea. Across the yard, the roof of the bin store shines like a lake.',
