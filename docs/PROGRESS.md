@@ -28,6 +28,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #6 i18n: `t()` with placeholders, English plurals and `@key` params; tables split by area with the 繁中 modules typed against the English keys; `compareTables()` for the validator; locale listeners for live switching. The font check caught `⟦⟧` missing-key markers with no glyph, so they are now `[[key]]`.
 - #4 fonts: Source Serif 4 (400, 400 italic, 600), Noto Serif TC 400, IBM Plex Mono (400, 500) from version-pinned `@expo-google-fonts` packages, subset at build time by `scripts/subset-fonts.ts` (a built-in cmap reader checks coverage; build fails if a player-visible character has no glyph or the payload exceeds 1.5 MiB). Projected final size with ~3,500 CJK glyphs ≈ 700 KiB. Chinese text uses Noto first so CJK punctuation keeps full-width metrics. `CREDITS.md` added. PR screenshots live on the orphan branch `pr-assets`.
 - Merged #28 (scaffold).
 - #3 scaffold: Vite 8, TypeScript 6.0 (strict, erasable syntax only), ESLint 10 + typescript-eslint, Vitest 5, Playwright 1.63 (matches the container's browser). CI jobs `attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`; `deploy.yml` for Pages. Production builds carry a CSP with `connect-src 'none'`.
