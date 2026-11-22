@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M4 Act II (M3 Act I closes with this PR)
-- **Last merged:** #45 Act II content (closes #17)
-- **In flight:** #46 Act I art (this PR, closes #16, the last M3 issue); #18 Act II puzzles on `puzzle/act2-18`
+- **Last merged:** #46 Act I art (closes #16)
+- **In flight:** #48 puzzles keep the full measure in 繁中 (this PR, closes #47, found at the M3 gate); #18 Act II puzzles and #19 Act II art in progress on `puzzle/act2-18` and `art/act2-19`
 
 ## Next
 
-1. Merge #46 and close M3 after playing Act I end to end in Playwright and checking the screenshots. 2. Review and merge #18 (door log, cipher, freezer). 3. #19 Act II art (stairwell, Dan's office, cold room, roof). Then M5: #20 Act III content, #21 Act III puzzles, #22 endings.
+1. Merge #48 and close M3. 2. Review and merge #18 (door log, cipher, freezer). 3. Review and merge #19 (Act II art). 4. M4 gate: play Acts I–II in both languages. Then M5: #20 Act III content, #21 Act III puzzles, #22 endings.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -22,12 +22,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Open decisions and blockers
 
-- **Repository settings need the owner.** The cloud proxy blocks settings writes, so these are waiting on Angze in the GitHub UI: make the repo public and set its description; enable Pages with source "GitHub Actions"; protect `main` with required status checks only (`attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`).
+- **Repository settings need the owner.** The cloud proxy blocks settings writes. Done by Angze: the repo is public with a description, and Pages is on. Still waiting: set the Pages source to "GitHub Actions" only (the branch build currently races our deploy and can publish the raw source page), and protect `main` with required status checks only (`attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`).
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-22
+- **M3 gate.** All Act I issues closed; main CI green; Act I played end to end in Playwright in 繁中, choosing by `data-choice` id (office, queue, TLC under UV, the honest yield, a three-cycle purge, the console, QUEUE LOCKED, the first 03:33, the 痕跡 card, loop 2's shared phantom notice, the notebook) with no console errors, and every screenshot read. English is covered by the e2e suite and the PR screenshots. One bug found: #47.
+- #47: in 繁中 the narrative column narrows to 36rem for prose, and puzzles inherited it, so the console's 67-column queue table overflowed its terminal. Puzzles now keep the full `--measure` in both languages; a Playwright test (which fails on the old CSS: 546 px of table in a 513 px terminal) pins it.
+- Merged #46 (Act I art). Pages is now enabled and public at https://angzeli.github.io/dark-reaction/, but the Pages source also deploys from the branch and races our Actions deploy; asked the owner to set Source to GitHub Actions.
 - #16 Act I art (drawn by a subagent in its own worktree; reviewed and merged here). **Synthesis lab:** three fume hoods breathing as one, the Kraken with eight taped ports and port 4 bare (the ports are a data array, so Act III changes one entry), cold trap and bubbler, the rotavap, the poster, the fraction rack, Tom's shelf. **Glovebox room:** the box with its limp gloves, the O₂ meter reading `o2At(minute)` (green, amber above 8, red above 10, as in the puzzle), the antechamber, the taped mini-antechamber, the SOP, the logbook. **NMR suite:** the magnet with its carousel and ladder, the compressor and its LED, the printer, the console glowing, Ian's signs. **Office:** desk 7's mug and card, the kettle on the windowsill, the sofa raised into the crop. 14 new art tests (every scene: viewBox, ids, references, no NaN, motion only through settings-aware classes; the Kraken's ports; the meter's colours). Note for later scenes: at desktop sizes the stage shows roughly y 243–657 of 900, tighter than the documented safe band.
 - Merged #45 (Act II content).
 - #17 Act II content, in both languages. **Act II opens** at the 02:47 after the three Act I puzzles, with `ph.door`. **Stairwell and lobby:** the porter's desk (Femi, never seen), the radio and the shipping forecast (rest), the main entrance that refuses your badge, fire exit B (it only gives 03:21–03:24, for the bins), the call point (*it is never Tuesday*), the landing window. **Dan's office** (03:15–03:18): the framed Figure 3 with its own header (*PROTON_DARK · holder 13 · acquired 14/03/2019 03:33*), her 03:31 email (`yc.email`), her box (`yc.box`: the Hualien tea, the cardigan, Dan's eleven unsent drafts), the 2018 photo (`yc.photo`), Ian's priority code. **Cold room:** the freezer before you know the rack, the solvent cabinets, the dewar, Tom's thesis in the cold. **Roof:** Priya (rest; she notices when you are far gone), the rain (rest), the rain log under the deckchair (`yc.roof`), the city. **Office and NMR, Act II:** her microSD (`yc.raw`: nineteen weeks of a real, slow peak, and a file named NOT_MINE), the priority run (your noise), reprocessing, staring and rerunning (chase), the baseline and integral fudges, the portal's declaration blocked while a fudge stands, and at 03:25 the night's perfect spectrum, printed or emailed (`perfect.offered`). New events (Femi's whistle, the 03:15 unlock, the bins, the printout), phantoms `ph.radium`, `ph.decay`, `ph.decay2`, and 19 new notebook entries (four of them pages you don't remember writing). English 7,865 words, 繁中 12,295 characters. 13 unit tests drive Act II through the engine; one Playwright test plays from a new game through Act I into Act II, to Dan's office at 03:15 and the printout. The final upload, stepping out of fire exit B and breaking the call point's glass get their ending effects in #22.
