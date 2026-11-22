@@ -1,4 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
+import { ACT_ONE } from '../src/content/routes.ts';
+import { newGame, play } from './bot.ts';
 
 /**
  * Act I's puzzles through the real game: the TLC plate, the glovebox
@@ -192,4 +194,17 @@ test('switching language mid-puzzle keeps the plate exactly as it was', async ({
   // The minutes already spent on the plate stay spent: 1 walk + 1 choice + 2 reading.
   await expect(zh.locator('.pz__clock-time')).toHaveText('02:51');
   await expect(clock(page)).toHaveText('02:51');
+});
+
+test('in 繁中 a puzzle status runs its sentences together, with no half-width space after 。 (#66)', async ({ page }) => {
+  test.setTimeout(90_000);
+  await newGame(page, 'zh-Hant-TW');
+  const at = ACT_ONE.findIndex((s) => 'do' in s && s.do === 'glovebox.antechamber');
+  await play(page, ACT_ONE.slice(0, at + 1));
+  const status = page.locator('.gb__status');
+  for (const move of ['outer', 'load', 'outer', 'evacuate']) {
+    await page.locator(`.gb__btn[data-move="${move}"]`).click();
+    await expect(status).toContainText('ppm。');
+    expect(await status.textContent()).not.toContain('。 ');
+  }
 });

@@ -72,7 +72,7 @@ export const freezerView: PuzzleView = {
       const now = shownAt;
       const warning =
         now >= ALARM_TEMP ? 'puzzle.freezer.alarm' : now === ALARM_TEMP - 1 ? 'puzzle.freezer.beep' : now === ALARM_TEMP - 2 ? 'puzzle.freezer.warm' : null;
-      return warning ? `${found} ${api.t(warning, { temp: api.t('puzzle.freezer.temp', { t: minus(now) }) })}` : found;
+      return warning ? api.t('puzzle.then', { first: found, second: api.t(warning, { temp: api.t('puzzle.freezer.temp', { t: minus(now) }) }) }) : found;
     };
 
     const move = (m: FreezerMove, focusKey?: string) => {

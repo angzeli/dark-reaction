@@ -5,8 +5,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #74 endings and the title screen open at the top (closes #72)
-- **In flight:** the last minute before the dark, and "Look away" (this PR, closes #71)
+- **Last merged:** #75 the last minute before the dark, and "Look away" (closes #71)
+- **In flight:** 繁中 puzzle status lines without a half-width space after 。 (this PR, closes #66). In parallel: #64 Act III room art (art subagent), #67 hover on touch screens.
 
 ## Next
 
@@ -28,6 +28,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #66: **繁中 puzzle status lines no longer put a half-width space after 。**
+  - **The problem:** the glovebox, door log and freezer views joined two translated sentences with a literal space, and the glovebox also appended a half-width full stop. 繁中 read 「…空氣。 O₂ 3.8 ppm.」.
+  - **The fix:** they now use one template, `puzzle.then`: `{first} {second}` in English, `{first}{second}` in 繁中. The oxygen reading is a sentence of its own, `puzzle.glovebox.o2.now` (「O₂ {ppm} ppm。」).
+  - **Tests:** a unit test of the template in both languages. A Playwright check plays Act I in 繁中 to the antechamber and presses four controls: each status ends in 「ppm。」 and none contains 「。 」. It fails without the fix.
+- Merged #75 (closes #71).
 - #71: **the last minute before the dark.**
   - **The problem:** `App.act()` drew the next 02:47 before the lights-out card played, so the new room showed through the fade-in (and through flicker's steps).
   - **The fix:** while a lights-out card is pending, the page keeps the room it was showing. The card now uses its `before` paragraphs, which the UI had never shown: what just happened replaces the room's text, the choices go, the HUD clock reads 03:33, and screen readers hear the same lines. 02:47 is drawn at `onBlack`, as before.

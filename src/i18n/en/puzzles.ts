@@ -6,6 +6,8 @@ export const puzzles = {
   'puzzle.hint.none': 'No more hints',
   'puzzle.hint.label': '{n}.',
   'puzzle.leave': 'Step away',
+  // Two sentences, one after the other (English puts a space between them; 繁中 doesn't).
+  'puzzle.then': '{first} {second}',
 
   'puzzle.demo.title': 'A three-dial lock',
   'puzzle.demo.intro': 'Three brass dials, each from 0 to 9. Someone has scratched *2-4-1* into the paint beside them.',
@@ -55,6 +57,7 @@ export const puzzles = {
   'puzzle.glovebox.sop': 'ANTECHAMBER (laminated, one corner slightly melted): 1. Load. 2. Close outer door. 3. Evacuate and refill — TWICE. 4. Open inner door.',
   'puzzle.glovebox.pencil': 'THREE. Trust me. — YCL',
   'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
+  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm.',
   'puzzle.glovebox.cycles': 'Cycles: {n}',
   'puzzle.glovebox.pressure.atm': 'Chamber at atmosphere',
   'puzzle.glovebox.pressure.vac': 'Chamber under vacuum',

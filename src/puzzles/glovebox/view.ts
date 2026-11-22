@@ -66,7 +66,9 @@ export const gloveboxView: PuzzleView = {
       )} · ${api.t('puzzle.glovebox.inner')}: ${api.t(state.inner ? 'puzzle.glovebox.open' : 'puzzle.glovebox.closed')}`;
       cycles.textContent = api.t('puzzle.glovebox.cycles', { n: state.cycles });
       where.textContent = api.t(`puzzle.glovebox.vial.${state.vial}`);
-      status.textContent = state.last ? `${api.t(`puzzle.glovebox.ev.${state.last}`)} ${api.t('puzzle.glovebox.o2', { ppm: ppm.toFixed(1) })}.` : '';
+      status.textContent = state.last
+        ? api.t('puzzle.then', { first: api.t(`puzzle.glovebox.ev.${state.last}`), second: api.t('puzzle.glovebox.o2.now', { ppm: ppm.toFixed(1) }) })
+        : '';
 
       if (finished) {
         actions.replaceChildren(

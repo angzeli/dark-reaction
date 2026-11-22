@@ -256,7 +256,7 @@ export const doorlogView: PuzzleView = {
       if (f.kind === 'unmarked') return api.t('puzzle.doorlog.check.unmarked');
       const which = f.rows.length === 2 ? 'both' : f.rows[0]!;
       const said = api.t(`puzzle.doorlog.check.${which}`);
-      return f.usual ? `${said} ${api.t('puzzle.doorlog.check.usual', { time: minuteLabel(USUAL_PI) })}` : said;
+      return f.usual ? api.t('puzzle.then', { first: said, second: api.t('puzzle.doorlog.check.usual', { time: minuteLabel(USUAL_PI) }) }) : said;
     };
 
     const render = (focusKey?: string) => {
