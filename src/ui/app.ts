@@ -64,6 +64,8 @@ export class App {
   private puzzleFrame: FrameHandle | null = null;
   private busy = false;
   private keyboardUsed = false;
+  /** The loop and room the play screen last showed: arriving somewhere new starts at the top (#52). */
+  private shownAt: string | null = null;
   private status = '';
   private untrap: (() => void) | null = null;
   private lastFocus: HTMLElement | null = null;
@@ -393,6 +395,7 @@ export class App {
     const focusKey = (document.activeElement as HTMLElement | null)?.dataset?.['focusKey'];
     this.untrap?.();
     this.untrap = null;
+    if (this.screen !== 'play') this.shownAt = null;
     if (this.screen === 'title') this.renderTitle();
     else if (this.screen === 'ending') this.renderEnding();
     else this.renderPlay(opts.reveal ?? false);
@@ -516,6 +519,13 @@ export class App {
     const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choices, live);
     const app = this.shell('play', hud, art, narrative);
     app.dataset['decay'] = String(decay);
+    // A new room, or 02:47 again: start at the top, with the picture and the first line in view.
+    // Choosing within a room keeps the reader's place. Never smooth: it's a cut, not a pan.
+    const where = `${s.loop}:${s.location}`;
+    if (where !== this.shownAt) {
+      this.shownAt = where;
+      window.scrollTo(0, 0);
+    }
     this.mountStage(art, location.art, { act: s.act, minute: s.minute });
 
     const drawChoices = () => {
