@@ -5,8 +5,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #30 engine core (closes #5)
-- **In flight:** #35 art system (this PR), #34 gitignore fix; next #7 saves, #10 puzzle framework, #11 validator, #8 UI shell, #9 settings
+- **Last merged:** #35 art system (closes #12)
+- **In flight:** #34 gitignore fix (this PR), #7 saves; next #10 puzzle framework, #11 validator, #8 UI shell, #9 settings
 
 ## Next
 
@@ -28,6 +28,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #32: `.gitignore` now ignores `node_modules` as a symlink too (worktrees share one install); a symlink slipped into #31 and was removed before merge.
 - #12 art system: SVG helpers and palette (`src/art/svg.ts`), deterministic rain on glass and drops, tube flicker, LED blink, ordered dither, a grain canvas, a stage that only re-renders when the picture changes, and the 03:33 lights-out transition (stutter, black with the clock, cold 02:47, fade back; steady fade with flicker off; plain fades with reduced motion; dark-run variant; skippable). First illustration: the office, used as the title backdrop. Playwright checks every scene parses as SVG and the transition in all modes.
 - Merged #30 (engine core, after two rounds of cold review).
 - #5 engine core (cold-reviewed by a subagent; 9 bugs found across two passes and fixed, 44 engine tests): content schema (`src/engine/types.ts`), conditions, shortest-path travel, the `Game` class (choices, travel and wait menus, effects, timed events, 03:33 lights-out with ordered rules, loop reset, acts, phantoms, fudges with strike-through, obsession with end-of-loop rule and Infinite Loop, connection fragments, puzzles incl. the dark run, endings, transition cards). Real map in `src/content/world.ts`. 30 Vitest cases on a fixture world.
