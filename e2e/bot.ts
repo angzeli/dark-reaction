@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import type { RouteStep } from '../src/content/routes.ts';
 import { EN_LINE, ZH_LINE } from '../src/puzzles/cipher/logic.ts';
 import { ANSWER as DOORLOG } from '../src/puzzles/doorlog/logic.ts';
@@ -98,18 +98,27 @@ async function night(page: Page): Promise<void> {
   throw new Error('the night never ended');
 }
 
-export const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
-  async tlc(page) {
-    await page.locator('.tlc__uv').click();
-    for (const n of [12, 13, 14]) await page.locator(`.tlc__take[data-lane="${n}"]`).click();
-    await page.locator('.tlc__combine').click();
+/**
+ * How a solver presses a control: a click by default. e2e/input-modes.spec.ts
+ * passes a keyboard-only press (Tab to it, or arrow within its group, then
+ * Enter) and a touch-only one (a tap), so the same solution proves each puzzle
+ * can be finished either way.
+ */
+export type Press = (control: Locator) => Promise<void>;
+export const click: Press = (control) => control.click();
+
+export const SOLVERS: Record<string, (page: Page, press?: Press) => Promise<void>> = {
+  async tlc(page, press = click) {
+    await press(page.locator('.tlc__uv'));
+    for (const n of [12, 13, 14]) await press(page.locator(`.tlc__take[data-lane="${n}"]`));
+    await press(page.locator('.tlc__combine'));
   },
-  async glovebox(page) {
+  async glovebox(page, press = click) {
     for (const m of ['outer', 'load', 'outer', 'evacuate', 'refill', 'evacuate', 'refill', 'evacuate', 'refill', 'inner', 'transfer', 'done']) {
-      await page.locator(`.gb__btn[data-move="${m}"]`).click();
+      await press(page.locator(`.gb__btn[data-move="${m}"]`));
     }
   },
-  async doorlog(page) {
+  async doorlog(page, press = click) {
     // Tonight's two windows, by keyboard: Home is 02:47, PageUp five minutes, ArrowRight one.
     const set = async (row: 'pi' | 'exit', start: number) => {
       await page.locator(`.dl__track[data-row="${row}"]`).focus();
@@ -119,51 +128,51 @@ export const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
     };
     await set('pi', DOORLOG.pi);
     await set('exit', DOORLOG.exit);
-    await page.locator('.dl__write').click();
+    await press(page.locator('.dl__write'));
   },
-  async cipher(page) {
+  async cipher(page, press = click) {
     // Her last page: in 繁中 strip each character's radical; in English fill each gap with its element.
     if (await page.locator('.ci--zh').count()) {
       for (const [i, c] of ZH_LINE.entries()) {
-        await page.locator(`.ci__char[data-char="${i}"]`).click();
-        await page.locator(`.ci__radical[data-radical="${c.radical}"]`).click();
+        await press(page.locator(`.ci__char[data-char="${i}"]`));
+        await press(page.locator(`.ci__radical[data-radical="${c.radical}"]`));
       }
     } else {
-      for (const z of EN_LINE) await page.locator(`.ci__el[data-z="${z}"]`).click();
+      for (const z of EN_LINE) await press(page.locator(`.ci__el[data-z="${z}"]`));
     }
-    await page.locator('.ci__finish').click();
+    await press(page.locator('.ci__finish'));
   },
-  async freezer(page) {
-    await page.locator(`.fz__cell[data-cell="${FREEZER}"]`).click();
-    await page.locator('.fz__lift').click();
-    await page.locator('.fz__finish').click();
+  async freezer(page, press = click) {
+    await press(page.locator(`.fz__cell[data-cell="${FREEZER}"]`));
+    await press(page.locator('.fz__lift'));
+    await press(page.locator('.fz__finish'));
   },
-  async console(page) {
-    await page.locator('.con__chip[data-command="queue --all"]').click();
-    await page.locator('.con__chip[data-command="info 13"]').click();
-    await page.locator('.con__finish').click();
+  async console(page, press = click) {
+    await press(page.locator('.con__chip[data-command="queue --all"]'));
+    await press(page.locator('.con__chip[data-command="info 13"]'));
+    await press(page.locator('.con__finish'));
   },
-  async schlenk(page) {
-    await page.locator('.sk__n2').click();
-    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const) await page.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`).click();
-    await page.locator('.sk__bleed[data-bleed="tube"]').click();
-    await page.locator('.sk__jy').click();
-    await page.locator('.sk__wrap').click();
-    await page.locator('.sk__finish').click();
+  async schlenk(page, press = click) {
+    await press(page.locator('.sk__n2'));
+    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const) await press(page.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`));
+    await press(page.locator('.sk__bleed[data-bleed="tube"]'));
+    await press(page.locator('.sk__jy'));
+    await press(page.locator('.sk__wrap'));
+    await press(page.locator('.sk__finish'));
   },
-  async chirp(page) {
-    for (const key of ['2', '4', '1', '3', 'enter']) await page.locator(`.cp__key[data-key="${key}"]`).click();
-    await page.locator('.cp__finish').click();
+  async chirp(page, press = click) {
+    for (const key of ['2', '4', '1', '3', 'enter']) await press(page.locator(`.cp__key[data-key="${key}"]`));
+    await press(page.locator('.cp__finish'));
   },
-  async fabrication(page) {
-    await page.locator('.fb__overlay').click();
-    for (const feature of ['noise', 'solvent', 'satellites']) await page.locator(`.fb__spot[data-feature="${feature}"]`).click();
-    await page.locator('.fb__finish').click();
+  async fabrication(page, press = click) {
+    await press(page.locator('.fb__overlay'));
+    for (const feature of ['noise', 'solvent', 'satellites']) await press(page.locator(`.fb__spot[data-feature="${feature}"]`));
+    await press(page.locator('.fb__finish'));
   },
-  async peakmatch(page) {
-    for (const by of [10, 10, 1, 1, 1]) await page.locator(`.pm__nudge[data-by="${by}"]`).click();
-    await page.locator('.pm__peak[data-peak="product"]').click();
-    await page.locator('.pm__finish').click();
+  async peakmatch(page, press = click) {
+    for (const by of [10, 10, 1, 1, 1]) await press(page.locator(`.pm__nudge[data-by="${by}"]`));
+    await press(page.locator('.pm__peak[data-peak="product"]'));
+    await press(page.locator('.pm__finish'));
   },
 };
 

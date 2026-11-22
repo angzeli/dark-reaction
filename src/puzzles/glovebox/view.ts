@@ -67,7 +67,7 @@ export const gloveboxView: PuzzleView = {
       cycles.textContent = api.t('puzzle.glovebox.cycles', { n: state.cycles });
       where.textContent = api.t(`puzzle.glovebox.vial.${state.vial}`);
       status.textContent = state.last
-        ? api.t('puzzle.then', { first: api.t(`puzzle.glovebox.ev.${state.last}`), second: api.t('puzzle.glovebox.o2.now', { ppm: ppm.toFixed(1) }) })
+        ? api.t('puzzle.then', { first: api.t(`puzzle.glovebox.ev.${state.last}`), second: api.t('puzzle.glovebox.o2.now', { ppm: ppm.toFixed(1), n: state.cycles }) })
         : '';
 
       if (finished) {

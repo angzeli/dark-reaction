@@ -402,6 +402,12 @@ Procedural Web Audio only (no samples). Muted until the player opts in; master, 
 - Settings: language (switch any time without losing state), text size, text speed, reduce motion, disable flicker, high contrast, audio. A content note on first launch.
 - Saves: autosave and three slots in `localStorage`, versioned schema with migrations, export and import of a save file. The gallery lives apart from saves.
 - Privacy: no analytics, no telemetry, no runtime network requests, no login.
+- As built (#25), and checked in CI:
+  - **axe:** zero serious or critical violations on the title, play screen and every overlay, every puzzle, and an ending. Both languages, and high contrast.
+  - **Puzzles:** every one can be finished by keyboard alone (Tab, the arrows inside a roving group, Enter) and by touch alone. Every control is a Tab stop, or in a roving group that has one.
+  - **Overlays** keep focus inside and give it back to the control that opened them.
+  - **Live regions** speak each puzzle's state (the antechamber says its oxygen and its cycle count).
+  - **Reduced motion** stills every scene in every act; flicker off stops every flicker and blink, and the clock's stutter.
 
 ## 20. Technical shape (summary)
 

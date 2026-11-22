@@ -8,7 +8,7 @@ import { go, newGame, pick, play } from './bot.ts';
  * #25: axe on every kind of screen, in both languages, with zero serious or
  * critical violations: the title and its overlays, the play screen and its
  * overlays, the Act I and II puzzles, and an ending, in normal and high
- * contrast. Act III's four puzzles open from nights prepared in the engine
+ * contrast (the Act I and II puzzles in high contrast too). Act III's four puzzles open from nights prepared in the engine
  * (e2e/act3.ts), in both languages and in high contrast.
  */
 
@@ -39,13 +39,16 @@ async function puzzle(page: Page, where: string, then: 'leave' | 'solve', solve?
   await expect(page.locator('.pz')).toHaveCount(0);
 }
 
-for (const locale of ['en', 'zh-Hant-TW'] as const) {
-  test(`${locale}: the title, the play screen, their overlays, and six puzzles`, async ({ page }) => {
+for (const [locale, contrast] of [['en', false], ['zh-Hant-TW', false], ['en', true]] as const) {
+  test(`${locale}${contrast ? ', high contrast' : ''}: the title, the play screen, their overlays, and six puzzles`, async ({ page }) => {
     test.setTimeout(180_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.addInitScript((l) => {
-      if (!localStorage.getItem('dark-reaction.settings.v1')) localStorage.setItem('dark-reaction.settings.v1', JSON.stringify({ contentNoteSeen: true, locale: l }));
-    }, locale);
+    await page.addInitScript(
+      ([l, c]) => {
+        if (!localStorage.getItem('dark-reaction.settings.v1')) localStorage.setItem('dark-reaction.settings.v1', JSON.stringify({ contentNoteSeen: true, locale: l, highContrast: c }));
+      },
+      [locale, contrast] as const,
+    );
     await page.goto('./');
     await scan(page, 'title');
     await overlay(page, () => page.locator('.title__btn[data-focus-key="title-settings"]').click(), 'settings');
@@ -79,7 +82,9 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
     await play(page, [{ go: 'stairs' }, { do: 'stairs.terminal' }]);
     await puzzle(page, 'puzzle: door log', 'leave');
   });
+}
 
+for (const locale of ['en', 'zh-Hant-TW'] as const) {
   test(`${locale}: an ending, and the play screen in high contrast`, async ({ page }) => {
     test.setTimeout(120_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -98,16 +103,14 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
   });
 }
 
-test('en: the freezer, once her notebook is read', async ({ page }) => {
-  test.setTimeout(150_000);
-  await newGame(page, 'en');
-  await play(page, [{ go: 'stairs' }, { until: 27 }, { go: 'pi' }, { do: 'pi.notebook' }]);
-  for (const z of [88, 74, 49, 88, 6, 19, 8, 10]) await page.locator(`.ci__el[data-z="${z}"]`).click();
-  await page.locator('.ci__finish').click();
-  await expect(page.locator('.pz')).toHaveCount(0);
-  await play(page, [{ go: 'cold' }, { do: 'cold.rack1' }]);
-  await puzzle(page, 'puzzle: freezer', 'leave');
-});
+for (const locale of ['en', 'zh-Hant-TW'] as const) {
+  test(`${locale}: the freezer, once her notebook is read`, async ({ page }) => {
+    test.setTimeout(150_000);
+    await newGame(page, locale);
+    await play(page, [{ go: 'stairs' }, { until: 27 }, { go: 'pi' }, { do: 'pi.notebook' }, { solve: 'cipher' }, { go: 'cold' }, { do: 'cold.rack1' }]);
+    await puzzle(page, 'puzzle: freezer', 'leave');
+  });
+}
 
 // Act III: each puzzle from its own night, scanned as it opens and again half-way through.
 const ACT_THREE: Array<{ name: string; night: (l: Locale) => string; choice: string | null; moves: (page: Page) => Promise<void> }> = [

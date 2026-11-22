@@ -157,3 +157,38 @@ test('with full motion the text reveals and any key completes it', async ({ page
   await expect(page.locator('.narrative__text.rv-done, .narrative__text .rv-done').first()).toBeAttached();
   await expect(clock(page)).toHaveText('02:48');
 });
+
+test('overlays keep focus inside while open and give it back on close, from the title and from play (#25)', async ({ page }) => {
+  await start(page);
+  const inDialog = () => page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'));
+  const trapped = async (where: string) => {
+    await expect(page.getByRole('dialog')).toBeVisible();
+    for (let i = 0; i < 25; i++) {
+      await page.keyboard.press('Tab');
+      expect(await inDialog(), `${where}: Tab ${i + 1}`).toBe(true);
+    }
+    for (let i = 0; i < 25; i++) {
+      await page.keyboard.press('Shift+Tab');
+      expect(await inDialog(), `${where}: Shift+Tab ${i + 1}`).toBe(true);
+    }
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+  };
+  // From the title, by keyboard: the settings panel, then the gallery.
+  for (const [key, name] of [['title-settings', 'Settings'], ['title-gallery', 'Endings']] as const) {
+    const opener = page.locator(`.title__btn[data-focus-key="${key}"]`);
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    await trapped(name);
+    await expect(opener).toBeFocused();
+  }
+  // In play: the notebook and the menu, opened from their HUD buttons by keyboard.
+  await newGame(page);
+  for (const name of ['Notebook', 'Menu']) {
+    const opener = page.locator('.hud__btn').filter({ hasText: name });
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    await trapped(name);
+    await expect(opener).toBeFocused();
+  }
+});

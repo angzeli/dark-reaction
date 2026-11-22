@@ -57,7 +57,7 @@ export const puzzles = {
   'puzzle.glovebox.sop': 'ANTECHAMBER (laminated, one corner slightly melted): 1. Load. 2. Close outer door. 3. Evacuate and refill — TWICE. 4. Open inner door.',
   'puzzle.glovebox.pencil': 'THREE. Trust me. — YCL',
   'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
-  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm.',
+  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm. Cycles: {n}.',
   'puzzle.glovebox.cycles': 'Cycles: {n}',
   'puzzle.glovebox.pressure.atm': 'Chamber at atmosphere',
   'puzzle.glovebox.pressure.vac': 'Chamber under vacuum',

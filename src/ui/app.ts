@@ -73,6 +73,8 @@ export class App {
   private lastFocus: HTMLElement | null = null;
   /** Bumped by every play render and by the last minute before the dark: a reveal only draws the choices of its own page (#80). */
   private playSeq = 0;
+  /** The opener's `data-focus-key`, for when closing re-renders it as a new element (the title screen). */
+  private lastFocusKey: string | undefined;
 
   constructor(root: HTMLElement, opts: AppOptions) {
     this.root = root;
@@ -386,6 +388,7 @@ export class App {
 
   private openOverlay(overlay: Overlay): void {
     this.lastFocus = document.activeElement as HTMLElement | null;
+    this.lastFocusKey = this.lastFocus?.dataset?.['focusKey'];
     this.overlay = overlay;
     this.menuPanel = 'main';
     this.render();
@@ -397,6 +400,7 @@ export class App {
     if (wasNote && !this.settings.contentNoteSeen) this.updateSettings({ contentNoteSeen: true });
     else this.render();
     if (this.lastFocus?.isConnected) this.lastFocus.focus();
+    else if (this.lastFocusKey) this.root.querySelector<HTMLElement>(`[data-focus-key="${CSS.escape(this.lastFocusKey)}"]`)?.focus();
   }
 
   private settingsApi(): SettingsApi {
@@ -435,7 +439,13 @@ export class App {
     else if (this.screen === 'ending') this.renderEnding();
     else this.renderPlay(opts.reveal ?? false);
     if (this.overlay !== 'none' && this.screen !== 'ending') this.renderOverlay();
-    if (focusKey) this.root.querySelector<HTMLElement>(`[data-focus-key="${CSS.escape(focusKey)}"]`)?.focus({ preventScroll: true });
+    if (focusKey) {
+      // Put focus back on the same control, but never behind an open dialog: opening one from a
+      // control (the title's Settings) must leave focus in the dialog, not on the control (#25).
+      const target = this.root.querySelector<HTMLElement>(`[data-focus-key="${CSS.escape(focusKey)}"]`);
+      const dialog = this.root.querySelector('[role="dialog"]');
+      if (target && (!dialog || dialog.contains(target))) target.focus({ preventScroll: true });
+    }
     audio.setAmbience(this.screen === 'ending' ? null : this.ambienceFor());
   }
 
@@ -545,8 +555,8 @@ export class App {
       h(
         'nav',
         { class: 'hud__actions', 'aria-label': t('ui.menu') },
-        h('button', { type: 'button', class: 'hud__btn', 'aria-keyshortcuts': 'N', onclick: () => this.openOverlay('notebook') }, t('ui.notebook')),
-        h('button', { type: 'button', class: 'hud__btn', 'aria-keyshortcuts': 'M Escape', onclick: () => this.openOverlay('menu') }, t('ui.menu')),
+        h('button', { type: 'button', class: 'hud__btn', 'aria-keyshortcuts': 'N', dataset: { focusKey: 'hud-notebook' }, onclick: () => this.openOverlay('notebook') }, t('ui.notebook')),
+        h('button', { type: 'button', class: 'hud__btn', 'aria-keyshortcuts': 'M Escape', dataset: { focusKey: 'hud-menu' }, onclick: () => this.openOverlay('menu') }, t('ui.menu')),
       ),
     );
     const art = h('div', { class: 'play__art' });

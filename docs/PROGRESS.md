@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #81 no stale choices under the lights-out fade (closes #80)
-- **In flight:** the deploy goes after GitHub's branch build (this PR, closes #84). Also open: #82 (polish, #26), #83 (accessibility, #25).
+- **Last merged:** #85 the deploy goes after GitHub's branch build (closes #84)
+- **In flight:** the accessibility pass, part 2 (this PR, closes #25). Also open: #82 (polish, #26).
 
 ## Next
 
-1. Merge this PR and check the live site loads the build. 2. Merge #83 and #82. 3. #27 README, credits and v1.0.0.
+1. Merge this PR and #82. 2. #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,21 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #25 part 2: **the accessibility pass, finished.**
+  - **Every puzzle by keyboard alone and by touch alone** (`e2e/input-modes.spec.ts`).
+    - Each puzzle is mounted in the harness and solved with the bot's own solution, and `bot.ts`'s solvers now take a `press`. By keyboard: Tab to a control, or into its roving group (marked `data-roving` by `bindRoving`) and the arrows to it, then Enter; nothing is clicked. By touch: taps on a phone-sized touch screen.
+    - A Tab walk checks every control is a Tab stop or in a group that has one; a self-test proves the walk notices one taken out.
+    - The door log by touch and the Kraken by keyboard keep their own tests.
+  - **Focus:**
+    - **Bugs fixed.** On the title screen, opening Settings left focus on the button behind the dialog: `render()`'s focus restore pulled it back out. A dialog whose heading took focus on open let Tab escape when its controls came before the heading (the gallery). `trapFocus` now steps from a non-tabbable start.
+    - Closing an overlay gives focus back to its opener even when the screen re-rendered (the HUD buttons now have focus keys).
+    - A new test walks Tab and Shift+Tab inside Settings, the gallery, the notebook and the menu, then checks focus comes back.
+  - **Motion and flicker:**
+    - every scene and ending, in every act, lit and dark, has no running animation with reduced motion, and no flicker or blink with flicker off;
+    - **fixed:** the HUD clock's stutter (obsession ≥ 7) is a flash, and now stops with flicker off too, not only with reduced motion.
+  - **Screen readers:** the antechamber's live line now says the cycle count with the oxygen (*O₂ 5.1 ppm. Cycles: 2.*).
+  - **axe:** the Act I and II puzzles are now scanned in high contrast too, and the freezer in 繁中.
+- Merged #85 (closes #84).
 - #84: **the live site served the raw source page.**
   - **The cause:** with the Pages source still "Deploy from a branch", GitHub's *pages build and deployment* publishes the repository itself on every push, racing our *Deploy to GitHub Pages*. For 7e9323b it finished one second after ours, so <https://angzeli.github.io/dark-reaction/> served `index.html` with `/src/main.ts`.
   - **The workaround:** `deploy.yml`'s deploy job now waits for that commit's branch build to complete, up to 10 minutes, then deploys, so ours is last. If the Pages API says the source is *GitHub Actions* it doesn't wait.
