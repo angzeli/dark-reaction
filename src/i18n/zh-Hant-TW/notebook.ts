@@ -84,6 +84,14 @@ export const notebook: Record<keyof typeof en, string> = {
   'nb.printout.title': '那張印出來的譜',
   'nb.printout.body': 'PROTON_DARK，樣品槽 13，ar4217，今晚 03:33 收的，03:25 就印出來了。8.41 一根完美的峰。就是圖三，只是更好。',
 
+  // 第三幕
+  'nb.port4.title': '4 號接口',
+  'nb.port4.body': 'Kraken 的 4 號接口上有一個燒瓶，鋁箔包到瓶頸：*DARK · 14/03/19 · 別讓它見光——YCL*。微微溫熱。還在反應。',
+  'nb.tube.title': '她的管子',
+  'nb.tube.body': '小前艙裡：一支空的 J. Young 管，活栓關著，掛著一張紙牌：*給下一個來的人——YCL*。',
+  'nb.postit.title': 'Tom 的便利貼',
+  'nb.postit.body': '壓縮機上，2016 年：*Y.C. 打的拍子＝這台機器？？*那聲啾現在有節奏了。一組一組，然後停很久。',
+
   // 你不記得自己寫過的那幾頁
   'ph.tea.title': '02:47',
   'ph.tea.body': '02:47。這你做過了。先泡茶。再看 TLC 片。',
@@ -101,4 +109,8 @@ export const notebook: Record<keyof typeof en, string> = {
   'ph.decay.body': '再掃一次',
   'ph.decay2.title': '再一次',
   'ph.decay2.body': '再掃一次。再一次。這次一定會出現。再一次',
+  'ph.port4.title': '4 號接口',
+  'ph.port4.body': '4 號接口。別讓它見光。',
+  'ph.booking.title': '03:33',
+  'ph.booking.body': '03:33 不是截止時間。是一個預約。',
 };

@@ -86,6 +86,14 @@ export const notebook = {
   'nb.printout.title': 'The printout',
   'nb.printout.body': 'PROTON_DARK, holder 13, ar4217, acquired at 03:33 tonight and printed at 03:25. A perfect peak at 8.41. Figure 3, only better.',
 
+  // Act III
+  'nb.port4.title': 'Port 4',
+  'nb.port4.body': 'A flask on port 4 of the Kraken, foil to the neck: *DARK · 14/03/19 · do not let it see the light — YCL*. Faintly warm. Still reacting.',
+  'nb.tube.title': 'Her tube',
+  'nb.tube.body': 'In the small antechamber: an empty J. Young tube, tap closed, tagged *for whoever comes next — YCL*.',
+  'nb.postit.title': 'Tom’s Post-it',
+  'nb.postit.body': 'On the compressor, 2016: *Y.C.’s drumming = this thing??* The chirp has a rhythm now. Groups, then a long pause.',
+
   // Pages you don't remember writing
   'ph.tea.title': '02:47',
   'ph.tea.body': '02:47. You’ve done this before. Make tea first. Then the plate.',
@@ -103,4 +111,8 @@ export const notebook = {
   'ph.decay.body': 'one more scan',
   'ph.decay2.title': 'one more',
   'ph.decay2.body': 'one more scan. one more. it will be there this time. one more',
+  'ph.port4.title': 'Port 4',
+  'ph.port4.body': 'Port four. Don’t let it see the light.',
+  'ph.booking.title': '03:33',
+  'ph.booking.body': '03:33 isn’t a deadline. It’s a booking.',
 } as const;

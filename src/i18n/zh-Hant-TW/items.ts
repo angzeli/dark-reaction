@@ -9,4 +9,6 @@ export const items: Record<keyof typeof en, string> = {
   'item.tube.own': '你的 NMR 管',
   'item.spectrum.own': '你從 400 存下來的譜',
   'item.printout': '一張還溫溫的完美圖譜',
+  'item.foil': '一捲鋁箔',
+  'item.tube.jy': '她那支空的 J. Young 管',
 };

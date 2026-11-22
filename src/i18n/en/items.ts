@@ -7,4 +7,6 @@ export const items = {
   'item.tube.own': 'your NMR tube',
   'item.spectrum.own': 'your spectrum, saved from the 400',
   'item.printout': 'a warm printout of a perfect spectrum',
+  'item.foil': 'a roll of foil',
+  'item.tube.jy': 'her J. Young tube, empty',
 } as const;

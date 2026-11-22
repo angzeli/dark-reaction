@@ -10,6 +10,7 @@ export const world = {
   'loop.start.again':
     'You come to with your cheek on the keyboard. 02:47. The page of *j*s is there again, exactly as long as before.',
 
+  'loop.start.act3': 'You come to with your cheek on the keyboard. 02:47. The page of *j*s is there, but tonight it is one line shorter.',
   'lo.first':
     'Everything goes at once: the tubes, the monitors, the green running men over the doors, the hum you had stopped hearing. In the dark there is only the rain, and then not even that.',
 
@@ -29,6 +30,22 @@ export const world = {
     'The write-up office holds eleven desks and one person. Rain works at the big window in long, patient strokes, and the street lamp outside turns every drop sodium orange. One of the two tubes overhead is dying in a way that only bothers you when you notice it. On your monitor, the NMR queue is still open.',
   'office.hub.act2':
     'The write-up office, again: eleven desks and one person, the rain at the big window, patient as ever, the dying tube. You know the order of the night now. The email at 02:50, the hoover at five past three, the dark at 03:33. On your monitor the queue is open, and the booking is where it always is.',
+  'office.hub.act3':
+    'The write-up office at 02:47, and something has changed that you can’t name. The rain is quieter, as if it is listening. The dying tube has stopped flickering and simply burns, steady and too white. On your monitor the queue is open, and the booking at 03:33 is still there, holder 13, ar4217. But the comment has changed. It used to say *it’s still going*. Now it says *nearly done*.',
+  'synth.hub.act3':
+    'Lab 4.12 is colder than it should be. The fume hoods still breathe, but out of step now, one of them lagging behind like a sleeper’s second breath. Your fractions wait in their rack. And on the Kraken, on port 4, where nothing has ever been, there is a flask.',
+  'glovebox.hub.act3':
+    'The glovebox room is very quiet. The O₂ meter glows {ppm} ppm. On the box’s left flank the taped mini-antechamber has frost on its little window, though nothing in this room is cold, and behind the frost something small and upright is standing very still, waiting.',
+  'pi.hub.act3':
+    'Dan’s office, warm as ever. Everything is where it was, except that the framed paper hangs very slightly crooked now, as if someone has taken it down to look at it closely and put it back in a hurry.',
+  'stairs.hub.act3':
+    'The stairwell is darker. Two of the green running men have gone out, and the ones that remain seem to be running faster. The radio on the porter’s desk has drifted between stations, and under the shipping forecast, faintly, someone is tapping a rhythm on a table.',
+  'nmr.hub.act3':
+    'The NMR suite hums. The cryocooler’s chirp has changed: no longer steady but grouped, a few chirps and a pause, a few chirps and a pause, like someone drumming their fingers while they think. The console is the brightest thing in the basement. Holder 13 is still empty, and still the only one without dust.',
+  'cold.hub.act3':
+    'B.05 is colder than ever. Frost has crept out from the freezer’s seals and across the floor in thin white feathers, and all of them point the same way: towards the door, towards the stairs, towards the lab four floors up.',
+  'roof.hub.act3':
+    'On the roof the rain has thinned to almost nothing, a fine cold mist that hangs rather than falls. The city is very quiet. The cranes’ red lights blink in a slow rhythm you have heard somewhere before. Under the deckchair, the lunchbox waits where she left it.',
   'synth.hub.act1':
     'Lab 4.12 smells of acetone and warm dust. The fume hoods breathe in unison, sashes down, their lights turning them into three tall aquariums of nothing. Your column fractions wait in a rack on the bench: twenty-four test tubes of almost exactly the same colourless liquid. Someone has labelled the Schlenk line THE KRAKEN on a strip of tape, and nobody has ever taken it off.',
   'glovebox.hub.act1':

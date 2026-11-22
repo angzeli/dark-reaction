@@ -10,7 +10,10 @@ export const roofScenes: SceneDef[] = [
     id: 'roof.hub',
     location: 'roof',
     hub: true,
-    text: [{ key: 'roof.hub.act1' }],
+    text: [
+      { key: 'roof.hub.act1', if: { not: { act: 3 } } },
+      { key: 'roof.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       {
         id: 'roof.priya',
