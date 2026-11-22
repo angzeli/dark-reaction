@@ -51,6 +51,23 @@ describe('graph checks', () => {
     expect(messages).toContain('scene "office.trap" has no Back and no unconditional way out (dead end)');
     expect(messages).toContain('choice "office.nothing" neither shows text nor goes anywhere');
   });
+
+  it('never let a choice that ends the game come first, where one Enter would take it (#61)', () => {
+    const c: Content = miniContent();
+    const end = { id: 'office.end', label: 'x', effects: [{ ending: 'honest' as const }] };
+    c.scenes.push({ id: 'office.brink', location: 'office', text: [{ key: 'x' }], choices: [end] });
+    c.scenes.push({ id: 'office.guarded', location: 'office', text: [{ key: 'x' }], choices: [{ id: 'office.stay', label: 'x', text: [{ key: 'x' }], once: 'loop' }, { ...end, id: 'office.end2' }] });
+    c.scenes.push({ id: 'office.safe', location: 'office', backFirst: true, text: [{ key: 'x' }], choices: [{ ...end, id: 'office.end3' }] });
+    c.scenes.push({ id: 'office.pointless', location: 'office', hub: true, backFirst: true, text: [{ key: 'x' }], choices: [] });
+    c.scenes[0]!.choices.push(...['brink', 'guarded', 'safe', 'pointless'].map((s) => ({ id: `office.to.${s}`, label: 'x', to: `office.${s}` })));
+    const messages = checkGraph(c).map((p) => p.message);
+    expect(messages.filter((m) => m.includes('ends the game'))).toEqual([
+      'scene "office.brink": "office.end" ends the game and can be the first choice; put an always-available choice before it, or set backFirst',
+      // A choice that can vanish (once a loop) doesn't count as always there.
+      'scene "office.guarded": "office.end2" ends the game and can be the first choice; put an always-available choice before it, or set backFirst',
+    ]);
+    expect(messages).toContain('scene "office.pointless" sets backFirst but has no Back to put first');
+  });
 });
 
 describe('locale checks', () => {

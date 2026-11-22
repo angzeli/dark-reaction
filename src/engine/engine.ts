@@ -220,7 +220,10 @@ export class Game {
       out.push({ id: 'meta:travel', label: 'ui.travel', cost: 0, kind: 'meta' });
       out.push({ id: 'meta:wait', label: 'ui.wait', cost: 0, kind: 'meta' });
     } else if (!scene.noBack) {
-      out.push({ id: 'meta:back', label: 'ui.back', cost: 0, kind: 'meta' });
+      const back: ChoiceView = { id: 'meta:back', label: 'ui.back', cost: 0, kind: 'meta' };
+      // Keyboard focus and key 1 go to the first choice: where that would end the game, Back comes first.
+      if (scene.backFirst) out.unshift(back);
+      else out.push(back);
     }
     return out;
   }

@@ -69,7 +69,9 @@ export const stairsScenes: SceneDef[] = [
     location: 'stairs',
     noBack: true,
     text: [{ key: 'stairs.door.text' }],
+    // The way back comes first: keyboard focus and key 1 land on it, so a stray Enter can't end the run (#61).
     choices: [
+      { id: 'stairs.door.close', label: 'stairs.door.close', to: 'stairs.hub' },
       {
         // Clocking Off: from Act II, if you can still make yourself go.
         id: 'stairs.leave',
@@ -90,7 +92,6 @@ export const stairsScenes: SceneDef[] = [
         ],
         to: 'stairs.hub',
       },
-      { id: 'stairs.door.close', label: 'stairs.door.close', to: 'stairs.hub' },
     ],
   },
   {

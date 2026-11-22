@@ -17,11 +17,20 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
   test(`Clocking Off, in ${locale}: out through fire exit B with the bins, to the ending and back to the title`, async ({ page }) => {
     test.setTimeout(120_000);
     await newGame(page, locale);
-    await play(page, ROUTES.clocking!.steps.slice(0, -1));
+    await play(page, ROUTES.clocking!.steps.slice(0, -2));
 
-    // In the doorway: the step out, or back in. No waiting about.
+    // By keyboard, the doorway's first choice is the way back: a stray Enter shuts the door rather than ending the run (#61).
+    await page.locator('.choice[data-choice="stairs.exitb.open"]').focus();
+    await page.keyboard.press('Enter');
     await expect(page.locator('.choice')).toHaveCount(2);
     await expect(page.locator('.narrative__text')).toContainText(locale === 'en' ? 'The door would let you go.' : '這扇門會讓你走');
+    await expect(page.locator('.choice[data-choice="stairs.door.close"]')).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.choice[data-choice="stairs.exitb.open"]')).toBeVisible(); // back in the stairwell
+    await expect(page.locator('article.ending')).toHaveCount(0);
+
+    // Then deliberately: push the bar again while the bins are still going out, and step out.
+    await pick(page, 'stairs.exitb.open');
     await pick(page, 'stairs.leave');
 
     await expect(page.locator('article.ending[data-ending="clocking"]')).toBeVisible();
@@ -49,6 +58,8 @@ test('Honest Noise, in English: a figure bent in loop 1 stops the box being tick
   await strike(page);
   await expect(page.locator('.narrative__text')).toContainText('through with a single line, then initial and date it.');
   await expect(page.locator('.hud__clock')).toHaveText('03:32');
+  // Back comes first on the portal's page, so a stray Enter there can't send anything (#61).
+  await expect(page.locator('.choice').first()).toHaveAttribute('data-choice', 'meta:back');
   await pick(page, 'office.upload.own');
 
   await expect(page.locator('article.ending[data-ending="honest"]')).toBeVisible();

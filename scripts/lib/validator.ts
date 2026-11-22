@@ -101,6 +101,19 @@ export function checkGraph(content: Content): Problem[] {
       if (!saysOrDoes) problems.push(err('graph', `choice "${choice.id}" neither shows text nor goes anywhere`));
     }
   }
+
+  // Keyboard focus and key 1 go to the first choice (#61): a choice that ends the game must
+  // never be able to come first. Either an always-available choice precedes it, or Back does.
+  const ends = (c: (typeof content.scenes)[number]['choices'][number]) => (c.effects ?? []).some((e) => 'ending' in e);
+  for (const scene of content.scenes) {
+    const hasBack = !scene.hub && !scene.noBack;
+    if (scene.backFirst && !hasBack) problems.push(err('graph', `scene "${scene.id}" sets backFirst but has no Back to put first`));
+    const first = scene.choices.findIndex(ends);
+    if (first < 0 || (scene.backFirst && hasBack)) continue;
+    if (!scene.choices.slice(0, first).some((c) => !c.if && !c.once && !ends(c))) {
+      problems.push(err('graph', `scene "${scene.id}": "${scene.choices[first]!.id}" ends the game and can be the first choice; put an always-available choice before it, or set backFirst`));
+    }
+  }
   return problems;
 }
 
