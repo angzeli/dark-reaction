@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #39 UI shell (closes #8)
-- **In flight:** #40 settings and content note (this PR)
+- **Last merged:** #40 settings and content note (closes #9)
+- **In flight:** #41 validator (this PR) — the last M2 issue
 
 ## Next
 
-1. #11 validator and playtime estimate (last M2 issue). Then M3 Act I: #14 content, #15 puzzles, #16 art + ambience.
+1. Close M2: merge #41, verify main is green, play it in a browser. 2. M3 Act I: #14 content, #15 puzzles (TLC, glovebox, NMR console), #16 art + ambience.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- Merged #40 (settings and content note).
+- #11 validator (`npm run validate`): content load (engine shape and reference checks), structural reachability and dead ends, every choice says or does something, locale parity and placeholders, every key used by content or by `t('…')` in code exists, 繁中 punctuation and British-spelling warnings, routes per ending played through the engine (`src/engine/simulate.ts`, routes in `src/content/routes.ts`, shared with the Playwright bot) and rendered in both locales, the critical-path playtime (EN 230 wpm, 繁中 350 cpm, plus puzzle par) failing under 30 min once the true-ending route exists, a seeded random-walk fuzz, and a content-size report. Pure puzzle logic registry in `src/puzzles/logic.ts`.
 - #9 settings and content note: a settings panel from the title and the menu (language, four text sizes, four text speeds, reduce motion, allow flicker, high contrast, sound with three volumes) built from native radios, checkboxes and sliders; focus survives re-renders; a first-launch content note in the browser's language with quick flicker and motion toggles, re-readable from the menu and settings.
 - Merged #39 (UI shell).
 - #8 UI shell: `App` (title with language and sound toggles, Continue/New game/Import; play screen with HUD, illustration, revealed narrative, numbered choices by key or tap; notebook on ruled paper with sections, phantom pages, strike-through for fudges, margin notes, the loop log; menu with save/load slots, export/import, language and sound; act and lights-out cards; ending screen; puzzle overlay wired to the engine; autosave after every action). Settings model (separate key, OS-aware defaults). Content skeleton: eight rooms with their Act I descriptions in both languages. 8 Playwright tests drive the real build.
