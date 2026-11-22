@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #34 gitignore fix (closes #32)
-- **In flight:** #37 puzzle framework (this PR), #36 saves (cold review); next #8 UI shell, #9 settings, #11 validator
+- **Last merged:** #37 puzzle framework (closes #10)
+- **In flight:** #36 save system (this PR, cold-reviewed, fixes in)
 
 ## Next
 
-1. M2 Engine: #5 core, #6 i18n, #7 saves, #8 UI shell, #9 settings, #10 puzzle framework, #11 validator, #12 art, #13 audio.
+1. #8 UI shell (title, play screen, notebook, menu, saves, cards, puzzle overlay), #9 settings and content note, #11 validator and playtime. Then M3 Act I.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #7 saves: `SaveStore` (autosave + slots 1–3 under `dark-reaction.save.*`), a versioned envelope (`game`, `schema`, `savedAt`, `locale`, `summary`, `state`) with ordered migrations (v0 → v1: the bare prototype state without `actLoop`), shape validation that refuses corrupt, foreign or newer saves with a reason, `latest()` for Continue, export/import as text and file helpers. `Gallery` under its own key (`dark-reaction.gallery.v1`) records endings and solved puzzles before the epilogue; margins only after a first ending. Storage access never throws (blocked, full or missing localStorage). Cold-reviewed: 7 bugs fixed (content-id drift, quota at startup, element shapes, gallery wipe, silent import errors, unserialisable writes, weak tests); #38 opened for two-tab autosave clashes.
+- Merged #35 (art system).
 - #10 puzzle framework: the contract (`src/puzzles/types.ts`: pure `logic` with init/apply/isSolved/isFailed/minutes/solution, and a DOM `view` with rerender), the shared frame (`src/puzzles/frame.ts`: title, intro, a clock that moves as minutes are spent, three-tier hints revealed in order, Step away, 03:33 ends the attempt, modal dialog with focus trap, live re-render on language switch), DOM helpers (`src/ui/dom.ts`), a `puzzles` locale area, a reusable contract test (`tests/helpers/puzzle-contract.ts`), and a sample dial lock proving it end to end in Playwright.
 - #32: `.gitignore` now ignores `node_modules` as a symlink too (worktrees share one install); a symlink slipped into #31 and was removed before merge.
 - #12 art system: SVG helpers and palette (`src/art/svg.ts`), deterministic rain on glass and drops, tube flicker, LED blink, ordered dither, a grain canvas, a stage that only re-renders when the picture changes, and the 03:33 lights-out transition (stutter, black with the clock, cold 02:47, fade back; steady fade with flicker off; plain fades with reduced motion; dark-run variant; skippable). First illustration: the office, used as the title backdrop. Playwright checks every scene parses as SVG and the transition in all modes.

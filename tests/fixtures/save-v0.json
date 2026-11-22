@@ -1,0 +1,74 @@
+{
+  "v": 0,
+  "loop": 1,
+  "minute": 2,
+  "act": 1,
+  "location": "office",
+  "scene": "office.hub",
+  "menu": "none",
+  "inventory": [],
+  "flags": [],
+  "lflags": [
+    "woke"
+  ],
+  "known": [
+    {
+      "id": "nb.mug",
+      "loop": 1,
+      "minute": 0
+    },
+    {
+      "id": "fudge.yield",
+      "loop": 1,
+      "minute": 1
+    }
+  ],
+  "solved": [],
+  "hints": {},
+  "usedLoop": [
+    "office.mug",
+    "office.yield"
+  ],
+  "usedEver": [
+    "office.mug",
+    "office.yield"
+  ],
+  "firedEvents": [],
+  "fudges": [
+    {
+      "id": "fudge.yield",
+      "corrected": false,
+      "loop": 1
+    }
+  ],
+  "fudgesEver": 1,
+  "fragments": [
+    "yc.mug"
+  ],
+  "obsession": 0,
+  "chasedThisLoop": false,
+  "restedThisLoop": false,
+  "chaseUsed": [],
+  "restUsed": [],
+  "loops": [],
+  "display": [
+    {
+      "key": "r.yield",
+      "style": "result"
+    },
+    {
+      "key": "ui.noted",
+      "params": {
+        "entry": "@fudge.yield.title"
+      },
+      "style": "system"
+    }
+  ],
+  "cards": [],
+  "puzzle": null,
+  "darkRun": false,
+  "ending": null,
+  "margins": [],
+  "puzzleData": {},
+  "turns": 2
+}
