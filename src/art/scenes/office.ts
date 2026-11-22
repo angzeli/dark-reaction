@@ -1,7 +1,8 @@
 /**
  * 4.08 Write-up office, 02:47. Rain on the big window, sodium light from
  * the street, two tubes (one of them dying), your monitor with the NMR
- * queue open, hot desk 7 buried in boxes, the kettle, the sofa.
+ * queue open, hot desk 7 buried in boxes, the kettle on the windowsill,
+ * the sofa.
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
 import type { ArtContext } from '../types.ts';
@@ -103,8 +104,11 @@ export function office(ctx: ArtContext): string {
     rect(700, 550, 150, 50, '#3b2d20'),
     rect(700, 568, 150, 4, '#8a7a5c', { opacity: 0.45 }),
     boxes,
-    path('M862 562 h26 v34 a6 6 0 0 1 -6 6 h-14 a6 6 0 0 1 -6 -6 z', '#7a6a5a'),
-    path('M888 570 q14 2 0 18', 'none', { stroke: '#7a6a5a', 'stroke-width': 4 }),
+    path('M862 562 h26 v34 a6 6 0 0 1 -6 6 h-14 a6 6 0 0 1 -6 -6 z', '#c9c3b6', { opacity: 0.85 }),
+    path('M888 570 q14 2 0 18', 'none', { stroke: '#c9c3b6', 'stroke-width': 4, opacity: 0.85 }),
+    rect(862, 562, 6, 40, '#ffffff', { opacity: 0.12 }),
+    poly([[666, 600], [676, 578], [686, 600]], '#cfc6b2', { opacity: 0.6 }),
+    label(672, 597, '7', 11, '#2a2118'),
   );
 
   // Your desk and monitor with the queue on it.
@@ -135,21 +139,32 @@ export function office(ctx: ArtContext): string {
     path('M1270 462 l40 -10 l8 22 l-44 6 z', C.copper, { opacity: 0.8 }),
   );
 
-  // Kettle counter and the fridge under it.
+  // The counter over the fridge: two mugs and the tea caddy.
   const kitchen = group(
     'kitchen',
     rect(1395, 560, 190, 14, '#24313f'),
     rect(1400, 574, 180, 126, '#16202b'),
     rect(1408, 584, 80, 104, '#1b2733', { rx: 3 }),
     circle(1478, 640, 2, C.tube, { opacity: 0.6 }),
-    path('M1440 560 v-46 q0 -10 10 -10 h34 q10 0 10 10 v46 z', '#5a6774'),
-    path('M1494 520 q20 0 18 22', 'none', { stroke: '#5a6774', 'stroke-width': 6 }),
-    rect(1452, 498, 28, 8, '#3d4853', { rx: 3 }),
-    path('M1530 560 v-28 h22 v28 z', '#6b5446'),
-    path('M1556 560 v-22 h18 v22 z', '#3f5560'),
+    path('M1446 560 v-28 h22 v28 z', '#6b5446'),
+    path('M1474 560 v-22 h18 v22 z', '#3f5560'),
+    rect(1506, 532, 40, 28, '#2b3540', { rx: 3 }),
   );
 
-  // Chair, and the sofa in the foreground.
+  // The kettle lives on the windowsill, against the street lamp.
+  const kettle = group(
+    'kettle',
+    rect(566, 552, 64, 6, '#1c242c', { rx: 2 }),
+    path('M570 552 v-42 q0 -10 10 -10 h34 q10 0 10 10 v42 z', '#2e3843'),
+    path('M624 516 q20 0 18 22', 'none', { stroke: '#2e3843', 'stroke-width': 6 }),
+    rect(582, 494, 28, 8, '#252e37', { rx: 3 }),
+    path('M571 548 v-38 q0 -9 9 -9', 'none', { stroke: C.sodium, 'stroke-width': 1.5, opacity: 0.45 }),
+    path('M626 574 q2 34 14 56 t8 26', 'none', { stroke: '#121a22', 'stroke-width': 3 }),
+    rect(638, 654, 20, 14, '#1c2631', { rx: 2 }),
+  );
+
+  // Chair, and the sofa in the foreground, high enough that the play screen's
+  // wide crop still shows its back.
   const chair = group(
     'chair',
     rect(1080, 560, 120, 150, '#0d141c', { rx: 14 }),
@@ -159,14 +174,14 @@ export function office(ctx: ArtContext): string {
   );
   const sofa = group(
     'layer-fg',
-    path('M20 900 v-150 q0 -40 40 -40 h360 q40 0 40 40 v150 z', '#161c1a'),
-    path('M60 760 q0 -26 26 -26 h300 q26 0 26 26 v40 h-352 z', '#1d2522'),
-    path('M300 735 q40 -12 90 4 l-6 30 q-44 -10 -84 0 z', '#2d3a44', { opacity: 0.9 }),
+    path('M20 900 v-216 q0 -40 40 -40 h360 q40 0 40 40 v216 z', '#161c1a'),
+    path('M60 694 q0 -26 26 -26 h300 q26 0 26 26 v40 h-352 z', '#1d2522'),
+    path('M300 669 q40 -12 90 4 l-6 30 q-44 -10 -84 0 z', '#2d3a44', { opacity: 0.9 }),
   );
 
   return svg(
     'office',
-    [background, windowPane, spill, tubes, clock, board, hotDesk, desk, kitchen, chair, sofa].join(''),
+    [background, windowPane, kettle, spill, tubes, clock, board, hotDesk, desk, kitchen, chair, sofa].join(''),
     { dark: ctx.dark ?? false },
   );
 }

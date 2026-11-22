@@ -1,13 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { SCENES } from '../src/art/scenes/index.ts';
+import { hasScene, SCENES } from '../src/art/scenes/index.ts';
 import { hash, rain, seeded } from '../src/art/svg.ts';
 import type { ArtContext } from '../src/art/types.ts';
+import { o2At } from '../src/content/lab.ts';
+import { LOCATIONS } from '../src/content/world.ts';
 
 const contexts: ArtContext[] = [
   { act: 1, minute: 0 },
   { act: 2, minute: 28 },
   { act: 3, minute: 46, dark: true },
 ];
+
+/** Scene motion the reduce-motion and flicker settings can stop (src/styles/art.css), and the stage's own classes. */
+const MOTION = new Set(['dr-rain', 'dr-drop', 'dr-flicker', 'dr-blink', 'dr-breathe']);
+const STAGE = new Set(['dr-scene', 'dr-scene--dark', 'dr-tube', 'dr-dither']);
+
+/** Rooms whose illustrations arrive with later acts. */
+const LATER = new Set(['pi', 'stairs', 'cold', 'roof']);
 
 describe('scenes', () => {
   for (const [id, scene] of Object.entries(SCENES)) {
@@ -16,15 +25,62 @@ describe('scenes', () => {
         const a = scene(ctx);
         expect(a.startsWith('<svg')).toBe(true);
         expect(a).toContain(`data-art="${id}"`);
+        expect(a).toContain('viewBox="0 0 1600 900"');
         expect(a).toContain('aria-hidden="true"');
-        expect(a).not.toMatch(/NaN|undefined/);
+        expect(a).not.toMatch(/NaN|undefined|Infinity/);
         expect(scene(ctx)).toBe(a);
       }
     });
+
+    it(`${id} defines each id once and every id it refers to`, () => {
+      for (const ctx of contexts) {
+        const a = scene(ctx);
+        const ids = [...a.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+        expect(new Set(ids).size).toBe(ids.length);
+        for (const [, ref] of a.matchAll(/url\(#([^)]+)\)/g)) expect(ids).toContain(ref);
+      }
+    });
+
+    it(`${id} moves only through classes the settings can stop`, () => {
+      const a = scene(contexts[0]!);
+      expect(a).not.toMatch(/<animate|<set\b/);
+      const classes = [...a.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1]!.split(/\s+/)).filter((c) => c.startsWith('dr-'));
+      for (const c of classes) expect(MOTION.has(c) || STAGE.has(c), c).toBe(true);
+    });
   }
+
+  it('every room has its illustration, apart from the ones later acts bring', () => {
+    const arts = LOCATIONS.map((l) => l.art);
+    for (const id of LATER) expect(arts).toContain(id);
+    for (const id of arts) if (!LATER.has(id)) expect(hasScene(id), id).toBe(true);
+  });
 
   it('the office clock follows the loop clock', () => {
     expect(SCENES['office']!({ act: 1, minute: 0 })).not.toBe(SCENES['office']!({ act: 1, minute: 13 }));
+  });
+
+  it('the Kraken has eight ports numbered left to right, and port 4 is bare', () => {
+    const a = SCENES['synth']!({ act: 1, minute: 0 });
+    const ports = [...a.matchAll(/<g class="kraken-port" data-port="(\d+)" data-holds="(\w+)">(.*?)<\/g>/g)].map(([, n, holds, body]) => {
+      const tag = body!.match(/<text x="([\d.]+)"[^>]*>(\d+)<\/text>/)!;
+      return { n: Number(n), holds, x: Number(tag[1]), label: Number(tag[2]) };
+    });
+    expect(ports.map((p) => p.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(ports.map((p) => p.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    for (let i = 1; i < ports.length; i++) expect(ports[i]!.x).toBeGreaterThan(ports[i - 1]!.x);
+    expect(ports.filter((p) => p.holds === 'none').map((p) => p.n)).toEqual([4]);
+  });
+
+  it('the glovebox meter reads the O₂ model, from green through amber to red', () => {
+    const meter = (minute: number) => {
+      const m = SCENES['glovebox']!({ act: 1, minute }).match(/class="gb-o2" data-level="(\w+)"[^>]*>([\d.]+)</);
+      return { level: m?.[1], ppm: m?.[2] };
+    };
+    expect(meter(0)).toEqual({ level: 'green', ppm: o2At(0).toFixed(1) });
+    expect(meter(31)).toEqual({ level: 'green', ppm: '8.0' });
+    expect(meter(32)).toEqual({ level: 'amber', ppm: '8.2' });
+    expect(meter(41)).toEqual({ level: 'amber', ppm: '10.0' });
+    expect(meter(42)).toEqual({ level: 'red', ppm: '10.2' });
   });
 });
 
