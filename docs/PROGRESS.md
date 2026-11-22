@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M5 Act III & Endings (M3 and M4 closed)
-- **Last merged:** #68 Act III puzzles (closes #21)
-- **In flight:** Act III part B and Dark Reaction (this PR, closes #20 and #22; cold review first)
+- **Last merged:** #70 Act III part B and Dark Reaction (closes #20 and #22)
+- **In flight:** the playthrough bot (this PR, closes #24, the last M5 issue)
 
 ## Next
 
-1. Merge this PR (Dark Reaction) after its cold review. **M5 gate:** all M5 issues closed, main CI green, the true ending played through in Playwright in both languages, screenshots read. 2. #24: the bot (`e2e/bot.ts`) plays every route in both languages, with screenshots. 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR. **M5 gate:** all M5 issues closed, main CI green, the true ending played through in Playwright in both languages, screenshots read. 2. #72 (endings open scrolled down) and #71 (the lights-out fade-in; "Look away" in the dark run). 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #24 **The playthrough bot.** `e2e/playthrough.spec.ts` plays every ending's route from `src/content/routes.ts` (the validator's own) through the real UI, from a new game to the ending screen, in English and 繁中: twelve runs.
+  - **Checks:** no console errors, no request outside the page's origin, and the ending arrives in the same loop as the simulator's.
+  - **Screenshots** go to `e2e/screenshots/playthrough/<locale>/<ending>/`, which CI keeps with the Playwright report. Each run keeps its ending screen. The true ending's route visits all eight rooms and all ten puzzles, so its runs also keep each room on arrival, each puzzle as it opens and each lights-out.
+  - **Bot:** `play()` takes an optional `Capture`; solvers added for the cipher (both scripts) and the freezer.
+- Merged #70 (closes #20 and #22). Follow-ups filed: #71, #72.
 - #20 Act III part B and #22 endings part 3: **Dark Reaction**, the true ending, and with it all six endings are in the game.
   - **The setup:** in Act III, load her dark tube (filled on the Kraken, in foil) into holder 13 (`nmr.holder13`), arm the UPS with the chirp's PIN, and be in the NMR suite at 03:33.
   - **The run:** the dark-run rules come first in `LIGHTS_OUT`. Without the UPS, the console goes out too. With it but something missing, the run gives only noise and a page in your handwriting says what: `ph.pages` (a fudge stands), `ph.figure` (Figure 3 not proved), `ph.her` (her raw data, nine fragments, or one of the five required). Otherwise the lights go out, the room is drawn dark around the console, and the peak match opens; solving it is Dark Reaction. Stepping away lets the night end as usual.
