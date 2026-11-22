@@ -75,6 +75,7 @@ CI runs `attribution`, `typecheck`, `lint`, `unit`, `validate`, `build` and `e2e
 - **Content boundaries:** no suicide or self-harm, no gore, no real hazardous procedures (see `docs/DESIGN.md` §1).
 - **Tests:** engine and puzzle logic get Vitest coverage; anything the player can do end to end gets a Playwright path.
 - Third-party assets must be OFL or CC0 and listed in `CREDITS.md`.
+- **Art:** scenes are pure functions `(ArtContext) => string` returning SVG in a 1600 × 900 viewBox (`src/art/scenes/`, registered in `scenes/index.ts`), built from the helpers in `src/art/svg.ts` and the palette `C`. The stage crops with `slice`, so keep what matters inside the safe band x 200–1400, y 150–760. Randomness only through `seeded(hash(id))` so a scene never changes between renders. Motion only through the CSS classes in `src/styles/art.css` (`dr-rain`, `dr-drop`, `dr-flicker`, `dr-blink`, `dr-breathe`), which the reduce-motion and flicker settings switch off. Illustrations are `aria-hidden`; the location is described in text.
 
 ## 5. Layout
 
