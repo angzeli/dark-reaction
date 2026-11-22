@@ -129,7 +129,7 @@ describe('the portal', () => {
     g.correctFudge('fudge.baseline');
     g.choose('office.monitor');
     g.choose('office.submit.own');
-    expect(ids(g)).toEqual(['office.upload.own', 'meta:back']);
+    expect(ids(g)).toEqual(['meta:back', 'office.upload.own']);
     g.choose('office.upload.own');
     expect(g.state.ending).toBe('honest');
     expect(epilogueKeys(g)).toContain('ending.honest.struck');
@@ -158,7 +158,7 @@ describe('the portal', () => {
     g.correctFudge('fudge.yield');
     g.choose('office.monitor');
     g.choose('office.submit.printout');
-    expect(ids(g)).toEqual(['office.upload.printout', 'meta:back']);
+    expect(ids(g)).toEqual(['meta:back', 'office.upload.printout']);
   });
 
   it('the perfect upload remembers her email only if you read it', () => {
@@ -190,7 +190,7 @@ describe('fire exit B', () => {
     // The door has swung shut behind the words; push it again and it asks again.
     expect(g.state.scene).toBe('stairs.hub');
     g.choose('stairs.exitb.open');
-    expect(ids(g)).toEqual(['stairs.leave.cant', 'stairs.door.close']);
+    expect(ids(g)).toEqual(['stairs.door.close', 'stairs.leave.cant']);
   });
 
   it('too far gone, you can’t make yourself leave', () => {
@@ -200,6 +200,7 @@ describe('fire exit B', () => {
     waitUntil(g, 34);
     g.choose('stairs.exitb.open');
     expect(ids(g)).not.toContain('stairs.leave');
+    expect(ids(g)).toEqual(['stairs.door.close', 'stairs.leave.cant']);
     g.choose('stairs.leave.cant');
     expect(keys(g)[0]).toBe('stairs.leave.cant');
     expect(keys(g)).not.toContain('stairs.leave.notyet');
@@ -213,7 +214,7 @@ describe('fire exit B', () => {
     goTo(g, 'stairs');
     waitUntil(g, 34);
     g.choose('stairs.exitb.open');
-    expect(ids(g)).toEqual(['stairs.leave', 'stairs.door.close']);
+    expect(ids(g)).toEqual(['stairs.door.close', 'stairs.leave']);
   });
 
   it('otherwise you step out, and the rain log comes with you if you found it', () => {
@@ -245,7 +246,7 @@ describe('fire exit B', () => {
     waitUntil(g, 34);
     expect(ids(g)).not.toContain('stairs.leave');
     g.choose('stairs.exitb.open');
-    expect(ids(g)).toEqual(['stairs.leave', 'stairs.door.close']); // no waiting in the doorway, no wandering off
+    expect(ids(g)).toEqual(['stairs.door.close', 'stairs.leave']); // no waiting in the doorway, no wandering off
     g.choose('stairs.door.close');
     expect(g.state.scene).toBe('stairs.hub');
     waitUntil(g, 37);

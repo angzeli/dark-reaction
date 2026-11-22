@@ -140,6 +140,7 @@ export const officeScenes: SceneDef[] = [
     // The portal's last page, with your spectrum attached. Uploading it ends the night.
     id: 'office.declare.own',
     location: 'office',
+    backFirst: true,
     text: [
       { key: 'office.declare.own.text' },
       { key: 'office.declare.blocked', if: { uncorrectedGte: 1 } },
@@ -158,6 +159,7 @@ export const officeScenes: SceneDef[] = [
   {
     id: 'office.declare.printout',
     location: 'office',
+    backFirst: true,
     text: [
       { key: 'office.declare.printout.text' },
       { key: 'office.declare.blocked', if: { uncorrectedGte: 1 } },

@@ -123,6 +123,8 @@ export interface SceneDef {
   onEnter?: Effect[];
   /** Non-hub scenes get an automatic "Back" unless this is set. */
   noBack?: boolean;
+  /** List Back first instead of last, where the first choice would otherwise end the game (#61). */
+  backFirst?: boolean;
 }
 
 export interface LocationDef {
