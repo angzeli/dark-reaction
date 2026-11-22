@@ -5,8 +5,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #33 procedural audio (closes #13)
-- **In flight:** #30 engine core (this PR, cold-reviewed twice), #34 gitignore fix; next #12 art system, #7 saves
+- **Last merged:** #30 engine core (closes #5)
+- **In flight:** #35 art system (this PR), #34 gitignore fix; next #7 saves, #10 puzzle framework, #11 validator, #8 UI shell, #9 settings
 
 ## Next
 
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #12 art system: SVG helpers and palette (`src/art/svg.ts`), deterministic rain on glass and drops, tube flicker, LED blink, ordered dither, a grain canvas, a stage that only re-renders when the picture changes, and the 03:33 lights-out transition (stutter, black with the clock, cold 02:47, fade back; steady fade with flicker off; plain fades with reduced motion; dark-run variant; skippable). First illustration: the office, used as the title backdrop. Playwright checks every scene parses as SVG and the transition in all modes.
+- Merged #30 (engine core, after two rounds of cold review).
 - #5 engine core (cold-reviewed by a subagent; 9 bugs found across two passes and fixed, 44 engine tests): content schema (`src/engine/types.ts`), conditions, shortest-path travel, the `Game` class (choices, travel and wait menus, effects, timed events, 03:33 lights-out with ordered rules, loop reset, acts, phantoms, fudges with strike-through, obsession with end-of-loop rule and Infinite Loop, connection fragments, puzzles incl. the dark run, endings, transition cards). Real map in `src/content/world.ts`. 30 Vitest cases on a fixture world.
 - Merged #29 (fonts). M1 Foundation done.
 - #13 audio: procedural Web Audio engine (`src/audio/audio.ts`), created only on an explicit opt-in. Noise beds (white, pink, brown), oscillators, LFOs, convolution reverb, rain drops, radio murmur, compressor pulse, cryocooler chirps. Ten ambience mixes (eight locations, title, dark) and thirteen cues (lights-out, loop start, phantom, solve, hint, fail, chirp, six endings) defined as sound-design data in `src/audio/presets/`. `chirpSchedule()` shared by the chirp puzzle's LED and audio. Unit tests for presets and timing; a Playwright test bundles the module and plays everything in real Chromium.
