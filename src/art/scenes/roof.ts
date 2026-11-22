@@ -7,7 +7,7 @@
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
 import type { ArtContext } from '../types.ts';
-import { C, circle, ellipse, glow, group, halo, hash, line, path, poly, rain, rect, seeded, svg } from '../svg.ts';
+import { C, circle, ellipse, glow, group, halo, hash, line, path, poly, rain, rect, seeded, stillRain, svg } from '../svg.ts';
 
 /** Top of the parapet: the city stands behind it, the roof in front. */
 const HORIZON = 540;
@@ -214,15 +214,7 @@ function plant(): string {
  * animated streak costs a repaint of the whole picture beneath it.
  */
 function weather(dim: boolean): string {
-  const rnd = seeded(hash('roof-weather'));
-  const still: string[] = [];
-  for (let i = 0; i < 320; i++) {
-    const x = rnd() * 1640;
-    const y = rnd() * 900;
-    const len = 16 + rnd() * 28;
-    still.push(line(x, y, x - len * 0.16, y + len, '#9fb7c9', 1, { opacity: (0.06 + rnd() * 0.1).toFixed(2) }));
-  }
-  return group('weather', ...still, rain('roof-rain', 0, 0, 1600, 900, dim ? 0.65 : 0.45, { drops: false }));
+  return group('weather', stillRain('roof-weather', 0, 0, 1600, 900, 320), rain('roof-rain', 0, 0, 1600, 900, dim ? 0.65 : 0.45, { drops: false }));
 }
 
 export function roof(ctx: ArtContext): string {

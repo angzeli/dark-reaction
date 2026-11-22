@@ -126,6 +126,22 @@ export function rain(id: string, x: number, y: number, w: number, h: number, den
   return `<clipPath id="clip-${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath><g clip-path="url(#clip-${id})">${streaks.join('')}${drops.join('')}</g>`;
 }
 
+/**
+ * Rain that holds still: faint streaks with no animation, so rain still reads
+ * with motion off. Pair it with `rain` for the falling layer. Deterministic.
+ */
+export function stillRain(id: string, x: number, y: number, w: number, h: number, n: number): string {
+  const rnd = seeded(hash(id));
+  const streaks: string[] = [];
+  for (let i = 0; i < n; i++) {
+    const sx = x + rnd() * (w + 40);
+    const sy = y + rnd() * h;
+    const len = 16 + rnd() * 28;
+    streaks.push(line(sx, sy, sx - len * 0.16, sy + len, '#9fb7c9', 1, { opacity: (0.06 + rnd() * 0.1).toFixed(2) }));
+  }
+  return streaks.join('');
+}
+
 /** Clock hands at the loop's time (minute 0 is 02:47), for the wall clocks. */
 export function clockHands(cx: number, cy: number, minute: number): string {
   const total = 2 * 60 + 47 + minute;

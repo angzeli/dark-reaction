@@ -6,7 +6,7 @@
  * rack; Tom's shelf. Part of the creative content (CC BY-NC-SA 4.0).
  */
 import type { ArtContext } from '../types.ts';
-import { C, circle, ellipse, glow, group, label, line, path, poly, rect, svg, tube } from '../svg.ts';
+import { C, circle, ellipse, glow, group, hash, label, line, path, poly, rect, seeded, svg, tube } from '../svg.ts';
 
 /** Glass reads against the lit hoods and the dark wall alike: a dark rim under a pale edge. */
 const GLASS = { fill: '#bfe3ec', edge: '#d3ecf2', rim: '#050d14' };
@@ -107,8 +107,13 @@ function hoodFront(x0: number): string {
 // ── The Kraken ─────────────────────────────────────────────────────────────
 
 /** What hangs on each port, 1 to 8. Port 4 is bare until Act III brings its flask. */
-type Holds = 'flask' | 'schlenk' | 'tube' | 'stopper' | 'none';
-const PORTS: ReadonlyArray<{ holds: Holds; r?: number; clip?: string }> = [
+type Holds = 'flask' | 'schlenk' | 'tube' | 'stopper' | 'none' | 'dark';
+interface PortDef {
+  holds: Holds;
+  r?: number;
+  clip?: string;
+}
+const PORTS: ReadonlyArray<PortDef> = [
   { holds: 'flask', r: 24, clip: '#b89a3a' },
   { holds: 'stopper' },
   { holds: 'stopper' },
@@ -118,13 +123,15 @@ const PORTS: ReadonlyArray<{ holds: Holds; r?: number; clip?: string }> = [
   { holds: 'tube' },
   { holds: 'flask', r: 30, clip: '#5f8f5a' },
 ];
+/** Act III: her flask, on the joint where nothing has ever been (synth.port4). */
+const PORT_4_ACT_3: PortDef = { holds: 'dark', r: 20, clip: '#b89a3a' };
+const portsFor = (act: number): ReadonlyArray<PortDef> => (act === 3 ? PORTS.map((p, i) => (i === 3 ? PORT_4_ACT_3 : p)) : PORTS);
 const portX = (i: number) => 470 + 80 * i;
 const VAC_Y = 274; // top of the vacuum manifold (16 high)
 const GAS_Y = 305; // top of the nitrogen manifold (14 high)
 const JOINT_Y = 386; // top of each port's ground-glass joint
 
-function port(i: number): string {
-  const { holds, r = 22, clip } = PORTS[i]!;
+function port(i: number, { holds, r = 22, clip }: PortDef): string {
   const x = portX(i);
   const n = i + 1;
   const parts: string[] = [
@@ -157,6 +164,28 @@ function port(i: number): string {
       rect(x + 22, top + 10, 5, 15, '#d6dde2', { opacity: 0.5, rx: 2 }),
       highlight(x - 3, top + 8, x - 3, top + 80, 0.35),
     );
+  } else if (holds === 'dark') {
+    // Wrapped in foil to the neck, its tap closed, a paper label in tidy pencil.
+    const foil = flaskPath(x, top + 12, 10, r);
+    const cy = top + 22 + r;
+    const rnd = seeded(hash('synth-port4-foil'));
+    const crinkles = Array.from({ length: 8 }, (_, k) => {
+      const fx = x - r + rnd() * r * 2;
+      const fy = top + 14 + rnd() * (r * 2 + 6);
+      return poly([[fx, fy], [fx + 5 + rnd() * 6, fy + 3], [fx + 2, fy + 8 + rnd() * 8]], k % 2 ? '#e6ecef' : '#6f7b84', { opacity: 0.5 });
+    });
+    parts.push(
+      glass(flaskPath(x, top, 22, r), 0.1),
+      `<clipPath id="synth-port4-foil"><path d="${foil}"/></clipPath>`,
+      path(foil, '#a9b3ba', { stroke: GLASS.rim, 'stroke-width': 2, 'stroke-opacity': 0.5 }),
+      `<g clip-path="url(#synth-port4-foil)">${crinkles.join('')}</g>`,
+      highlight(x - r * 0.6, cy + r * 0.1, x - r * 0.4, cy - r * 0.45, 0.5),
+      // The sidearm, its key turned across it: closed.
+      glass(rr(x + 5, top + 4, 22, 7, 3), 0.14),
+      rect(x + 19, top - 2, 5, 19, '#d6dde2', { opacity: 0.8, rx: 2 }),
+      `<g transform="rotate(-7 ${x} ${cy + 3})">${rect(x - 13, cy - 5, 26, 15, '#e8e0c8')}${line(x - 9, cy, x + 8, cy, '#7a7f86', 1.2)}${line(x - 9, cy + 5, x + 4, cy + 5, '#7a7f86', 1.2)}</g>`,
+    );
+    if (clip) parts.push(rect(x - 9, top - 6, 18, 6, clip, { opacity: 0.65, rx: 2 }));
   } else {
     parts.push(glass(flaskPath(x, top, 22, r), 0.11), highlight(x - r * 0.55, top + 22 + r * 0.6, x - r * 0.35, top + 22 + r * 0.25, 0.45));
     if (holds === 'schlenk') parts.push(glass(rr(x + 5, top + 6, 22, 7, 3), 0.14), rect(x + 22, top + 2, 5, 15, '#d6dde2', { opacity: 0.5, rx: 2 }));
@@ -170,7 +199,7 @@ const krakenHose = () =>
   path('M330 381 C 314 384, 312 404, 315 440 L 316 640', 'none', { stroke: '#1b1517', 'stroke-width': 10, 'stroke-linecap': 'round' }) +
   path('M326 386 C 316 392, 314 410, 316 440', 'none', { stroke: '#4a3c3c', 'stroke-width': 2, opacity: 0.45 });
 
-function kraken(): string {
+function kraken(act: number): string {
   const left = 352;
   const right = 1092;
   return group(
@@ -203,7 +232,7 @@ function kraken(): string {
     glass(rr(1114, 352, 30, 72, 11), 0.14),
     rect(1118, 396, 22, 24, C.copper, { opacity: 0.32, rx: 6 }),
     glass(rr(1135, 340, 8, 18, 3), 0.12),
-    ...PORTS.map((_, i) => port(i)),
+    ...portsFor(act).map((p, i) => port(i, p)),
   );
 }
 
@@ -350,10 +379,13 @@ export function synth(ctx: ArtContext): string {
 
   const tubes = group('layer-light', tube(160, 46, 320, { on: true }), tube(1120, 46, 320, { flicker: true, on: !dim }));
 
-  // The hoods breathe together: one group, one animation.
+  // The hoods breathe together: one group, one animation. In Act III they fall out of
+  // step, the third lagging behind like a sleeper's second breath.
+  const breathe = (xs: number[], style = '') =>
+    `<g class="dr-breathe"${style}>${[...xs.map(hoodInterior), ...xs.map((x0) => glow(x0 + HOOD_W / 2, 380, 150, 230, C.tube, 0.09))].join('')}</g>`;
   const hoods = [
     group('hoods', ...HOODS.map(hoodBody)),
-    group('dr-breathe', ...HOODS.map(hoodInterior), ...HOODS.map((x0) => glow(x0 + HOOD_W / 2, 380, 150, 230, C.tube, 0.09))),
+    dim ? breathe(HOODS.slice(0, 2)) + breathe(HOODS.slice(2), ' style="animation-delay:-4.4s"') : breathe(HOODS),
     group('hood-fronts', ...HOODS.map(hoodFront)),
   ].join('');
 
@@ -369,6 +401,6 @@ export function synth(ctx: ArtContext): string {
 
   // The room is drawn 45 units high and shifted down, so the hoods' monitors and the
   // bench top both fall inside the play screen's wide crop.
-  const room = `<g transform="translate(0 45)">${[shelf(), poster(), hoods, krakenHose(), bench, fractionRack(), kraken(), rotavap()].join('')}</g>`;
+  const room = `<g transform="translate(0 45)">${[shelf(), poster(), hoods, krakenHose(), bench, fractionRack(), kraken(ctx.act), rotavap()].join('')}</g>`;
   return svg('synth', [background, tubes, room].join(''), { dark: ctx.dark ?? false });
 }
