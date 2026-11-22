@@ -130,7 +130,13 @@ function bookcase(): string {
   );
 }
 
-function framedPaper(): string {
+/**
+ * In Act III (pi.hub.act3) the frame hangs very slightly crooked, as if taken
+ * down and put back in a hurry: it turns about its nail, the brass plate
+ * screwed to the wall below stays level, and a paler ghost of the wall where
+ * the frame always hung shows along the edges it has swung away from.
+ */
+function framedPaper(crooked: boolean): string {
   const x = 824;
   const y = 250;
   const ink = '#2c2a28';
@@ -144,9 +150,8 @@ function framedPaper(): string {
   );
   const text = (cx: number, cy: number, n: number, w: number) =>
     Array.from({ length: n }, (_, i) => rect(cx, cy + i * 6, i % 5 === 4 ? w * 0.6 : w, 2, ink, { opacity: 0.35 }));
-  return group(
-    'framed-paper',
-    glow(x + 138, y + 60, 200, 90, C.copper, 0.06),
+  const light = glow(x + 138, y + 60, 200, 90, C.copper, 0.06);
+  const frame = [
     rect(x, y, 276, 128, '#1c1611'),
     rect(x, y, 276, 2, '#6a5642', { opacity: 0.8 }),
     rect(x + 10, y + 10, 256, 108, '#b8b0a0', { opacity: 0.55 }),
@@ -158,9 +163,15 @@ function framedPaper(): string {
     rect(x + 132, y + 18, 124, 92, '#e2dccb', { opacity: 0.62 }),
     line(fx, base + 4, fx + 112, base + 4, ink, 1, { opacity: 0.5 }),
     figure,
-    rect(x + 110, y + 132, 56, 10, '#b8954f', { opacity: 0.85 }),
-    rect(x + 110, y + 132, 56, 2, '#e0c88a', { opacity: 0.6 }),
-  );
+  ];
+  const plate = [rect(x + 110, y + 132, 56, 10, '#b8954f', { opacity: 0.85 }), rect(x + 110, y + 132, 56, 2, '#e0c88a', { opacity: 0.6 })];
+  if (!crooked) return group('framed-paper', light, ...frame, ...plate);
+  return `<g class="framed-paper" data-detail="paper-crooked">${[
+    light,
+    rect(x, y, 276, 128, '#433b35', { opacity: 0.5, stroke: '#5a5047', 'stroke-width': 1.5, 'stroke-opacity': 0.5 }),
+    `<g transform="rotate(1.8 ${x + 138} ${y + 2})">${frame.join('')}</g>`,
+    ...plate,
+  ].join('')}</g>`;
 }
 
 function photo(): string {
@@ -255,7 +266,7 @@ export function pi(ctx: ArtContext): string {
   const dim = ctx.act === 3;
   return svg(
     'pi',
-    [room(), glow(700, 560, 420, 160, C.copper, 0.07), door(), windowPane(dim), streetLight(), bookcase(), framedPaper(), photo(), wallClock(ctx.minute), cabinet(), desk(), lamp()].join(''),
+    [room(), glow(700, 560, 420, 160, C.copper, 0.07), door(), windowPane(dim), streetLight(), bookcase(), framedPaper(dim), photo(), wallClock(ctx.minute), cabinet(), desk(), lamp()].join(''),
     { dark: ctx.dark ?? false },
   );
 }

@@ -9,11 +9,12 @@
  */
 import { O2_LIMIT, o2At } from '../../content/lab.ts';
 import type { ArtContext } from '../types.ts';
-import { C, circle, ellipse, glow, group, halo, label, line, path, poly, rect, svg, tube } from '../svg.ts';
+import { C, circle, ellipse, glow, group, halo, hash, label, line, path, poly, rect, seeded, svg, tube } from '../svg.ts';
 
 /** Meter colours and thresholds, matching the antechamber puzzle's readout. */
 const METER = { green: C.tube, amber: '#e8c36a', red: '#ff7b6b' } as const;
 const AMBER_FROM = 8;
+const FROST = '#eef7fb';
 
 function meterLevel(ppm: number): keyof typeof METER {
   return ppm > O2_LIMIT ? 'red' : ppm > AMBER_FROM ? 'amber' : 'green';
@@ -220,7 +221,39 @@ function antechamber(): string {
   );
 }
 
-function miniAntechamber(): string {
+/**
+ * Act III (glovebox.hub.act3): frost on the mini-antechamber's little window,
+ * though nothing in the room is cold, and behind it something small and
+ * upright standing very still (her J. Young tube, waiting on its rack).
+ * Dark glass on a dark body never showed before; the frost makes it.
+ */
+function frostedWindow(): string {
+  const rnd = seeded(hash('gb-mini-frost'));
+  const [x, y, w, h] = [334, 480, 44, 15];
+  const rime = Array.from({ length: 22 }, () => {
+    const a = rnd() * Math.PI * 2;
+    const r = 0.9 + rnd() * 0.25;
+    return circle(x + w / 2 + Math.cos(a) * (w / 2) * r, y + h / 2 + Math.sin(a) * (h / 2) * r, 0.7 + rnd() * 1.2, FROST, { opacity: (0.45 + rnd() * 0.45).toFixed(2) });
+  });
+  return `<g class="mini-window" data-detail="mini-frost">${[
+    `<clipPath id="gb-mini-glass"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5"/></clipPath>`,
+    halo(x + w / 2, y + h / 2, 20, FROST, 0.12),
+    rect(x - 2, y - 2, w + 4, h + 4, '#1f2a34', { rx: 6 }),
+    `<g clip-path="url(#gb-mini-glass)">${[
+      rect(x, y, w, h, '#1f2e3a'),
+      // The tube behind the frost: a thin upright, its tap a little wider.
+      rect(x + 24.5, y + 3, 2.6, 12, '#020507'),
+      rect(x + 23.3, y + 1, 5, 3.4, '#020507', { rx: 1 }),
+      rect(x + 17, y + 12.5, 18, 2.5, '#05090d'),
+      rect(x, y, w, h, FROST, { opacity: 0.36 }),
+      rect(x, y, w, h * 0.4, FROST, { opacity: 0.16 }),
+      rect(x + 7, y + 3, w - 14, h - 6, '#0c151d', { opacity: 0.12, rx: 4 }),
+    ].join('')}</g>`,
+    ...rime,
+  ].join('')}</g>`;
+}
+
+function miniAntechamber(frosted: boolean): string {
   // Small, sealed, and taped shut in someone's careful hand.
   return group(
     'mini',
@@ -231,6 +264,7 @@ function miniAntechamber(): string {
     circle(296, 474, 3, '#8a9aa8'),
     rect(284, 466, 30, 9, '#d8cfb4', { opacity: 0.78, transform: 'rotate(-58 299 470)' }),
     rect(284, 470, 30, 9, '#d8cfb4', { opacity: 0.72, transform: 'rotate(52 299 474)' }),
+    frosted ? frostedWindow() : '',
     rect(322, 462, 66, 15, '#e4dcc4', { opacity: 0.85, transform: 'rotate(-3 355 469)' }),
     label(326, 473, 'DO NOT OPEN', 7.5, '#6e2a22', { transform: 'rotate(-3 355 469)', 'font-style': 'italic' }),
   );
@@ -264,7 +298,7 @@ export function glovebox(ctx: ArtContext): string {
     ellipse(780, 694, 420, 14, C.shadow, { opacity: 0.45 }),
     box(ppm),
     antechamber(),
-    miniAntechamber(),
+    miniAntechamber(dim),
     gloveport(640, 456),
     gloveport(920, 456),
     glove(640, 456, -6),

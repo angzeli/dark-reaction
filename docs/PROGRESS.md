@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #77 hover only where there is one (closes #67)
-- **In flight:** content to 18,000 English words (this PR, closes #69). Also open: #79 Act III room art (#64).
+- **Last merged:** #78 content to 18,000 English words (closes #69)
+- **In flight:** Act III room art (this PR, closes #64).
 
 ## Next
 
-1. Merge this PR and #79. 2. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 3. M6: #26 polish, #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 3. M6: #26 polish, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #64: **Act III rooms look the way Act III reads.** Drawn by the art subagent; each detail appears only in Act III.
+  - **B.05:** frost feathers grow from the freezer's seal and fan across the floor to the foot of the door, every one pointing at it.
+  - **Dan's office:** the framed 2020 paper hangs 1.8° crooked, its brass plate still level, a paler outline of where it was.
+  - **Stairwell:** both running men in the picture, over fire exit B and the main entrance, have gone out; a faint green glow upstairs stands for the ones still lit.
+  - **Glovebox room:** the mini-antechamber has a frosted window with a small upright tube behind it.
+  - **Write-up office:** the dying tube burns steady and too white (no flicker), lighting the wall and edges below it. The rain is lighter, as the text says.
+  - **Roof** (added in review, from the subagent's report): the Act III rain thins to a mist, a pale wash with a sixth of the falling streaks.
+  - **Tests:** Acts I and II of all six rooms hash byte for byte as before. Each detail is present only in Act III. Nothing in the Act III office flickers, the dead signs have no glow, the frame turns 0.5–3° with its plate level, and the roof's Act III rain is under a third of Act II's.
+- Merged #78 (closes #69).
 - #69: **English at 18,075 words, 繁中 at 27,630 characters** (from 16,480 and 25,287). New words deepen rooms off the main path; the critical path is unchanged at 50.2 / 51.0 min.
   - **Act III looks**, matching the room art in #64:
     - the frost in B.05, every feather pointing upstairs, and a narrow handprint on the door frame (`nb.frost`);

@@ -214,7 +214,16 @@ function plant(): string {
  * animated streak costs a repaint of the whole picture beneath it.
  */
 function weather(dim: boolean): string {
-  return group('weather', stillRain('roof-weather', 0, 0, 1600, 900, 320), rain('roof-rain', 0, 0, 1600, 900, dim ? 0.65 : 0.45, { drops: false }));
+  // Act III: the rain has thinned to a fine mist that hangs rather than falls (roof.hub.act3).
+  if (dim) {
+    return group(
+      'weather',
+      rect(0, 0, 1600, 900, '#c9d6e0', { opacity: '0.06', 'data-detail': 'mist' }),
+      stillRain('roof-weather', 0, 0, 1600, 900, 60),
+      rain('roof-rain', 0, 0, 1600, 900, 0.1, { drops: false }),
+    );
+  }
+  return group('weather', stillRain('roof-weather', 0, 0, 1600, 900, 320), rain('roof-rain', 0, 0, 1600, 900, 0.45, { drops: false }));
 }
 
 export function roof(ctx: ArtContext): string {

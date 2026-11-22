@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { hasScene, SCENES } from '../src/art/scenes/index.ts';
 import { hash, rain, seeded } from '../src/art/svg.ts';
@@ -113,6 +114,89 @@ describe('scenes', () => {
     expect(meter(32)).toEqual({ level: 'amber', ppm: '8.2' });
     expect(meter(41)).toEqual({ level: 'amber', ppm: '10.0' });
     expect(meter(42)).toEqual({ level: 'red', ppm: '10.2' });
+  });
+});
+
+describe('Act III rooms (#64)', () => {
+  /**
+   * SHA-256 of every Act I and II render of these rooms (minutes 0, 13, 28
+   * and 46, lit and dark) as they were before Act III got its own details.
+   * Act III may change these rooms; Acts I and II may not.
+   */
+  const ACTS_1_2: Record<string, string> = {
+    cold: 'd2637f5c08e172e8ee9f864cfaf94d7712adaf000c5ea305ceff6baf3969d3fb',
+    glovebox: '4b564883a42c6573afd14da47b0790c4dabe7f33c655870ac8626414ae9df393',
+    office: '7b49bd97b5239d9343143eaf0337a2f3bb79c75d113107fefd3e27f952fe438e',
+    pi: '0e2b469b8320eb4d6de048397010c9fbee2fc3fff5f50ef65564fd9a7accbeb3',
+    roof: '2219ae82a2c13dc17b5e3dba27b2cd6b66f1c9ebf450542d6e392f4f9815ea08',
+    stairs: '545a2afdf09841dfb68e58dbf325506588e6ff1712a195793c263850d4bfd9df',
+  };
+  /** What each room's Act III hub text describes, by the `data-detail` its picture carries. */
+  const DETAILS: Record<string, string[]> = {
+    cold: ['frost-feathers'],
+    glovebox: ['mini-frost'],
+    office: ['tube-steady'],
+    pi: ['paper-crooked'],
+    roof: ['mist'],
+    stairs: ['exit-out', 'exit-out', 'exit-above'],
+  };
+  const details = (svg: string) => [...svg.matchAll(/data-detail="([^"]+)"/g)].map((m) => m[1]).sort();
+
+  it('Acts I and II render byte for byte as they did before', () => {
+    for (const [id, expected] of Object.entries(ACTS_1_2)) {
+      const parts: string[] = [];
+      for (const act of [1, 2] as const) for (const minute of [0, 13, 28, 46]) for (const dark of [false, true]) parts.push(SCENES[id]!({ act, minute, dark }));
+      expect(createHash('sha256').update(parts.join('\n')).digest('hex'), id).toBe(expected);
+    }
+  });
+
+  it('each room shows what its Act III text describes, and only in Act III', () => {
+    for (const [id, expected] of Object.entries(DETAILS)) {
+      for (const dark of [false, true]) {
+        expect(details(SCENES[id]!({ act: 3, minute: 20, dark })), id).toEqual(expected.slice().sort());
+        for (const act of [1, 2] as const) expect(details(SCENES[id]!({ act, minute: 20, dark })), `${id} act ${act}`).toEqual([]);
+      }
+    }
+  });
+
+  it('the office’s dying tube stops flickering in Act III: steady, too white, and nothing in the room flickers', () => {
+    for (const act of [1, 2] as const) expect(SCENES['office']!({ act, minute: 0 })).toContain('dr-flicker');
+    const a = SCENES['office']!({ act: 3, minute: 0 });
+    expect(a).not.toContain('dr-flicker');
+    expect(a).toMatch(/<g class="dr-tube office-tube-steady" data-detail="tube-steady">/);
+  });
+
+  it('the stairwell’s two running men are out in Act III and cast no glow', () => {
+    const signs = (act: 1 | 2 | 3) => (SCENES['stairs']!({ act, minute: 0 }).match(/fill="#2f9a5a"/g) ?? []).length;
+    expect(signs(1)).toBe(2);
+    expect(signs(2)).toBe(2);
+    expect(signs(3)).toBe(0);
+    const dead = [...SCENES['stairs']!({ act: 3, minute: 0 }).matchAll(/<g class="exit-sign" data-detail="exit-out"[^>]*>(.*?)<\/g>/g)].map((m) => m[1]!);
+    expect(dead).toHaveLength(2);
+    for (const sign of dead) expect(sign).not.toContain('dr-blur-lg');
+  });
+
+  it('on the roof the rain thins to a mist in Act III: far fewer falling streaks', () => {
+    const streaks = (act: 1 | 2 | 3) => (SCENES['roof']!({ act, minute: 0 }).match(/class="dr-rain"/g) ?? []).length;
+    expect(streaks(3)).toBeLessThan(streaks(2) / 3);
+  });
+
+  it('Dan’s framed paper hangs very slightly crooked in Act III, its brass plate still level', () => {
+    const crooked = SCENES['pi']!({ act: 3, minute: 0 }).match(
+      /<g class="framed-paper" data-detail="paper-crooked">.*?<g transform="rotate\(([\d.]+) [\d.]+ [\d.]+\)">(.*?)<\/g>(.*?)<\/g>/,
+    );
+    expect(crooked).not.toBeNull();
+    const [, angle, frame, wall] = crooked!;
+    expect(Number(angle)).toBeGreaterThan(0.5);
+    expect(Number(angle)).toBeLessThan(3);
+    expect(frame).toContain('fill="#e2dccb"');
+    expect(frame).not.toContain('fill="#b8954f"');
+    expect(wall).toContain('fill="#b8954f"');
+    for (const act of [1, 2] as const) {
+      const level = SCENES['pi']!({ act, minute: 0 }).match(/<g class="framed-paper">(.*?)<\/g>/)?.[1];
+      expect(level).toContain('fill="#e2dccb"');
+      expect(level).not.toContain('rotate(');
+    }
   });
 });
 
