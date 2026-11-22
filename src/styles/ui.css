@@ -251,6 +251,8 @@ button {
   position: relative;
 }
 :lang(zh-Hant-TW) .narrative { max-width: 36rem; }
+/* Puzzles keep the full measure in both languages: terminals and tables need it. */
+:lang(zh-Hant-TW) .narrative--puzzle { max-width: var(--measure); }
 
 .para {
   margin: 0 0 1em;

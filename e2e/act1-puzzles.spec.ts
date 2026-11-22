@@ -159,6 +159,22 @@ test('the console works by touch alone', async ({ page }) => {
   await expect(page.locator('.narrative__text')).toContainText('somebody is going to load a sample');
 });
 
+test('in 繁中 the console’s queue table fits its terminal without scrolling', async ({ page }) => {
+  await begin(page);
+  await page.getByRole('button', { name: 'Menu' }).click();
+  await page.getByRole('button', { name: '繁體中文' }).click();
+  await page.keyboard.press('Escape');
+  await page.locator('.choice[data-choice="meta:travel"]').click();
+  await page.locator('.choice[data-choice="go:nmr"]').click();
+  await page.locator('.choice[data-choice="nmr.console"]').click();
+  const c = page.getByRole('dialog');
+  await c.locator('.con__chip[data-command="queue --all"]').click();
+  const table = c.locator('.con__line--out').filter({ hasText: 'PROTON_DARK' });
+  await expect(table).toBeVisible();
+  const { scroll, client } = await table.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+  expect(scroll).toBeLessThanOrEqual(client);
+});
+
 test('switching language mid-puzzle keeps the plate exactly as it was', async ({ page }) => {
   await begin(page);
   await go(page, '4.12 Synthesis lab');
