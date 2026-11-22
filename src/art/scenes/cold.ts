@@ -94,6 +94,98 @@ function freezer(): string {
   );
 }
 
+/**
+ * One frost feather: a faintly bowed spine from root to tip, its barbs swept
+ * back from the tip so the whole thing points the way it grew. `flat`
+ * squashes the barbs' depth for feathers lying on the floor.
+ */
+function feather(rnd: () => number, from: [number, number], to: [number, number], o: { flat: number; width: number; opacity: number }): string {
+  const [x0, y0] = from;
+  const [x1, y1] = to;
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const [ux, uy] = [(x1 - x0) / len, (y1 - y0) / len];
+  const [px, py] = [-uy, ux * o.flat];
+  const bow = (rnd() - 0.5) * len * 0.12;
+  const [cx, cy] = [(x0 + x1) / 2 + px * bow, (y0 + y1) / 2 + py * bow];
+  const at = (t: number): [number, number] => [
+    (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1,
+    (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * cy + t * t * y1,
+  ];
+  const f = (n: number) => n.toFixed(1);
+  let d = `M${f(x0)} ${f(y0)}Q${f(cx)} ${f(cy)} ${f(x1)} ${f(y1)}`;
+  const barbs = Math.max(4, Math.round(len / 6));
+  for (let i = 1; i < barbs; i++) {
+    const t = i / barbs;
+    const [bx, by] = at(t);
+    const reach = len * (0.17 - t * 0.11) * (0.75 + rnd() * 0.5);
+    for (const side of [1, -1]) {
+      d += `M${f(bx)} ${f(by)}l${f(reach * (-ux * 0.6 + side * px * 0.8))} ${f(reach * (-uy * 0.6 + side * py * 0.8))}`;
+    }
+  }
+  return path(d, 'none', { stroke: FROST, 'stroke-width': o.width, 'stroke-linecap': 'round', opacity: o.opacity.toFixed(2) });
+}
+
+/**
+ * Act III (cold.hub.act3): frost has crept out of the freezer's seals and
+ * across the floor in thin white feathers, every one of them pointing the
+ * same way, at the door and the stairs beyond it.
+ */
+function frostFeathers(): string {
+  const rnd = seeded(hash('cold-feathers'));
+  // Drawn where the furniture is lifted to: the lid's seal, the floor line.
+  const seal = 497 - LIFT;
+  const base = FLOOR - LIFT;
+  const door: [number, number] = [118, base + 4];
+  const out: string[] = [];
+  // Out of the seal and down the front, leaning towards the door.
+  for (let x = 262; x < 800; x += 34 + rnd() * 26) {
+    const y = seal + 3 + rnd() * 3;
+    out.push(feather(rnd, [x, y], [x - 22 - rnd() * 22, y + 16 + rnd() * 18], { flat: 1, width: 1.2, opacity: 0.55 + rnd() * 0.25 }));
+  }
+  // Down the freezer's near end to the floor.
+  for (let y = seal + 14; y < base - 30; y += 38 + rnd() * 10) {
+    out.push(feather(rnd, [236, y], [222 - rnd() * 6, y + 30 + rnd() * 8], { flat: 1, width: 1.2, opacity: 0.5 + rnd() * 0.2 }));
+  }
+  // Across the floor: trails of feathers from under the freezer, fanning out
+  // over the floor and drawing in again to the door's foot, each feather aimed
+  // along its trail. Some trails have reached the door; the rest are on their way.
+  const trails: Array<[number, number, number]> = [
+    // [root x, how far the trail bows out across the floor, how much of the way it has crept]
+    [280, 6, 1],
+    [380, 16, 1],
+    [490, 28, 0.94],
+    [600, 42, 0.82],
+    [710, 58, 0.7],
+    [800, 76, 0.56],
+  ];
+  for (const [rx, bulge, reach] of trails) {
+    const root: [number, number] = [rx, base + 3];
+    const ctrl: [number, number] = [(rx + door[0]) / 2, base + 3 + bulge * 2];
+    const along = (t: number): [number, number] => [
+      (1 - t) * (1 - t) * root[0] + 2 * (1 - t) * t * ctrl[0] + t * t * door[0],
+      (1 - t) * (1 - t) * root[1] + 2 * (1 - t) * t * ctrl[1] + t * t * door[1],
+    ];
+    const span = Math.hypot(door[0] - rx, bulge * 2);
+    for (let t = 0.02; t < reach - 0.04; ) {
+      const step = (40 + rnd() * 34) / span;
+      const t1 = Math.min(t + step, reach);
+      const [a, b] = [along(t), along(t1)];
+      const near = (a[1] - base) / 80;
+      out.push(feather(rnd, a, b, { flat: 0.3, width: 1 + near * 0.6, opacity: 0.28 + rnd() * 0.22 + near * 0.12 }));
+      t = t1 + (6 + rnd() * 10) / span;
+    }
+  }
+  // Where they arrive: rime along the foot of the door.
+  for (let x = 62; x < 186; x += 4 + rnd() * 7) {
+    out.push(circle(x, base - 2 - rnd() * 7, 0.9 + rnd() * 1.6, FROST, { opacity: (0.35 + rnd() * 0.4).toFixed(2) }));
+  }
+  return `<g class="cold-frost" data-detail="frost-feathers">${[
+    glow(420, base + 18, 360, 24, '#dcefff', 0.08),
+    glow(160, base - 6, 90, 30, '#dcefff', 0.1),
+    ...out,
+  ].join('')}</g>`;
+}
+
 function dewar(): string {
   const rnd = seeded(hash('cold-dewar'));
   const lace = Array.from({ length: 14 }, (_, i) => {
@@ -200,5 +292,5 @@ function tomsBoxes(): string {
 export function cold(ctx: ArtContext): string {
   const dim = ctx.act === 3;
   const lifted = `<g transform="translate(0 ${-LIFT})">${[door(), wall(), freezer(), cabinets(), dewar(), tomsBoxes()].join('')}</g>`;
-  return svg('cold', room(dim) + lifted, { dark: ctx.dark ?? false });
+  return svg('cold', room(dim) + lifted + (dim ? frostFeathers() : ''), { dark: ctx.dark ?? false });
 }

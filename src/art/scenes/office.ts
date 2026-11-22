@@ -8,6 +8,35 @@
 import type { ArtContext } from '../types.ts';
 import { C, circle, clockHands, glow, group, label, line, path, poly, rain, rect, svg, tube } from '../svg.ts';
 
+/** Colder and whiter than any tube should be. */
+const TOO_WHITE = '#f4f9ff';
+
+/**
+ * Act III (office.hub.act3): the dying tube has stopped flickering and simply
+ * burns, steady and too white. No motion class, so it holds still whatever
+ * the settings. The tube itself sits above the play screen's crop, so its
+ * cold light is laid down the wall too.
+ */
+function steadyTube(x: number, y: number, w: number): string {
+  return `<g class="dr-tube office-tube-steady" data-detail="tube-steady">${[
+    glow(x + w / 2 + 10, 300, 470, 250, TOO_WHITE, 0.085),
+    rect(x - 6, y - 4, w + 12, 14, C.steel),
+    glow(x + w / 2, y + 34, w * 0.8, 100, TOO_WHITE, 0.22),
+    rect(x, y, w, 7, TOO_WHITE, { rx: 3 }),
+  ].join('')}</g>`;
+}
+
+/** The same light catching the top edges under it: the clock's rim, the monitor, the desk, the notice board, the counter. */
+const whiteEdges = () =>
+  group(
+    'office-white-edges',
+    path('M1145.5 235.6 A42 42 0 0 1 1224.5 235.6', 'none', { stroke: TOO_WHITE, 'stroke-width': 2, opacity: 0.3 }),
+    rect(1009, 395, 252, 2, TOO_WHITE, { opacity: 0.3, rx: 1 }),
+    rect(940, 600, 450, 2, TOO_WHITE, { opacity: 0.2 }),
+    rect(1390, 250, 170, 2, TOO_WHITE, { opacity: 0.22 }),
+    rect(1395, 560, 190, 2, TOO_WHITE, { opacity: 0.16 }),
+  );
+
 export function office(ctx: ArtContext): string {
   const dim = ctx.act === 3;
   const wall = `<linearGradient id="office-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#14263a"/></linearGradient>
@@ -47,7 +76,8 @@ export function office(ctx: ArtContext): string {
     city,
     litWindows,
     glow(600, 560, 140, 80, C.sodium, 0.35),
-    rain('office-window', 90, 150, 560, 410, dim ? 1.6 : 1),
+    // In Act III the rain is quieter, as if it is listening (office.hub.act3).
+    rain('office-window', 90, 150, 560, 410, dim ? 0.55 : 1),
     rect(82, 142, 576, 10, C.steel),
     rect(82, 558, 576, 16, C.steelLit),
     rect(82, 142, 10, 426, C.steel),
@@ -60,7 +90,7 @@ export function office(ctx: ArtContext): string {
   // Sodium light spilling across the floor.
   const spill = poly([[100, 692], [650, 692], [820, 900], [180, 900]], C.sodium, { opacity: 0.06 });
 
-  const tubes = group('layer-light', tube(240, 46, 380, { on: true }), tube(980, 46, 380, { flicker: true, on: !dim }));
+  const tubes = group('layer-light', tube(240, 46, 380, { on: true }), dim ? steadyTube(980, 46, 380) : tube(980, 46, 380, { flicker: true, on: true }));
 
   // Wall clock, showing the time in the loop.
   const clock = group(
@@ -170,7 +200,7 @@ export function office(ctx: ArtContext): string {
 
   return svg(
     'office',
-    [background, windowPane, kettle, spill, tubes, clock, board, hotDesk, desk, kitchen, chair, sofa].join(''),
+    [background, windowPane, kettle, spill, tubes, clock, board, hotDesk, desk, kitchen, dim ? whiteEdges() : '', chair, sofa].join(''),
     { dark: ctx.dark ?? false },
   );
 }

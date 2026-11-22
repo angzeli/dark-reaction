@@ -20,15 +20,19 @@ const LANDING_Y = FLOOR - STEPS * RISE; // 450
 const LANDING_X = FOOT - STEPS * GO; // 530, where the second flight starts back up to the right
 const LANDING_LEFT = 410;
 
-/** A green running-man sign: the panel, its glow, a white figure making for a door. */
-function exitSign(x: number, y: number): string {
+/**
+ * A green running-man sign: the panel, its glow, a white figure making for a
+ * door. Gone out (Act III, stairs.hub.act3), it is a dull green box with no
+ * glow, the figure barely there.
+ */
+function exitSign(x: number, y: number, lit = true): string {
   const w = 88;
   const h = 26;
-  const ink = '#e8f6ee';
-  return [
-    glow(x + w / 2, y + h / 2, 70, 44, C.tube, 0.22),
+  const ink = lit ? '#e8f6ee' : '#6f8a7a';
+  const parts = [
+    lit ? glow(x + w / 2, y + h / 2, 70, 44, C.tube, 0.22) : '',
     rect(x, y, w, h, '#0c1d14', { rx: 2 }),
-    rect(x + 3, y + 3, w - 6, h - 6, '#2f9a5a', { opacity: 0.85 }),
+    rect(x + 3, y + 3, w - 6, h - 6, lit ? '#2f9a5a' : '#1c3a29', { opacity: 0.85 }),
     circle(x + 17, y + 8, 2.2, ink),
     path(`M${x + 16} ${y + 11} l-3 5 l-4 3 M${x + 13} ${y + 16} l4 4 M${x + 16} ${y + 12} l5 1 M${x + 15} ${y + 12} l-4 2`, 'none', {
       stroke: ink,
@@ -37,8 +41,19 @@ function exitSign(x: number, y: number): string {
     }),
     path(`M${x + 30} ${y + 13} h20 m-5 -4 l5 4 l-5 4`, 'none', { stroke: ink, 'stroke-width': 1.6 }),
     rect(x + w - 26, y + 6, 12, 15, 'none', { stroke: ink, 'stroke-width': 1.5 }),
-  ].join('');
+  ];
+  if (lit) return parts.join('');
+  // A little of the street's sodium catches the dead panel's lower edge.
+  return `<g class="exit-sign" data-detail="exit-out" opacity="0.55">${parts.join('')}${rect(x + 3, y + h - 5, w - 6, 2, C.sodium, { opacity: 0.18 })}</g>`;
 }
+
+/**
+ * Act III: with the tube and the signs down here out, a faint green spill
+ * shows on the wall where the flight turns out of sight, from the running men
+ * on the floors above that are still lit.
+ */
+const signsAbove = () =>
+  `<g class="exit-above" data-detail="exit-above">${glow(LANDING_X + STEPS * GO + 60, LANDING_Y - STEPS * RISE - 30, 120, 60, C.tube, 0.1)}</g>`;
 
 /** The first flight and the half-landing: one concrete mass, steps climbing to the left. */
 function flightOnePoints(): Array<[number, number]> {
@@ -137,13 +152,13 @@ function landingWindow(): string {
   );
 }
 
-function exitB(): string {
+function exitB(signLit: boolean): string {
   return group(
     'exit-b',
     rect(196, 330, 150, 360, '#16212c'),
     rect(206, 340, 130, 350, '#1d2b33'),
     rect(212, 346, 118, 338, '#213139'),
-    exitSign(227, 292),
+    exitSign(227, 292, signLit),
     // ALARMED — RELEASED BY SECURITY ONLY
     rect(240, 420, 62, 24, '#b89a3a', { opacity: 0.82 }),
     rect(240, 420, 62, 6, C.red, { opacity: 0.8 }),
@@ -207,7 +222,7 @@ function desk(): string {
   );
 }
 
-function entrance(): string {
+function entrance(signLit: boolean): string {
   const x = 1090;
   const y = 250;
   const w = 310;
@@ -254,7 +269,7 @@ function entrance(): string {
     // The badge reader that will say no.
     rect(1338, 466, 14, 26, '#11171d', { rx: 2 }),
     circle(1345, 473, 2.2, C.red),
-    exitSign(1199, 282),
+    exitSign(1199, 282, signLit),
   );
 }
 
@@ -279,12 +294,13 @@ export function stairs(ctx: ArtContext): string {
     [
       background,
       group('layer-light', tube(860, 40, 300, { on: !dim })),
+      dim ? signsAbove() : '',
       landingWindow(),
-      exitB(),
+      exitB(!dim),
       callPoint(),
       stair(),
       desk(),
-      entrance(),
+      entrance(!dim),
     ].join(''),
     { dark: ctx.dark ?? false },
   );
