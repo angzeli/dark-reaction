@@ -102,3 +102,40 @@ test('03:33 can be skipped, and a dark run never rolls back to 02:47', async ({ 
   expect(result.skippedIn).toBeLessThan(800);
   expect(result.seen).toEqual(['03:33']);
 });
+
+// #25: reduced motion stops every scene's motion, and flicker off stops every flash, in every room and ending.
+test('every scene, in every act, lit and dark: reduced motion stills it; flicker off stops its flicker and blinks', async ({ page }) => {
+  test.setTimeout(120_000);
+  const errors = await load(page);
+  const result = await page.evaluate(async () => {
+    const { SCENES } = (window as unknown as { DRArt: { SCENES: Record<string, (ctx: { act: 1 | 2 | 3; minute: number; dark?: boolean }) => string> } }).DRArt;
+    const host = document.querySelector<HTMLElement>('#host')!;
+    const root = document.documentElement;
+    const running = () =>
+      document.getAnimations().filter((a) => a.playState === 'running').map((a) => (a as CSSAnimation).animationName ?? '');
+    const problems: string[] = [];
+    let animated = 0;
+    for (const [id, scene] of Object.entries(SCENES)) {
+      for (const act of [1, 2, 3] as const) {
+        for (const dark of [false, true]) {
+          host.innerHTML = scene({ act, minute: 20, dark });
+          for (const mode of ['on', 'reduce', 'flicker-off'] as const) {
+            root.dataset['motion'] = mode === 'reduce' ? 'reduce' : 'full';
+            root.dataset['flicker'] = mode === 'flicker-off' ? 'off' : 'on';
+            await new Promise((r) => requestAnimationFrame(() => r(null)));
+            const names = running();
+            if (mode === 'on' && names.length) animated++;
+            if (mode === 'reduce' && names.length) problems.push(`${id} act ${act}${dark ? ' dark' : ''}, reduced motion: ${[...new Set(names)].join(', ')}`);
+            const flashes = names.filter((n) => n === 'dr-flicker' || n === 'dr-blink');
+            if (mode === 'flicker-off' && flashes.length) problems.push(`${id} act ${act}${dark ? ' dark' : ''}, flicker off: ${[...new Set(flashes)].join(', ')}`);
+          }
+        }
+      }
+    }
+    return { problems, animated };
+  });
+  expect(result.problems).toEqual([]);
+  // The check means something: with everything allowed, most scenes do move.
+  expect(result.animated).toBeGreaterThan(20);
+  expect(errors).toEqual([]);
+});

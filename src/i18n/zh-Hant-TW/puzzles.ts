@@ -57,7 +57,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.glovebox.sop': '前艙操作（護貝，一角有點融掉）：1. 放入。2. 關外門。3. 抽真空、回填氮氣——兩次。4. 開內門。',
   'puzzle.glovebox.pencil': '三次。相信我。——YCL',
   'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
-  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm。',
+  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm。循環：{n} 次。',
   'puzzle.glovebox.cycles': '循環：{n} 次',
   'puzzle.glovebox.pressure.atm': '前艙：常壓',
   'puzzle.glovebox.pressure.vac': '前艙：真空',

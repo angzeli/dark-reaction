@@ -366,7 +366,8 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
     repeating-linear-gradient(transparent 0 2.2rem, rgba(159, 184, 224, 0.035) 2.2rem 2.3rem);
 }
 .app[data-decay='2'] .hud__clock { animation: dr-stutter 5s steps(1, end) infinite; }
-:root[data-motion='reduce'] .app[data-decay='2'] .hud__clock { animation: none; }
+:root[data-motion='reduce'] .app[data-decay='2'] .hud__clock,
+:root[data-flicker='off'] .app[data-decay='2'] .hud__clock { animation: none; }
 @keyframes dr-stutter {
   0%, 100% { opacity: 1; }
   61% { opacity: 1; }

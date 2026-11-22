@@ -43,6 +43,16 @@ export function trapFocus(root: HTMLElement): () => void {
     if (items.length === 0) return;
     const first = items[0]!;
     const last = items[items.length - 1]!;
+    const active = document.activeElement as HTMLElement | null;
+    // Focus may sit on something that isn't a Tab stop (the dialog's title, focused on open): step
+    // from there to the next control in document order, or the previous one, wrapping inside.
+    if (active && !items.includes(active)) {
+      e.preventDefault();
+      const after = items.filter((el) => active.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
+      const before = items.filter((el) => active.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_PRECEDING);
+      (e.shiftKey ? (before.at(-1) ?? last) : (after[0] ?? first)).focus();
+      return;
+    }
     if (e.shiftKey && document.activeElement === first) {
       e.preventDefault();
       last.focus();

@@ -65,6 +65,8 @@ export interface RovingOptions {
 
 /** Handle the arrow keys (and Home/End) for a group of controls inside `container`. */
 export function bindRoving(container: HTMLElement, opts: RovingOptions): void {
+  // Marks the group, so a keyboard walk (e2e/input-modes.spec.ts) knows the arrows move inside it.
+  container.dataset['roving'] = opts.linear ? 'line' : 'grid';
   container.addEventListener('keydown', (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey || !ARROWS.has(e.key)) return;
     const items = opts.items();

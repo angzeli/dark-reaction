@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { newGame } from './bot.ts';
 
 /** The first-launch content note and the settings panel, against the real build. */
 
@@ -83,4 +84,21 @@ test('settings and the content note are reachable from the in-game menu', async 
   await page.keyboard.press('m');
   await page.getByRole('button', { name: 'Settings' }).click();
   await expect(page.getByRole('dialog', { name: 'Settings' })).toBeVisible();
+});
+
+test('the clock’s stutter is a flash: flicker off stops it, and so does reduced motion (#25)', async ({ page }) => {
+  await newGame(page, 'en', { reducedMotion: false });
+  // Obsession 7 and up: the HUD clock stutters (src/styles/ui.css).
+  await page.evaluate(() => {
+    document.querySelector<HTMLElement>('.app')!.dataset['decay'] = '2';
+  });
+  const animation = () => page.locator('.hud__clock').evaluate((el) => getComputedStyle(el).animationName);
+  const set = (motion: string, flicker: string) =>
+    page.evaluate(([m, f]) => Object.assign(document.documentElement.dataset, { motion: m, flicker: f }), [motion, flicker] as const);
+  await set('full', 'on');
+  expect(await animation()).toBe('dr-stutter');
+  await set('full', 'off');
+  expect(await animation()).toBe('none');
+  await set('reduce', 'on');
+  expect(await animation()).toBe('none');
 });
