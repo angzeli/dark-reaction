@@ -66,6 +66,10 @@ export const ui: Record<keyof typeof en, string> = {
   'nb.loops.none': '第一個夜晚還沒結束。',
   'nb.margins.title': '頁邊，鉛筆寫的',
 
+  'conflict.title': '另一個分頁也開著',
+  'conflict.body': '這個夜晚在另一個分頁也開著，而那個分頁剛剛存了檔。為了不讓任何一邊的進度不見，這個分頁先停止存檔。你可以載入比較新的存檔，從那裡繼續；也可以留在這裡繼續玩，覆蓋掉它。',
+  'conflict.load': '載入比較新的存檔',
+  'conflict.keep': '留在這裡繼續玩，覆蓋掉它',
   'save.slot.auto': '自動存檔',
   'save.slot.n': '存檔 {n}',
   'save.empty': '空的',

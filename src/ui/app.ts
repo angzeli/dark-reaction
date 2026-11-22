@@ -23,7 +23,7 @@ import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
 import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
 
-type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note';
+type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
 const SECTIONS: NotebookSection[] = ['tonight', 'people', 'places', 'data', 'anomalies'];
@@ -47,6 +47,8 @@ export class App {
 
   private screen: 'title' | 'play' | 'ending' = 'title';
   private overlay: Overlay = 'none';
+  /** Another tab saved this night; don't overwrite it until the player decides (#38). */
+  private autosavePaused = false;
   private menuPanel: MenuPanel = 'main';
   private notebookSection: NotebookSection | 'loops' = 'tonight';
   private stage: Stage | null = null;
@@ -71,6 +73,7 @@ export class App {
     document.addEventListener('keydown', (e) => this.onKey(e));
     document.addEventListener('pointerdown', () => (this.keyboardUsed = false));
     document.addEventListener('visibilitychange', () => audio.setHidden(document.visibilityState === 'hidden'));
+    window.addEventListener('storage', (e) => this.onStorage(e));
   }
 
   start(): void {
@@ -174,8 +177,39 @@ export class App {
   }
 
   private autosave(): void {
-    if (!this.game) return;
+    if (!this.game || this.autosavePaused) return;
     this.saves.write('auto', this.game.state, getLocale());
+  }
+
+  /**
+   * Another tab on this origin wrote the autosave. Storage events only reach
+   * the other tabs, so this tab's game is now out of date: stop saving over
+   * it and let the player choose (#38).
+   */
+  private onStorage(e: StorageEvent): void {
+    if (e.key !== SaveStore.key('auto') || e.newValue === null) return;
+    if (this.screen === 'title') {
+      if (this.overlay === 'none') this.render(); // Continue may have appeared
+      return;
+    }
+    if (this.screen !== 'play' || !this.game || this.autosavePaused) return;
+    this.autosavePaused = true;
+    this.lastFocus = document.activeElement as HTMLElement | null;
+    this.overlay = 'conflict';
+    this.render();
+  }
+
+  private resolveConflict(choice: 'load' | 'keep'): void {
+    this.autosavePaused = false;
+    if (choice === 'load') {
+      this.closePuzzle();
+      this.loadSlot('auto');
+      return;
+    }
+    this.overlay = 'none';
+    this.autosave();
+    this.render();
+    if (this.lastFocus?.isConnected) this.lastFocus.focus();
   }
 
   private async playCards(): Promise<void> {
@@ -265,7 +299,8 @@ export class App {
     const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
 
     if (this.overlay !== 'none') {
-      if (e.key === 'Escape') {
+      // The two-tab question has to be answered; it can't be waved away.
+      if (e.key === 'Escape' && this.overlay !== 'conflict') {
         e.preventDefault();
         this.closeOverlay();
       }
@@ -582,19 +617,33 @@ export class App {
           ? settingsPanel(this.settingsApi())
           : this.overlay === 'note'
             ? contentNote(this.settingsApi(), () => this.closeOverlay())
-            : this.menuPanelEl();
-    const close = h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
+            : this.overlay === 'conflict'
+              ? this.conflictPanel()
+              : this.menuPanelEl();
+    const close = this.overlay === 'conflict' ? null : h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
     const dialog = h(
       'section',
       { class: `overlay overlay--${this.overlay}`, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'overlay-title' },
       h('div', { class: 'overlay__sheet' }, close, panel),
     );
     dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) this.closeOverlay();
+      if (e.target === dialog && this.overlay !== 'conflict') this.closeOverlay();
     });
     this.root.querySelector('.app')!.appendChild(dialog);
     this.untrap = trapFocus(dialog);
     if (!dialog.contains(document.activeElement)) (dialog.querySelector('#overlay-title') as HTMLElement | null)?.focus({ preventScroll: true });
+  }
+
+  private conflictPanel(): HTMLElement {
+    const btn = (label: string, onclick: () => void) => h('button', { type: 'button', class: 'menu__btn', onclick }, label);
+    return h(
+      'div',
+      { class: 'menu conflict' },
+      h('h2', { id: 'overlay-title', class: 'menu__title', tabindex: '-1' }, t('conflict.title')),
+      h('p', { class: 'conflict__body' }, t('conflict.body')),
+      btn(t('conflict.load'), () => this.resolveConflict('load')),
+      btn(t('conflict.keep'), () => this.resolveConflict('keep')),
+    );
   }
 
   private notebookPanel(): HTMLElement {

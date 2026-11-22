@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M4 Act II and M5 Act III/endings in parallel (M3 closed)
-- **Last merged:** #48 puzzles keep the full measure in 繁中 (closes #47); M3 closed
-- **In flight:** #49 endings part 1 (under cold review); #50 Act III content part A (this PR, part of #20); #18 Act II puzzles and #19 Act II art in progress
+- **Last merged:** #50 Act III content part A (part of #20)
+- **In flight:** #51 two tabs (this PR, closes #38); #49 endings part 1 (cold review); #18 Act II puzzles and #19 Act II art, both done by their agents and awaiting PRs
 
 ## Next
 
-1. Merge #49 after its cold review, then #50. 2. Review and merge #18, then endings part 2 (Fire Alarm). 3. Review and merge #19, then the ending illustrations. 4. #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), then Act III part B (holder 13, the UPS, the dark run) with endings part 3 (Dark Reaction, critical-path playtime).
+1. Merge #51. 2. Open, review and merge the Act II art (#19) and Act II puzzles (#18). 3. Merge #49 after its cold review, then #23 gallery and endings part 2 (Fire Alarm). 4. #21 Act III puzzles, then Act III part B with endings part 3.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #38 two tabs. A tab now listens for `storage` events on the autosave key. When another tab saves the same night, this one stops autosaving and asks, in a dialog that can't be waved away: load the newer save, or keep playing here and save over it. A tab sitting on the title screen just refreshes, so Continue appears. A Playwright test drives two pages on one origin through both answers and checks what is actually stored.
 - #20 Act III content, part A, in both languages. **Act III opens** at the 02:47 after her raw data, her email and the night's offer (`ph.port4`); each Act III loop opens one line of *j*s shorter. Every room has Act III text (the office's queue comment now says *nearly done*; frost on the cold-room floor points upstairs). **New:** the flask on port 4 (`yc.flask`, *do not let it see the light*), foil from the drawer, the mini-antechamber opened her way with the purge you know (her J. Young tube, `yc.tube`, *for whoever comes next*), Tom's Post-it on the compressor (`yc.chirp`), whose chirp has become a rhythm, and `ph.booking` two loops in. DESIGN.md §11 P9 now says Figure 3, like the game text (it said Figure 2). Part B (holder 13, the UPS, the dark run and its failure pages) lands with the Act III puzzles. 8 unit tests.
 - **M3 gate.** All Act I issues closed; main CI green; Act I played end to end in Playwright in 繁中, choosing by `data-choice` id (office, queue, TLC under UV, the honest yield, a three-cycle purge, the console, QUEUE LOCKED, the first 03:33, the 痕跡 card, loop 2's shared phantom notice, the notebook) with no console errors, and every screenshot read. English is covered by the e2e suite and the PR screenshots. One bug found: #47.
 - #47: in 繁中 the narrative column narrows to 36rem for prose, and puzzles inherited it, so the console's 67-column queue table overflowed its terminal. Puzzles now keep the full `--measure` in both languages; a Playwright test (which fails on the old CSS: 546 px of table in a 513 px terminal) pins it.

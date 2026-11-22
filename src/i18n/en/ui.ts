@@ -64,6 +64,11 @@ export const ui = {
   'nb.loops.none': 'The first night is still going.',
   'nb.margins.title': 'In pencil, in the margin',
 
+  'conflict.title': 'Open in another tab',
+  'conflict.body':
+    'This night is also open in another tab, and that tab has just saved. So that neither of them is lost, this tab has stopped saving. Load the newer save to carry on from there, or keep playing here and save over it.',
+  'conflict.load': 'Load the newer save',
+  'conflict.keep': 'Keep playing here and save over it',
   'save.slot.auto': 'Autosave',
   'save.slot.n': 'Slot {n}',
   'save.empty': 'Empty',
