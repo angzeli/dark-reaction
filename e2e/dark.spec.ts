@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { DARK_NIGHT } from '../src/content/routes.ts';
 import { actThree, resume, type Locale } from './act3.ts';
-import { play } from './bot.ts';
+import { play, settle } from './bot.ts';
 
 /**
  * Dark Reaction through the real UI (#20 part B, #22): the true ending's
@@ -46,6 +46,27 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
     expect((await gallery(page))?.endings['dark']?.count).toBe(1);
   });
 }
+
+test('looking away from her peak ends the night: the button says so, and the dark room stays until it is dark', async ({ page }) => {
+  test.setTimeout(120_000);
+  await resume(page, ready('zh-Hant-TW'), 'zh-Hant-TW');
+  await play(page, DARK_NIGHT.slice(0, -1));
+  await expect(page.locator('.pz__leave')).toHaveText('把視線移開');
+  await expect(page.locator('.pz__intro')).toContainText('只要移開視線，這一夜就在這裡結束。');
+  await page.locator('.pz__leave').click();
+  // Under the fade: the NMR suite still, her peak gone, the line about looking away, nothing to choose.
+  const fading = await page.evaluate(() => ({
+    puzzle: document.querySelectorAll('.pz').length,
+    place: document.querySelector('.hud__place')?.textContent,
+    choices: document.querySelectorAll('.choice').length,
+    text: document.querySelector('.narrative__text')?.textContent ?? '',
+  }));
+  expect(fading).toMatchObject({ puzzle: 0, place: 'B.03 NMR 室', choices: 0 });
+  expect(fading.text).toContain('黑暗就靠了過來');
+  await settle(page);
+  await expect(page.locator('.hud__clock')).toHaveText('02:47');
+  await expect(page.locator('article.ending')).toHaveCount(0);
+});
 
 test('with Figure 3 unproved the run gives only noise, a page in your hand says why, and it is 02:47', async ({ page }) => {
   test.setTimeout(120_000);

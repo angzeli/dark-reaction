@@ -173,7 +173,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
 
   // ── P10 · 黑暗中的那根峰 ──────────────────────────────────────────────────
   'puzzle.peakmatch.title': '黑暗中',
-  'puzzle.peakmatch.intro': '整棟樓的燈都熄了。主控台靠著 UPS 運作，是房間裡唯一的光：她那支管子的譜，黑底綠線，什麼都還沒校正。你的筆記本裡，有她從 microSD 來的參考譜。',
+  'puzzle.peakmatch.intro': '整棟樓的燈都熄了。主控台靠著 UPS 運作，是房間裡唯一的光：她那支管子的譜，黑底綠線，什麼都還沒校正。你的筆記本裡，有她從 microSD 來的參考譜。只要移開視線，這一夜就在這裡結束。',
   'puzzle.peakmatch.screen': 'PROTON_DARK · holder 13 · 1 scan · on UPS',
   'puzzle.peakmatch.reference': '她的參考譜 · 第 19 週 · 來自 microSD',
   'puzzle.peakmatch.reference.solvent': 'C₆D₅H 7.16',
@@ -196,6 +196,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
   'puzzle.peakmatch.h3': '+0.23 ppm；8.41 那根峰。',
   'puzzle.peakmatch.solved': '黑暗裡，螢幕上，8.41 那根峰一動也不動。',
   'puzzle.peakmatch.left': '你的目光離開螢幕，黑暗就靠了過來。',
+  'puzzle.peakmatch.leave': '把視線移開',
   'puzzle.peakmatch.margin': '黑暗中：+0.23 ppm，再找 8.41 那根峰。',
 
   // ── 謎題告訴你的事 ────────────────────────────────────────────────────────

@@ -187,7 +187,7 @@ export const act3puzzles = {
   // ── P10 · Peak match in the dark ──────────────────────────────────────────
   'puzzle.peakmatch.title': 'In the dark',
   'puzzle.peakmatch.intro':
-    'Every light in the building is out. The console runs on the UPS, the only light in the room: her tube’s spectrum, green on black, and nothing on it referenced. In your notebook, her reference from the microSD.',
+    'Every light in the building is out. The console runs on the UPS, the only light in the room: her tube’s spectrum, green on black, and nothing on it referenced. In your notebook, her reference from the microSD. Look away, and the night ends here.',
   'puzzle.peakmatch.screen': 'PROTON_DARK · holder 13 · 1 scan · on UPS',
   'puzzle.peakmatch.reference': 'Her reference · week 19 · from the microSD',
   'puzzle.peakmatch.reference.solvent': 'C₆D₅H 7.16',
@@ -210,6 +210,7 @@ export const act3puzzles = {
   'puzzle.peakmatch.h3': '+0.23 ppm; the peak at 8.41.',
   'puzzle.peakmatch.solved': 'In the dark, on the screen, the peak at 8.41 holds still.',
   'puzzle.peakmatch.left': 'You look away from the screen, and the dark comes in close.',
+  'puzzle.peakmatch.leave': 'Look away',
   'puzzle.peakmatch.margin': 'In the dark: +0.23 ppm, then the peak at 8.41.',
 
   // ── What the puzzles teach you ────────────────────────────────────────────
