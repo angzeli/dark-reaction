@@ -22,6 +22,13 @@ describe('lookup', () => {
     expect(t('ui.noted', { entry: '@loc.office.name' }, 'zh-Hant-TW')).toBe('寫進筆記本：4.08 研究生辦公室。');
   });
 
+  it('puts two sentences one after the other the way each language does (#66)', () => {
+    expect(t('puzzle.then', { first: 'The door opens.', second: 'O₂ 1.0 ppm.' }, 'en')).toBe('The door opens. O₂ 1.0 ppm.');
+    expect(t('puzzle.then', { first: '門開了。', second: 'O₂ 1.0 ppm。' }, 'zh-Hant-TW')).toBe('門開了。O₂ 1.0 ppm。');
+    // Every 繁中 sentence a puzzle status can end with or start with stays full-width at the join.
+    expect(t('puzzle.glovebox.o2.now', { ppm: '1.0' }, 'zh-Hant-TW')).toBe('O₂ 1.0 ppm。');
+  });
+
   it('marks missing keys and unfilled placeholders visibly instead of crashing', () => {
     expect(t('no.such.key')).toBe('[[no.such.key]]');
     expect(has('no.such.key')).toBe(false);
