@@ -193,6 +193,8 @@ button {
   display: grid;
   grid-template-rows: auto auto 1fr;
 }
+/* Whatever takes focus scrolls clear of the sticky HUD (its height is measured into --hud-h). */
+html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 .hud {
   position: sticky;
   top: 0;
