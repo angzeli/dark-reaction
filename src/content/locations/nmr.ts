@@ -93,6 +93,25 @@ export const nmrScenes: SceneDef[] = [
         effects: [{ fragment: 'yc.chirp' }, { learn: 'nb.postit' }],
         text: [{ key: 'nmr.postit.r' }],
       },
+      {
+        // P8: the UPS keypad, once Tom's Post-it has made you listen.
+        id: 'nmr.ups',
+        label: 'nmr.ups',
+        cost: 1,
+        if: { all: [{ act: 3 }, { know: 'nb.postit' }, { not: { solved: 'chirp' } }] },
+        text: [{ key: 'nmr.ups.r' }],
+        effects: [{ puzzle: 'chirp' }],
+      },
+      {
+        // The PIN is knowledge; arming is tonight's (ups.armed lasts until 03:33).
+        id: 'nmr.ups.again',
+        label: 'nmr.ups.again',
+        cost: 1,
+        if: { all: [{ act: 3 }, { solved: 'chirp' }, { not: { lflag: 'ups.armed' } }] },
+        text: [{ key: 'nmr.ups.again.r' }],
+        effects: [{ lflag: 'ups.armed' }],
+        tags: ['shortcut'],
+      },
       { id: 'nmr.printer', once: 'loop', label: 'nmr.printer', cost: 1, text: [{ key: 'nmr.printer.r' }] },
     ],
   },

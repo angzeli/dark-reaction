@@ -3,6 +3,7 @@
  * yield you write down, the fume hoods, the Kraken, the poster. docs/DESIGN.md §9.
  */
 import type { Cond, SceneDef } from '../../engine/types.ts';
+import { CLEAN_MINUTES as SCHLENK_MINUTES } from '../../puzzles/schlenk/logic.ts';
 
 /** The yield is written down once, honestly or not, and never offered again. */
 const yieldOpen: Cond = { all: [{ lflag: 'synth.weighed' }, { not: { know: 'nb.yield' } }, { not: { know: 'fudge.yield' } }] };
@@ -75,6 +76,33 @@ export const synthScenes: SceneDef[] = [
         if: { all: [{ act: 3 }, { not: { item: 'item.foil' } }] },
         effects: [{ give: 'item.foil' }],
         text: [{ key: 'synth.foil.r' }],
+      },
+      {
+        // P5: her tube on port 2, her flask on port 4, and the Kraken's rules between them.
+        id: 'synth.kraken.fill',
+        label: 'synth.kraken.fill',
+        cost: 1,
+        if: { all: [{ act: 3 }, { item: 'item.tube.jy' }, { not: { solved: 'schlenk' } }] },
+        text: [{ key: 'synth.kraken.fill.r' }],
+        effects: [{ puzzle: 'schlenk' }],
+      },
+      {
+        // Once you know the way, it takes as long as a clean run does; foil or no foil.
+        id: 'synth.kraken.again',
+        label: 'synth.kraken.again',
+        cost: SCHLENK_MINUTES,
+        if: { all: [{ act: 3 }, { item: 'item.tube.jy' }, { solved: 'schlenk' }, { item: 'item.foil' }] },
+        text: [{ key: 'synth.kraken.again.r' }],
+        effects: [{ take: 'item.tube.jy' }, { give: 'item.tube.dark' }],
+        tags: ['shortcut'],
+      },
+      {
+        id: 'synth.kraken.again.light',
+        label: 'synth.kraken.again',
+        cost: SCHLENK_MINUTES,
+        if: { all: [{ act: 3 }, { item: 'item.tube.jy' }, { solved: 'schlenk' }, { not: { item: 'item.foil' } }] },
+        text: [{ key: 'synth.kraken.again.light.r' }],
+        effects: [{ take: 'item.tube.jy' }, { lflag: 'tube.spoiled' }],
       },
       { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }] },
       { id: 'synth.kraken', once: 'loop', label: 'synth.kraken', cost: 1, text: [{ key: 'synth.kraken.r' }] },

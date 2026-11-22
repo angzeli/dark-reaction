@@ -9,5 +9,6 @@ export const items = {
   'item.printout': 'a warm printout of a perfect spectrum',
   'item.foil': 'a roll of foil',
   'item.tube.jy': 'her J. Young tube, empty',
+  'item.tube.dark': 'her J. Young tube, filled and wrapped in foil',
   'item.microsd': 'a microSD card in a cryovial',
 } as const;

@@ -5,6 +5,7 @@
 import { act1 } from './en/act1.ts';
 import { act2 } from './en/act2.ts';
 import { act3 } from './en/act3.ts';
+import { act3puzzles } from './en/act3puzzles.ts';
 import { act2puzzles } from './en/act2puzzles.ts';
 import { endings } from './en/endings.ts';
 import { items } from './en/items.ts';
@@ -13,5 +14,5 @@ import { puzzles } from './en/puzzles.ts';
 import { world } from './en/world.ts';
 import { ui } from './en/ui.ts';
 
-export const en = { ...ui, ...puzzles, ...world, ...act1, ...act2, ...act2puzzles, ...act3, ...notebook, ...items, ...endings } as const;
+export const en = { ...ui, ...puzzles, ...world, ...act1, ...act2, ...act2puzzles, ...act3, ...act3puzzles, ...notebook, ...items, ...endings } as const;
 export type Key = keyof typeof en;

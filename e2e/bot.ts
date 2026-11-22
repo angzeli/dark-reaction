@@ -76,7 +76,7 @@ async function night(page: Page): Promise<void> {
   throw new Error('the night never ended');
 }
 
-const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
+export const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
   async tlc(page) {
     await page.locator('.tlc__uv').click();
     for (const n of [12, 13, 14]) await page.locator(`.tlc__take[data-lane="${n}"]`).click();
@@ -103,6 +103,28 @@ const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
     await page.locator('.con__chip[data-command="queue --all"]').click();
     await page.locator('.con__chip[data-command="info 13"]').click();
     await page.locator('.con__finish').click();
+  },
+  async schlenk(page) {
+    await page.locator('.sk__n2').click();
+    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const) await page.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`).click();
+    await page.locator('.sk__bleed[data-bleed="tube"]').click();
+    await page.locator('.sk__jy').click();
+    await page.locator('.sk__wrap').click();
+    await page.locator('.sk__finish').click();
+  },
+  async chirp(page) {
+    for (const key of ['2', '4', '1', '3', 'enter']) await page.locator(`.cp__key[data-key="${key}"]`).click();
+    await page.locator('.cp__finish').click();
+  },
+  async fabrication(page) {
+    await page.locator('.fb__overlay').click();
+    for (const feature of ['noise', 'solvent', 'satellites']) await page.locator(`.fb__spot[data-feature="${feature}"]`).click();
+    await page.locator('.fb__finish').click();
+  },
+  async peakmatch(page) {
+    for (const by of [10, 10, 1, 1, 1]) await page.locator(`.pm__nudge[data-by="${by}"]`).click();
+    await page.locator('.pm__peak[data-peak="product"]').click();
+    await page.locator('.pm__finish').click();
   },
 };
 

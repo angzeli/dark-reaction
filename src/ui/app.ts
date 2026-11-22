@@ -622,6 +622,8 @@ export class App {
       startMinute: game.state.minute,
       act: game.state.act,
       reduceMotion: this.settings.reduceMotion,
+      flicker: this.settings.flicker,
+      has: (item) => game.state.inventory.includes(item),
       data: game.state.puzzleData[id],
       restoredMinutes:
         game.state.puzzleData[id] === undefined
