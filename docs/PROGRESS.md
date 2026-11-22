@@ -4,13 +4,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Milestone:** M5 Act III & Endings (M3 and M4 closed)
-- **Last merged:** #70 Act III part B and Dark Reaction (closes #20 and #22)
-- **In flight:** the playthrough bot (this PR, closes #24, the last M5 issue)
+- **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
+- **Last merged:** #73 the playthrough bot (closes #24, the last M5 issue)
+- **In flight:** endings and the title screen open at the top (this PR, closes #72)
 
 ## Next
 
-1. Merge this PR. **M5 gate:** all M5 issues closed, main CI green, the true ending played through in Playwright in both languages, screenshots read. 2. #72 (endings open scrolled down) and #71 (the lights-out fade-in; "Look away" in the dark run). 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #71 (the lights-out fade-in; "Look away" in the dark run). 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,9 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #72: **endings and the title screen open at the top.** `render()` reset the scroll only for the play screen, so an ending reached from a scrolled room opened part-way into its epilogue, with the focused title above the viewport (Dark Reaction at 1280 × 900: `scrollY` 514). Arriving at the title or an ending now scrolls to the top; re-rendering the same screen keeps the place. Two Playwright tests at phone width: Fire Alarm from a scrolled page opens at `scrollY` 0 with its title focused and in view, and the title screen after it starts at the top (this one fails without the fix, at 155); quitting to the title from a scrolled room and continuing starts at the top.
+- **M5 gate passed.** All M5 issues are closed (#20–#24, #55, #61), and main is green after #73, deploy included. The true ending is played through the real UI in English and 繁中 by `e2e/dark.spec.ts` and the playthrough bot. I read the bot's screenshots: all eight rooms, all ten puzzles, five lights-outs and six endings per language. The peak match's dark room measures mean brightness 14.8 against 40.8 lit.
+- Merged #73 (closes #24).
 - #24 **The playthrough bot.** `e2e/playthrough.spec.ts` plays every ending's route from `src/content/routes.ts` (the validator's own) through the real UI, from a new game to the ending screen, in English and 繁中: twelve runs.
   - **Checks:** no console errors, no request outside the page's origin, and the ending arrives in the same loop as the simulator's.
   - **Screenshots** go to `e2e/screenshots/playthrough/<locale>/<ending>/`, which CI keeps with the Playwright report. Each run keeps its ending screen. The true ending's route visits all eight rooms and all ten puzzles, so its runs also keep each room on arrival, each puzzle as it opens and each lights-out.
