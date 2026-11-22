@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M5 Act III & Endings (M3 and M4 closed)
-- **Last merged:** #63 axe in CI (part of #25)
-- **In flight:** #65 the way back first (this PR, closes #61); the puzzle subagent on #21 (`puzzle/act3-21`)
+- **Last merged:** #68 Act III puzzles (closes #21)
+- **In flight:** Act III part B and Dark Reaction (this PR, closes #20 and #22; cold review first)
 
 ## Next
 
-1. Merge this PR; review and merge the puzzle subagent's branch (#21) when it reports. 2. Act III part B with endings part 3 (Dark Reaction and the critical path). 3. #25 part 2 (Act III puzzles under axe, keyboard-only and touch-only passes). 4. #24: the bot (`e2e/bot.ts`) grows to every route in both languages, with screenshots. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR (Dark Reaction) after its cold review. **M5 gate:** all M5 issues closed, main CI green, the true ending played through in Playwright in both languages, screenshots read. 2. #24: the bot (`e2e/bot.ts`) plays every route in both languages, with screenshots. 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,7 +28,31 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #20 Act III part B and #22 endings part 3: **Dark Reaction**, the true ending, and with it all six endings are in the game.
+  - **The setup:** in Act III, load her dark tube (filled on the Kraken, in foil) into holder 13 (`nmr.holder13`), arm the UPS with the chirp's PIN, and be in the NMR suite at 03:33.
+  - **The run:** the dark-run rules come first in `LIGHTS_OUT`. Without the UPS, the console goes out too. With it but something missing, the run gives only noise and a page in your handwriting says what: `ph.pages` (a fudge stands), `ph.figure` (Figure 3 not proved), `ph.her` (her raw data, nine fragments, or one of the five required). Otherwise the lights go out, the room is drawn dark around the console, and the peak match opens; solving it is Dark Reaction. Stepping away lets the night end as usual.
+  - **The route:** the critical path, five loops and 68 steps.
+    1. Act I, with her mug, drawer and SOP.
+    2. Her office at 03:15 and your own run, which ends as the lights go (the night offers its printout at 03:25 while it runs).
+    3. The freezer and her raw data, the door log, the rain log.
+    4. Act III: the flask, the chirp and Figure 3 proved.
+    5. Her tube in the dark.
+  - **Playtime:** the critical path reads and plays in **50.2 min EN, 51.0 min 繁中**, over the 30-minute gate.
+  - **Cold review, answered:**
+    - The peak match mounts once, after the lights-out card, with focus on its title.
+    - Holder 13 no longer reads as empty once her tube is in.
+    - A repeat failure shows its page again.
+    - Pages written at 03:33 now follow "You come to…" under one notice.
+    - Leaving the peak match keeps its line.
+    - The epilogue's opening no longer retells the run.
+    - Infinite Loop's repeats are readable in high contrast.
+    - The foil comes off before the tube goes into the magnet.
+  - **Infinite Loop:** its ending screen now also shows the same choice three times, fading, with nothing to press (#22's "choices repeat").
+  - **Tests:** 15 unit tests for the dark run (success, stepping away, each failure and their order, a repeat failure, being elsewhere, holder 13 only in Act III and only with the tube, Dark over Infinite). Playwright plays the last night through the UI in both languages and checks the noise-and-page failure. The bot's waits now stop when 03:33 itself opens a puzzle.
+  - **Content size:** English is at 16,302 words against the spec's ~18,000; filed as #69.
+- Merged #68 (closes #21).
 - #21 Act III puzzles (built by the puzzle subagent). **The Kraken** (P5; synthesis lab, Act III, holding her J. Young tube): a live diagram of the line (manifolds, bubbler, taps, bleeds, her tube filling, the cannula darkening), the laminated rules card with rule 5 in pencil, and the controls: nitrogen main, a three-way tap per port as a radio group, two bleeds, her tube's own tap, foil. Any broken rule is a suck-back or a hiss that puts the line back as it started, two minutes later; a clean run is 6 minutes, the same as the shortcut. Foil is read from what you carry: without it the tube sits in the light and is spoiled for the night (`tube.spoiled`; the mini-antechamber now gives one tube a night). Solved: `item.tube.dark`, `nb.schlenk`. **The chirp** (P8; NMR suite, once Tom's Post-it is read): her rhythm 2 · 4 · 1 · 3 from the audio module's own schedule, as a sound (only with audio on) and a light that flashes only when flicker is allowed and motion isn't reduced; otherwise one steady segment per chirp, so it is solvable with the sound off and without anything flashing; a screen reader hears each group in words. A 3 × 4 keypad (arrows, taps or number keys; Enter sends). Arms the UPS for tonight (`ups.armed`, `nb.ups`); later nights key it in again in a minute. **Three spectra** (P9; office, with the printout): your spectrum, the printout and Figure 3, with magnified baselines and "lay the printout over Figure 3"; the noise can be circled only laid over, plus any two of solvent, satellites, integral, timestamp; the peak and a coffee ring are noted, never marked. `nb.fabrication`. **In the dark** (P10): green on black, referencing by buttons or keyboard to +0.23 ppm, then the small 8.41 with its satellites beside the bare 8.19; costs no minutes; `nb.peak`. Nothing opens it yet: the dark run (part B) will. All spectra come from one seeded module (`src/puzzles/spectra.ts`): the printout's noise is Figure 3's point for point, and only the fake lacks the 7.16 solvent peak and the satellites. `PuzzleApi` gains `flicker` and a read-only `has(item)`, wired in the app and the harness. 134 unit tests (contracts, every rule and reset, a BFS solution from random states, the spectra, saves, the wiring through the engine, keys built at run time), 12 Playwright tests (each puzzle through the real game from a night prepared in the engine, by keyboard and by touch, in both languages; the peak match at 03:33 from a save and in the harness) and 12 axe scans (Act III's puzzles in both languages and high contrast, as they open and half-way). The bot gains the four solvers. DESIGN.md §11 records what was built.
+- Merged #65 (closes #61).
 - #61: for keyboard players the first choice takes focus, and Enter takes it. In fire exit B's doorway the first choice was *Step out into the rain*, and on the portal's declaration page it was *Tick the box and upload*, so one stray Enter could end the run (autosaved, so for good). Now the way back comes first in both: *Let the door swing shut* in the doorway, and Back on the portal pages, via a new `backFirst` scene flag in the engine (where the first choice would otherwise end the game). That matches the call point from #57. The validator now enforces the rule for every scene (a choice that ends the game must follow an always-available choice, or the scene sets `backFirst`; `backFirst` where there is no Back is an error), so new endings can't bring it back. Unit tests pin both orders; the Clocking Off e2e presses Enter in the doorway by keyboard and checks it only shuts the door, and the Honest Noise e2e checks Back leads the portal.
 - Merged #63 (part of #25).
 - #25 accessibility, part 1: **axe runs in CI**. `@axe-core/playwright` 4.14.0 (dev dependency, released 15 October 2026) scans, in English and 繁中, the title screen and its settings, gallery and content-note overlays; the play screen and its notebook and menu; the six Act I and II puzzles (TLC, antechamber, console, cipher, door log, and the freezer in English); and an ending and the play screen in high contrast. Every scan must have zero serious or critical violations. It found one rule in the cipher: element tiles and 繁中 radical buttons had `aria-label`s that didn't contain their visible text (`label-content-name-mismatch`). They are now named by what they show ("1 H", "Take off the metal radical" / 「拿掉 金字旁」). Everything else passed on first run. Part 2 adds Act III's puzzles once #21 lands, and the keyboard-only and touch-only passes.

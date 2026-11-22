@@ -109,11 +109,11 @@ export const endings = {
   'ending.dark.title': 'Dark Reaction',
   'ending.dark.clue': 'Run the sample nobody booked, in the dark.',
   'ending.dark.1':
-    'At 03:33 the lights go out, all of them, everywhere, and the hum you had stopped hearing stops. In the dark the console stays lit on its battery, a small green island, and the magnet, which has never needed the lights, goes on being very cold on purpose.',
+    'You don’t move. The console hums on its battery, the only light in the building, and the spectrum stays where you found it: her peak, small and real, with nothing on the screen trying to make it bigger. Above you the magnet goes on being very cold on purpose, as it has every night, whether anyone was watching or not.',
   'ending.dark.2':
-    'Holder 13 drops. You hear it more than see it: the soft hiss of air, the tube sinking into the bore. *PROTON_DARK · 1 scan · acquiring.* The free induction decay crawls across the screen, a long thin shiver, the only thing moving in the building.',
+    'You save it twice, the way she would have: once on the console, once on the microSD, beside her weekly runs, so that her files and tonight’s sit in one folder for the first time. You name it the way she named hers, all but the last word: *2026-11-23_0333_PROTON_DARK.fid*. Nobody has to write NOT_MINE on this one. On the pad by the keyboard you write the time, the solvent and the shift, and her initials before yours.',
   'ending.dark.3':
-    'The transform. Solvent. Grease. The bump at 6.9 that is always there. And at 8.41, exactly where her reference said, a peak: small, honest, no taller than the noise around it is wide, its two carbon-13 satellites sitting either side of it like a pair of commas. Not Figure 3. Nothing like Figure 3. Real.',
+    'Her tube has waited for this since 2019. Not for a paper, not for a figure: only for someone to run it in the dark, the way she wrote it down, and look at what came back without needing it to be anything else. It isn’t a big peak. It was never going to be. It is the only one in the building tonight that nobody had to make.',
   'ending.dark.4': 'The clock on the console says 03:33. Then it says 03:34.',
   'ending.dark.5':
     'The lights come back slowly, floor by floor, as if the building is remembering them one at a time. Upstairs the dying tube in the office flickers, considers it, and comes on. You sit in the NMR suite with the spectrum on the screen for a long time, and nobody tells you to go home, and for once you don’t need telling.',

@@ -524,15 +524,15 @@ describe('Act III puzzles in the building', () => {
     expect(ids(g)).not.toContain('office.compare');
   });
 
-  it('nothing opens the peak match yet (the dark run will); solving it writes 8.41 down', () => {
+  it('no room opens the peak match: only the dark run at 03:33 does, and solving it writes 8.41 down and is Dark Reaction', () => {
     const opens = (effects: readonly object[] = []) => effects.some((e) => 'puzzle' in e && e.puzzle === 'peakmatch');
     // The other three do open from choices, so the search itself is sound.
     for (const id of ['schlenk', 'chirp', 'fabrication']) {
       expect(CONTENT.scenes.flatMap((s) => s.choices).some((c) => (c.effects ?? []).some((e) => 'puzzle' in e && e.puzzle === id)), id).toBe(true);
     }
     expect(CONTENT.scenes.flatMap((s) => s.choices).filter((c) => opens(c.effects))).toEqual([]);
-    expect(CONTENT.lightsOut.filter((r) => r.puzzle === 'peakmatch' || opens(r.effects))).toEqual([]);
-    expect(CONTENT.puzzles.find((p) => p.id === 'peakmatch')!.onSolve).toEqual([{ learn: 'nb.peak' }]);
+    expect(CONTENT.lightsOut.filter((r) => r.puzzle === 'peakmatch' || opens(r.effects)).map((r) => r.id)).toEqual(['lo.dark.run']);
+    expect(CONTENT.puzzles.find((p) => p.id === 'peakmatch')!.onSolve).toEqual([{ learn: 'nb.peak' }, { ending: 'dark' }]);
   });
 
   it('each puzzle has three hints, its design par and a margin note', () => {

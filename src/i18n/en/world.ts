@@ -42,6 +42,8 @@ export const world = {
     'The stairwell is darker. Two of the green running men have gone out, and the ones that remain seem to be running faster. The radio on the porter’s desk has drifted between stations, and under the shipping forecast, faintly, someone is tapping a rhythm on a table.',
   'nmr.hub.act3':
     'The NMR suite hums. The cryocooler’s chirp has changed: no longer steady but grouped, a few chirps and a pause, a few chirps and a pause, like someone drumming their fingers while they think. The console is the brightest thing in the basement. Holder 13 is still empty, and still the only one without dust.',
+  'nmr.hub.act3.loaded':
+    'The NMR suite hums. The cryocooler’s chirp comes in its groups, a few chirps and a pause, patient now, like someone who has stopped drumming their fingers and is simply waiting. The console is the brightest thing in the basement. Holder 13 has her tube in it, the only holder without dust, and the only one that matters tonight.',
   'cold.hub.act3':
     'B.05 is colder than ever. Frost has crept out from the freezer’s seals and across the floor in thin white feathers, and all of them point the same way: towards the door, towards the stairs, towards the lab four floors up.',
   'roof.hub.act3':

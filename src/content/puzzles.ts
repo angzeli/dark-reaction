@@ -97,11 +97,11 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
     margin: 'puzzle.fabrication.margin',
   },
   {
-    // Opens at 03:33 in the dark run (#20 part B); nothing in the rooms opens it.
+    // Opens at 03:33 in the dark run (LIGHTS_OUT, lo.dark.run); nothing in the rooms opens it.
     id: 'peakmatch',
     par: 2,
     hints: hints('peakmatch'),
-    onSolve: [{ learn: 'nb.peak' }],
+    onSolve: [{ learn: 'nb.peak' }, { ending: 'dark' }],
     solvedText: [{ key: 'puzzle.peakmatch.solved' }],
     leftText: [{ key: 'puzzle.peakmatch.left' }],
     margin: 'puzzle.peakmatch.margin',

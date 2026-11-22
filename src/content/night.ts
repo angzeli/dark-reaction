@@ -1,9 +1,9 @@
 /**
  * What the night does on its own: timed events, the pages you don't remember
  * writing, and what happens at 03:33. docs/DESIGN.md §5, §14.
- * All three acts; the dark run's rules at 03:33 arrive with the Act III puzzles.
+ * All three acts. At 03:33 the dark run's rules come first (§12), then the first night's.
  */
-import type { ActDef, EventDef, LightsOutRule, PhantomDef } from '../engine/types.ts';
+import type { ActDef, Cond, EventDef, LightsOutRule, PhantomDef } from '../engine/types.ts';
 import { EXIT_B_OPEN, PI_OPEN } from './world.ts';
 
 const onLevel4 = { any: [{ at: 'office' as const }, { at: 'synth' as const }, { at: 'glovebox' as const }, { at: 'pi' as const }] };
@@ -67,7 +67,35 @@ export const PHANTOMS: PhantomDef[] = [
   { entry: 'ph.booking', when: { all: [{ actGte: 3 }, { loopsInActGte: 2 }] } },
 ];
 
+/** The dark run (#20): you in the NMR suite at 03:33, her tube in holder 13. */
+const inPlace: Cond = { all: [{ at: 'nmr' }, { lflag: 'holder13.loaded' }] };
+/** Her raw data read, and at least nine of her traces, five of them these. */
+const knowsHer: Cond = {
+  all: [{ know: 'nb.raw' }, { fragmentsGte: 9 }, ...['yc.email', 'yc.raw', 'yc.flask', 'yc.tube', 'yc.chirp'].map((fragment): Cond => ({ fragment }))],
+};
+
+/** A dark run that gives only noise, and the page (`page`) that says why. */
+function failed(id: string, missing: Cond, page: string): LightsOutRule {
+  return {
+    id,
+    if: { all: [inPlace, missing] },
+    effects: [{ learn: page }],
+    // Rule text is read before its effects run, so the page shows here only on a repeat.
+    text: [{ key: 'lo.dark.noise' }, { key: `${page}.body`, style: 'phantom', if: { know: page } }],
+  };
+}
+
 /** Checked in order at 03:33; later acts put their rules (and the endings) first. */
 export const LIGHTS_OUT: LightsOutRule[] = [
+  // No UPS: the console goes out with everything else, and holder 13 never drops.
+  { id: 'lo.dark.nopower', if: { all: [inPlace, { not: { lflag: 'ups.armed' } }] }, text: [{ key: 'lo.dark.nopower' }] },
+  // The run goes, but something is missing: only noise, and a page in your hand saying what.
+  // The page is written once; on a later failure for the same reason it is shown again.
+  failed('lo.dark.pages', { uncorrectedGte: 1 }, 'ph.pages'),
+  failed('lo.dark.figure', { not: { know: 'nb.fabrication' } }, 'ph.figure'),
+  failed('lo.dark.her', { not: knowsHer }, 'ph.her'),
+  // Everything in place: the run, in the dark, and her peak to find (Dark Reaction, if you do).
+  // No text: the peak match takes the narrative's place at once, and its intro says it.
+  { id: 'lo.dark.run', if: inPlace, puzzle: 'peakmatch' },
   { id: 'lo.first', if: { not: { know: 'nb.reset' } }, effects: [{ learn: 'nb.reset' }], text: [{ key: 'lo.first' }] },
 ];

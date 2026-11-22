@@ -493,14 +493,14 @@ describe('lights-out rules', () => {
     expect(g.state.known.map((k) => k.id)).not.toContain('ph.pages');
   });
 
-  it('a rule with effects applies them and still resets, carrying its text and the phantom page', () => {
+  it('a rule with effects applies them and still resets, carrying its text and, after 02:47, the phantom page', () => {
     const g = fresh();
     g.choose('office.yield');
     g.choose('office.loaded');
     endLoop(g);
     expect(g.state.loop).toBe(2);
     expect(g.state.known.map((k) => k.id)).toContain('ph.pages');
-    expect(keys(g).slice(0, 3)).toEqual(['lo.pages.text', 'ui.phantom.notice', 'ph.pages.body']);
+    expect(keys(g).slice(0, 4)).toEqual(['lo.pages.text', 'loop.start', 'ui.phantom.notice', 'ph.pages.body']);
   });
 
   it('a rule whose effects end the game does not reset', () => {

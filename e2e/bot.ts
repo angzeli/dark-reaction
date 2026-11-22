@@ -29,6 +29,8 @@ async function loopNow(page: Page): Promise<number> {
 }
 
 const ended = async (page: Page) => (await page.locator('article.ending').count()) > 0;
+/** The night is over for the bot's purposes: an ending, or a puzzle opened by 03:33 itself (the dark run). */
+const stopped = async (page: Page) => (await ended(page)) || (await page.locator('.pz').count()) > 0;
 
 /** Let the lights-out and any act card play out (an act card is dismissed with Enter, as a player would). */
 export async function settle(page: Page): Promise<void> {
@@ -59,7 +61,7 @@ export async function waitUntil(page: Page, minute: number): Promise<void> {
   const loop = await loopNow(page);
   for (let i = 0; i < 40; i++) {
     const left = minute - (await minuteNow(page));
-    if (left <= 0 || (await ended(page)) || (await loopNow(page)) !== loop) return;
+    if (left <= 0 || (await stopped(page)) || (await loopNow(page)) !== loop) return;
     await wait(page, left >= 10 ? 10 : left >= 5 ? 5 : 1);
   }
   throw new Error(`never reached minute ${minute}`);
@@ -69,7 +71,7 @@ export async function waitUntil(page: Page, minute: number): Promise<void> {
 async function night(page: Page): Promise<void> {
   const loop = await loopNow(page);
   for (let i = 0; i < 20; i++) {
-    if ((await ended(page)) || (await loopNow(page)) !== loop) return;
+    if ((await stopped(page)) || (await loopNow(page)) !== loop) return;
     const left = 46 - (await minuteNow(page));
     await wait(page, left >= 10 ? 10 : left >= 5 ? 5 : 1);
   }

@@ -322,9 +322,9 @@ export class Game {
     s.display = [...text, ...this.notices];
     if (s.ending) return;
     if (s.darkRun) {
-      // The dark run happens at 03:33; whatever happened, the night ends here.
+      // The dark run happens at 03:33; whatever happened, the night ends here, and what you saw carries.
       s.darkRun = false;
-      this.reset();
+      this.reset(s.display);
       return;
     }
     this.advance(minutes);
@@ -539,14 +539,15 @@ export class Game {
         s.display = [...text, ...this.notices];
         return;
       }
-      this.reset([...text, ...this.notices]);
+      // Pages the rule writes join 02:47's own, after "You come to…", under one notice.
+      this.reset(text, this.notices);
       return;
     }
     this.reset();
   }
 
   /** 02:47 again. Items and loop flags go; knowledge stays. */
-  private reset(carried: Paragraph[] = []): void {
+  private reset(carried: Paragraph[] = [], pages: Paragraph[] = []): void {
     const s = this.state;
     if (s.ending) return;
     const c = this.content;
@@ -578,14 +579,17 @@ export class Game {
       s.actLoop = s.loop;
       s.cards.push({ kind: 'act', act: next.act });
     }
-    this.startLoop(carried);
+    this.startLoop(carried, pages);
   }
 
-  /** Set up 02:47 of the current loop: phantom pages, the start room, loop-start text. */
-  startLoop(carried: Paragraph[]): void {
+  /**
+   * Set up 02:47 of the current loop: phantom pages, the start room, loop-start text.
+   * `pages` are notices already written at 03:33, shown with the loop's own pages.
+   */
+  startLoop(carried: Paragraph[], pages: Paragraph[] = []): void {
     const s = this.state;
     const c = this.content;
-    this.notices = [];
+    this.notices = [...pages];
     for (const phantom of c.phantoms) {
       if (!s.known.some((k) => k.id === phantom.entry) && holds(phantom.when, s)) this.learn(phantom.entry);
     }

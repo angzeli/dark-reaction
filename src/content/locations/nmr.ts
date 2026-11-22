@@ -12,7 +12,8 @@ export const nmrScenes: SceneDef[] = [
     hub: true,
     text: [
       { key: 'nmr.hub.act1', if: { not: { act: 3 } } },
-      { key: 'nmr.hub.act3', if: { act: 3 } },
+      { key: 'nmr.hub.act3', if: { all: [{ act: 3 }, { not: { lflag: 'holder13.loaded' } }] } },
+      { key: 'nmr.hub.act3.loaded', if: { all: [{ act: 3 }, { lflag: 'holder13.loaded' }] } },
     ],
     choices: [
       {
@@ -29,7 +30,10 @@ export const nmrScenes: SceneDef[] = [
         label: 'nmr.console.again',
         cost: 2,
         if: { solved: 'console' },
-        text: [{ key: 'nmr.console.again.r' }],
+        text: [
+          { key: 'nmr.console.again.r', if: { not: { lflag: 'holder13.loaded' } } },
+          { key: 'nmr.console.loaded.r', if: { lflag: 'holder13.loaded' } },
+        ],
       },
       {
         id: 'nmr.load',
@@ -72,7 +76,16 @@ export const nmrScenes: SceneDef[] = [
         text: [{ key: 'nmr.printout.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - st.minute }) }],
       },
       { id: 'nmr.magnet', once: 'loop', label: 'nmr.magnet', cost: 1, text: [{ key: 'nmr.magnet.r' }] },
-      { id: 'nmr.carousel', once: 'loop', label: 'nmr.carousel', cost: 1, text: [{ key: 'nmr.carousel.r' }] },
+      {
+        id: 'nmr.carousel',
+        once: 'loop',
+        label: 'nmr.carousel',
+        cost: 1,
+        text: [
+          { key: 'nmr.carousel.r', if: { not: { lflag: 'holder13.loaded' } } },
+          { key: 'nmr.carousel.loaded.r', if: { lflag: 'holder13.loaded' } },
+        ],
+      },
       { id: 'nmr.signs', once: 'loop', label: 'nmr.signs', cost: 1, effects: [{ learn: 'nb.ian' }], text: [{ key: 'nmr.signs.r' }] },
       {
         id: 'nmr.compressor',
@@ -111,6 +124,15 @@ export const nmrScenes: SceneDef[] = [
         text: [{ key: 'nmr.ups.again.r' }],
         effects: [{ lflag: 'ups.armed' }],
         tags: ['shortcut'],
+      },
+      {
+        // The dark run (#20): her tube in holder 13, the one slot without dust, for 03:33.
+        id: 'nmr.holder13',
+        label: 'nmr.holder13',
+        cost: 1,
+        if: { all: [{ act: 3 }, { item: 'item.tube.dark' }] },
+        effects: [{ take: 'item.tube.dark' }, { lflag: 'holder13.loaded' }],
+        text: [{ key: 'nmr.holder13.r' }],
       },
       { id: 'nmr.printer', once: 'loop', label: 'nmr.printer', cost: 1, text: [{ key: 'nmr.printer.r' }] },
     ],

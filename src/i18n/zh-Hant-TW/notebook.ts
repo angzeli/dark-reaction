@@ -113,6 +113,12 @@ export const notebook: Record<keyof typeof en, string> = {
   'ph.port4.body': '4 號接口。別讓它見光。',
   'ph.booking.title': '03:33',
   'ph.booking.body': '03:33 不是截止時間。是一個預約。',
+  'ph.pages.title': '那幾頁',
+  'ph.pages.body': '那幾頁還沒劃掉，就不行。先劃掉。',
+  'ph.figure.title': '圖三',
+  'ph.figure.body': '圖三還立在那裡，就不行。先證明它是假的。',
+  'ph.her.title': '她',
+  'ph.her.body': '你還不認識她。',
 
   // 第二幕：謎題告訴你的事
   'nb.porter.title': '警衛的星期一',

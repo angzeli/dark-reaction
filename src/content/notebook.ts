@@ -70,6 +70,9 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('ph.decay2', 'anomalies', 'phantom'),
   entry('ph.port4', 'tonight', 'phantom'),
   entry('ph.booking', 'anomalies', 'phantom'),
+  entry('ph.pages', 'anomalies', 'phantom'),
+  entry('ph.figure', 'anomalies', 'phantom'),
+  entry('ph.her', 'anomalies', 'phantom'),
   // Act II: what the puzzles teach you
   entry('nb.porter', 'tonight'),
   entry('nb.cipher', 'tonight'),
