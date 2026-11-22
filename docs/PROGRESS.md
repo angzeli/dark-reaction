@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #79 Act III rooms look the way Act III reads (closes #64)
-- **In flight:** no stale choices under the lights-out fade (this PR, closes #80). Also in progress: #25 part 2 (accessibility), #26 (polish).
+- **Last merged:** #81 no stale choices under the lights-out fade (closes #80)
+- **In flight:** the deploy goes after GitHub's branch build (this PR, closes #84). Also open: #82 (polish, #26), #83 (accessibility, #25).
 
 ## Next
 
-1. Merge this PR. 2. #25 part 2 (input modes, motion and flicker, focus in overlays). 3. #26 polish. 4. #27 README, credits and v1.0.0.
+1. Merge this PR and check the live site loads the build. 2. Merge #83 and #82. 3. #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -22,12 +22,17 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Open decisions and blockers
 
-- **Repository settings need the owner.** The cloud proxy blocks settings writes. Done by Angze: the repo is public with a description, and Pages is on. Still waiting: set the Pages source to "GitHub Actions" only (the branch build currently races our deploy and can publish the raw source page), and protect `main` with required status checks only (`attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`).
+- **Repository settings need the owner.** The cloud proxy blocks settings writes. Done by Angze: the repo is public with a description, and Pages is on. Still waiting: set the Pages source to "GitHub Actions" only (the branch build races our deploy and did publish the raw source page, #84; `deploy.yml` now waits for it, but the setting is the real fix), and protect `main` with required status checks only (`attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`).
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-22
+- #84: **the live site served the raw source page.**
+  - **The cause:** with the Pages source still "Deploy from a branch", GitHub's *pages build and deployment* publishes the repository itself on every push, racing our *Deploy to GitHub Pages*. For 7e9323b it finished one second after ours, so <https://angzeli.github.io/dark-reaction/> served `index.html` with `/src/main.ts`.
+  - **The workaround:** `deploy.yml`'s deploy job now waits for that commit's branch build to complete, up to 10 minutes, then deploys, so ours is last. If the Pages API says the source is *GitHub Actions* it doesn't wait.
+  - **The real fix** is still the owner's setting.
+- Merged #81 (closes #80).
 - #80: **no stale choices under the lights-out fade.**
   - **The problem:** #75 keeps the room on screen while the card fades in, and completes the page's running reveal. But the reveal's promise still drew that page's choices a microtask later, so choices appeared under the fade. A press that landed after the card could act on the new night; the freezer-alarm e2e lost three minutes to it.
   - **The fix:** every play render, and the last minute before the dark, bumps `playSeq`. A reveal draws its choices only if its page is still current.
