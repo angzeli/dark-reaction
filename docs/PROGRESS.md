@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #73 the playthrough bot (closes #24, the last M5 issue)
-- **In flight:** endings and the title screen open at the top (this PR, closes #72)
+- **Last merged:** #74 endings and the title screen open at the top (closes #72)
+- **In flight:** the last minute before the dark, and "Look away" (this PR, closes #71)
 
 ## Next
 
-1. Merge this PR. 2. #71 (the lights-out fade-in; "Look away" in the dark run). 3. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #71: **the last minute before the dark.**
+  - **The problem:** `App.act()` drew the next 02:47 before the lights-out card played, so the new room showed through the fade-in (and through flicker's steps).
+  - **The fix:** while a lights-out card is pending, the page keeps the room it was showing. The card now uses its `before` paragraphs, which the UI had never shown: what just happened replaces the room's text, the choices go, the HUD clock reads 03:33, and screen readers hear the same lines. 02:47 is drawn at `onBlack`, as before.
+  - **"Look away":** a puzzle can name its own leave label (`PuzzleDef.leave`, falling back to `puzzle.leave`). The peak match's is *Look away* / 「把視線移開」, and its intro now says that looking away ends the night.
+  - **Tests:**
+    - `e2e/lightsout.spec.ts`: under the fade, the synthesis lab at 03:33, loop 1, no choices, no 02:47 text; then 02:47 in loop 2.
+    - `e2e/dark.spec.ts`: the 繁中 label and intro; looking away keeps the NMR suite and its line under the fade, then 02:47.
+- **M5 Act III & Endings closed** (6 of 6 issues).
+- Merged #74 (closes #72).
 - #72: **endings and the title screen open at the top.** `render()` reset the scroll only for the play screen, so an ending reached from a scrolled room opened part-way into its epilogue, with the focused title above the viewport (Dark Reaction at 1280 × 900: `scrollY` 514). Arriving at the title or an ending now scrolls to the top; re-rendering the same screen keeps the place. Two Playwright tests at phone width: Fire Alarm from a scrolled page opens at `scrollY` 0 with its title focused and in view, and the title screen after it starts at the top (this one fails without the fix, at 155); quitting to the title from a scrolled room and continuing starts at the top.
 - **M5 gate passed.** All M5 issues are closed (#20–#24, #55, #61), and main is green after #73, deploy included. The true ending is played through the real UI in English and 繁中 by `e2e/dark.spec.ts` and the playthrough bot. I read the bot's screenshots: all eight rooms, all ten puzzles, five lights-outs and six endings per language. The peak match's dark room measures mean brightness 14.8 against 40.8 lit.
 - Merged #73 (closes #24).

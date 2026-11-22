@@ -104,6 +104,8 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
     onSolve: [{ learn: 'nb.peak' }, { ending: 'dark' }],
     solvedText: [{ key: 'puzzle.peakmatch.solved' }],
     leftText: [{ key: 'puzzle.peakmatch.left' }],
+    // Stepping away here ends the night, and the whole setup with it (#71).
+    leave: 'puzzle.peakmatch.leave',
     margin: 'puzzle.peakmatch.margin',
   },
 ];

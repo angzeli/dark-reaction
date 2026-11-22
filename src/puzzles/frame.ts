@@ -38,6 +38,8 @@ export interface FrameOptions {
   cue(id: 'solve' | 'fail' | 'hint' | 'chirp'): void;
   /** The clock moved inside the puzzle (so the rest of the UI can follow). */
   onMinutes?(minute: number): void;
+  /** Key for the leave button (default `puzzle.leave`). */
+  leaveKey?: string;
 }
 
 export interface FrameHandle {
@@ -94,7 +96,7 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   const renderChrome = () => {
     title.textContent = o.t(`puzzle.${id}.title`);
     intro.innerHTML = inline(o.t(`puzzle.${id}.intro`));
-    leave.textContent = o.t('puzzle.leave');
+    leave.textContent = o.t(o.leaveKey ?? 'puzzle.leave');
     renderClock();
     renderHints();
   };

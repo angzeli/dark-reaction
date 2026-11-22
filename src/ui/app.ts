@@ -9,7 +9,7 @@ import type { AmbienceId } from '../audio/presets/ambience.ts';
 import { playLightsOut } from '../art/lightsout.ts';
 import { SCENES } from '../art/scenes/index.ts';
 import { createStage, type Stage } from '../art/stage.ts';
-import { clockLabel } from '../engine/clock.ts';
+import { clockLabel, LOOP_LENGTH } from '../engine/clock.ts';
 import { Game, newGameState, uncorrectedFudges } from '../engine/engine.ts';
 import type { Act, Card, Content, EndingId, GameState, NotebookDef, NotebookSection, Paragraph } from '../engine/types.ts';
 import { getLocale, onLocaleChange, t, type Locale } from '../i18n/i18n.ts';
@@ -178,7 +178,8 @@ export class App {
     if (game.state.ending && !before.ending) this.gallery.recordEnding(game.state.ending, game.state.solved);
     this.autosave();
     if (this.phantomCount() > before.phantoms && game.state.cards.length === 0) audio.cue('phantom');
-    this.render({ reveal: true });
+    // When the lights are about to go out, the room stays as it was until the dark (#71); 02:47 is drawn at onBlack.
+    if (game.state.cards[0]?.kind !== 'lightsout') this.render({ reveal: true });
     await this.playCards();
   }
 
@@ -244,6 +245,7 @@ export class App {
 
   private async playCard(card: Card): Promise<void> {
     if (card.kind === 'lightsout') {
+      this.showLastMinute(card.before);
       audio.cue('lightsout');
       const handle = playLightsOut(document.body, {
         reduceMotion: this.settings.reduceMotion,
@@ -270,6 +272,29 @@ export class App {
       audio.cue(`ending.${card.ending}` as `ending.${EndingId}`);
       this.screen = 'ending';
     }
+  }
+
+  /**
+   * The minute before the dark, on the page that is still showing: what just happened (the
+   * card's `before`), no choices, 03:33 on the clock. The room itself is left as it was.
+   */
+  private showLastMinute(before: Paragraph[]): void {
+    if (this.screen !== 'play') return;
+    this.closePuzzle();
+    const narrative = this.root.querySelector<HTMLElement>('.narrative');
+    narrative?.classList.remove('narrative--puzzle');
+    const text = narrative?.querySelector('.narrative__text');
+    if (text && before.length) {
+      this.currentReveal?.complete();
+      this.currentReveal = null;
+      text.replaceChildren(...before.map((p) => this.paragraph(p)));
+      for (const el of text.children) el.classList.add('rv-done');
+      const live = narrative?.querySelector('[aria-live]');
+      if (live) live.textContent = before.map((p) => t(p.key, p.params)).join(' ');
+    }
+    narrative?.querySelector('.choices')?.replaceChildren();
+    const clock = this.root.querySelector('.hud__clock');
+    if (clock) clock.textContent = clockLabel(LOOP_LENGTH);
   }
 
   private showActCard(act: Act): Promise<void> {
@@ -647,6 +672,7 @@ export class App {
         this.autosave();
       },
       cue: (cueId) => audio.cue(cueId),
+      leaveKey: def.leave,
       onMinutes: (minute) => {
         const hud = this.root.querySelector('.hud__clock');
         if (hud) hud.textContent = clockLabel(minute);

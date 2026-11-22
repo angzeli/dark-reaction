@@ -167,6 +167,8 @@ export interface PuzzleDef {
   onFail?: Effect[];
   /** Text shown when the player steps away. */
   leftText?: TextRef[];
+  /** Key for the leave button when stepping away means more than usual (default `puzzle.leave`). */
+  leave?: string;
   /** Margin note key for new game+. */
   margin?: string;
 }
