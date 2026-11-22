@@ -58,4 +58,7 @@
 
 :lang(zh-Hant-TW) {
   --font-serif: var(--font-serif-zh);
+  /* Noto Serif TC has no italic and no bold: anything styled italic in 繁中
+     stays upright rather than sheared into a fake oblique (#55). */
+  font-synthesis: none;
 }
