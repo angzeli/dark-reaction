@@ -17,7 +17,10 @@ export const gloveboxScenes: SceneDef[] = [
     id: 'glovebox.hub',
     location: 'glovebox',
     hub: true,
-    text: [{ key: 'glovebox.hub.act1', params: ppm }],
+    text: [
+      { key: 'glovebox.hub.act1', params: ppm, if: { not: { act: 3 } } },
+      { key: 'glovebox.hub.act3', params: ppm, if: { act: 3 } },
+    ],
     choices: [
       {
         id: 'glovebox.antechamber',
@@ -55,7 +58,24 @@ export const gloveboxScenes: SceneDef[] = [
         text: [{ key: 'glovebox.sop.r' }],
       },
       { id: 'glovebox.logbook', label: 'glovebox.logbook', cost: 1, to: 'glovebox.logbook' },
-      { id: 'glovebox.mini', once: 'loop', label: 'glovebox.mini', cost: 1, effects: [{ learn: 'nb.mini' }], text: [{ key: 'glovebox.mini.r' }] },
+      { id: 'glovebox.mini', once: 'loop', label: 'glovebox.mini', cost: 1, if: { not: { act: 3 } }, effects: [{ learn: 'nb.mini' }], text: [{ key: 'glovebox.mini.r' }] },
+      {
+        // Act III: the small antechamber, opened her way: three cycles, as the SOP's pencil says.
+        id: 'glovebox.mini.open',
+        label: 'glovebox.mini.open',
+        cost: PURGE_MINUTES,
+        if: { all: [{ act: 3 }, { solved: 'glovebox' }, { not: { item: 'item.tube.jy' } }] },
+        effects: [{ give: 'item.tube.jy' }, { fragment: 'yc.tube' }, { learn: 'nb.tube' }],
+        text: [{ key: 'glovebox.mini.open.r.1' }, { key: 'glovebox.mini.open.r.2' }],
+      },
+      {
+        id: 'glovebox.mini.shut',
+        label: 'glovebox.mini.shut',
+        cost: 1,
+        once: 'loop',
+        if: { all: [{ act: 3 }, { not: { solved: 'glovebox' } }] },
+        text: [{ key: 'glovebox.mini.shut.r' }],
+      },
     ],
   },
   {

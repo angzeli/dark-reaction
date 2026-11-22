@@ -12,7 +12,8 @@ export const officeScenes: SceneDef[] = [
     hub: true,
     text: [
       { key: 'office.hub.act1', if: { act: 1 } },
-      { key: 'office.hub.act2', if: { actGte: 2 } },
+      { key: 'office.hub.act2', if: { act: 2 } },
+      { key: 'office.hub.act3', if: { act: 3 } },
     ],
     choices: [
       { id: 'office.monitor', label: 'office.monitor', to: 'office.monitor' },

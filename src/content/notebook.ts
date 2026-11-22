@@ -55,6 +55,10 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('nb.raw', 'data'),
   // Act II: anomalies
   entry('nb.printout', 'anomalies'),
+  // Act III
+  entry('nb.port4', 'anomalies'),
+  entry('nb.tube', 'anomalies'),
+  entry('nb.postit', 'people'),
   // Pages in your handwriting that you don't remember writing (docs/DESIGN.md §14)
   entry('ph.tea', 'tonight', 'phantom'),
   entry('ph.three', 'tonight', 'phantom'),
@@ -64,4 +68,6 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('ph.radium', 'tonight', 'phantom'),
   entry('ph.decay', 'anomalies', 'phantom'),
   entry('ph.decay2', 'anomalies', 'phantom'),
+  entry('ph.port4', 'tonight', 'phantom'),
+  entry('ph.booking', 'anomalies', 'phantom'),
 ];

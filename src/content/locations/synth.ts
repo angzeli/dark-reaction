@@ -12,7 +12,10 @@ export const synthScenes: SceneDef[] = [
     id: 'synth.hub',
     location: 'synth',
     hub: true,
-    text: [{ key: 'synth.hub.act1' }],
+    text: [
+      { key: 'synth.hub.act1', if: { not: { act: 3 } } },
+      { key: 'synth.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       {
         id: 'synth.plate',
@@ -54,6 +57,24 @@ export const synthScenes: SceneDef[] = [
         text: [{ key: 'synth.yield.fudge.r' }],
         effects: [{ fudge: 'fudge.yield' }],
         tags: ['fudge'],
+      },
+      {
+        // Act III: on the port that has never had anything on it.
+        id: 'synth.port4',
+        label: 'synth.port4',
+        cost: 1,
+        once: 'loop',
+        if: { act: 3 },
+        effects: [{ fragment: 'yc.flask' }, { learn: 'nb.port4' }],
+        text: [{ key: 'synth.port4.r' }],
+      },
+      {
+        id: 'synth.foil',
+        label: 'synth.foil',
+        cost: 1,
+        if: { all: [{ act: 3 }, { not: { item: 'item.foil' } }] },
+        effects: [{ give: 'item.foil' }],
+        text: [{ key: 'synth.foil.r' }],
       },
       { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }] },
       { id: 'synth.kraken', once: 'loop', label: 'synth.kraken', cost: 1, text: [{ key: 'synth.kraken.r' }] },

@@ -10,7 +10,10 @@ export const coldScenes: SceneDef[] = [
     id: 'cold.hub',
     location: 'cold',
     hub: true,
-    text: [{ key: 'cold.hub.act1' }],
+    text: [
+      { key: 'cold.hub.act1', if: { not: { act: 3 } } },
+      { key: 'cold.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       { id: 'cold.freezer', label: 'cold.freezer', cost: 1, once: 'loop', if: { not: { know: 'nb.cipher' } }, text: [{ key: 'cold.freezer.r' }] },
       { id: 'cold.cabinets', label: 'cold.cabinets', cost: 1, once: 'loop', text: [{ key: 'cold.cabinets.r' }] },

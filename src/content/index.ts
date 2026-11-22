@@ -23,7 +23,8 @@ export const CONTENT: Content = {
   loopStart: [
     { key: 'loop.start.first', if: { not: { loopGte: 2 } } },
     { key: 'loop.start.second', if: { all: [{ loopGte: 2 }, { not: { loopGte: 3 } }] } },
-    { key: 'loop.start.again', if: { loopGte: 3 } },
+    { key: 'loop.start.again', if: { all: [{ loopGte: 3 }, { not: { act: 3 } }] } },
+    { key: 'loop.start.act3', if: { all: [{ loopGte: 3 }, { act: 3 }] } },
   ],
   obsession: { decay1: 4, decay2: 7, infinite: 10, infiniteFromLoop: 4 },
   scenes: [...officeScenes, ...synthScenes, ...gloveboxScenes, ...piScenes, ...stairsScenes, ...nmrScenes, ...coldScenes, ...roofScenes],

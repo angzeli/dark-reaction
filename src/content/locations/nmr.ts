@@ -10,7 +10,10 @@ export const nmrScenes: SceneDef[] = [
     id: 'nmr.hub',
     location: 'nmr',
     hub: true,
-    text: [{ key: 'nmr.hub.act1' }],
+    text: [
+      { key: 'nmr.hub.act1', if: { not: { act: 3 } } },
+      { key: 'nmr.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       {
         id: 'nmr.console',
@@ -70,7 +73,25 @@ export const nmrScenes: SceneDef[] = [
       { id: 'nmr.magnet', once: 'loop', label: 'nmr.magnet', cost: 1, text: [{ key: 'nmr.magnet.r' }] },
       { id: 'nmr.carousel', once: 'loop', label: 'nmr.carousel', cost: 1, text: [{ key: 'nmr.carousel.r' }] },
       { id: 'nmr.signs', once: 'loop', label: 'nmr.signs', cost: 1, effects: [{ learn: 'nb.ian' }], text: [{ key: 'nmr.signs.r' }] },
-      { id: 'nmr.compressor', once: 'loop', label: 'nmr.compressor', cost: 1, text: [{ key: 'nmr.compressor.r' }] },
+      {
+        id: 'nmr.compressor',
+        once: 'loop',
+        label: 'nmr.compressor',
+        cost: 1,
+        text: [
+          { key: 'nmr.compressor.r', if: { not: { act: 3 } } },
+          { key: 'nmr.compressor.act3', if: { act: 3 } },
+        ],
+      },
+      {
+        id: 'nmr.postit',
+        label: 'nmr.postit',
+        cost: 1,
+        once: 'loop',
+        if: { act: 3 },
+        effects: [{ fragment: 'yc.chirp' }, { learn: 'nb.postit' }],
+        text: [{ key: 'nmr.postit.r' }],
+      },
       { id: 'nmr.printer', once: 'loop', label: 'nmr.printer', cost: 1, text: [{ key: 'nmr.printer.r' }] },
     ],
   },

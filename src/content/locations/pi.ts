@@ -19,7 +19,10 @@ export const piScenes: SceneDef[] = [
     id: 'pi.hub',
     location: 'pi',
     hub: true,
-    text: [{ key: 'pi.hub.text' }],
+    text: [
+      { key: 'pi.hub.text', if: { not: { act: 3 } } },
+      { key: 'pi.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       { id: 'pi.paper', label: 'pi.paper', cost: 1, once: 'loop', effects: [{ learn: 'nb.framed' }], text: [{ key: 'pi.paper.r' }] },
       {

@@ -183,6 +183,8 @@ Timed events added in Act II's half of the building (once a loop each): 02:57 Fe
 
 A flask appears on port 4 of the Kraken, a port that has never had a flask on it. The compressor's chirp changes into a rhythm Tom once wrote down. The mini-antechamber yields a tube she prepared and labelled for whoever came next. You prove the 2020 figure was the night's (its noise is identical to the 03:33 printout). In the last loop you fill her tube in the dark, load it into holder 13, keep the console alive on the UPS, and wait for 03:33. The lights go out. The magnet doesn't need them.
 
+Every room reads differently in Act III (darker, stranger, quieter); the office's queue comment changes from *it's still going* to *nearly done*, and each loop opens one line of *j*s shorter. In the rooms: the flask on port 4 (`yc.flask`), the foil drawer, the mini-antechamber opened with the purge you know (`item.tube.jy`, `yc.tube`; without it, you leave it alone), Tom's Post-it on the compressor (`yc.chirp`), and pages `ph.port4` (Act III opens) and `ph.booking` (two loops in).
+
 ## 9. Locations in detail
 
 Each location has its own illustration (§12), ambience (§13) and secrets. Hub text varies by act.
@@ -286,15 +288,15 @@ Ten puzzles, each a distinct mechanic, each solvable by a non-chemist from in-wo
 - **Par:** 2.5 min. **Shortcut:** the knowledge.
 
 ### P9 · The too-perfect spectrum (`fabrication`): evidence marking. Act III, office.
-- **Mechanic:** the 03:33 printout beside your own real spectrum and Figure 2 of the 2020 paper (PDF on your computer), drawn as plots you can toggle and overlay. Tap a feature to mark it as suspicious. Five tells:
-  1. **The noise is identical** to Figure 2's, point for point (overlay toggle). *Required.*
+- **Mechanic:** the 03:33 printout beside your own real spectrum and Figure 3 of the 2020 paper (PDF on your computer), drawn as plots you can toggle and overlay. Tap a feature to mark it as suspicious. Five tells:
+  1. **The noise is identical** to Figure 3's, point for point (overlay toggle). *Required.*
   2. No residual solvent peak (C₆D₅H, 7.16 ppm); every real spectrum in C₆D₆ has one, including yours.
   3. No ¹³C satellites either side of the big peak.
   4. The integral is exactly 1.000 on a dead-flat baseline.
   5. Acquired 03:33, tonight.
 - **Solved when** the noise match plus any two others are marked. Wrong marks cost nothing but are noted ("That's just your coffee ring").
 - **Grants:** `nb.fabrication`.
-- **Hints:** (1) Real spectra are messy: solvent, satellites, noise. What's missing? (2) Lay the printout over Figure 2 of the 2020 paper and look at the noise, not the peaks. (3) Mark the noise match, the missing solvent peak at 7.16 and the missing satellites.
+- **Hints:** (1) Real spectra are messy: solvent, satellites, noise. What's missing? (2) Lay the printout over Figure 3 of the 2020 paper and look at the noise, not the peaks. (3) Mark the noise match, the missing solvent peak at 7.16 and the missing satellites.
 - **Par:** 3 min. **Shortcut:** the knowledge.
 
 ### P10 · Peak match in the dark (`peakmatch`): calibration and identification. Act III finale, NMR suite at 03:33.

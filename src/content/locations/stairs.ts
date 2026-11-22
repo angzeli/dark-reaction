@@ -13,7 +13,10 @@ export const stairsScenes: SceneDef[] = [
     id: 'stairs.hub',
     location: 'stairs',
     hub: true,
-    text: [{ key: 'stairs.hub.act1' }],
+    text: [
+      { key: 'stairs.hub.act1', if: { not: { act: 3 } } },
+      { key: 'stairs.hub.act3', if: { act: 3 } },
+    ],
     choices: [
       { id: 'stairs.desk', label: 'stairs.desk', cost: 1, once: 'loop', effects: [{ learn: 'nb.femi' }], text: [{ key: 'stairs.desk.r' }] },
       {

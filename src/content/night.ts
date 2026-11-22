@@ -1,7 +1,7 @@
 /**
  * What the night does on its own: timed events, the pages you don't remember
  * writing, and what happens at 03:33. docs/DESIGN.md §5, §14.
- * Act I and Act II so far; Act III adds its own.
+ * All three acts; the dark run's rules at 03:33 arrive with the Act III puzzles.
  */
 import type { ActDef, EventDef, LightsOutRule, PhantomDef } from '../engine/types.ts';
 import { EXIT_B_OPEN, PI_OPEN } from './world.ts';
@@ -13,6 +13,8 @@ const offered = { all: [{ actGte: 2 as const }, { flag: 'ran.own' }] };
 /** Act II opens at the 02:47 after the three Act I puzzles are solved (docs/DESIGN.md §8). */
 export const ACTS: ActDef[] = [
   { act: 2, when: { all: [{ solved: 'tlc' }, { solved: 'glovebox' }, { solved: 'console' }, { know: 'nb.reset' }] }, title: 'act.2.title' },
+  // Act III: her raw data read, her email read, and the night's perfect spectrum offered at least once.
+  { act: 3, when: { all: [{ know: 'nb.raw' }, { know: 'nb.email' }, { flag: 'perfect.offered' }] }, title: 'act.3.title' },
 ];
 
 export const EVENTS: EventDef[] = [
@@ -61,6 +63,8 @@ export const PHANTOMS: PhantomDef[] = [
   },
   { entry: 'ph.decay', when: { obsessionGte: 4 } },
   { entry: 'ph.decay2', when: { obsessionGte: 7 } },
+  { entry: 'ph.port4', when: { actGte: 3 } },
+  { entry: 'ph.booking', when: { all: [{ actGte: 3 }, { loopsInActGte: 2 }] } },
 ];
 
 /** Checked in order at 03:33; later acts put their rules (and the endings) first. */
