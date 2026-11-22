@@ -3,7 +3,8 @@
  * has a 繁中 twin typed against its keys, so the compiler enforces parity.
  */
 import { puzzles } from './en/puzzles.ts';
+import { world } from './en/world.ts';
 import { ui } from './en/ui.ts';
 
-export const en = { ...ui, ...puzzles } as const;
+export const en = { ...ui, ...puzzles, ...world } as const;
 export type Key = keyof typeof en;
