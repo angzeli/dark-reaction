@@ -18,11 +18,12 @@ async function start(page: Page, opts: { reducedMotion?: boolean; locale?: strin
     if (u.protocol.startsWith('http') && u.host !== 'localhost:4173') outside.push(r.url());
   });
   await page.emulateMedia({ reducedMotion: opts.reducedMotion === false ? 'no-preference' : 'reduce' });
-  if (opts.locale) {
-    await page.addInitScript((locale) => {
-      localStorage.setItem('dark-reaction.settings.v1', JSON.stringify({ locale }));
-    }, opts.locale);
-  }
+  // The content note has been read; e2e/settings.spec.ts covers it.
+  await page.addInitScript((locale) => {
+    if (!localStorage.getItem('dark-reaction.settings.v1')) {
+      localStorage.setItem('dark-reaction.settings.v1', JSON.stringify({ contentNoteSeen: true, ...(locale ? { locale } : {}) }));
+    }
+  }, opts.locale ?? null);
   await page.goto('./');
   return { errors, outside };
 }

@@ -596,3 +596,83 @@ button {
   .play__art .dr-stage { max-height: 34vh; }
   .narrative { padding-top: 1rem; }
 }
+
+/* ── Settings and the content note ──────────────────────────────────────── */
+
+.overlay--settings .overlay__sheet,
+.overlay--note .overlay__sheet {
+  background: #0d1926;
+  border-top: 2px solid var(--copper);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+.set { display: grid; gap: 1rem; max-width: 34rem; }
+.set__title, .note__title { margin: 0; font-weight: 600; }
+.set__title:focus, .note__title:focus { outline: none; }
+.set__group {
+  margin: 0;
+  padding: 0.75rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+.set__legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.set__options { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.set__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #2f475c;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.set__option:has(input:checked) { border-color: var(--tube); color: #eaf7ee; }
+.set__option input, .set__check input { accent-color: var(--tube); width: 1.05rem; height: 1.05rem; }
+.set__check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.1rem 0.6rem;
+  align-items: center;
+  padding: 0.4rem 0;
+}
+.set__check label { cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+.set__hint {
+  grid-column: 2;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.set__sound {
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid #2f475c;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.set__sound[aria-pressed='true'] { border-color: var(--tube); color: var(--tube); }
+.set__slider {
+  display: grid;
+  grid-template-columns: 6rem 1fr 3.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.set__slider input { accent-color: var(--tube); min-height: 32px; }
+.set__slider input:disabled { opacity: 0.4; }
+.set__value { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-align: end; }
+
+.note { max-width: 34rem; line-height: 1.7; }
+.note p { margin: 0.85rem 0; }
+.note__quick { margin: 1.25rem 0; padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+.note__go { margin-top: 0.5rem; }

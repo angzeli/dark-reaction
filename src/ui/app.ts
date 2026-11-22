@@ -21,8 +21,9 @@ import type { KV } from '../save/storage.ts';
 import { h, inline, trapFocus } from './dom.ts';
 import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
+import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
 
-type Overlay = 'none' | 'notebook' | 'menu';
+type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
 const SECTIONS: NotebookSection[] = ['tonight', 'people', 'places', 'data', 'anomalies'];
@@ -74,6 +75,8 @@ export class App {
 
   start(): void {
     this.screen = 'title';
+    // The content note comes first, once, before anything else.
+    if (!this.settings.contentNoteSeen) this.overlay = 'note';
     this.render();
   }
 
@@ -305,9 +308,20 @@ export class App {
   }
 
   private closeOverlay(): void {
+    const wasNote = this.overlay === 'note';
     this.overlay = 'none';
-    this.render();
-    this.lastFocus?.focus?.();
+    if (wasNote && !this.settings.contentNoteSeen) this.updateSettings({ contentNoteSeen: true });
+    else this.render();
+    if (this.lastFocus?.isConnected) this.lastFocus.focus();
+  }
+
+  private settingsApi(): SettingsApi {
+    return {
+      settings: this.settings,
+      update: (patch) => this.updateSettings(patch),
+      toggleSound: () => this.toggleSound(),
+      showNote: () => this.openOverlay('note'),
+    };
   }
 
   private flash(message: string): void {
@@ -323,12 +337,15 @@ export class App {
   // ── Rendering ────────────────────────────────────────────────────────────
 
   render(opts: { reveal?: boolean } = {}): void {
+    // Re-rendering replaces the DOM; put focus back on the same control.
+    const focusKey = (document.activeElement as HTMLElement | null)?.dataset?.['focusKey'];
     this.untrap?.();
     this.untrap = null;
     if (this.screen === 'title') this.renderTitle();
     else if (this.screen === 'ending') this.renderEnding();
     else this.renderPlay(opts.reveal ?? false);
-    if (this.overlay !== 'none' && this.screen === 'play') this.renderOverlay();
+    if (this.overlay !== 'none' && this.screen !== 'ending') this.renderOverlay();
+    if (focusKey) this.root.querySelector<HTMLElement>(`[data-focus-key="${CSS.escape(focusKey)}"]`)?.focus({ preventScroll: true });
     audio.setAmbience(this.screen === 'ending' ? null : this.ambienceFor());
   }
 
@@ -393,6 +410,7 @@ export class App {
           t('ui.newgame'),
         ),
         h('button', { type: 'button', class: 'title__btn', onclick: () => void this.importSave() }, t('ui.import')),
+        h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-settings' }, onclick: () => this.openOverlay('settings') }, t('ui.settings')),
       );
     }
     const panel = h(
@@ -405,7 +423,7 @@ export class App {
     );
     this.shell('title', h('div', { class: 'title' }, art, panel));
     this.mountStage(art, 'office', { act: 1, minute: 0 });
-    (panel.querySelector('button.title__btn') as HTMLElement | null)?.focus({ preventScroll: true });
+    if (this.overlay === 'none') (panel.querySelector('button.title__btn') as HTMLElement | null)?.focus({ preventScroll: true });
   }
 
   private paragraph(p: Paragraph): HTMLElement {
@@ -546,7 +564,14 @@ export class App {
   // ── Overlays ─────────────────────────────────────────────────────────────
 
   private renderOverlay(): void {
-    const panel = this.overlay === 'notebook' ? this.notebookPanel() : this.menuPanelEl();
+    const panel =
+      this.overlay === 'notebook'
+        ? this.notebookPanel()
+        : this.overlay === 'settings'
+          ? settingsPanel(this.settingsApi())
+          : this.overlay === 'note'
+            ? contentNote(this.settingsApi(), () => this.closeOverlay())
+            : this.menuPanelEl();
     const close = h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
     const dialog = h(
       'section',
@@ -558,7 +583,7 @@ export class App {
     });
     this.root.querySelector('.app')!.appendChild(dialog);
     this.untrap = trapFocus(dialog);
-    (dialog.querySelector('#overlay-title') as HTMLElement | null)?.focus({ preventScroll: true });
+    if (!dialog.contains(document.activeElement)) (dialog.querySelector('#overlay-title') as HTMLElement | null)?.focus({ preventScroll: true });
   }
 
   private notebookPanel(): HTMLElement {
@@ -667,9 +692,11 @@ export class App {
       btn(t('ui.notebook'), () => this.openOverlay('notebook')),
       btn(t('ui.save'), () => ((this.menuPanel = 'save'), this.render())),
       btn(t('ui.load'), () => ((this.menuPanel = 'load'), this.render())),
+      btn(t('ui.settings'), () => this.openOverlay('settings')),
       btn(t('ui.export'), () => this.exportSave()),
       btn(t('ui.import'), () => void this.importSave()),
       h('div', { class: 'menu__toggles' }, this.langToggle(), this.soundToggle()),
+      btn(t('note.reread'), () => this.openOverlay('note')),
       btn(t('ui.quit'), () => this.quitToTitle(), { class: 'menu__btn menu__btn--quiet' }),
     );
   }
