@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 import { Game } from '../src/engine/engine.ts';
 import type { GameState } from '../src/engine/types.ts';
-import { Gallery, GALLERY_KEY } from '../src/save/gallery.ts';
+import { t } from '../src/i18n/i18n.ts';
+import { ENDING_ORDER, Gallery, GALLERY_KEY } from '../src/save/gallery.ts';
 import { fitToContent, parseSave, SAVE_SCHEMA, SaveStore, stateProblem } from '../src/save/saves.ts';
 import { browserStorage, memoryStorage, wrapStorage, type KV } from '../src/save/storage.ts';
 import { miniContent } from './fixtures/mini.ts';
@@ -240,6 +241,15 @@ describe('the gallery', () => {
     expect(stored.endings.futureEnding).toEqual({ first: 'y', count: 1 });
     expect(stored.extra).toBe(42);
     expect(stored.solved).toEqual(['schlenk']);
+  });
+
+  it('can name and hint at all six endings in both languages, found or not', () => {
+    expect(ENDING_ORDER).toHaveLength(6);
+    for (const id of ENDING_ORDER) {
+      for (const locale of ['en', 'zh-Hant-TW'] as const) {
+        for (const key of [`ending.${id}.title`, `ending.${id}.clue`]) expect(t(key, {}, locale), `${key} ${locale}`).not.toMatch(/^\[\[/);
+      }
+    }
   });
 
   it('backs up unreadable gallery text before replacing it', () => {
