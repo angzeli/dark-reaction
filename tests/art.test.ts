@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { hasScene, SCENES } from '../src/art/scenes/index.ts';
 import { hash, rain, seeded } from '../src/art/svg.ts';
 import type { ArtContext } from '../src/art/types.ts';
+import { ENDINGS, EPILOGUES } from '../src/content/endings.ts';
 import { o2At } from '../src/content/lab.ts';
 import { LOCATIONS } from '../src/content/world.ts';
 
@@ -34,7 +35,7 @@ describe('scenes', () => {
         const a = scene(ctx);
         const ids = [...a.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
         expect(new Set(ids).size).toBe(ids.length);
-        for (const [, ref] of a.matchAll(/url\(#([^)]+)\)/g)) expect(ids).toContain(ref);
+        for (const [, ref] of a.matchAll(/(?:url\(#|href="#)([^)"]+)/g)) expect(ids).toContain(ref);
       }
     });
 
@@ -59,6 +60,15 @@ describe('scenes', () => {
     for (const loc of LOCATIONS) expect(hasScene(loc.art), loc.art).toBe(true);
   });
 
+  it('every ending has its illustration, including the two whose triggers come later', () => {
+    for (const id of Object.keys(EPILOGUES)) expect(hasScene(`ending.${id}`), id).toBe(true);
+    for (const ending of ENDINGS) expect(hasScene(ending.art), ending.art).toBe(true);
+  });
+
+  it('Infinite Loop holds perfectly still, whatever the settings', () => {
+    for (const ctx of contexts) expect(SCENES['ending.infinite']!(ctx)).not.toMatch(/class="[^"]*\bdr-(rain|drop|flicker|blink|breathe)\b/);
+  });
+
   it('the wall clocks in the office and in Dan’s office follow the loop clock', () => {
     for (const id of ['office', 'pi']) expect(SCENES[id]!({ act: 1, minute: 0 }), id).not.toBe(SCENES[id]!({ act: 1, minute: 13 }));
   });
@@ -70,16 +80,27 @@ describe('scenes', () => {
     expect(streaks.filter((l) => !l.includes('dr-rain')).length).toBeGreaterThan(100);
   });
 
-  it('the Kraken has eight ports numbered left to right, and port 4 is bare', () => {
-    const a = SCENES['synth']!({ act: 1, minute: 0 });
-    const ports = [...a.matchAll(/<g class="kraken-port" data-port="(\d+)" data-holds="(\w+)">(.*?)<\/g>/g)].map(([, n, holds, body]) => {
-      const tag = body!.match(/<text x="([\d.]+)"[^>]*>(\d+)<\/text>/)!;
-      return { n: Number(n), holds, x: Number(tag[1]), label: Number(tag[2]) };
-    });
-    expect(ports.map((p) => p.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
-    expect(ports.map((p) => p.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
-    for (let i = 1; i < ports.length; i++) expect(ports[i]!.x).toBeGreaterThan(ports[i - 1]!.x);
-    expect(ports.filter((p) => p.holds === 'none').map((p) => p.n)).toEqual([4]);
+  it('the Kraken has eight ports numbered left to right; port 4 is bare until Act III brings her flask', () => {
+    const ports = (act: 1 | 2 | 3) =>
+      [...SCENES['synth']!({ act, minute: 0 }).matchAll(/<g class="kraken-port" data-port="(\d+)" data-holds="(\w+)">(.*?)<\/g>/g)].map(([, n, holds, body]) => {
+        const tag = body!.match(/<text x="([\d.]+)"[^>]*>(\d+)<\/text>/)!;
+        return { n: Number(n), holds, x: Number(tag[1]), label: Number(tag[2]) };
+      });
+    for (const act of [1, 2, 3] as const) {
+      const p = ports(act);
+      expect(p.map((q) => q.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(p.map((q) => q.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      for (let i = 1; i < p.length; i++) expect(p[i]!.x).toBeGreaterThan(p[i - 1]!.x);
+    }
+    for (const act of [1, 2] as const) {
+      expect(ports(act).filter((q) => q.holds === 'none').map((q) => q.n)).toEqual([4]);
+      expect(SCENES['synth']!({ act, minute: 0 })).not.toContain('synth-port4-foil');
+    }
+    const act3 = ports(3);
+    expect(act3.find((q) => q.n === 4)?.holds).toBe('dark');
+    expect(act3.filter((q) => q.holds === 'none')).toEqual([]);
+    expect(act3.filter((q) => q.n !== 4).map((q) => q.holds)).toEqual(ports(1).filter((q) => q.n !== 4).map((q) => q.holds));
+    expect(SCENES['synth']!({ act: 3, minute: 0 })).toContain('clip-path="url(#synth-port4-foil)"');
   });
 
   it('the glovebox meter reads the O₂ model, from green through amber to red', () => {
