@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #75 the last minute before the dark, and "Look away" (closes #71)
-- **In flight:** 繁中 puzzle status lines without a half-width space after 。 (this PR, closes #66). In parallel: #64 Act III room art (art subagent), #67 hover on touch screens.
+- **Last merged:** #76 繁中 puzzle status lines without a half-width space after 。 (closes #66)
+- **In flight:** hover only where there is one (this PR, closes #67). In parallel: #64 Act III room art (art subagent), #69 content to ~18,000 English words.
 
 ## Next
 
-1. Merge this PR. 2. #69, content to ~18,000 English words. 4. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker), #66, #67. 5. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #69, content to ~18,000 English words. 3. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 4. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #67: **a tap never leaves a hover look behind.**
+  - **The problem:** `.pz button:hover:not(:disabled)` (specificity 0,3,1) outranked the puzzles' selected, pressed and "on" styles (0,3,0 at most). On a touch screen, where :hover sticks to whatever was tapped, a toggle kept the hover border instead of its own.
+  - **The fix:** every hover rule in `puzzle.css` and `ui.css` (puzzle buttons, title, menu and slot buttons, the HUD's, the choices) now sits in `@media (hover: hover)`. The puzzle rule also skips `[aria-checked='true']`, `[aria-pressed='true']`, `[data-on='true']` and marked circles, so those win wherever both apply. The fabrication puzzle's local workaround from #21 is gone.
+  - **Test:** a Playwright check on a phone (`hasTouch`, `isMobile`, `(hover: hover)` false) taps the Kraken's nitrogen main and a port's nitrogen tap, then leaves the pointer on each, as a touch browser does. Each keeps its "on" blue, and a plain button keeps its plain border. It fails on the old CSS.
+- Merged #76 (closes #66).
 - #66: **繁中 puzzle status lines no longer put a half-width space after 。**
   - **The problem:** the glovebox, door log and freezer views joined two translated sentences with a literal space, and the glovebox also appended a half-width full stop. 繁中 read 「…空氣。 O₂ 3.8 ppm.」.
   - **The fix:** they now use one template, `puzzle.then`: `{first} {second}` in English, `{first}{second}` in 繁中. The oxygen reading is a sentence of its own, `puzzle.glovebox.o2.now` (「O₂ {ppm} ppm。」).
