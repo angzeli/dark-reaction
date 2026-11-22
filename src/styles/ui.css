@@ -33,6 +33,14 @@ button {
   font: inherit;
   color: inherit;
 }
+
+/* Emphasis marks quoted writing: notes, emails, signs, labels. English sets
+   it in italic; 繁中 has no italic, so it stays upright in a warmer tint of
+   whatever ink surrounds it (light on the night screens, dark on paper). */
+:lang(zh-Hant-TW) em {
+  font-style: normal;
+  color: color-mix(in srgb, currentColor 72%, var(--sodium));
+}
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
