@@ -5,8 +5,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M5 Act III & Endings (M3 and M4 closed)
-- **Last merged:** #58 the ending gallery (closes #23)
-- **In flight:** #59 scroll on arrival (this PR); Fire Alarm (#57, in cold review); the art subagent on the ending illustrations and port 4's flask (`art/endings-22`); the puzzle subagent on #21 (`puzzle/act3-21`)
+- **Last merged:** #59 scroll on arrival (closes #52)
+- **In flight:** #60 focus clear of the HUD (this PR, closes #43); Fire Alarm (#57, in cold review); the art subagent on the ending illustrations and port 4's flask (`art/endings-22`); the puzzle subagent on #21 (`puzzle/act3-21`)
 
 ## Next
 
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #43: on short windows (a laptop at 1280 × 600, a phone held sideways), moving focus backwards through a tall puzzle scrolled the control just into view, underneath the sticky HUD (WCAG 2.2, 2.4.11). The app now measures the HUD into `--hud-h` with a `ResizeObserver` (it wraps on phones and grows with text size), and `html { scroll-padding-top }` keeps focused controls clear of it. The HUD clock's prohibited `aria-label` is gone: a visually hidden "Time" precedes it instead. Playwright Shift+Tabs thirty times up through the NMR console at 1280 × 600 and 390 × 640 and checks no focused control overlaps the HUD. It fails on the old code (a console line at 9–61 px under an 82 px HUD) and passes now. The axe criterion moves to #25, where axe arrives.
+- Merged #59 (closes #52).
 - #52: arriving somewhere new kept the old scroll position, so after choosing near the bottom of a long page and walking, the new room's picture and first line were above the viewport (on a phone, entirely). The play screen now remembers the loop and room it last showed and, when either changes (a walk, or 02:47 again), jumps to the top. It never scrolls smoothly: it's a cut, not a pan, so reduced motion is respected. Choosing within a room keeps the reader's place, and keyboard focus still lands on the first choice without scrolling. A Playwright test at phone width (390 × 844) fails on the old code (the lab opened 177 px down) and passes now: a same-room choice keeps the place, a walk starts at the top with the picture in view, and so does the next loop after 03:33.
 - Merged #58 (closes #23).
 - #23 the ending gallery, **結局一覽**, from the title screen and the in-game menu. It shows six frames in the order of DESIGN §12, with a count ("2 of 6 found" / 「已找到 2／6」). A found ending shows its title and how often and since when it was reached ("Reached 1 time, first on 22 November 2026"); the rest show "Not yet found" and their clue, so the secret one keeps its name. Pictures are still images of each ending's scene (`<img>` data URIs: no SVG id clashes between six scenes, no motion); an unfound one is only its shape, blurred and darkened. Until the ending art lands the frames are empty. Recording before the epilogue, survival across new games, slot deletion and imports, and margin derivation were already in the save layer and its tests; this adds a test that all six endings can be named and hinted at in both languages, and Playwright paths: from the title with nothing found, Clocking Off played by the bot, the gallery from the title and then from the next night's menu, the notebook's pencil margins, and 結局一覽 in 繁中 with its clues upright.

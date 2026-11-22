@@ -60,6 +60,8 @@ export class App {
   private menuPanel: MenuPanel = 'main';
   private notebookSection: NotebookSection | 'loops' = 'tonight';
   private stage: Stage | null = null;
+  /** Keeps `--hud-h` at the sticky HUD's height, so focus never scrolls under it (#43). */
+  private hudObserver: ResizeObserver | null = null;
   private currentReveal: Reveal | null = null;
   private puzzleFrame: FrameHandle | null = null;
   private busy = false;
@@ -395,7 +397,10 @@ export class App {
     const focusKey = (document.activeElement as HTMLElement | null)?.dataset?.['focusKey'];
     this.untrap?.();
     this.untrap = null;
-    if (this.screen !== 'play') this.shownAt = null;
+    if (this.screen !== 'play') {
+      this.shownAt = null;
+      this.watchHud(null);
+    }
     if (this.screen === 'title') this.renderTitle();
     else if (this.screen === 'ending') this.renderEnding();
     else this.renderPlay(opts.reveal ?? false);
@@ -500,7 +505,13 @@ export class App {
       'header',
       { class: 'hud' },
       h('p', { class: 'hud__place' }, t(location.name)),
-      h('p', { class: 'hud__time' }, h('time', { class: 'hud__clock', 'aria-label': t('ui.time') }, clockLabel(s.minute)), h('span', { class: 'hud__loop' }, t('ui.loop', { n: s.loop }))),
+      h(
+        'p',
+        { class: 'hud__time' },
+        h('span', { class: 'sr-only' }, `${t('ui.time')} `),
+        h('time', { class: 'hud__clock' }, clockLabel(s.minute)),
+        h('span', { class: 'hud__loop' }, t('ui.loop', { n: s.loop })),
+      ),
       h(
         'nav',
         { class: 'hud__actions', 'aria-label': t('ui.menu') },
@@ -518,6 +529,7 @@ export class App {
       : null;
     const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choices, live);
     const app = this.shell('play', hud, art, narrative);
+    this.watchHud(hud);
     app.dataset['decay'] = String(decay);
     // A new room, or 02:47 again: start at the top, with the picture and the first line in view.
     // Choosing within a room keeps the reader's place. Never smooth: it's a cut, not a pan.
@@ -569,6 +581,27 @@ export class App {
     }
 
     if (s.puzzle && !this.busy) this.openPuzzle(narrative);
+  }
+
+  /** Track the sticky HUD's height in `--hud-h` (it wraps on phones and grows with text size). */
+  private watchHud(hud: HTMLElement | null): void {
+    this.hudObserver?.disconnect();
+    this.hudObserver = null;
+    const root = document.documentElement;
+    if (!hud) {
+      root.style.removeProperty('--hud-h');
+      return;
+    }
+    // Measured only once laid out. A synchronous measure here would force a layout mid-render,
+    // before the picture and the choices are in, and the briefly short page would clamp the
+    // scroll position to the top (undoing #52's "a choice keeps your place").
+    const set = () => root.style.setProperty('--hud-h', `${Math.ceil(hud.getBoundingClientRect().height)}px`);
+    if (typeof ResizeObserver === 'undefined') {
+      requestAnimationFrame(set);
+      return;
+    }
+    this.hudObserver = new ResizeObserver(set);
+    this.hudObserver.observe(hud);
   }
 
   private openPuzzle(host: HTMLElement): void {
