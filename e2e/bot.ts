@@ -1,6 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 import type { RouteStep } from '../src/content/routes.ts';
+import { EN_LINE, ZH_LINE } from '../src/puzzles/cipher/logic.ts';
 import { ANSWER as DOORLOG } from '../src/puzzles/doorlog/logic.ts';
+import { ANSWER as FREEZER } from '../src/puzzles/freezer/logic.ts';
 
 /**
  * The playthrough bot: plays the validator's route steps (src/content/
@@ -32,9 +34,27 @@ const ended = async (page: Page) => (await page.locator('article.ending').count(
 /** The night is over for the bot's purposes: an ending, or a puzzle opened by 03:33 itself (the dark run). */
 const stopped = async (page: Page) => (await ended(page)) || (await page.locator('.pz').count()) > 0;
 
+/**
+ * What a playthrough wants to keep: a screenshot on arriving in each room,
+ * of each puzzle as it opens, and of each lights-out (#24). `play` reports
+ * to it while it runs.
+ */
+export interface Capture {
+  room(location: string): Promise<void>;
+  puzzle(id: string): Promise<void>;
+  lightsOut(): Promise<void>;
+}
+let capture: Capture | null = null;
+
 /** Let the lights-out and any act card play out (an act card is dismissed with Enter, as a player would). */
 export async function settle(page: Page): Promise<void> {
+  let dark = false;
   for (let i = 0; i < 200; i++) {
+    // Shoot once it is fully dark, with the clock lit (the fade-in shows nothing yet).
+    if (!dark && capture && (await page.locator('.dr-lightsout .dr-lightsout__clock--on').count())) {
+      dark = true;
+      await capture.lightsOut();
+    }
     if (await page.locator('.act-card:not(.act-card--out)').count()) {
       await page.keyboard.press('Enter');
       await page.waitForTimeout(100);
@@ -101,6 +121,23 @@ export const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
     await set('exit', DOORLOG.exit);
     await page.locator('.dl__write').click();
   },
+  async cipher(page) {
+    // Her last page: in 繁中 strip each character's radical; in English fill each gap with its element.
+    if (await page.locator('.ci--zh').count()) {
+      for (const [i, c] of ZH_LINE.entries()) {
+        await page.locator(`.ci__char[data-char="${i}"]`).click();
+        await page.locator(`.ci__radical[data-radical="${c.radical}"]`).click();
+      }
+    } else {
+      for (const z of EN_LINE) await page.locator(`.ci__el[data-z="${z}"]`).click();
+    }
+    await page.locator('.ci__finish').click();
+  },
+  async freezer(page) {
+    await page.locator(`.fz__cell[data-cell="${FREEZER}"]`).click();
+    await page.locator('.fz__lift').click();
+    await page.locator('.fz__finish').click();
+  },
   async console(page) {
     await page.locator('.con__chip[data-command="queue --all"]').click();
     await page.locator('.con__chip[data-command="info 13"]').click();
@@ -146,16 +183,33 @@ export async function strike(page: Page): Promise<void> {
   await expect(notebook).toHaveCount(0);
 }
 
-export async function play(page: Page, steps: readonly RouteStep[]): Promise<void> {
+export async function play(page: Page, steps: readonly RouteStep[], keep?: Capture): Promise<void> {
+  capture = keep ?? null;
+  try {
+    await playSteps(page, steps);
+  } finally {
+    capture = null;
+  }
+}
+
+async function playSteps(page: Page, steps: readonly RouteStep[]): Promise<void> {
   for (const [i, step] of steps.entries()) {
     try {
       await settle(page);
       if ('do' in step) await pick(page, step.do);
-      else if ('go' in step) await go(page, step.go);
+      else if ('go' in step) {
+        await go(page, step.go);
+        await settle(page);
+        await capture?.room(step.go);
+      }
       else if ('wait' in step) await wait(page, step.wait);
       else if ('until' in step) await waitUntil(page, step.until);
       else if ('night' in step) await night(page);
       else if ('solve' in step) {
+        if (capture) {
+          await expect(page.locator('.pz')).toBeVisible();
+          await capture.puzzle(step.solve);
+        }
         await SOLVERS[step.solve]!(page);
         await expect(page.locator('.pz')).toHaveCount(0);
       } else if ('fail' in step) await page.locator('.pz__leave').click();
