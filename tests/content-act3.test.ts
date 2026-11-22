@@ -149,3 +149,75 @@ describe('what she left', () => {
     expect(keys(g)).toEqual(['nmr.compressor.r']);
   });
 });
+
+describe('second looks and Act III looks (#69)', () => {
+  /** Each Act III look: where it is, and the key it shows. */
+  const LOOKS: Array<[LocationId, string]> = [
+    ['cold', 'cold.frost'],
+    ['office', 'office.ceiling'],
+    ['stairs', 'stairs.signs'],
+    ['roof', 'roof.cranes'],
+  ];
+
+  it('the Act III looks are there only in Act III, and each says what the room now shows', () => {
+    const two = readyForThree();
+    for (const [where, id] of LOOKS) {
+      if (two.state.location !== where) goTo(two, where);
+      expect(ids(two), id).not.toContain(id);
+    }
+    const three = readyForThree();
+    endLoop(three);
+    expect(three.state.act).toBe(3);
+    for (const [where, id] of LOOKS) {
+      if (three.state.location !== where) goTo(three, where);
+      expect(ids(three), id).toContain(id);
+      three.choose(id);
+      expect(keys(three)[0]).toBe(`${id}.r`);
+      if (!three.scene.hub) three.choose('meta:back');
+    }
+    expect(known(three)).toContain('nb.frost');
+  });
+
+  it('rooms that change in Act III say so when you look again', () => {
+    const g = readyForThree();
+    endLoop(g);
+    goTo(g, 'cold');
+    g.choose('cold.dewar');
+    expect(keys(g)[0]).toBe('cold.dewar.act3');
+    goTo(g, 'stairs');
+    g.choose('stairs.window');
+    expect(keys(g)[0]).toBe('stairs.window.act3');
+    g.choose('stairs.crossword');
+    expect(keys(g)[0]).toBe('stairs.crossword.act3');
+    goTo(g, 'roof');
+    g.choose('roof.priya');
+    expect(keys(g).slice(0, 2)).toEqual(['roof.priya.act3.1', 'roof.priya.act3.2']);
+  });
+
+  it('Priya’s messages follow the act, and the late line still comes when you are chasing', () => {
+    const one = new Game(CONTENT);
+    drainCards(one);
+    goTo(one, 'roof');
+    one.choose('roof.priya');
+    expect(keys(one).slice(0, 2)).toEqual(['roof.priya.r.1', 'roof.priya.r.2']);
+    const two = readyForThree();
+    two.state.obsession = 4;
+    goTo(two, 'roof');
+    two.choose('roof.priya');
+    expect(keys(two)).toEqual(expect.arrayContaining(['roof.priya.act2.1', 'roof.priya.act2.2', 'roof.priya.r.late']));
+    expect(keys(two)).not.toContain('roof.priya.r.1');
+  });
+
+  it('her mug reads differently once you have found her rain log', () => {
+    const g = new Game(CONTENT);
+    drainCards(g);
+    g.choose('office.desk7');
+    g.choose('office.mug');
+    expect(keys(g)).not.toContain('office.mug.rain');
+    learnt(g, 'nb.rainlog');
+    endLoop(g);
+    g.choose('office.desk7');
+    g.choose('office.mug');
+    expect(keys(g)).toContain('office.mug.rain');
+  });
+});

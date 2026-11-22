@@ -59,7 +59,28 @@ export const stairsScenes: SceneDef[] = [
         if: { all: [{ actGte: 2 }, { know: 'nb.keeps' }, { know: 'nb.callpoint' }] },
         to: 'stairs.alarm',
       },
-      { id: 'stairs.window', label: 'stairs.window', cost: 1, once: 'loop', text: [{ key: 'stairs.window.r' }] },
+      {
+        id: 'stairs.window',
+        label: 'stairs.window',
+        cost: 1,
+        once: 'loop',
+        text: [
+          { key: 'stairs.window.r', if: { not: { act: 3 } } },
+          { key: 'stairs.window.act3', if: { act: 3 } },
+        ],
+      },
+      {
+        id: 'stairs.crossword',
+        label: 'stairs.crossword',
+        cost: 1,
+        once: 'loop',
+        text: [
+          { key: 'stairs.crossword.r', if: { not: { act: 3 } } },
+          { key: 'stairs.crossword.act3', if: { act: 3 } },
+        ],
+      },
+      // Act III: two of the green running men have gone out (#69, drawn in #64).
+      { id: 'stairs.signs', label: 'stairs.signs', cost: 1, once: 'loop', if: { act: 3 }, text: [{ key: 'stairs.signs.r' }] },
     ],
   },
   {

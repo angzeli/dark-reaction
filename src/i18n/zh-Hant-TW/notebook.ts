@@ -132,4 +132,8 @@ export const notebook: Record<keyof typeof en, string> = {
   'nb.freezer.title': '第一架，E5',
   'nb.freezer.body':
     '負八十冰箱第一架，她的盒子：「YCL——請勿解凍」。不在最外圈、紅蓋子、周圍沒有黑蓋子、字母加數字等於十：E5。冷凍小管裡一張 microSD 卡。她的原始數據。',
+  'nb.frost.title': '霜',
+  'nb.frost.body': 'B.05 的霜都指向上面，指向 4.12 實驗室。到了門口就停住，門框上有一個手印，比我的手窄。',
+  'nb.frame.title': '畫框',
+  'nb.frame.body': '2020 年那篇論文的畫框掛歪了。玻璃內側有一個指印，壓在圖三最高的峰上。怎麼扶都扶不正。',
 };

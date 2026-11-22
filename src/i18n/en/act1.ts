@@ -120,4 +120,15 @@ export const act1 = {
   'nmr.printer': 'Look at the printer',
   'nmr.printer.r':
     'A laser printer on a trolley, under a sign: SPECTRA ONLY. NOT THESES. NOT BOARDING PASSES. — I.O. Its tray is full. Its display says READY, and goes on saying it, patiently, to the empty room.',
+
+  // ── Second looks and small things (#69) ───────────────────────────────────
+  'glovebox.gloves': 'Put your hands in the gloves',
+  'glovebox.gloves.r':
+    'You push your hands into the gloves. The butyl is cold and smells of nothing, and inside the box your hands become someone else’s: thick, slow, a fraction late. Over the years the gloves have been worn into a shape, the way shoes are, and the shape is not quite yours. The fingers are a little too short. You flex them, and for a moment you could swear the fingers inside the box move a fraction before yours do.',
+  'synth.shelf': 'Look at Tom’s shelf',
+  'synth.shelf.r':
+    'Tom’s shelf is a museum of labels. *TOM’S — DO NOT TOUCH (this means you).* *TOM’S — STILL MEANS YOU.* *TOM’S — IAN, I KNOW IT WAS YOU.* At the back, behind a jar of stirrer bars, one label is in a different hand, tidy pencil on masking tape: *YCL — Tom, please give these back :)* Under it, in Tom’s capitals, newer: *SORRY. — T.* The stirrer bars are still here.',
+  'office.postit': 'Read the Post-it on your monitor',
+  'office.postit.r':
+    'A yellow Post-it on the edge of your monitor, in Tom’s capitals, from Friday: *BACKED UP YOUR DATA TO THE GROUP DRIVE. YOU’RE WELCOME. ALSO: SLEEP IS A REAL THING, LOOK IT UP. — T.* Underneath, smaller, as if added on his way out of the door: *ALSO ALSO: DON’T RUN ANYTHING AT 3. IT GETS WEIRD DOWN THERE.*',
 } as const;

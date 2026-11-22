@@ -78,6 +78,8 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('nb.cipher', 'tonight'),
   entry('nb.freezer', 'data'),
   entry('nb.keeps', 'anomalies'),
+  entry('nb.frost', 'anomalies'),
+  entry('nb.frame', 'anomalies'),
   // Act III: what the puzzles teach you
   entry('nb.schlenk', 'tonight'),
   entry('nb.ups', 'tonight'),

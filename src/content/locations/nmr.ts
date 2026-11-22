@@ -75,7 +75,7 @@ export const nmrScenes: SceneDef[] = [
         tags: ['chase'],
         text: [{ key: 'nmr.printout.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - st.minute }) }],
       },
-      { id: 'nmr.magnet', once: 'loop', label: 'nmr.magnet', cost: 1, text: [{ key: 'nmr.magnet.r' }] },
+      { id: 'nmr.magnet', once: 'loop', label: 'nmr.magnet', cost: 1, text: [{ key: 'nmr.magnet.r' }, { key: 'nmr.magnet.act3', if: { act: 3 } }] },
       {
         id: 'nmr.carousel',
         once: 'loop',
@@ -86,7 +86,14 @@ export const nmrScenes: SceneDef[] = [
           { key: 'nmr.carousel.loaded.r', if: { lflag: 'holder13.loaded' } },
         ],
       },
-      { id: 'nmr.signs', once: 'loop', label: 'nmr.signs', cost: 1, effects: [{ learn: 'nb.ian' }], text: [{ key: 'nmr.signs.r' }] },
+      {
+        id: 'nmr.signs',
+        once: 'loop',
+        label: 'nmr.signs',
+        cost: 1,
+        effects: [{ learn: 'nb.ian' }],
+        text: [{ key: 'nmr.signs.r' }, { key: 'nmr.signs.act3', if: { act: 3 } }],
+      },
       {
         id: 'nmr.compressor',
         once: 'loop',

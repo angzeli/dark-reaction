@@ -146,4 +146,20 @@ export const act2 = {
   'roof.city': 'Look at the city',
   'roof.city.r':
     'London in every direction, orange at the edges and dark in the middle where the river is. The cranes stand over it with their red lights on, keeping watch over nothing. Somewhere out there people are asleep in their thousands, and some of them have deadlines too.',
+
+  // ── Second looks and small things (#69) ───────────────────────────────────
+  'office.mug.rain':
+    'You know now where the ring came from: a mug carried up to the roof at three in the morning and back down again, tea going cold beside a rain gauge, one line written a night. Thirty-one months of it. You turn the mug so that the character faces the window, which feels like the right way round.',
+  'pi.photo.keeps':
+    'Now you look at the windows she is looking at. In the photograph, behind the glass of Lab 4.12, there is nothing: a fume hood, a strip light, the blur of a summer afternoon. You look anyway, for longer than makes sense, in case whoever called her is still in there, and in case they are still calling.',
+  'pi.books': 'Read the spines on Dan’s shelves',
+  'pi.books.r':
+    'Dan shelves by guilt. Standing up: the books he has read, spines cracked white. Lying flat on top of them: the books he means to read, which is most of them. *Photocatalysis: Principles and Practice.* *Mentoring the Modern Researcher.* *Leadership in the Laboratory*, still in its shrink-wrap. On the bottom shelf, spine out, a Mandarin phrasebook, a Post-it marking a page near the front: *Excuse me, can you help me? I am looking for someone.*',
+  'stairs.crossword': 'Look at the crossword',
+  'stairs.crossword.r':
+    'Femi’s crossword, done in confident capitals except for one clue: *Keeps going (8)*. Eight empty squares. CONTINUE fits. So does PERSISTS. You pick up his pen and put it down again. It isn’t your crossword, and tonight is not a night for finishing other people’s things.',
+  'roof.priya.act2.1':
+    'The bar finds you and the messages fall in. Priya: *ok random question* — *wasn’t there someone in your group who just stopped coming in? before our time* — *my old flatmate says the ridley group has a ghost* — *she also says crystals cure hangovers so*',
+  'roof.priya.act2.2':
+    'You type *there was someone. Lin. 2019.* and look at it for a long time before you send it. The dots come and go twice. Then: *that’s not a ghost story, then. that’s a person.* And, a minute later: *go home. nobody should end up as a story about a building x*',
 } as const;

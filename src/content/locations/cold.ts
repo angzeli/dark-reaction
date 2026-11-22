@@ -36,8 +36,19 @@ export const coldScenes: SceneDef[] = [
         tags: ['shortcut'],
       },
       { id: 'cold.cabinets', label: 'cold.cabinets', cost: 1, once: 'loop', text: [{ key: 'cold.cabinets.r' }] },
-      { id: 'cold.dewar', label: 'cold.dewar', cost: 1, once: 'loop', text: [{ key: 'cold.dewar.r' }] },
+      {
+        id: 'cold.dewar',
+        label: 'cold.dewar',
+        cost: 1,
+        once: 'loop',
+        text: [
+          { key: 'cold.dewar.r', if: { not: { act: 3 } } },
+          { key: 'cold.dewar.act3', if: { act: 3 } },
+        ],
+      },
       { id: 'cold.tom', label: 'cold.tom', cost: 1, once: 'loop', text: [{ key: 'cold.tom.r' }] },
+      // Act III: the frost on the floor, all of it pointing upstairs (#69, drawn in #64).
+      { id: 'cold.frost', label: 'cold.frost', cost: 1, once: 'loop', if: { act: 3 }, effects: [{ learn: 'nb.frost' }], text: [{ key: 'cold.frost.r' }] },
     ],
   },
 ];

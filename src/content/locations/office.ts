@@ -65,9 +65,28 @@ export const officeScenes: SceneDef[] = [
         tags: ['rest'],
         text: [{ key: 'office.sofa.r' }],
       },
-      { id: 'office.window', once: 'loop', label: 'office.window', cost: 1, text: [{ key: 'office.window.r' }] },
+      {
+        id: 'office.window',
+        once: 'loop',
+        label: 'office.window',
+        cost: 1,
+        text: [
+          { key: 'office.window.r', if: { not: { act: 3 } } },
+          { key: 'office.window.act3', if: { act: 3 } },
+        ],
+      },
+      { id: 'office.postit', once: 'loop', label: 'office.postit', cost: 1, text: [{ key: 'office.postit.r' }] },
+      // Act III: the tube over hot desk 7 has stopped flickering (#69, drawn in #64).
+      { id: 'office.ceiling', once: 'loop', label: 'office.ceiling', cost: 1, if: { act: 3 }, text: [{ key: 'office.ceiling.r' }] },
       { id: 'office.desk7', label: 'office.desk7', cost: 1, to: 'office.desk7' },
-      { id: 'office.phone', once: 'loop', label: 'office.phone', cost: 1, effects: [{ learn: 'nb.priya' }], text: [{ key: 'office.phone.r' }] },
+      {
+        id: 'office.phone',
+        once: 'loop',
+        label: 'office.phone',
+        cost: 1,
+        effects: [{ learn: 'nb.priya' }],
+        text: [{ key: 'office.phone.r' }, { key: 'office.phone.act3', if: { act: 3 } }],
+      },
     ],
   },
   {
@@ -195,7 +214,8 @@ export const officeScenes: SceneDef[] = [
         label: 'office.mug',
         cost: 1,
         effects: [{ fragment: 'yc.mug' }, { learn: 'nb.mug' }],
-        text: [{ key: 'office.mug.r' }],
+        // Once you have found her rain log, you know where the ring came from.
+        text: [{ key: 'office.mug.r' }, { key: 'office.mug.rain', if: { know: 'nb.rainlog' } }],
       },
       {
         id: 'office.drawer',

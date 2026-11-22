@@ -104,9 +104,10 @@ export const synthScenes: SceneDef[] = [
         text: [{ key: 'synth.kraken.again.light.r' }],
         effects: [{ take: 'item.tube.jy' }, { lflag: 'tube.spoiled' }],
       },
-      { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }] },
+      { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }, { key: 'synth.hoods.act3', if: { act: 3 } }] },
       { id: 'synth.kraken', once: 'loop', label: 'synth.kraken', cost: 1, text: [{ key: 'synth.kraken.r' }] },
-      { id: 'synth.poster', once: 'loop', label: 'synth.poster', cost: 1, text: [{ key: 'synth.poster.r' }] },
+      { id: 'synth.poster', once: 'loop', label: 'synth.poster', cost: 1, text: [{ key: 'synth.poster.r' }, { key: 'synth.poster.act3', if: { act: 3 } }] },
+      { id: 'synth.shelf', once: 'loop', label: 'synth.shelf', cost: 1, text: [{ key: 'synth.shelf.r' }] },
     ],
   },
 ];
