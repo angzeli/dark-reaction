@@ -1,0 +1,36 @@
+#!/bin/sh
+# commit-msg hook: enforce attribution on every commit in this repository.
+#
+#   1. The author must be exactly "Angze Li <162757881+angzeli@users.noreply.github.com>".
+#   2. The message must carry a Claude co-author trailer, for example
+#      "Co-Authored-By: Claude <noreply@anthropic.com>".
+#
+# Enable with:  git config core.hooksPath .githooks
+# The same rules run in CI (scripts/check-attribution.sh), so bypassing the
+# hook with --no-verify only moves the failure to the pull request.
+
+msg_file="$1"
+expected_name="Angze Li"
+expected_email="162757881+angzeli@users.noreply.github.com"
+
+ident=$(git var GIT_AUTHOR_IDENT) || {
+  echo "commit-msg: could not determine the commit author" >&2
+  exit 1
+}
+name=$(printf '%s\n' "$ident" | sed -E 's/^(.*) <[^>]*>.*$/\1/')
+email=$(printf '%s\n' "$ident" | sed -E 's/^.*<([^>]*)>.*$/\1/')
+
+status=0
+if [ "$name" != "$expected_name" ] || [ "$email" != "$expected_email" ]; then
+  echo "commit-msg: author is '$name <$email>'." >&2
+  echo "commit-msg: every commit must be authored by '$expected_name <$expected_email>'." >&2
+  status=1
+fi
+
+# Ignore comment lines that git strips from the final message.
+if ! grep -v '^#' "$msg_file" | grep -qiE '^Co-Authored-By: Claude( [^<>]*)? <noreply@anthropic\.com>[[:space:]]*$'; then
+  echo "commit-msg: missing trailer 'Co-Authored-By: Claude <noreply@anthropic.com>'." >&2
+  status=1
+fi
+
+exit $status
