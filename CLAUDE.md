@@ -47,18 +47,18 @@ GitHub writes server-side squash commits under the account's profile display nam
 
 | Command | What it does |
 |---|---|
-| `npm ci` | Install exact dependencies |
-| `npm run dev` | Vite dev server |
-| `npm run build` | Subset fonts, typecheck, build to `dist/` |
-| `npm run preview` | Serve `dist/` |
+| `npm ci` | Install exact dependencies (Node ≥ 22.18; scripts run under Node's built-in type stripping) |
+| `npm run dev` | Vite dev server at `http://localhost:5173/dark-reaction/` |
+| `npm run build` | Typecheck, then build to `dist/` (production builds inject a strict CSP with `connect-src 'none'`) |
+| `npm run preview` | Serve `dist/` at `http://localhost:4173/dark-reaction/` |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` | ESLint |
-| `npm test` | Vitest unit tests |
-| `npm run validate` | Content validator: graph, endings, locale parity, placeholders, playtime |
-| `npm run e2e` | Playwright playthrough bot + axe (pass `-- --trace off` locally) |
+| `npm run lint` | ESLint (flat config, typescript-eslint; bans enums, namespaces and network globals in `src/`) |
+| `npm test` | Vitest unit tests in `tests/` |
+| `npm run validate` | Content validator (graph, endings, locale parity, placeholders, playtime) |
+| `npm run e2e` | Playwright against the built site (`npm run build` first; pass `-- --trace off` locally) |
 | `bash scripts/check-attribution.sh origin/main..HEAD` | Attribution check for your branch |
 
-(Commands land with the scaffold PR; keep this table in sync.)
+CI runs `attribution`, `typecheck`, `lint`, `unit`, `validate`, `build` and `e2e` on every PR; `deploy.yml` publishes `dist/` to GitHub Pages on every push to `main`. Playwright is pinned to 1.63.0 to match the browser preinstalled in the cloud container; keep them in step.
 
 ## 4. Code conventions
 

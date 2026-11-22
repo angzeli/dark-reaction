@@ -1,0 +1,41 @@
+:root {
+  --night-0: #070e16;
+  --night-1: #0b1622;
+  --night-2: #1d3346;
+  --tube: #9fe3b5;
+  --copper: #b07a4f;
+  --sodium: #e0913a;
+  --paper: #efe5cf;
+  --ink: #24324a;
+  --text: #d8e0e6;
+  --text-dim: #8fa3b3;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--night-1);
+  color: var(--text);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.placeholder {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+.placeholder__clock {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  color: var(--tube);
+  letter-spacing: 0.2em;
+  font-size: 1.25rem;
+}
+
+.placeholder__title { font-weight: 400; font-size: clamp(1.75rem, 6vw, 3rem); margin: 0.5rem 0; }
+.placeholder__status { color: var(--text-dim); }
