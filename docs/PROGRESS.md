@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #76 繁中 puzzle status lines without a half-width space after 。 (closes #66)
-- **In flight:** hover only where there is one (this PR, closes #67). In parallel: #64 Act III room art (art subagent), #69 content to ~18,000 English words.
+- **Last merged:** #77 hover only where there is one (closes #67)
+- **In flight:** content to 18,000 English words (this PR, closes #69). Also open: #79 Act III room art (#64).
 
 ## Next
 
-1. Merge this PR. 2. #69, content to ~18,000 English words. 3. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 4. M6: #26 polish, #64 Act III room art, #27 README, credits and v1.0.0.
+1. Merge this PR and #79. 2. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 3. M6: #26 polish, #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,19 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #69: **English at 18,075 words, 繁中 at 27,630 characters** (from 16,480 and 25,287). New words deepen rooms off the main path; the critical path is unchanged at 50.2 / 51.0 min.
+  - **Act III looks**, matching the room art in #64:
+    - the frost in B.05, every feather pointing upstairs, and a narrow handprint on the door frame (`nb.frost`);
+    - the crooked frame, with a thumbprint on the inside of the glass over Figure 3 (`nb.frame`);
+    - both exit signs dark, the rest running up, not out;
+    - the steady, too-white tube over hot desk 7;
+    - the cranes' lights finding one beat.
+  - **Act III versions** of the dewar, the stairwell window, Femi's crossword (filled in, in her pencil), the hoods, the magnet's second note, the poster's *ask Y.C.*, a 2019 sign of Ian's about holder 13, a new line in the rain log, and standing in the mist.
+  - **Second looks:** her mug once you have found the rain log; the 2018 photo once you know the building keeps whoever is inside at 03:33.
+  - **Small things in Acts I and II:** the gloves, Tom's shelf (her stirrer bars, never returned), Tom's Post-it on your monitor, Dan's shelves (a phrasebook marked at *I am looking for someone*), the crossword.
+  - **Priya's messages** now follow the act. In Act II she has heard about "the Ridley ghost"; in Act III a photo of lunch and *nearly done is what you said in march*.
+  - **Tests:** four unit tests (Act III looks only in Act III and saying the right thing; the Act III versions; Priya by act with the late line kept; the mug after the rain log). Validator green with locale parity.
+- Merged #77 (closes #67).
 - #67: **a tap never leaves a hover look behind.**
   - **The problem:** `.pz button:hover:not(:disabled)` (specificity 0,3,1) outranked the puzzles' selected, pressed and "on" styles (0,3,0 at most). On a touch screen, where :hover sticks to whatever was tapped, a toggle kept the hover border instead of its own.
   - **The fix:** every hover rule in `puzzle.css` and `ui.css` (puzzle buttons, title, menu and slot buttons, the HUD's, the choices) now sits in `@media (hover: hover)`. The puzzle rule also skips `[aria-checked='true']`, `[aria-pressed='true']`, `[data-on='true']` and marked circles, so those win wherever both apply. The fabrication puzzle's local workaround from #21 is gone.

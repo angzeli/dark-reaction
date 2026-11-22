@@ -43,7 +43,18 @@ export const piScenes: SceneDef[] = [
         text: [{ key: 'pi.notebook.r' }],
         effects: [{ puzzle: 'cipher' }],
       },
-      { id: 'pi.photo', label: 'pi.photo', cost: 1, once: 'loop', effects: [{ fragment: 'yc.photo' }, { learn: 'nb.photo' }], text: [{ key: 'pi.photo.r' }] },
+      {
+        id: 'pi.photo',
+        label: 'pi.photo',
+        cost: 1,
+        once: 'loop',
+        effects: [{ fragment: 'yc.photo' }, { learn: 'nb.photo' }],
+        // Once you know the building keeps whoever is inside at 03:33, you look at the windows too.
+        text: [{ key: 'pi.photo.r' }, { key: 'pi.photo.keeps', if: { know: 'nb.keeps' } }],
+      },
+      { id: 'pi.books', label: 'pi.books', cost: 1, once: 'loop', text: [{ key: 'pi.books.r' }] },
+      // Act III: the framed paper hangs crooked and won't stay straight (#69, drawn in #64).
+      { id: 'pi.frame', label: 'pi.frame', cost: 1, once: 'loop', if: { act: 3 }, effects: [{ learn: 'nb.frame' }], text: [{ key: 'pi.frame.r' }] },
       { id: 'pi.sticky', label: 'pi.sticky', cost: 1, once: 'loop', effects: [{ learn: 'nb.priority' }], text: [{ key: 'pi.sticky.r' }] },
     ],
   },

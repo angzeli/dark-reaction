@@ -49,6 +49,7 @@ export const gloveboxScenes: SceneDef[] = [
         effects: [{ take: 'item.vial' }, { lflag: 'sample.ruined' }],
       },
       { id: 'glovebox.meter', label: 'glovebox.meter', cost: 1, text: [{ key: 'glovebox.meter.r', params: ppm }] },
+      { id: 'glovebox.gloves', label: 'glovebox.gloves', cost: 1, once: 'loop', text: [{ key: 'glovebox.gloves.r' }] },
       {
         id: 'glovebox.sop',
         once: 'loop',

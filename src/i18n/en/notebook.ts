@@ -134,4 +134,8 @@ export const notebook = {
   'nb.freezer.title': 'Rack 1, E5',
   'nb.freezer.body':
     'Her box in rack 1 of the −80: YCL — DO NOT DEFROST. Not on the edge, a red cap, no black cap anywhere round it, row and column adding up to ten: E5. A microSD card in a cryovial. Her raw data.',
+  'nb.frost.title': 'The frost',
+  'nb.frost.body': 'In B.05 the frost points up, towards Lab 4.12. At the door it stops, and there is a handprint on the frame, narrower than mine.',
+  'nb.frame.title': 'The frame',
+  'nb.frame.body': 'The 2020 paper hangs crooked. A thumbprint on the inside of the glass, over the tallest peak of Figure 3. It won’t hang straight.',
 } as const;
