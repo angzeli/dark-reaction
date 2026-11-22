@@ -9,7 +9,7 @@
  */
 import { O2_LIMIT, o2At } from '../../content/lab.ts';
 import type { ArtContext } from '../types.ts';
-import { C, circle, ellipse, glow, group, label, line, path, poly, rect, svg, tube } from '../svg.ts';
+import { C, circle, ellipse, glow, group, halo, label, line, path, poly, rect, svg, tube } from '../svg.ts';
 
 /** Meter colours and thresholds, matching the antechamber puzzle's readout. */
 const METER = { green: C.tube, amber: '#e8c36a', red: '#ff7b6b' } as const;
@@ -188,7 +188,7 @@ function box(ppm: number): string {
     label(866, 279, 'ppm', 9, colour, { opacity: 0.55 }),
     `<text class="gb-o2" data-level="${level}" x="800" y="278" fill="${colour}" font-size="30" font-family="IBM Plex Mono, monospace" text-anchor="middle" letter-spacing="2">${reading}</text>`,
     // Regeneration overdue: a small amber light that won't stop.
-    group('dr-blink', circle(886, 256, 2.8, METER.amber), glow(886, 256, 10, 10, METER.amber, 0.5)),
+    group('dr-blink', circle(886, 256, 2.8, METER.amber), halo(886, 256, 9, METER.amber, 0.5)),
   ].join('');
 }
 

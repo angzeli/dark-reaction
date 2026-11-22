@@ -15,9 +15,6 @@ const contexts: ArtContext[] = [
 const MOTION = new Set(['dr-rain', 'dr-drop', 'dr-flicker', 'dr-blink', 'dr-breathe']);
 const STAGE = new Set(['dr-scene', 'dr-scene--dark', 'dr-tube', 'dr-dither']);
 
-/** Rooms whose illustrations arrive with later acts. */
-const LATER = new Set(['pi', 'stairs', 'cold', 'roof']);
-
 describe('scenes', () => {
   for (const [id, scene] of Object.entries(SCENES)) {
     it(`${id} renders a decorative SVG for every act, deterministically`, () => {
@@ -41,6 +38,15 @@ describe('scenes', () => {
       }
     });
 
+    it(`${id} keeps its wide glows big enough for their blur (small lights get a halo)`, () => {
+      for (const ctx of contexts) {
+        for (const [el] of scene(ctx).matchAll(/<ellipse [^>]*filter="url\(#dr-blur-lg\)"[^>]*>/g)) {
+          const r = (k: string) => Number(el.match(new RegExp(` ${k}="([\\d.]+)"`))?.[1]);
+          expect(Math.min(r('rx'), r('ry')), el).toBeGreaterThanOrEqual(20);
+        }
+      }
+    });
+
     it(`${id} moves only through classes the settings can stop`, () => {
       const a = scene(contexts[0]!);
       expect(a).not.toMatch(/<animate|<set\b/);
@@ -49,14 +55,19 @@ describe('scenes', () => {
     });
   }
 
-  it('every room has its illustration, apart from the ones later acts bring', () => {
-    const arts = LOCATIONS.map((l) => l.art);
-    for (const id of LATER) expect(arts).toContain(id);
-    for (const id of arts) if (!LATER.has(id)) expect(hasScene(id), id).toBe(true);
+  it('every room has its illustration', () => {
+    for (const loc of LOCATIONS) expect(hasScene(loc.art), loc.art).toBe(true);
   });
 
-  it('the office clock follows the loop clock', () => {
-    expect(SCENES['office']!({ act: 1, minute: 0 })).not.toBe(SCENES['office']!({ act: 1, minute: 13 }));
+  it('the wall clocks in the office and in Dan’s office follow the loop clock', () => {
+    for (const id of ['office', 'pi']) expect(SCENES[id]!({ act: 1, minute: 0 }), id).not.toBe(SCENES[id]!({ act: 1, minute: 13 }));
+  });
+
+  it('rain on the roof still shows with motion off: some streaks are not animated', () => {
+    const a = SCENES['roof']!({ act: 2, minute: 0 });
+    const streaks = [...a.matchAll(/<line [^>]*stroke="#9fb7c9"[^>]*>/g)].map((m) => m[0]);
+    expect(streaks.some((l) => l.includes('dr-rain'))).toBe(true);
+    expect(streaks.filter((l) => !l.includes('dr-rain')).length).toBeGreaterThan(100);
   });
 
   it('the Kraken has eight ports numbered left to right, and port 4 is bare', () => {
