@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #78 content to 18,000 English words (closes #69)
-- **In flight:** Act III room art (this PR, closes #64).
+- **Last merged:** #79 Act III rooms look the way Act III reads (closes #64)
+- **In flight:** no stale choices under the lights-out fade (this PR, closes #80). Also in progress: #25 part 2 (accessibility), #26 (polish).
 
 ## Next
 
-1. Merge this PR. 2. #25 part 2 (keyboard-only and touch-only passes, screen-reader puzzle state, motion and flicker). 3. M6: #26 polish, #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #25 part 2 (input modes, motion and flicker, focus in overlays). 3. #26 polish. 4. #27 README, credits and v1.0.0.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #80: **no stale choices under the lights-out fade.**
+  - **The problem:** #75 keeps the room on screen while the card fades in, and completes the page's running reveal. But the reveal's promise still drew that page's choices a microtask later, so choices appeared under the fade. A press that landed after the card could act on the new night; the freezer-alarm e2e lost three minutes to it.
+  - **The fix:** every play render, and the last minute before the dark, bumps `playSeq`. A reveal draws its choices only if its page is still current.
+  - **Test:** a Playwright check runs the clock out from inside the TLC plate, with full motion so the page is still revealing. A MutationObserver records any choice drawn while the old night is under the fade. It records one without the fix and none with it.
+- Merged #79 (closes #64).
 - #64: **Act III rooms look the way Act III reads.** Drawn by the art subagent; each detail appears only in Act III.
   - **B.05:** frost feathers grow from the freezer's seal and fan across the floor to the foot of the door, every one pointing at it.
   - **Dan's office:** the framed 2020 paper hangs 1.8° crooked, its brass plate still level, a paler outline of where it was.

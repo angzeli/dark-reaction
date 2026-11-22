@@ -71,6 +71,8 @@ export class App {
   private status = '';
   private untrap: (() => void) | null = null;
   private lastFocus: HTMLElement | null = null;
+  /** Bumped by every play render and by the last minute before the dark: a reveal only draws the choices of its own page (#80). */
+  private playSeq = 0;
 
   constructor(root: HTMLElement, opts: AppOptions) {
     this.root = root;
@@ -280,6 +282,7 @@ export class App {
    */
   private showLastMinute(before: Paragraph[]): void {
     if (this.screen !== 'play') return;
+    this.playSeq++; // the page's pending reveal must not bring its choices back under the fade
     this.closePuzzle();
     const narrative = this.root.querySelector<HTMLElement>('.narrative');
     narrative?.classList.remove('narrative--puzzle');
@@ -593,13 +596,14 @@ export class App {
       if (this.keyboardUsed && this.overlay === 'none' && !s.puzzle) (choices.querySelector('button') as HTMLElement | null)?.focus({ preventScroll: true });
     };
 
+    const seq = ++this.playSeq;
     this.currentReveal?.complete();
     if (withReveal) {
       live.textContent = paras.map((p) => t(p.key, p.params)).join(' ');
       this.currentReveal = reveal([...text.children] as HTMLElement[], revealDelay(this.settings));
       text.addEventListener('click', () => this.currentReveal?.complete());
       void this.currentReveal.done.then(() => {
-        if (this.game === game && this.screen === 'play') drawChoices();
+        if (this.game === game && this.screen === 'play' && seq === this.playSeq) drawChoices();
       });
     } else {
       this.currentReveal = null;
