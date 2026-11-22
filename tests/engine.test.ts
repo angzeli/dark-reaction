@@ -426,13 +426,25 @@ describe('puzzles', () => {
     expect(keys(g)).toEqual(['ui.noted']);
   });
 
-  it('abandoning shows the failure text and still costs time', () => {
+  it('stepping away shows the left text, keeps your things and still costs time', () => {
     const g = fresh();
+    g.choose('office.pen');
     g.choose('office.puzzle');
     g.completePuzzle({ solved: false, minutes: 3 });
     expect(g.state.solved).toEqual([]);
-    expect(keys(g)).toEqual(['p.demo.failed']);
+    expect(keys(g)).toEqual(['p.demo.left']);
     expect(g.state.minute).toBe(4);
+    expect(g.state.inventory).toEqual(['item.pen']);
+  });
+
+  it('failing outright applies onFail (the sample is lost) and shows the failure text', () => {
+    const g = fresh();
+    g.choose('office.pen');
+    g.choose('office.puzzle');
+    g.completePuzzle({ solved: false, failed: true, minutes: 3 });
+    expect(keys(g)).toEqual(['p.demo.failed']);
+    expect(g.state.inventory).toEqual([]);
+    expect(g.state.lflags).toContain('demo.ruined');
   });
 
   it('a puzzle that runs past 03:33 ends with the lights', () => {

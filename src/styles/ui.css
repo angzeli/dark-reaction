@@ -676,3 +676,11 @@ button {
 .note p { margin: 0.85rem 0; }
 .note__quick { margin: 1.25rem 0; padding-top: 0.5rem; border-top: 1px solid var(--rule); }
 .note__go { margin-top: 0.5rem; }
+
+.narrative__carry {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--copper);
+}
+.narrative--puzzle > .narrative__carry { display: none; }

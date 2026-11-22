@@ -457,7 +457,10 @@ export class App {
     const text = h('div', { class: 'narrative__text' }, ...paras.map((p) => this.paragraph(p)));
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
     const choices = h('ol', { class: 'choices', 'aria-label': t('ui.choices') });
-    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, choices, live);
+    const carrying = s.inventory.length
+      ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: s.inventory.map((i) => t(i)).join(t('ui.list.sep')) }))
+      : null;
+    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choices, live);
     const app = this.shell('play', hud, art, narrative);
     app.dataset['decay'] = String(decay);
     this.mountStage(art, location.art, { act: s.act, minute: s.minute });
@@ -524,6 +527,10 @@ export class App {
       act: game.state.act,
       reduceMotion: this.settings.reduceMotion,
       data: game.state.puzzleData[id],
+      restoredMinutes:
+        game.state.puzzleData[id] === undefined
+          ? 0
+          : module.logic.minutes(module.logic.init({ minute: game.state.minute, act: game.state.act, data: game.state.puzzleData[id] })),
       t,
       onHint: () => {
         const tier = game.useHint(id);
@@ -539,6 +546,10 @@ export class App {
         this.autosave();
       },
       cue: (cueId) => audio.cue(cueId),
+      onMinutes: (minute) => {
+        const hud = this.root.querySelector('.hud__clock');
+        if (hud) hud.textContent = clockLabel(minute);
+      },
     });
   }
 

@@ -45,8 +45,12 @@ export interface PuzzleApi {
   t(key: string, params?: Params): string;
   /** Report in-game minutes spent so far; the frame moves the clock (and ends the puzzle at 03:33). */
   setMinutes(total: number): void;
-  /** The puzzle is over: solved, or failed for this loop. */
-  finish(solved: boolean): void;
+  /**
+   * The puzzle is over. `solved`, or failed outright for this loop when
+   * `failed` is set (the attempt is spoiled: e.g. the sample oxidised).
+   * Stepping away is the frame's job, not the view's.
+   */
+  finish(solved: boolean, failed?: boolean): void;
   /** Persist in-progress data so a reload (or a language switch) keeps it. */
   saveData(data: unknown): void;
   /** Play an audio cue if sound is on. */

@@ -63,8 +63,10 @@ export function checkContent(content: Content): void {
   }
   for (const p of content.puzzles) {
     all(p.onSolve, `puzzle ${p.id}.onSolve`, new Set(['go', 'scene', 'hub']));
+    all(p.onFail, `puzzle ${p.id}.onFail`, new Set(['go', 'scene', 'hub', 'puzzle']));
     texts(p.solvedText, `puzzle ${p.id}.solvedText`);
     texts(p.failedText, `puzzle ${p.id}.failedText`);
+    texts(p.leftText, `puzzle ${p.id}.leftText`);
   }
   for (const ev of content.events) {
     checkCond(ev.if, `event ${ev.id}.if`);
@@ -119,7 +121,10 @@ export function checkReferences(content: Content): void {
       effects(choice.effects, `choice ${choice.id}`);
     }
   }
-  for (const p of content.puzzles) effects(p.onSolve, `puzzle ${p.id}.onSolve`);
+  for (const p of content.puzzles) {
+    effects(p.onSolve, `puzzle ${p.id}.onSolve`);
+    effects(p.onFail, `puzzle ${p.id}.onFail`);
+  }
   for (const ev of content.events) effects(ev.effects, `event ${ev.id}`);
   for (const ph of content.phantoms) need(notebook, ph.entry, 'notebook entry', `phantom ${ph.entry}`);
   for (const rule of content.lightsOut) {

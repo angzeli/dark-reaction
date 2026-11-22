@@ -4,13 +4,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Milestone:** M2 Engine (M1 Foundation complete)
-- **Last merged:** #40 settings and content note (closes #9)
-- **In flight:** #41 validator (this PR) — the last M2 issue
+- **Milestone:** M3 Act I (M1 Foundation and M2 Engine complete)
+- **Last merged:** #41 content validator and playtime estimate (closes #11), the last M2 issue
+- **In flight:** #42 Act I puzzles: TLC plate, glovebox antechamber, NMR console (this PR, closes #15)
 
 ## Next
 
-1. Close M2: merge #41, verify main is green, play it in a browser. 2. M3 Act I: #14 content, #15 puzzles (TLC, glovebox, NMR console), #16 art + ambience.
+1. Merge #42. 2. #14 Act I content: the scenes around the three puzzles (Y.C.'s handwriting, Femi, the yield fudge at the rotavap, the 03:33 booking as an event, the Act I to Act II turn). 3. #16 Act I art and ambience. Then M4 Act II.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #15 Act I puzzles. **TLC plate** (P3): a crude lane and fractions 10–16 on one coordinate system, a UV lamp that reveals the spot hiding in lane 11, tap any spot to measure its distance and Rf, take/leave toggles, and wrong combinations cost a minute each. **Glovebox antechamber** (P2): doors, evacuate and refill cycles and a pressure gauge against the box's O₂ meter, which rises with real in-game minutes; the SOP says TWICE and Y.C.'s pencil says THREE; too few cycles, a door at the wrong moment, or simply arriving late turns the copper(I) sample green for the rest of the night. **NMR console** (P1): a small typed shell with tappable command chips for touch; `queue --all` and `info 13` reveal the 03:33 booking under your username. The engine gains a third puzzle outcome, failing outright (`onFail` effects, `failedText`), separate from stepping away (`leftText`); the puzzle clock now drives the HUD clock. Progress inside a puzzle survives a reload or a language switch: every Act I puzzle saves its state (validated on the way back in), and the frame restores the minutes already spent (before, a remount quietly handed them back, and a reload could undo a spoiled sample). Choices in the synthesis lab, glovebox room and NMR suite wire the chain together (plate → rotavap → vial → antechamber → NMR tube → a carousel that says QUEUE LOCKED). First notebook entries (tonight and anomalies) and a line under the narrative for what you are carrying. 19 unit tests for the three logics, 6 Playwright tests (the whole chain, the ruined sample, a reload mid-purge, the UV trap, touch-only console, a language switch mid-puzzle). Opened #43: the sticky HUD can cover the focused element in a tall puzzle. DESIGN.md corrected to match: the TLC lane contents and the 9-minute purge shortcut.
+- Merged #41 (validator). **M2 Engine closed:** all ten issues done, main CI green apart from the Pages deploy (Pages not yet enabled), played through in Playwright with screenshots checked.
 - Merged #40 (settings and content note).
 - #11 validator (`npm run validate`): content load (engine shape and reference checks), structural reachability and dead ends, every choice says or does something, locale parity and placeholders, every key used by content or by `t('…')` in code exists, 繁中 punctuation and British-spelling warnings, routes per ending played through the engine (`src/engine/simulate.ts`, routes in `src/content/routes.ts`, shared with the Playwright bot) and rendered in both locales, the critical-path playtime (EN 230 wpm, 繁中 350 cpm, plus puzzle par) failing under 30 min once the true-ending route exists, a seeded random-walk fuzz, and a content-size report. Pure puzzle logic registry in `src/puzzles/logic.ts`.
 - #9 settings and content note: a settings panel from the title and the menu (language, four text sizes, four text speeds, reduce motion, allow flicker, high contrast, sound with three volumes) built from native radios, checkboxes and sliders; focus survives re-renders; a first-launch content note in the browser's language with quick flicker and motion toggles, re-readable from the menu and settings.

@@ -87,7 +87,7 @@ All Level 4 rooms are 1 minute from each other and 1 minute from the stairwell. 
   - the clock returns to 02:47 and you are back in the office,
   - **items reset** (inventory empties, rooms go back to how they were),
   - **knowledge persists** (notebook entries, puzzle solutions, hidden-state tracks).
-- **Knowledge, not items, opens the game.** Once you have solved a puzzle, later loops offer a shortcut ("Run the purge you worked out — 8 min") that applies the result without replaying the puzzle. Later loops are faster because you know more, never because you carry more.
+- **Knowledge, not items, opens the game.** Once you have solved a puzzle, later loops offer a shortcut ("Run the purge you worked out — 9 min") that applies the result without replaying the puzzle. Later loops are faster because you know more, never because you carry more.
 - **Timed events** fire when the clock passes their minute and their condition holds (the hoover down the corridor, the perfect spectrum printing, the porter's bins). They interrupt whatever you were doing, once per loop.
 
 ## 6. The notebook
@@ -227,11 +227,11 @@ Ten puzzles, each a distinct mechanic, each solvable by a non-chemist from in-wo
 - **In-world hint:** the SOP says two cycles; Y.C.'s pencil says "THREE. Trust me. — YCL".
 - **Grants:** `nb.purge`, item `item.tube.own`, fragment `yc.sop` (if read).
 - **Hints:** (1) The laminated SOP on the wall has a pencilled correction. (2) Shut both doors before you evacuate; evacuate and refill three times before the inner door. (3) Outer open → vial in → outer shut → (evacuate, refill) ×3 → inner open → vial in.
-- **Par:** 3 min. **Shortcut:** "Run the purge you worked out (8 min)."
+- **Par:** 3 min. **Shortcut:** "Run the purge you worked out (9 min)", the three cycles without the fumbling, offered only while there is still time to beat the meter.
 
 ### P3 · TLC plate (`tlc`): measurement and selection. Act I, synthesis lab.
 - **Mechanic:** a developed plate with a crude lane and fraction lanes 10–16, a ruler you can lay against any spot, a UV lamp toggle (some spots only show under UV). Your notebook: "product Rf ≈ 0.35 (3:1 hexane/EtOAc), UV-active".
-- **Numbers:** baseline 1.0 cm, solvent front 7.0 cm (a 6.0 cm run). Spots at 0.9 cm (Rf 0.15), 2.1 cm (0.35, product), 3.3 cm (0.55, UV only), 4.8 cm (0.80). Product appears in lanes 11–15; lane 11 also has the 0.15 spot, lane 15 the UV-only 0.55 spot.
+- **Numbers:** baseline 1.0 cm, solvent front 7.0 cm (a 6.0 cm run). Spots at 0.9 cm (Rf 0.15), 2.1 cm (0.35, product), 3.3 cm (0.55, UV only), 4.8 cm (0.80). Fractions come off the column in Rf order: lane 10 holds the 0.80 spot and the UV-only 0.55 spot; lane 11 the UV-only 0.55 spot and the product; lanes 12–14 the product alone; lane 15 the product and the 0.15 spot; lane 16 the 0.15 spot alone. In ordinary light lane 11 looks clean, which is the trap. Reading the plate costs 2 minutes.
 - **Goal:** select exactly the pure product lanes: **12, 13, 14**. Wrong selections cost a minute and a sigh.
 - **Grants:** `nb.tlc`, item `item.fractions`. Then the rotavap (5 min) gives `item.vial` and the yield fudge choice.
 - **Hints:** (1) Your notebook says Rf 0.35; Rf is how far the spot went divided by how far the solvent went. (2) The solvent went 6 cm, so you want a spot about 2.1 cm up, in lanes where it's alone; check under UV too. (3) Lanes 12, 13 and 14.

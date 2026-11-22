@@ -159,8 +159,12 @@ export interface PuzzleDef {
   onSolve: Effect[];
   /** Text shown when the puzzle is solved. */
   solvedText?: TextRef[];
-  /** Text shown when it is abandoned or fails. */
+  /** Text shown when the attempt fails outright (e.g. the sample oxidises). */
   failedText?: TextRef[];
+  /** Applied when the attempt fails outright (not when the player steps away). */
+  onFail?: Effect[];
+  /** Text shown when the player steps away. */
+  leftText?: TextRef[];
   /** Margin note key for new game+. */
   margin?: string;
 }
@@ -331,4 +335,6 @@ export interface Result {
   solved: boolean;
   /** In-game minutes the puzzle took. */
   minutes: number;
+  /** The attempt failed outright (as opposed to the player stepping away). */
+  failed?: boolean;
 }
