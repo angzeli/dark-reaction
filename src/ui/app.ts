@@ -398,7 +398,9 @@ export class App {
     this.untrap?.();
     this.untrap = null;
     if (this.screen !== 'play') {
-      this.shownAt = null;
+      // Arriving at the title or an ending starts at the top (#72); re-rendering it keeps the place.
+      if (this.shownAt !== this.screen) window.scrollTo(0, 0);
+      this.shownAt = this.screen;
       this.watchHud(null);
     }
     if (this.screen === 'title') this.renderTitle();
