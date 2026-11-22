@@ -61,9 +61,11 @@ export const gloveboxScenes: SceneDef[] = [
       { id: 'glovebox.mini', once: 'loop', label: 'glovebox.mini', cost: 1, if: { not: { act: 3 } }, effects: [{ learn: 'nb.mini' }], text: [{ key: 'glovebox.mini.r' }] },
       {
         // Act III: the small antechamber, opened her way: three cycles, as the SOP's pencil says.
+        // There is one tube a night: once it has been filled (or spoiled) on the Kraken, it doesn't come back.
         id: 'glovebox.mini.open',
         label: 'glovebox.mini.open',
         cost: PURGE_MINUTES,
+        once: 'loop',
         if: { all: [{ act: 3 }, { solved: 'glovebox' }, { not: { item: 'item.tube.jy' } }] },
         effects: [{ give: 'item.tube.jy' }, { fragment: 'yc.tube' }, { learn: 'nb.tube' }],
         text: [{ key: 'glovebox.mini.open.r.1' }, { key: 'glovebox.mini.open.r.2' }],

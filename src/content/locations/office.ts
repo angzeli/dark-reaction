@@ -39,6 +39,15 @@ export const officeScenes: SceneDef[] = [
         text: [{ key: 'office.print.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - st.minute }) }],
       },
       {
+        // P9: the printout beside your own spectrum and Figure 3.
+        id: 'office.compare',
+        label: 'office.compare',
+        cost: 1,
+        if: { all: [{ act: 3 }, { item: 'item.printout' }, { not: { solved: 'fabrication' } }] },
+        text: [{ key: 'office.compare.r' }],
+        effects: [{ puzzle: 'fabrication' }],
+      },
+      {
         id: 'office.tea',
         label: 'office.tea',
         cost: 4,

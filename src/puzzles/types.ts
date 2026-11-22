@@ -42,6 +42,10 @@ export interface PuzzleApi {
   readonly startMinute: number;
   readonly act: Act;
   readonly reduceMotion: boolean;
+  /** The player allows flickering and flashing light (Settings). Flash only when this is on and motion isn't reduced. */
+  readonly flicker: boolean;
+  /** Read-only: is the player carrying this item? (e.g. the Schlenk line needs foil to finish.) */
+  has(item: string): boolean;
   t(key: string, params?: Params): string;
   /** Report in-game minutes spent so far; the frame moves the clock (and ends the puzzle at 03:33). */
   setMinutes(total: number): void;

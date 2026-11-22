@@ -11,5 +11,6 @@ export const items: Record<keyof typeof en, string> = {
   'item.printout': '一張還溫溫的完美圖譜',
   'item.foil': '一捲鋁箔',
   'item.tube.jy': '她那支空的 J. Young 管',
+  'item.tube.dark': '她那支裝好、包著鋁箔的 J. Young 管',
   'item.microsd': '冷凍小管裡的一張 microSD 卡',
 };

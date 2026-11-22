@@ -64,4 +64,46 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
     leftText: [{ key: 'puzzle.freezer.left' }],
     margin: 'puzzle.freezer.margin',
   },
+  // ── Act III ─────────────────────────────────────────────────────────────
+  {
+    id: 'schlenk',
+    par: 3,
+    hints: hints('schlenk'),
+    onSolve: [{ take: 'item.tube.jy' }, { give: 'item.tube.dark' }, { learn: 'nb.schlenk' }],
+    // Without foil, the filled tube sits in the lab light: spoiled for the night.
+    onFail: [{ take: 'item.tube.jy' }, { lflag: 'tube.spoiled' }],
+    solvedText: [{ key: 'puzzle.schlenk.solved' }],
+    failedText: [{ key: 'puzzle.schlenk.failed' }],
+    leftText: [{ key: 'puzzle.schlenk.left' }],
+    margin: 'puzzle.schlenk.margin',
+  },
+  {
+    id: 'chirp',
+    par: 2.5,
+    hints: hints('chirp'),
+    // Armed for tonight; later nights key the PIN in again (nmr.ups.again).
+    onSolve: [{ learn: 'nb.ups' }, { lflag: 'ups.armed' }],
+    solvedText: [{ key: 'puzzle.chirp.solved' }],
+    leftText: [{ key: 'puzzle.chirp.left' }],
+    margin: 'puzzle.chirp.margin',
+  },
+  {
+    id: 'fabrication',
+    par: 3,
+    hints: hints('fabrication'),
+    onSolve: [{ learn: 'nb.fabrication' }],
+    solvedText: [{ key: 'puzzle.fabrication.solved' }],
+    leftText: [{ key: 'puzzle.fabrication.left' }],
+    margin: 'puzzle.fabrication.margin',
+  },
+  {
+    // Opens at 03:33 in the dark run (#20 part B); nothing in the rooms opens it.
+    id: 'peakmatch',
+    par: 2,
+    hints: hints('peakmatch'),
+    onSolve: [{ learn: 'nb.peak' }],
+    solvedText: [{ key: 'puzzle.peakmatch.solved' }],
+    leftText: [{ key: 'puzzle.peakmatch.left' }],
+    margin: 'puzzle.peakmatch.margin',
+  },
 ];

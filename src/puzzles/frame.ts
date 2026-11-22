@@ -20,6 +20,10 @@ export interface FrameOptions {
   startMinute: number;
   act: Act;
   reduceMotion: boolean;
+  /** Flickering light allowed (default: no). */
+  flicker?: boolean;
+  /** What the player is carrying, read-only (default: nothing). */
+  has?(item: string): boolean;
   data?: unknown;
   /**
    * Minutes already spent in this attempt, worked out from its saved data,
@@ -109,6 +113,8 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
     startMinute: o.startMinute,
     act: o.act,
     reduceMotion: o.reduceMotion,
+    flicker: o.flicker ?? false,
+    has: (item) => o.has?.(item) ?? false,
     t: (key, params) => o.t(key, params),
     setMinutes(total) {
       if (finished) return;
