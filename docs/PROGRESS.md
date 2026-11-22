@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M3 Act I (M1 Foundation and M2 Engine complete)
-- **Last merged:** #41 content validator and playtime estimate (closes #11), the last M2 issue
-- **In flight:** #42 Act I puzzles: TLC plate, glovebox antechamber, NMR console (this PR, closes #15)
+- **Last merged:** #42 Act I puzzles: TLC plate, glovebox antechamber, NMR console (closes #15)
+- **In flight:** #44 Act I content (this PR, closes #14); #16 Act I art and ambience on `art/act1-16`
 
 ## Next
 
-1. Merge #42. 2. #14 Act I content: the scenes around the three puzzles (Y.C.'s handwriting, Femi, the yield fudge at the rotavap, the 03:33 booking as an event, the Act I to Act II turn). 3. #16 Act I art and ambience. Then M4 Act II.
+1. Merge #44. 2. Open, review and merge the Act I art PR (#16). 3. M3 gate: play Act I end to end in Playwright in both languages and look at the screenshots. 4. M4 Act II: #17 content, #18 puzzles (door log, cipher, freezer), #19 art.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #14 Act I content, in both languages. **Office:** your monitor (the queue page with the 03:33 booking under your username, Dan's 02:50 email, the journal portal with its declaration box, thirty-one noisy spectra beside the 2020 Figure 3), tea at the window and the sofa (rest), the window, hot desk 7 (the 晨 mug and *Y.C.L. 2015–* in the drawer: fragments `yc.mug`, `yc.desk`), your phone. **Synthesis lab:** the fume hoods, the Kraken with nothing on port 4, the poster (*ask Y.C.*, rubbed out), and the yield after the rotavap: 61 %, or 68 % (`fudge.yield`). **Glovebox room:** the O₂ meter, the SOP with Y.C.'s pencil (`yc.sop`), the logbook (`fudge.logbook` or "overdue — reported"), the taped mini-antechamber. **NMR suite:** the magnet, the carousel (holder 13 is the only one without dust), Ian's signs, the compressor's chirp, the printer. **The night:** five timed events (the email, the hoover, the O₂ alarm, holder 13 PREPARING, the lights dimming), the first lights-out carried into loop 2, a second-loop opening, phantom pages `ph.tea`, `ph.three`, `ph.all`, `ph.strike`. Twenty notebook entries. Looks are spent once a loop. Phantom pages that arrive together share one notice ("There are pages in your notebook…"). English 5,056 words, 繁中 7,905 characters so far. 10 unit tests drive the real Act I through the engine; 3 new Playwright tests; 4 existing ones updated now that Dan's email cuts a wait short at 02:50.
+- Merged #42 (Act I puzzles). Opened #43 (the sticky HUD can hide the focused element).
 - #15 Act I puzzles. **TLC plate** (P3): a crude lane and fractions 10–16 on one coordinate system, a UV lamp that reveals the spot hiding in lane 11, tap any spot to measure its distance and Rf, take/leave toggles, and wrong combinations cost a minute each. **Glovebox antechamber** (P2): doors, evacuate and refill cycles and a pressure gauge against the box's O₂ meter, which rises with real in-game minutes; the SOP says TWICE and Y.C.'s pencil says THREE; too few cycles, a door at the wrong moment, or simply arriving late turns the copper(I) sample green for the rest of the night. **NMR console** (P1): a small typed shell with tappable command chips for touch; `queue --all` and `info 13` reveal the 03:33 booking under your username. The engine gains a third puzzle outcome, failing outright (`onFail` effects, `failedText`), separate from stepping away (`leftText`); the puzzle clock now drives the HUD clock. Progress inside a puzzle survives a reload or a language switch: every Act I puzzle saves its state (validated on the way back in), and the frame restores the minutes already spent (before, a remount quietly handed them back, and a reload could undo a spoiled sample). Choices in the synthesis lab, glovebox room and NMR suite wire the chain together (plate → rotavap → vial → antechamber → NMR tube → a carousel that says QUEUE LOCKED). First notebook entries (tonight and anomalies) and a line under the narrative for what you are carrying. 19 unit tests for the three logics, 6 Playwright tests (the whole chain, the ruined sample, a reload mid-purge, the UV trap, touch-only console, a language switch mid-puzzle). Opened #43: the sticky HUD can cover the focused element in a tall puzzle. DESIGN.md corrected to match: the TLC lane contents and the 9-minute purge shortcut.
 - Merged #41 (validator). **M2 Engine closed:** all ten issues done, main CI green apart from the Pages deploy (Pages not yet enabled), played through in Playwright with screenshots checked.
 - Merged #40 (settings and content note).

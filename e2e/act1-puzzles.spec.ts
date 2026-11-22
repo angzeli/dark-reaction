@@ -105,7 +105,7 @@ test('two purge cycles let the air in: the sample is lost and the vial goes', as
   await d.getByRole('button', { name: 'Take your hands out of the gloves' }).click();
   await expect(page.locator('.narrative__text')).toContainText('There won’t be another one tonight');
   await expect(page.locator('.narrative__carry')).toHaveCount(0);
-  await expect(page.locator('.choice').filter({ hasText: 'antechamber' })).toHaveCount(0);
+  await expect(page.locator('.choice').filter({ hasText: 'Take the vial in through the antechamber' })).toHaveCount(0);
 });
 
 test('a reload mid-purge puts the antechamber back as it was, clock and all', async ({ page }) => {

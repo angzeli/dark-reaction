@@ -378,7 +378,16 @@ export class Game {
     if (!def) throw new Error(`Unknown notebook entry: ${id}`);
     s.known.push({ id, loop: s.loop, minute: s.minute });
     if (def.kind === 'phantom') {
-      this.notices.push({ key: 'ui.phantom.notice', style: 'system' }, { key: def.body, style: 'phantom' });
+      // Pages found together share one notice: "There are pages in your notebook…".
+      const page: Paragraph = { key: def.body, style: 'phantom' };
+      const last = this.notices[this.notices.length - 1];
+      const notice = this.notices.findLast((p) => p.key === 'ui.phantom.notice');
+      if (last?.style === 'phantom' && notice) {
+        notice.params = { n: Number(notice.params?.['n'] ?? 1) + 1 };
+        this.notices.push(page);
+      } else {
+        this.notices.push({ key: 'ui.phantom.notice', params: { n: 1 }, style: 'system' }, page);
+      }
     } else {
       this.notices.push({ key: 'ui.noted', params: { entry: `@${def.title}` }, style: 'system' });
     }

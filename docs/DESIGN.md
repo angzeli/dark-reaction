@@ -80,7 +80,7 @@ All Level 4 rooms are 1 minute from each other and 1 minute from the stairwell. 
 
 - Each loop runs **46 in-game minutes**, from **02:47** (minute 0) to **03:33** (minute 46).
 - Every loop starts in the write-up office. You come to with your cheek on the keyboard.
-- **Actions cost minutes.** Looking closely costs 1. Walking costs the travel time. Lab work costs what it would really cost, compressed: rotary evaporation 5, an NMR run 8, an antechamber purge cycle 3.
+- **Actions cost minutes.** Looking closely costs 1, and a look is spent for the rest of the loop (the room is as it was at the next 02:47); readings that change, such as the O₂ meter, can be checked again. Walking costs the travel time. Lab work costs what it would really cost, compressed: rotary evaporation 5, an NMR run 8, an antechamber purge cycle 3.
 - If an action would run past 03:33 it still happens, and then the lights go out.
 - **At 03:33 the lights go out.** This is the signature transition (see §12). Then, unless an ending triggers:
   - the loop counter goes up by one,
@@ -168,6 +168,8 @@ Each act opens with a title card at 02:47.
 You do what you came to do. Pick the right column fractions (TLC), rotavap them, take the vial into the glovebox and make up the NMR sample before the oxygen climbs past 10 ppm, take it down to the NMR. The queue won't run it: holder 13 holds a priority booking at 03:33, under your username, submitted at 03:33 tonight, for a sample that isn't in the carousel. At 03:33 the lights go out. At 02:47 the kettle is cold again and there is a line in your notebook in your own handwriting that you didn't write.
 
 Beats: the queue screen in the office (hook); the climbing O₂ (tension); first lights-out; first phantom entry ("Make tea first"); Y.C.'s pencil on the SOP; the console's `queue --all`.
+
+Timed events (once a loop each): 02:50 Dan's email lands (office); 03:05 a hoover runs along the Level 4 corridor (any Level 4 room); 03:28 the O₂ meter starts to beep (glovebox room); 03:30 the console wakes by itself, *HOLDER 13 · PREPARING* (NMR suite); 03:31 every light in the building dims for a breath (everywhere). The first 03:33 writes `nb.reset`, and its dark carries over into the next 02:47.
 
 ### Act II: Traces
 

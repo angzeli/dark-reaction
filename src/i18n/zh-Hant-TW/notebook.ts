@@ -2,14 +2,63 @@
 import type { notebook as en } from '../en/notebook.ts';
 
 export const notebook: Record<keyof typeof en, string> = {
+  // 今晚
+  'nb.portal.title': '死線',
+  'nb.portal.body': '修訂稿 09:00 前要上傳到投稿系統。第二位審查人要暗反應階段產物的 ¹H NMR 證據：8.41 ppm 的甲酸根峰。最後還有一格要勾：*數據完整且未經修改*。',
   'nb.tlc.title': '收集液',
   'nb.tlc.body': '產物（Rf 0.35）只在第 12–14 管是乾淨的。第 11 管藏著一個只有 UV 下才看得到的斑點；第 15 管有一個跑得比較慢的。',
+  'nb.sop.title': 'SOP',
+  'nb.sop.body': '護貝的前艙 SOP 寫抽真空、回填兩次。有個簽名 YCL 的人用鉛筆改成：三次。相信我。',
   'nb.purge.title': '前艙',
   'nb.purge.body': '抽真空、回填要三次，不是兩次。在 SOP 上用鉛筆簽 YCL 的那個人是對的。箱子的氧氣大約 03:28 會超過 10 ppm，所以要在 03:18 前開始抽灌。',
+  'nb.logbook.title': '手套箱紀錄本',
+  'nb.logbook.body': '再生從 11 月 9 日就逾期了。寫進紀錄本，也寄信告訴組上了。',
+  'fudge.logbook.title': '手套箱紀錄本',
+  'fudge.logbook.body': '再生檢查：完成。',
+  'nb.queue.locked.title': '排程被鎖住了',
+  'nb.queue.locked.body': '400 不收我的樣品：03:33 的優先預約把排程鎖住了。只有設施管理員能覆寫。',
+
+  // 人
+  'nb.dan.title': 'Dan',
+  'nb.dan.body': 'Daniel Ridley 教授，我老闆。27 號以前都在波士頓。要我 09:00 前交出那張譜。說我最棒了，這反而更糟。',
+  'nb.priya.title': 'Priya',
+  'nb.priya.body': '人在新加坡，那邊已經快中午了。問我睡了沒。這整棟樓沒有一個地方有訊號能回她。',
+  'nb.tom.title': 'Tom',
+  'nb.tom.body': '實驗室的同伴。什麼都貼上「Tom 的——別碰（說的就是你）」。現在在家睡覺，像個正常人。',
+  'nb.ian.title': 'Ian Okoro',
+  'nb.ian.body': 'NMR 設施管理員。只用護貝的告示說話。他會知道。',
+  'nb.mug.title': '7 號桌',
+  'nb.mug.body': '一只白色馬克杯，用藍色毛筆寫了一個「晨」字。乾淨、冰冷，沒有灰塵。7 號桌沒有人坐。',
+  'nb.drawer.title': 'Y.C.L.',
+  'nb.drawer.body': '7 號桌的抽屜裡刻著：Y.C.L. 2015–。沒有結束的年份。',
+
+  // 數據
+  'nb.paper.title': '圖三',
+  'nb.paper.body': 'Ridley、Lin 等人，2020：8.41 ppm 一根乾淨的峰。這個反應我跑了三十一次，看到了三十一次雜訊。',
+  'nb.yield.title': '產率',
+  'nb.yield.body': '61%。（論文寫 70。）',
+  'fudge.yield.title': '產率',
+  'fudge.yield.body': '68%。（天平在飄？）',
+
+  // 異常
+  'nb.booking.title': '用我的名字訂的預約',
+  'nb.booking.body': '系上的排程頁面：樣品槽 13，今晚 03:33，ar4217，優先，詳細資料不公開。不是我訂的。',
   'nb.queue.0333.title': '03:33 的預約',
   'nb.queue.0333.body': '樣品槽 13，PROTON_DARK，掃一次。使用者：我。預約和送出的時間都是今晚 03:33，而那還沒發生。優先權：設施覆寫。備註：「它還在反應」。',
   'nb.holder13.title': '樣品槽 13',
   'nb.holder13.body': '空的。不管 03:33 要跑的是什麼，都還沒放進去。',
-  'nb.queue.locked.title': '排程被鎖住了',
-  'nb.queue.locked.body': '400 不收我的樣品：03:33 的優先預約把排程鎖住了。只有設施管理員能覆寫。',
+  'nb.mini.title': '小前艙',
+  'nb.mini.body': '用膠帶封死：請勿開啟——YCL 14/03/19。壓力錶還停在真空。',
+  'nb.reset.title': '03:33',
+  'nb.reset.body': '03:33，整棟樓的燈一起熄了。然後就是 02:47，我坐在自己的桌前，熱水壺是冷的。',
+
+  // 你不記得自己寫過的那幾頁
+  'ph.tea.title': '02:47',
+  'ph.tea.body': '02:47。這你做過了。先泡茶。再看 TLC 片。',
+  'ph.three.title': '三',
+  'ph.three.body': '三次。永遠都是三次。',
+  'ph.all.title': '排程',
+  'ph.all.body': '排程只給你看它認為是你的東西。',
+  'ph.strike.title': '那幾頁',
+  'ph.strike.body': '劃一條線。簽名。寫日期。你知道怎麼做。',
 };

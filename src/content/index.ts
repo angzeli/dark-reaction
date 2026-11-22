@@ -11,6 +11,7 @@ import { piScenes } from './locations/pi.ts';
 import { roofScenes } from './locations/roof.ts';
 import { stairsScenes } from './locations/stairs.ts';
 import { synthScenes } from './locations/synth.ts';
+import { EVENTS, LIGHTS_OUT, PHANTOMS } from './night.ts';
 import { NOTEBOOK } from './notebook.ts';
 import { PUZZLE_DEFS } from './puzzles.ts';
 import { EDGES, LOCATIONS } from './world.ts';
@@ -21,15 +22,16 @@ export const CONTENT: Content = {
   edges: EDGES,
   loopStart: [
     { key: 'loop.start.first', if: { not: { loopGte: 2 } } },
-    { key: 'loop.start.again', if: { loopGte: 2 } },
+    { key: 'loop.start.second', if: { all: [{ loopGte: 2 }, { not: { loopGte: 3 } }] } },
+    { key: 'loop.start.again', if: { loopGte: 3 } },
   ],
   obsession: { decay1: 4, decay2: 7, infinite: 10, infiniteFromLoop: 4 },
   scenes: [...officeScenes, ...synthScenes, ...gloveboxScenes, ...piScenes, ...stairsScenes, ...nmrScenes, ...coldScenes, ...roofScenes],
   notebook: NOTEBOOK,
   puzzles: PUZZLE_DEFS,
-  events: [],
-  phantoms: [],
-  lightsOut: [],
+  events: EVENTS,
+  phantoms: PHANTOMS,
+  lightsOut: LIGHTS_OUT,
   acts: [],
   endings: [],
 };

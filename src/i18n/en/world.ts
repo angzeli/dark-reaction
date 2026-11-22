@@ -5,8 +5,20 @@
 export const world = {
   'loop.start.first':
     'You come to with your cheek on the keyboard and a full page of the letter *j* on the screen. The clock in the corner says 02:47. Somewhere above the ceiling tiles, the building breathes out.',
+  'loop.start.second':
+    'You come to with your cheek on the keyboard and a full page of the letter *j* on the screen. 02:47. The kettle is cold. You remember the dark the way you remember a stair that wasn’t there.',
   'loop.start.again':
     'You come to with your cheek on the keyboard. 02:47. The page of *j*s is there again, exactly as long as before.',
+
+  'lo.first':
+    'Everything goes at once: the tubes, the monitors, the green running men over the doors, the hum you had stopped hearing. In the dark there is only the rain, and then not even that.',
+
+  'ev.mail': 'Your monitor chimes. A new email, sent at 02:50, from Dan.',
+  'ev.hoover':
+    'Down the corridor a hoover starts up, drones along the carpet for a while, and stops outside a door that isn’t yours. Nobody walks past.',
+  'ev.o2alarm': 'On top of the box, the oxygen meter has started to beep: a small, reasonable sound that does not stop.',
+  'ev.preparing': 'The console’s screen wakes by itself. *HOLDER 13 · PREPARING.* Nothing in the carousel moves.',
+  'ev.dim': 'Every light in the building dims for the length of a breath, then comes back a shade too yellow.',
 
   'office.hub.act1':
     'The write-up office holds eleven desks and one person. Rain works at the big window in long, patient strokes, and the street lamp outside turns every drop sodium orange. One of the two tubes overhead is dying in a way that only bothers you when you notice it. On your monitor, the NMR queue is still open.',
