@@ -1,0 +1,9 @@
+/**
+ * Puzzle logic by id, with no DOM. The validator, unit tests and the route
+ * simulator solve puzzles through these; the UI registry (registry.ts)
+ * pairs each with its view.
+ */
+import type { PuzzleLogic } from './types.ts';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const PUZZLE_LOGIC: Record<string, PuzzleLogic<any, any>> = {};
