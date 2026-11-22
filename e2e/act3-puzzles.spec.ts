@@ -123,6 +123,32 @@ test.describe('on a phone', () => {
     await expect(page.locator('.choice[data-choice="synth.kraken.fill"]')).toHaveCount(0);
   });
 
+  test('a tapped toggle shows its own state, never a hover left behind (#67)', async ({ page }) => {
+    await resume(page, kraken('en', true), 'en');
+    const { d } = await open(page, 'synth.kraken.fill', 'tap');
+    const border = (sel: string) => d.locator(sel).evaluate((el) => getComputedStyle(el).borderTopColor);
+    // A phone has no hover. After a tap, a touch browser leaves :hover on what was tapped; Playwright's
+    // tap doesn't, so put the pointer there as the browser would and check the control still shows its state.
+    expect(await page.evaluate(() => matchMedia('(hover: hover)').matches)).toBe(false);
+    const tapAndLinger = async (sel: string) => {
+      await d.locator(sel).tap();
+      await d.locator(sel).hover();
+    };
+    // The nitrogen main, then port 2 to nitrogen: each keeps its "on" colour.
+    await tapAndLinger('.sk__n2');
+    await expect(d.locator('.sk__n2')).toHaveAttribute('data-on', 'true');
+    expect(await border('.sk__n2')).toBe('rgb(111, 183, 238)');
+    const n2 = '.sk__tap[data-port="2"][data-tap="n2"]';
+    await tapAndLinger(n2);
+    await expect(d.locator(n2)).toHaveAttribute('aria-checked', 'true');
+    expect(await border(n2)).toBe('rgb(111, 183, 238)');
+    // A plain button keeps its plain look with the pointer left on it.
+    const hint = page.locator('.pz__hint-btn');
+    const plain = await hint.evaluate((el) => getComputedStyle(el).borderTopColor);
+    await hint.hover();
+    expect(await hint.evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(plain);
+  });
+
   test('the three spectra in 繁中, by touch: everything fits, and every circle can be tapped', async ({ page }) => {
     await resume(page, spectra('zh-Hant-TW'), 'zh-Hant-TW');
     const { d } = await open(page, 'office.compare', 'tap');

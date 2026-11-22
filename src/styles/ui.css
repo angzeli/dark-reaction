@@ -140,10 +140,12 @@ button {
   border-color: var(--copper);
   color: #f1e2cf;
 }
-.title__btn:hover,
-.menu__btn:hover,
-.slot__btn:hover:not(:disabled) {
-  border-color: var(--tube);
+@media (hover: hover) {
+  .title__btn:hover,
+  .menu__btn:hover,
+  .slot__btn:hover:not(:disabled) {
+    border-color: var(--tube);
+  }
 }
 .title__confirm {
   flex-basis: 100%;
@@ -247,7 +249,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   font-size: 0.8rem;
   cursor: pointer;
 }
-.hud__btn:hover { border-color: var(--tube); }
+@media (hover: hover) {
+  .hud__btn:hover { border-color: var(--tube); }
+}
 
 .play__art .dr-stage {
   max-height: 46vh;
@@ -322,11 +326,16 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   line-height: 1.45;
   cursor: pointer;
 }
-.choice:hover,
 .choice:focus-visible {
   background: rgba(159, 227, 181, 0.05);
   box-shadow: inset 2px 0 0 var(--tube);
   outline: none;
+}
+@media (hover: hover) {
+  .choice:hover {
+    background: rgba(159, 227, 181, 0.05);
+    box-shadow: inset 2px 0 0 var(--tube);
+  }
 }
 .choice__n {
   font-family: var(--font-mono);
