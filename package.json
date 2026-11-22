@@ -10,8 +10,10 @@
     "node": ">=22.18"
   },
   "scripts": {
+    "fonts": "node scripts/subset-fonts.ts",
+    "predev": "npm run fonts",
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run fonts && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -21,9 +23,13 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@expo-google-fonts/ibm-plex-mono": "0.4.2",
+    "@expo-google-fonts/noto-serif-tc": "0.4.2",
+    "@expo-google-fonts/source-serif-4": "0.4.2",
     "@playwright/test": "1.63.0",
     "@types/node": "22.20.5",
     "eslint": "10.15.0",
+    "subset-font": "2.9.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.73.0",
     "vite": "8.3.8",

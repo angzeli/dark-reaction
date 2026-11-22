@@ -5,13 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M1 Foundation
-- **Last merged:** #2 design document, progress log, contributor rules, attribution tooling
-- **In flight:** #3 project scaffold (Vite + TypeScript, lint, Vitest, Playwright, CI jobs, Pages deploy)
+- **Last merged:** #28 project scaffold (closes #3)
+- **In flight:** #4 self-hosted fonts with build-time subsetting
 
 ## Next
 
-1. #4 self-hosted fonts with build-time subsetting of Noto Serif TC.
-2. M2 Engine: #5 core, #6 i18n, #7 saves, #8 UI shell, #9 settings, #10 puzzle framework, #11 validator, #12 art, #13 audio.
+1. M2 Engine: #5 core, #6 i18n, #7 saves, #8 UI shell, #9 settings, #10 puzzle framework, #11 validator, #12 art, #13 audio.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -29,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #4 fonts: Source Serif 4 (400, 400 italic, 600), Noto Serif TC 400, IBM Plex Mono (400, 500) from version-pinned `@expo-google-fonts` packages, subset at build time by `scripts/subset-fonts.ts` (a built-in cmap reader checks coverage; build fails if a player-visible character has no glyph or the payload exceeds 1.5 MiB). Projected final size with ~3,500 CJK glyphs ≈ 700 KiB. Chinese text uses Noto first so CJK punctuation keeps full-width metrics. `CREDITS.md` added. PR screenshots live on the orphan branch `pr-assets`.
+- Merged #28 (scaffold).
 - #3 scaffold: Vite 8, TypeScript 6.0 (strict, erasable syntax only), ESLint 10 + typescript-eslint, Vitest 5, Playwright 1.63 (matches the container's browser). CI jobs `attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`; `deploy.yml` for Pages. Production builds carry a CSP with `connect-src 'none'`.
 - Merged #2 (design document and contributor rules). Opened issues #3–#27 across M1–M6.
 - Initial commit on `main`: MIT `LICENSE`, `.gitignore`, bilingual `README.md`.

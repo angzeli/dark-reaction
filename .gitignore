@@ -13,8 +13,8 @@ dist-ssr/
 .vite/
 *.local
 
-# Generated at build time
-public/fonts/generated/
+# Generated at build time (scripts/subset-fonts.ts)
+src/assets/fonts/generated/
 .cache/
 
 # Tests

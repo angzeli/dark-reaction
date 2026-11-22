@@ -48,8 +48,9 @@ GitHub writes server-side squash commits under the account's profile display nam
 | Command | What it does |
 |---|---|
 | `npm ci` | Install exact dependencies (Node ≥ 22.18; scripts run under Node's built-in type stripping) |
+| `npm run fonts` | Subset the self-hosted fonts to the glyphs in use (`src/assets/fonts/generated/`, gitignored); runs before `dev` and `build` |
 | `npm run dev` | Vite dev server at `http://localhost:5173/dark-reaction/` |
-| `npm run build` | Typecheck, then build to `dist/` (production builds inject a strict CSP with `connect-src 'none'`) |
+| `npm run build` | Subset fonts, typecheck, then build to `dist/` (production builds inject a strict CSP with `connect-src 'none'`) |
 | `npm run preview` | Serve `dist/` at `http://localhost:4173/dark-reaction/` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint (flat config, typescript-eslint; bans enums, namespaces and network globals in `src/`) |
