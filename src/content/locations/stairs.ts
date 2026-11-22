@@ -20,6 +20,15 @@ export const stairsScenes: SceneDef[] = [
     choices: [
       { id: 'stairs.desk', label: 'stairs.desk', cost: 1, once: 'loop', effects: [{ learn: 'nb.femi' }], text: [{ key: 'stairs.desk.r' }] },
       {
+        // P6: seven nights of badges, and the porter's Monday.
+        id: 'stairs.terminal',
+        label: 'stairs.terminal',
+        cost: 1,
+        if: { not: { solved: 'doorlog' } },
+        text: [{ key: 'stairs.terminal.r' }],
+        effects: [{ puzzle: 'doorlog' }],
+      },
+      {
         id: 'stairs.radio',
         label: 'stairs.radio',
         cost: 3,

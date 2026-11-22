@@ -30,7 +30,10 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   return el;
 }
 
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+/** What Tab can reach: nothing disabled, and nothing taken out of the tab order (a roving group keeps one stop). */
+const FOCUSABLE = ['a[href]', 'button:not([disabled])', 'input:not([disabled])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]']
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .join(', ');
 
 /** Keep Tab and Shift+Tab inside `root`. Returns a function that removes the trap. */
 export function trapFocus(root: HTMLElement): () => void {

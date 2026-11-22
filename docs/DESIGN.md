@@ -244,12 +244,12 @@ Ten puzzles, each a distinct mechanic, each solvable by a non-chemist from in-wo
 - **Par:** 2.5 min. **Shortcut:** "Combine 12–14 (1 min)."
 
 ### P4 · −80 °C freezer box (`freezer`): grid deduction. Act II, cold room.
-- **Mechanic:** rack 1, a 9×9 box labelled "YCL — DO NOT DEFROST" (rows A–I, columns 1–9), caps in black, white and red. Lifting a tube costs a minute and warms the freezer a degree; at −74 °C the alarm forces you to close it for the rest of the loop. Her box notes on the lid:
+- **Mechanic:** rack 1, a 9×9 box labelled "YCL — DO NOT DEFROST" (rows A–I, columns 1–9), caps in black, white and red, some slots empty. Choose a tube, then lift it: each lift costs a minute and warms the freezer a degree from −80 °C. The sixth tube that isn't the card reaches −74 °C, and the alarm forces you to close it for the rest of the loop (finding the card on that lift still counts). Her box notes on the lid, where "next to" means any of the eight surrounding cells, corners included, and the note says so:
   1. "Nothing of mine on the edge (Tom borrows from the edge)."
   2. "The card's under a red cap."
-  3. "Never next to a black cap; I didn't want it mistaken for a sample."
-  4. "Row and column add to ten (A = 1)."
-- **Red caps:** A5, B8, C3, D6, E5, F4, G3, I1. Black caps neighbour B8 (C8), D6 (D7), F4 (E4) and G3 (G2). I1 and A5 are on the edge; C3 sums to 6. **Answer: E5.**
+  3. "Never next to a black cap, not even corner to corner. I didn't want it mistaken for a sample."
+  4. "Row and column add up to ten, counting A as 1."
+- **Red caps:** A5, B8, C3, D6, E5, F4, G3, I1. **Black caps:** C8, D7, G4, G2. Every red cap but one breaks a note: A5 and I1 are on the edge; C3 adds up to 6; B8 (C8 below), D6 (D7 beside), F4 (G4 below) and G3 (G2 and G4 either side) add up to ten but touch a black cap. **Answer: E5**, the only cell in the box that keeps all four notes (a unit test applies them to the whole grid). The tubes on the edge are Tom's.
 - **Grants:** `nb.freezer`, item `item.microsd`.
 - **Hints:** (1) Read her lid notes again: edges, caps, neighbours, a sum. (2) Only red caps off the edge, not touching a black cap, are left; the sum picks one. (3) E5.
 - **Par:** 3 min. **Shortcut:** "Lift E5 (2 min)."
@@ -264,7 +264,7 @@ Ten puzzles, each a distinct mechanic, each solvable by a non-chemist from in-wo
 - **Par:** 3 min. **Shortcut:** "Fill her tube the way you did before (6 min)."
 
 ### P6 · Door-access log (`doorlog`): schedule deduction. Act II, stairwell lobby.
-- **Mechanic:** the porter's terminal shows seven nights of Level 4 and ground-floor access events, 02:40–03:40, filterable by night and door. The player marks two windows for tonight on a 02:47–03:33 timeline (tap a start time; no dragging needed).
+- **Mechanic:** the porter's terminal shows seven nights (Monday 16 to Sunday 22 November) of Level 4 and ground-floor access events, 02:40–03:40, filterable by night and door; an "older entries" toggle reaches back through the archive. The player marks two windows for tonight on a 02:47–03:33 timeline, one row for 4.01 and one for fire exit B: tap the minute a window opens, nudge it a minute or five, or use the arrow keys (no dragging). Then "write it down": a wrong window costs a minute and the text says which row is off, never what is right. Reading the log costs 2 minutes.
 - **The pattern:** Tue–Sun the porter opens 4.01 for cleaning 03:12–03:15. On **Mondays** (bins night) everything shifts three minutes: 4.01 is open **03:15–03:18**, and fire exit B is released **03:21–03:24** while the bins go out. The computer and phone both say it's Monday. Noise: Tom's badge on Wednesday, Ian's on Thursday.
 - **Also in the log:** `LIN Y C (EXPIRED 30/09/2019)`: main entrance DENIED 02:47, Lab 4.12 GRANTED 03:33, every night; scrolling back, the first entry is 14/03/2019 03:33 and there is no exit, ever.
 - **Grants:** `nb.porter` (both windows), `nb.keeps` (the building keeps whoever is inside at 03:33), fragment `yc.badge`.
@@ -272,11 +272,11 @@ Ten puzzles, each a distinct mechanic, each solvable by a non-chemist from in-wo
 - **Par:** 3.5 min. **Shortcut:** the knowledge (you just turn up on time).
 
 ### P7 · Notebook cipher (`cipher`): substitution with an in-world key. Act II, PI office (her notebook).
-- **Mechanic:** the last page of her notebook; slots, one per token; a key panel (the periodic table poster from 4.12, reproduced as an interactive table). Tap a slot, then the answer, to fill it. The language versions are localised originals with the same answer.
-  - **English:** "If anyone reads this: 88 74 · 49 · 88 6 19 · 8 10". Atomic numbers → symbols → letters: Ra W · In · Ra C K · O Ne → **RAW IN RACK ONE**.
-  - **繁中：**「真的那份：鉈 · 氡 鈉 · 鉀」，便利貼：「偏旁拿掉就好。」去掉部首 → **它 · 冬內 · 甲**：它在冷凍櫃裡，甲架（甲 = 1）。
+- **Mechanic:** the last page of her notebook. The language versions are localised originals with the same answer, and each keeps its own progress, so switching language half-way spoils neither; solving either solves the puzzle. Wrong picks are refused, and every second one costs a minute.
+  - **English:** "If anyone reads this: 88 74 · 49 · 88 6 19 · 8 10", with "(ask the poster)" in the margin. A gap under each number, and a key panel: the periodic table printed inside the notebook's back cover (all 118 elements in the real layout, the same numbers as the poster in 4.12). Tap a gap (the next one comes up by itself), then an element. Atomic numbers → symbols → letters: Ra W · In · Ra C K · O Ne → **RAW IN RACK ONE**.
+  - **繁中：**「真的那份：鉈 · 氡 鈉 · 鉀」，便利貼：「偏旁拿掉就好。」選一個字，再選要拿掉的偏旁：金字旁、石字旁、气字頭、三點水（元素名稱就是用這四個偏旁造的字）。去掉部首 → **它 · 冬內 · 甲**：它在冷凍櫃裡，甲架（甲 = 1）。
 - **Grants:** `nb.cipher` (rack 1), fragment `yc.notebook`.
-- **Hints (EN):** (1) Every number is below 118, and the poster in 4.12 has the same numbers on it. (2) Each number is an atomic number; write its symbol and read the letters. (3) 88 is Ra, 74 is W: RAW IN RACK ONE. **(繁中):** (1) 這幾個字全是元素名。(2) 把金字旁、气字頭拿掉，剩下的字連起來讀。(3) 它、冬、內、甲：它在『冬』裡面，甲架。
+- **Hints (EN):** (1) Every number is below 118, and the poster in 4.12 has the same numbers on it. (2) Each number is an atomic number; write its symbol and read the letters. (3) 88 is Ra, 74 is W: RAW IN RACK ONE. **(繁中):** (1) 這幾個字全是元素名。(2) 把金字旁、气字頭拿掉，剩下的字連起來讀。(3) 它、冬、內、甲：它在「冬」裡面，甲架。
 - **Par:** 3 min. **Shortcut:** the knowledge.
 
 ### P8 · Cryocooler chirp (`chirp`): rhythm decoding, audio *and* visual. Act III, NMR suite.
