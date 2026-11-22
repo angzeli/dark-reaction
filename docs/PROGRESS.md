@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #85 the deploy goes after GitHub's branch build (closes #84)
-- **In flight:** the accessibility pass, part 2 (this PR, closes #25). Also open: #82 (polish, #26).
+- **Last merged:** #83 accessibility pass, part 2 (closes #25)
+- **In flight:** the polish pass (this PR, closes #26).
 
 ## Next
 
-1. Merge this PR and #82. 2. #27 README, credits and v1.0.0.
+1. Merge this PR. 2. #27, the last M6 issue: the bilingual README (play link, screenshots, controls, content note, running locally, credits, licence), CREDITS (add axe-core and the test tools), the v1.0.0 tag and GitHub Release with notes, and a live-site check (the site was verified loading the build after #85).
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,18 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #26: **the polish pass.**
+  - **Full playthroughs:** the true ending's route at 375 × 667 (English) and 1440 × 900 (繁中), 25 screenshots each, reviewed. Nothing overflows or clips; the HUD wraps cleanly on the phone. No new bugs from the review. #80, a race, turned up in #25's suite and is fixed in #81.
+  - **Copy edit:**
+    - every English UI string now uses ’ (ten had straight apostrophes, including the HUD's *4.01 Prof. Ridley’s office*);
+    - *toward* → *towards*;
+    - the validator warns on straight quotes in English and on a wider list of American spellings;
+    - 繁中 terminology (抽氣櫃, 前艙, 老闆, 死線, 產率) and CJK–Latin spacing checked consistent.
+  - **Size and speed:**
+    - the build is 497 KB of JS (174 KB gzipped), 51 KB of CSS (12 KB gzipped) and about 410 KB of subset fonts;
+    - locally the page loads in about 140 ms (DOMContentLoaded about 100 ms);
+    - walking through every room raised no long task (`e2e/perf.spec.ts`, which reports both as annotations and fails on any long task during scene changes).
+- Merged #83 (closes #25).
 - #25 part 2: **the accessibility pass, finished.**
   - **Every puzzle by keyboard alone and by touch alone** (`e2e/input-modes.spec.ts`).
     - Each puzzle is mounted in the harness and solved with the bot's own solution, and `bot.ts`'s solvers now take a `press`. By keyboard: Tab to a control, or into its roving group (marked `data-roving` by `bindRoving`) and the arrows to it, then Enter; nothing is clicked. By touch: taps on a phone-sized touch screen.

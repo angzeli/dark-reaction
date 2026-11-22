@@ -53,9 +53,9 @@ export const world = {
   'glovebox.hub.act1':
     'The glovebox has a small room to itself, like a patient on a ward: a long steel body, two black gloves hanging limp from their ports, a window you can look into but never quite through. The oxygen meter on top glows green. {ppm} ppm. It was lower when you came in.',
   'pi.door.text':
-    "Prof. Ridley's door is shut and locked. Through the frosted glass: the shape of a desk lamp, the shape of a chair. A printed sign at eye level says BOSTON UNTIL 27 NOV — PLEASE EMAIL, in the font Dan uses for everything, including condolence cards.",
+    'Prof. Ridley’s door is shut and locked. Through the frosted glass: the shape of a desk lamp, the shape of a chair. A printed sign at eye level says BOSTON UNTIL 27 NOV — PLEASE EMAIL, in the font Dan uses for everything, including condolence cards.',
   'pi.hub.text':
-    "Dan's office is warmer than the rest of the floor, as if the radiator in here was never told about the budget. Books lie flat on top of books standing up. The hoover has been and gone; its tracks are still in the carpet.",
+    'Dan’s office is warmer than the rest of the floor, as if the radiator in here was never told about the budget. Books lie flat on top of books standing up. The hoover has been and gone; its tracks are still in the carpet.',
   'stairs.hub.act1':
     'The stairwell is concrete and echo. A green running man glows above every door, forever on his way out. Through the tall window on the landing the sodium light comes in sideways and lays orange bars across the steps. Somewhere below, a radio is talking to nobody.',
   'nmr.hub.act1':
