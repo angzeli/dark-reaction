@@ -139,7 +139,7 @@ export const endings = {
   'ending.fire.2':
     'Then the building screams. Every sounder on every floor, a rising two-note wail that goes through the concrete and up your spine, and the green running men over the doors seem, for the first time, to be actually running. Doors you have never seen open swing open on their magnets. Somewhere above, the lift sinks to the ground floor, opens its doors and stays there, sulking. The building is doing what it was designed to do. It is evacuating, by protocol, everyone and everything in it.',
   'ending.fire.3':
-    'You go out through the main entrance. Your badge isn’t needed; the doors stand wide open, held by the alarm, and the rain blows in across the lobby floor. Nothing stops you. You walk out into the car park and turn and look at the Vellacott Building, lit from top to bottom and howling, and then it is 03:33 and every light stays on, because the rules say they must.',
+    'You go out through the main entrance. Your badge isn’t needed; the doors stand wide open, held by the alarm, and the rain blows in across the lobby floor. Nothing stops you. You walk out into the car park and turn and look at the Vellacott Building, lit from top to bottom and howling. It will still be lit at 03:33, when every light in it stays on, because the rules say they must.',
   'ending.fire.4':
     'The fire engines arrive in four minutes, which is very good of them. Two of them, enormous and patient, their blue lights going round the wet car park like a slow carousel. Firefighters in yellow helmets walk into the building with the unhurried confidence of people who do this every night, which they do.',
   'ending.fire.5':

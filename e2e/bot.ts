@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import type { RouteStep } from '../src/content/routes.ts';
+import { ANSWER as DOORLOG } from '../src/puzzles/doorlog/logic.ts';
 
 /**
  * The playthrough bot: plays the validator's route steps (src/content/
@@ -85,6 +86,18 @@ const SOLVERS: Record<string, (page: Page) => Promise<void>> = {
     for (const m of ['outer', 'load', 'outer', 'evacuate', 'refill', 'evacuate', 'refill', 'evacuate', 'refill', 'inner', 'transfer', 'done']) {
       await page.locator(`.gb__btn[data-move="${m}"]`).click();
     }
+  },
+  async doorlog(page) {
+    // Tonight's two windows, by keyboard: Home is 02:47, PageUp five minutes, ArrowRight one.
+    const set = async (row: 'pi' | 'exit', start: number) => {
+      await page.locator(`.dl__track[data-row="${row}"]`).focus();
+      await page.keyboard.press('Home');
+      for (let i = 0; i < Math.floor(start / 5); i++) await page.keyboard.press('PageUp');
+      for (let i = 0; i < start % 5; i++) await page.keyboard.press('ArrowRight');
+    };
+    await set('pi', DOORLOG.pi);
+    await set('exit', DOORLOG.exit);
+    await page.locator('.dl__write').click();
   },
   async console(page) {
     await page.locator('.con__chip[data-command="queue --all"]').click();

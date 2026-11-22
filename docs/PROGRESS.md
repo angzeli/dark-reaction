@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M5 Act III & Endings (M3 and M4 closed)
-- **Last merged:** #59 scroll on arrival (closes #52)
-- **In flight:** #60 focus clear of the HUD (this PR, closes #43); Fire Alarm (#57, in cold review); the art subagent on the ending illustrations and port 4's flask (`art/endings-22`); the puzzle subagent on #21 (`puzzle/act3-21`)
+- **Last merged:** #60 focus clear of the HUD (closes #43)
+- **In flight:** #57 endings part 2, Fire Alarm (this PR, part of #22; cold review answered); the art subagent on the ending illustrations and port 4's flask (`art/endings-22`); the puzzle subagent on #21 (`puzzle/act3-21`)
 
 ## Next
 
-1. Merge #57 (Fire Alarm) after its cold review, and this PR; review and merge the art and puzzle subagents' branches as they report. 2. Ending illustrations and port 4's flask in the Act III art. 3. #21 Act III puzzles, then Act III part B with endings part 3 (Dark Reaction and the critical path). 4. #24: the bot (`e2e/bot.ts`) grows to every route in both languages, with screenshots.
+1. Merge #57 (Fire Alarm); review and merge the art and puzzle subagents' branches as they report. 2. Ending illustrations and port 4's flask in the Act III art. 3. #21 Act III puzzles, then Act III part B with endings part 3 (Dark Reaction and the critical path). 4. #24: the bot (`e2e/bot.ts`) grows to every route in both languages, with screenshots.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +28,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-22
+- #22 endings, part 2: **Fire Alarm**. From Act II, once the door log has told you that whoever is inside at 03:33 the building keeps (`nb.keeps`), and you have looked at the call point, you can put your thumb on its glass. That opens a moment at the box: break the glass (the ending, at no cost in minutes), or take your thumb away. Like every ending it can't happen in Act I: the door log can be read early, but the glass waits for Act II (a test caught the Act I path). After the cold review, the way back is the first choice at the glass, so keyboard focus and key 1 land on it and a stray Enter can't end the run (Playwright checks it in 繁中). The epilogue no longer assumes the glass broke just before 03:33. The tests now pin the call-point requirement, Act I's later loops, Act III, the glass at 03:32 and zero costs; each mutation the review found surviving now fails one. The same Enter risk at fire exit B's doorway is #61. Its route reads the log and breaks the glass in loop 2 (19.6 min with the epilogue). The bot learned the door log (by keyboard, either language); Playwright plays Fire Alarm through the UI in 繁中. Five of six endings are now in the game.
+- Merged #60 (closes #43).
 - #43: on short windows (a laptop at 1280 × 600, a phone held sideways), moving focus backwards through a tall puzzle scrolled the control just into view, underneath the sticky HUD (WCAG 2.2, 2.4.11). The app now measures the HUD into `--hud-h` with a `ResizeObserver` (it wraps on phones and grows with text size), and `html { scroll-padding-top }` keeps focused controls clear of it. The HUD clock's prohibited `aria-label` is gone: a visually hidden "Time" precedes it instead. Playwright Shift+Tabs thirty times up through the NMR console at 1280 × 600 and 390 × 640 and checks no focused control overlaps the HUD. It fails on the old code (a console line at 9–61 px under an 82 px HUD) and passes now. The axe criterion moves to #25, where axe arrives.
 - Merged #59 (closes #52).
 - #52: arriving somewhere new kept the old scroll position, so after choosing near the bottom of a long page and walking, the new room's picture and first line were above the viewport (on a phone, entirely). The play screen now remembers the loop and room it last showed and, when either changes (a walk, or 02:47 again), jumps to the top. It never scrolls smoothly: it's a cut, not a pan, so reduced motion is respected. Choosing within a room keeps the reader's place, and keyboard focus still lands on the first choice without scrolling. A Playwright test at phone width (390 × 844) fails on the old code (the lab opened 177 px down) and passes now: a same-room choice keeps the place, a walk starts at the top with the picture in view, and so does the next loop after 03:33.

@@ -113,6 +113,11 @@ export const ROUTES: Partial<Record<EndingId, Route>> = {
     summary: 'Act I, then in Act II be at fire exit B when the bins go out at 03:21, and leave.',
     steps: steps(ACT_ONE, [{ go: 'stairs' }, { until: 34 }, { do: 'stairs.exitb.open' }, { do: 'stairs.leave' }]),
   },
+  fire: {
+    ending: 'fire',
+    summary: 'Act I, then in Act II look at the call point, read the door log (whoever is inside at 03:33, the building keeps), and break the glass.',
+    steps: steps(ACT_ONE, [{ go: 'stairs' }, { do: 'stairs.callpoint' }, { do: 'stairs.terminal' }, { solve: 'doorlog' }, { do: 'stairs.glass' }, { do: 'stairs.alarm.break' }]),
+  },
   infinite: {
     ending: 'infinite',
     summary: 'Act I, then three Act II nights of every chase and no rest (each runs past 03:33 on its own), until the fourth 03:33 keeps you.',
