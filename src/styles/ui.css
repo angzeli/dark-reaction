@@ -760,12 +760,19 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 .set__sound[aria-pressed='true'] { border-color: var(--tube); color: var(--tube); }
 .set__slider {
   display: grid;
-  grid-template-columns: 6rem 1fr 3.5rem;
+  grid-template-columns: minmax(0, 6rem) minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
   margin-top: 0.5rem;
 }
-.set__slider input { accent-color: var(--tube); min-height: 32px; }
+.set__slider input { accent-color: var(--tube); min-height: 32px; min-width: 0; width: 100%; }
+/* Settings must fit the screen at every text size (#107): fieldsets default to their content's
+   min-content width, and the slider rows' fixed columns don't fit a phone at the largest size. */
+.set, .set__group, .overlay__sheet { min-width: 0; min-inline-size: 0; }
+@media (max-width: 34rem) {
+  .set__slider { grid-template-columns: minmax(0, 1fr) auto; }
+  .set__slider label { grid-column: 1 / -1; }
+}
 .set__slider input:disabled { opacity: 0.4; }
 .set__value { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-align: end; }
 

@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #137 The TLC plate speaks its lamp, names its spots, and words the crude lane in 繁中 (closes #106, #114)
+- **Last merged:** #138 Settings fits a phone at every text size (closes #107)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #107: **Settings fits a phone at every text size.**
+  - **What was wrong:** at 390 px, choosing the largest text size made the dialog 430 px wide. Close was pushed off the edge, with a 10 px sliver left and no Escape on a touch screen, and the descriptions were cut off. The cause was the volume sliders' fixed `6rem`/`3.5rem` columns around a range input, plus fieldsets' default min-content width. The mobile player found it; Layer 3 sweeps the default text size only.
+  - **The fix:** the slider rows wrap their label on narrow screens, and the sheet and fieldsets may shrink.
+  - **Test:** `e2e/settings-fit.spec.ts` checks every text size in both languages at 390 px. Four of the eight fail without the fix.
+- Merged #137 (closes #106, #114).
 - #106, #114: **the TLC plate speaks its lamp, names its spots, and words the crude lane properly in 繁中.**
   - **Unannounced lamp:** turning on the UV lamp, the puzzle's key move, changed nothing a screen reader could hear. Lane 11's hidden spot (the trap) and lane 10's appeared in silence, and several spot buttons had the same name ("Measure the spot in lane crude" ×3).
   - **The 繁中 template:** the lane string was built for numbers, so it read 「量第 粗產物 道的斑點」, with a half-width ", " between spots.
