@@ -78,7 +78,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
   - **Spacing:** 「Schlenk line上」 (three times) and 「CAROUSEL.*樣品槽」 / 「HAS RUN.*它」 ran Latin into Han. The README's 「Schlenk 管線」 is now 「Schlenk line」, as in the game. The validator now flags Latin letters, digits and stops touching Han in 繁中, ignoring placeholders.
   - **Chemistry (the chemist):**
     - B.05 was "the coldest room in the building" with a −80 along one wall, which in reality warms a room. It's now still called the cold room, though it hasn't been cold since the freezer came, which makes Act III's frost the uncanny thing it should be.
-    - The solvent cabinets carry yellow warning triangles, not diamonds.
+    - The solvent cabinets carry yellow warning triangles with a flame, not diamonds, in the text and in the picture.
     - The fractions are "colourless or nearly".
     - `PROTON_DARK`'s single scan stays: it's the ghost's booking, and "one more scan" is the notebook's refrain.
   - **Tests:** `tests/content-polish.test.ts` and `tests/validator.test.ts`. All five fail without the fix.

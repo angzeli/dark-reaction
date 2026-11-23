@@ -393,6 +393,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 /* "What you can do" heads the choices, and only while there are some: not over a puzzle, nor in the
    moment before the dark (#144). */
 #choices-heading:has(+ .choices:empty) { display: none; }
+/* No lone character on a paragraph's or a choice's last line, which 繁中 at the larger sizes kept
+   making (「縮」, 「碼」, 「鐘。」, #NEW7). Browsers without it wrap as before. */
+.narrative__text p, .ending__text p, .choice__label, .overlay__sheet p { text-wrap: pretty; }
 /* A filename has nowhere to break: on a phone at the larger text sizes, her
    2019-03-14_0333_PROTON_DARK_NOT_MINE.fid pushed the whole page sideways (#156). Long tokens
    break where they must; everything else wraps as before. */

@@ -2,7 +2,7 @@
  * B.05 Cold room and solvent store, 02:47. Cold blue light on insulated
  * panels; the −80 °C freezer along one wall like a white chest in an attic,
  * its display reading −80 and frost at the seals; the yellow solvent
- * cabinets with their yellow diamonds and brown bottles behind glass; a squat
+ * cabinets with their yellow warning triangles and brown bottles behind glass; a squat
  * steel dewar breathing a thin white plume; a stack of Tom's boxes.
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
@@ -237,8 +237,8 @@ function cabinets(): string {
     bottle(x + 90, 472),
     line(x + 16, 470, x + 56, 330, '#ffffff', 4, { opacity: 0.05 }),
     line(x + 75, 470, x + 115, 330, '#ffffff', 4, { opacity: 0.05 }),
-    // Yellow warning diamonds.
-    poly([[x + 65, 532], [x + 89, 556], [x + 65, 580], [x + 41, 556]], '#d4b13c', { stroke: '#1a1a14', 'stroke-width': 2 }),
+    // Yellow warning triangles with a flame, as UK solvent cabinets carry (GHS's own flame is a red diamond, #146).
+    poly([[x + 65, 528], [x + 92, 576], [x + 38, 576]], '#d4b13c', { stroke: '#1a1a14', 'stroke-width': 2 }),
     path(`M${x + 65} ${568} c-8 -4 -6 -12 0 -18 c0 8 8 8 4 18 z`, '#1a1a14'),
     rect(x + 58, 490, 4, 30, '#4a4428', { rx: 2 }),
     rect(x + 68, 490, 4, 30, '#4a4428', { rx: 2 }),

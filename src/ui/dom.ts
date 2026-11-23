@@ -122,7 +122,15 @@ export function plain(text: string): string {
 /** Escape text for safe insertion and turn *emphasis* and line breaks into markup. */
 export function inline(text: string): string {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return escaped.replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+  return glue(escaped).replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+}
+
+/**
+ * In 繁中 a number or a Latin word keeps its space from the Han after it, but not a line break: 「4 號」,
+ * 「3 分鐘」 and 「microSD 卡」 were split across lines at the larger text sizes (#NEW7).
+ */
+function glue(html: string): string {
+  return html.replace(/([A-Za-z0-9]) (?=[\u3400-\u9fff\uf900-\ufaff])/g, '$1&nbsp;');
 }
 
 const ARROWS: Record<string, number> = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };
