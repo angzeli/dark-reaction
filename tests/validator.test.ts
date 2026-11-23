@@ -7,12 +7,14 @@ import {
   checkGraph,
   checkLocales,
   checkRoutes,
+  checkSpacing,
   chineseChars,
   englishWords,
   fuzz,
   referencedKeys,
   type Render,
 } from '../scripts/lib/validator.ts';
+import { TABLES } from '../src/i18n/i18n.ts';
 import { miniContent } from './fixtures/mini.ts';
 
 /** Every key renders as a ten-word English sentence and a twenty-character Chinese one. */
@@ -84,6 +86,19 @@ describe('locale checks', () => {
   it('warn about straight quotes and half-width commas in 繁中', () => {
     const problems = checkLocales({ en: { a: 'x', b: 'y' }, 'zh-Hant-TW': { a: '他說"好"', b: '你好,世界' } }, new Map());
     expect(problems.filter((p) => p.level === 'warning')).toHaveLength(2);
+  });
+
+  it('want a space between Latin text and Han characters in 繁中, as the rest of it has (#145, #160)', () => {
+    const tables = {
+      en: { a: 'x', b: 'y', c: 'z', d: 'w' },
+      'zh-Hant-TW': { a: 'Schlenk line上貼著膠帶', b: '7號流動座位', c: '*NO SAMPLE IN CAROUSEL.*樣品槽', d: '7 號座位，Schlenk line 上，{n}分鐘，{n:一頁:幾頁}，*CAROUSEL.* 樣品槽' },
+    };
+    expect(checkSpacing(tables).map((p) => p.message)).toEqual([
+      'zh "a": "e上" needs a space between the Latin text and the Han characters',
+      'zh "b": "7號" needs a space between the Latin text and the Han characters',
+      'zh "c": "L.*樣" needs a space between the Latin text and the Han characters',
+    ]);
+    expect(checkSpacing(TABLES)).toEqual([]);
   });
 
   it('warn about straight quotes in English, and not about typeset ones (#26)', () => {

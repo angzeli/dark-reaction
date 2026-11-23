@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #178 Dan's door unlocks once, seen from the side you're on (closes #142)
+- **Last merged:** #179 繁中 that reads as Taiwan does, and chemistry a chemist believes (closes #145, #146, #160)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,19 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #145, #146, #160: **繁中 that reads as Taiwan does, and chemistry a chemist believes.**
+  - **The freezer note:** 「卡在紅蓋子底下」 read as a position (the cell under a red cap), and read that way no cell fits the clues. It now says the card is in a red-capped cryovial (the chemist).
+  - **繁中 wording:**
+    - 「你幾乎聽過的曲子」, 「然後一直顯示下去，耐心地，…」 and 「念出了聲音」 read like translation; 「一只」 becomes 「一個」; the drafts go to a couple in Hualien, not "to Hualien".
+    - From the mobile player: 「上一輪」 for "last night" in the loop; 「一整頁的 *j*」; the foil line no longer says the thinness is what you need (the English gets its "but" too); and the two antechamber shortcuts say 大前艙 and 小前艙.
+  - **Spacing:** 「Schlenk line上」 (three times) and 「CAROUSEL.*樣品槽」 / 「HAS RUN.*它」 ran Latin into Han. The README's 「Schlenk 管線」 is now 「Schlenk line」, as in the game. The validator now flags Latin letters, digits and stops touching Han in 繁中, ignoring placeholders.
+  - **Chemistry (the chemist):**
+    - B.05 was "the coldest room in the building" with a −80 along one wall, which in reality warms a room. It's now still called the cold room, though it hasn't been cold since the freezer came, which makes Act III's frost the uncanny thing it should be.
+    - The solvent cabinets carry yellow warning triangles with a flame, not diamonds, in the text and in the picture.
+    - The fractions are "colourless or nearly".
+    - `PROTON_DARK`'s single scan stays: it's the ghost's booking, and "one more scan" is the notebook's refrain.
+  - **Tests:** `tests/content-polish.test.ts` and `tests/validator.test.ts`. All five fail without the fix.
+- Merged #178 (closes #142).
 - #142: **Dan's door unlocks once, seen from the side you're on.**
   - **What was wrong:** #131's line for the player waiting at the door (`ev.unlock.door`, "at pi") also fired *inside* the office. Arriving while the door stands open takes you straight in, so you were told the lock "clicks back in front of you, nobody at the door but you". And after hearing the corridor's click (`ev.unlock`) from the lab, you got both (the chemist, second pass).
   - **The fix:** conditions gain `scene`, and the door-side line needs you standing at `pi.door`. Both lines set a loop flag, and each needs it unset, so the unlock is told once a night. The content loader checks that a `scene` condition names a scene that exists.

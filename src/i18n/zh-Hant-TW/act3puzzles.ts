@@ -86,7 +86,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
   'puzzle.schlenk.ev.drained': '幫浦直接從她開著的管子裡，把東西喝回去了。你把所有東西關掉，從頭再來。',
   'puzzle.schlenk.done': '拿起她的管子',
   'puzzle.schlenk.giveup': '把它放下',
-  'puzzle.schlenk.h1': 'Kraken 上那張規則卡，比你記得的 Schlenk line操作更重要。',
+  'puzzle.schlenk.h1': 'Kraken 上那張規則卡，比你記得的 Schlenk line 操作更重要。',
   'puzzle.schlenk.h2': '先讓起泡器冒泡，把管子那個接口抽灌一次，讓燒瓶接上氮氣，再讓管子把液體接過來。',
   'puzzle.schlenk.h3': '開氮氣；2 號接口接真空，再接氮氣；4 號接口接氮氣；2 號接口關閉、打開放氣閥；關管子的活栓；包鋁箔。',
   'puzzle.schlenk.solved': '她的管子封好了，也包好了，躺在你的手心，像什麼睡著的東西。線上 4 號接口的燒瓶，七年來第一次空了。',

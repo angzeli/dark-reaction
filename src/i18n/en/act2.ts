@@ -126,7 +126,7 @@ export const act2 = {
     'The seal lets go with a gasp and the cold comes out to meet you, white and heavy, pouring over your hands. Five racks, each a tower of boxes, their labels furred with frost: initials, dates, a decade of the group’s samples. You don’t know what you’re looking for. You shut it before the display can complain.',
   'cold.cabinets': 'Read the solvent cabinets',
   'cold.cabinets.r':
-    'Yellow cabinets with yellow diamonds. Behind the glass, the big brown bottles everyone uses and nobody orders: acetone, hexane, ethyl acetate. One has a label in Tom’s capitals: *TOM’S ACETONE — FOR WASHING — NOT FOR DRINKING (this means you)*. You have never been less tempted.',
+    'Yellow cabinets with yellow warning triangles. Behind the glass, the big brown bottles everyone uses and nobody orders: acetone, hexane, ethyl acetate. One has a label in Tom’s capitals: *TOM’S ACETONE — FOR WASHING — NOT FOR DRINKING (this means you)*. You have never been less tempted.',
   'cold.dewar': 'Listen to the dewar',
   'cold.dewar.r':
     'A squat steel dewar in the corner breathes out a thin white plume and sighs every few seconds, like an old dog dreaming. Frost has made a lace collar round its neck. It is the only thing down here that sounds alive.',

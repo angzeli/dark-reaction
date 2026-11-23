@@ -28,7 +28,7 @@ export const notebook: Record<keyof typeof en, string> = {
   'nb.ian.title': 'Ian Okoro',
   'nb.ian.body': 'NMR 設施管理員。只用護貝的告示說話。他會知道。',
   'nb.mug.title': '7 號流動座位',
-  'nb.mug.body': '一只白色馬克杯，用藍色毛筆寫了一個「晨」字。乾淨、冰冷，沒有灰塵。7 號流動座位沒有人坐。',
+  'nb.mug.body': '一個白色馬克杯，用藍色毛筆寫了一個「晨」字。乾淨、冰冷，沒有灰塵。7 號流動座位沒有人坐。',
   'nb.drawer.title': 'Y.C.L.',
   'nb.drawer.body': '7 號流動座位的抽屜裡刻著：Y.C.L. 2015–。沒有結束的年份。',
 
