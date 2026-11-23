@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #176 A solved puzzle stays solved when you step away from it (closes #140)
+- **Last merged:** #177 Long words wrap on a phone (closes #156)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #156: **long words wrap on a phone.**
+  - **What was wrong:** at text sizes 大 and 中, the microSD's filename (`2019-03-14_0333_PROTON_DARK_NOT_MINE.fid`) had nowhere to break. The page grew to 446 px, every paragraph was cut off and 選單 sat past the screen's edge (the mobile player, second pass). The Dark Reaction ending names a file the same way.
+  - **Also:** at the largest text size in English, the header's clock, loop and buttons came to 397 px on any page.
+  - **The fix:** the narrative, ending and overlay text break long tokens where they must (`overflow-wrap: anywhere`). On phones, the header's loop may drop under the clock and its buttons sit a little tighter.
+  - **Harness:** Layer 3 gains a target with her raw data on screen (`scene-office-microsd`). No target had the filename, and the second pass's sweep ran before the largest-text variant existed.
+  - **Test:** `e2e/long-words.spec.ts` checks both pages at 390 px in both languages at three text sizes. Five of the twelve fail without the fix.
+- Merged #176 (closes #140).
 - #140: **a solved puzzle stays solved when you step away from it.**
   - **What was wrong:** eight puzzles end with a button of their own once solved (*Write the PIN down*, *Write it in your notebook*, the cipher's, the freezer's, …). *Step away* is still there beside it, and it always reported "not solved". So a player who solved the UPS keypad and stepped away walked into 03:33 with it unarmed, and nothing said so (the breaker, second pass).
   - **The fix:** a view tells the frame when it's solved (`api.solved()`). From then on, stepping away, or the lights going out, ends the puzzle solved, with its usual effects.

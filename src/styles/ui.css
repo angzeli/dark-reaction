@@ -390,6 +390,10 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   background: rgba(3, 7, 11, 0.74);
   overflow-y: auto;
 }
+/* A filename has nowhere to break: on a phone at the larger text sizes, her
+   2019-03-14_0333_PROTON_DARK_NOT_MINE.fid pushed the whole page sideways (#156). Long tokens
+   break where they must; everything else wraps as before. */
+.narrative__text, .ending__text, .overlay__sheet { overflow-wrap: anywhere; }
 .overlay__sheet {
   position: relative;
   width: min(100%, 44rem);
@@ -654,6 +658,11 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 @media (max-width: 40rem) {
   .hud { grid-template-columns: 1fr auto; }
   .hud__place { grid-column: 1 / -1; grid-row: 2; font-size: 0.75rem; }
+  /* At the largest text size in English the clock, the loop and both buttons came to 397 px (#156):
+     the loop may drop under the clock, and the buttons sit a little tighter. */
+  .hud > * { min-width: 0; }
+  .hud__time { flex-wrap: wrap; row-gap: 0; }
+  .hud__btn { padding-inline: 0.55rem; }
   .play__art .dr-stage { max-height: 34vh; }
   .narrative { padding-top: 1rem; }
 }
