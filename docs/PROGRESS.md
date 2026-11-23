@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #133 A notice fades, and follows the language (closes #103)
+- **Last merged:** #134 Focus stays in a puzzle when the control that had it goes away (closes #104)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #104: **focus stays in a puzzle when the control that had it goes away.**
+  - **What was wrong:** pressing "Put the vial in the antechamber" disables that button, and keyboard focus fell to the page body, with no ring anywhere and the next Tab a guess. The accessibility player found it.
+  - **The fix:** `keepFocusIn` (`src/ui/dom.ts`), used by the puzzle frame. After any click or key inside, if focus has fallen out, it goes to the nearest usable control from the same place (the next, or failing that the one before). That covers every puzzle, including controls a view redraws.
+  - **Test:** `e2e/puzzle-focus.spec.ts` presses "Put the vial in" by keyboard and expects focus still in the puzzle. It fails without the fix. The puzzle, input-mode and axe suites pass.
+- Merged #133 (closes #103).
 - #103: **a notice fades, and follows the language.**
   - **What was wrong:** after Continue, Load or Save, the notice at the foot of the screen ("Loaded the autosave.") stayed for the rest of the session. It covered part of a choice or a line of text on every screen, took taps on a phone, and kept its language after a switch. Layer 3 showed it on every screenshot after a load; the breaker and the mobile player reported it.
   - **The fix:** the notice is kept as a function, re-translated on every render, and cleared after 4 s. The `role=status` region still speaks it.
