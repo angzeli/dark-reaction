@@ -33,6 +33,8 @@ export type Cond =
   | { minuteGte: number }
   | { minuteLt: number }
   | { at: LocationId }
+  /** Standing in this scene (a room can have more than one: outside a door, and inside it). */
+  | { scene: string }
   | { obsessionGte: number }
   | { obsessionLt: number }
   /** Number of fudges still standing (not struck through) is at least n. */

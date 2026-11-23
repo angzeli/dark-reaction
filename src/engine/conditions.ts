@@ -22,6 +22,7 @@ export function holds(cond: Cond | undefined, state: GameState): boolean {
   if ('minuteGte' in cond) return state.minute >= cond.minuteGte;
   if ('minuteLt' in cond) return state.minute < cond.minuteLt;
   if ('at' in cond) return state.location === cond.at;
+  if ('scene' in cond) return state.scene === cond.scene;
   if ('obsessionGte' in cond) return state.obsession >= cond.obsessionGte;
   if ('obsessionLt' in cond) return state.obsession < cond.obsessionLt;
   if ('uncorrectedGte' in cond) return uncorrectedFudges(state) >= cond.uncorrectedGte;
@@ -50,5 +51,6 @@ export function condRefs(cond: Cond | undefined, out: Array<{ kind: string; id: 
   else if ('usedEver' in cond) out.push({ kind: 'choice', id: cond.usedEver });
   else if ('flag' in cond) out.push({ kind: 'flag', id: cond.flag });
   else if ('lflag' in cond) out.push({ kind: 'lflag', id: cond.lflag });
+  else if ('scene' in cond) out.push({ kind: 'scene', id: cond.scene });
   return out;
 }

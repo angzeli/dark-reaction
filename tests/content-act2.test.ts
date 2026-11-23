@@ -117,6 +117,32 @@ describe('Dan’s office', () => {
     waitUntil(g, 28);
     expect(keys(g)).toContain('ev.unlock');
   });
+
+  it('and it unlocks once a night, seen from the side of the door you are on (#142)', () => {
+    // Heard from the lab, then walked over: straight in, with no second click at a door you're already through.
+    const lab = actTwo();
+    goTo(lab, 'synth');
+    waitUntil(lab, 28);
+    expect(keys(lab)).toContain('ev.unlock');
+    goTo(lab, 'pi');
+    expect(lab.state.scene).toBe('pi.hub');
+    expect(keys(lab)).not.toContain('ev.unlock.door');
+    // Seen at the door, then off down the corridor: no second click there either.
+    const door = actTwo();
+    goTo(door, 'pi');
+    waitUntil(door, 28);
+    expect(keys(door)).toContain('ev.unlock.door');
+    goTo(door, 'synth');
+    expect(keys(door)).not.toContain('ev.unlock');
+    // Up the stairs after it opened (off Level 4, so nothing heard): the room, and no door-side line inside it.
+    const late = actTwo();
+    goTo(late, 'stairs');
+    waitUntil(late, 28);
+    goTo(late, 'pi');
+    expect(late.state.minute).toBeLessThan(31);
+    expect(late.state.scene).toBe('pi.hub');
+    expect(keys(late)).not.toContain('ev.unlock.door');
+  });
 });
 
 describe('the night’s offer', () => {

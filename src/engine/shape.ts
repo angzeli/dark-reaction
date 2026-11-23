@@ -10,7 +10,7 @@ import type { Content, Cond, Effect } from './types.ts';
 const COND_KEYS = new Set([
   'all', 'any', 'not', 'flag', 'lflag', 'know', 'item', 'solved', 'act', 'actGte', 'loopGte', 'minuteGte', 'minuteLt',
   'at', 'obsessionGte', 'obsessionLt', 'uncorrectedGte', 'fudgedEver', 'fragment', 'fragmentsGte', 'loopsInActGte',
-  'used', 'usedEver', 'always',
+  'used', 'usedEver', 'always', 'scene',
 ]);
 
 const EFFECT_KEYS = new Set([
@@ -23,15 +23,17 @@ const NAVIGATION = new Set(['time', 'go', 'scene', 'hub']);
 /** Events, onEnter and lights-out effects also may not open puzzles (rules use `puzzle:` instead). */
 const PASSIVE = new Set([...NAVIGATION, 'puzzle']);
 
-export function checkCond(cond: Cond | undefined, where: string): void {
+/** Checks a condition's shape, and with `scenes`, that every scene it names exists. */
+export function checkCond(cond: Cond | undefined, where: string, scenes?: ReadonlySet<string>): void {
   if (cond === undefined) return;
   const keys = Object.keys(cond);
   if (keys.length !== 1 || !COND_KEYS.has(keys[0]!)) {
     throw new Error(`${where}: a condition must have exactly one known key, got {${keys.join(', ')}}`);
   }
-  if ('all' in cond) cond.all.forEach((c, i) => checkCond(c, `${where}.all[${i}]`));
-  if ('any' in cond) cond.any.forEach((c, i) => checkCond(c, `${where}.any[${i}]`));
-  if ('not' in cond) checkCond(cond.not, `${where}.not`);
+  if ('scene' in cond && scenes && !scenes.has(cond.scene)) throw new Error(`${where}: no scene "${cond.scene}"`);
+  if ('all' in cond) cond.all.forEach((c, i) => checkCond(c, `${where}.all[${i}]`, scenes));
+  if ('any' in cond) cond.any.forEach((c, i) => checkCond(c, `${where}.any[${i}]`, scenes));
+  if ('not' in cond) checkCond(cond.not, `${where}.not`, scenes);
 }
 
 export function checkEffect(effect: Effect, where: string, forbid: ReadonlySet<string> = new Set()): void {
@@ -43,18 +45,20 @@ export function checkEffect(effect: Effect, where: string, forbid: ReadonlySet<s
 }
 
 export function checkContent(content: Content): void {
+  const sceneIds = new Set(content.scenes.map((x) => x.id));
+  const cond = (c: Cond | undefined, where: string) => checkCond(c, where, sceneIds);
   const all = (effects: readonly Effect[] | undefined, where: string, forbid?: ReadonlySet<string>) =>
     (effects ?? []).forEach((e, i) => checkEffect(e, `${where}[${i}]`, forbid));
   const texts = (refs: ReadonlyArray<{ if?: Cond }> | undefined, where: string) =>
-    (refs ?? []).forEach((r, i) => checkCond(r.if, `${where}[${i}].if`));
+    (refs ?? []).forEach((r, i) => cond(r.if, `${where}[${i}].if`));
 
   texts(content.loopStart, 'loopStart');
-  for (const loc of content.locations) (loc.entry ?? []).forEach((e, i) => checkCond(e.if, `location ${loc.id}.entry[${i}]`));
+  for (const loc of content.locations) (loc.entry ?? []).forEach((e, i) => cond(e.if, `location ${loc.id}.entry[${i}]`));
   for (const scene of content.scenes) {
     texts(scene.text, `scene ${scene.id}.text`);
     all(scene.onEnter, `scene ${scene.id}.onEnter`, PASSIVE);
     for (const choice of scene.choices) {
-      checkCond(choice.if, `choice ${choice.id}.if`);
+      cond(choice.if, `choice ${choice.id}.if`);
       texts(choice.text, `choice ${choice.id}.text`);
       all(choice.effects, `choice ${choice.id}.effects`);
       const moves = (choice.effects ?? []).filter((e) => 'go' in e || 'scene' in e || 'hub' in e).length + (choice.to ? 1 : 0);
@@ -69,17 +73,17 @@ export function checkContent(content: Content): void {
     texts(p.leftText, `puzzle ${p.id}.leftText`);
   }
   for (const ev of content.events) {
-    checkCond(ev.if, `event ${ev.id}.if`);
+    cond(ev.if, `event ${ev.id}.if`);
     all(ev.effects, `event ${ev.id}.effects`, PASSIVE);
     texts(ev.text, `event ${ev.id}.text`);
   }
-  for (const ph of content.phantoms) checkCond(ph.when, `phantom ${ph.entry}.when`);
+  for (const ph of content.phantoms) cond(ph.when, `phantom ${ph.entry}.when`);
   for (const rule of content.lightsOut) {
-    checkCond(rule.if, `lightsOut ${rule.id}.if`);
+    cond(rule.if, `lightsOut ${rule.id}.if`);
     all(rule.effects, `lightsOut ${rule.id}.effects`, PASSIVE);
     texts(rule.text, `lightsOut ${rule.id}.text`);
   }
-  for (const act of content.acts) checkCond(act.when, `act ${act.act}.when`);
+  for (const act of content.acts) cond(act.when, `act ${act.act}.when`);
   for (const ending of content.endings) texts(ending.epilogue, `ending ${ending.id}.epilogue`);
 }
 
