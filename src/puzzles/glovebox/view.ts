@@ -70,6 +70,8 @@ export const gloveboxView: PuzzleView = {
         ? api.t('puzzle.then', { first: api.t(`puzzle.glovebox.ev.${state.last}`), second: api.t('puzzle.glovebox.o2.now', { ppm: ppm.toFixed(1), n: state.cycles }) })
         : '';
 
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (state.done) api.solved();
       if (finished) {
         actions.replaceChildren(
           state.done

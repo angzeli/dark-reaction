@@ -81,6 +81,8 @@ export const cipherView: PuzzleView = {
     const renderEn = (): HTMLElement[] => {
       const en = state.en;
       const solved = cipherLogic.isSolved(state);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (solved) api.solved();
       const slots = EN_LINE.map((n, i) => {
         const filled = en.filled[i]!;
         return h(
@@ -175,6 +177,8 @@ export const cipherView: PuzzleView = {
     const renderZh = (): HTMLElement[] => {
       const zh = state.zh;
       const solved = cipherLogic.isSolved(state);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (solved) api.solved();
       const chars = ZH_LINE.map((c, i) => {
         const stripped = zh.stripped[i]!;
         const radical = `@puzzle.cipher.radical.${c.radical}`;
@@ -247,6 +251,8 @@ export const cipherView: PuzzleView = {
     const render = (focusKey?: string) => {
       const zh = getLocale() === 'zh-Hant-TW';
       const solved = cipherLogic.isSolved(state);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (solved) api.solved();
       root.className = `ci ci--${zh ? 'zh' : 'en'}`;
       body.replaceChildren(...(zh ? renderZh() : renderEn()));
       done.replaceChildren(

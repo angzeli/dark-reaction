@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #175 Nightly QA: the long explorer and fuzzer run every night (closes #91)
+- **Last merged:** #176 A solved puzzle stays solved when you step away from it (closes #140)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #140: **a solved puzzle stays solved when you step away from it.**
+  - **What was wrong:** eight puzzles end with a button of their own once solved (*Write the PIN down*, *Write it in your notebook*, the cipher's, the freezer's, …). *Step away* is still there beside it, and it always reported "not solved". So a player who solved the UPS keypad and stepped away walked into 03:33 with it unarmed, and nothing said so (the breaker, second pass).
+  - **The fix:** a view tells the frame when it's solved (`api.solved()`). From then on, stepping away, or the lights going out, ends the puzzle solved, with its usual effects.
+  - **Test:** `e2e/step-away.spec.ts` solves each of the eight puzzles, steps away before its last button and checks the solve is kept. All eight fail without the fix.
+- Merged #175 (closes #91).
 - #91: **nightly QA.** `.github/workflows/nightly-qa.yml` runs Layer 1 at length (`explore.ts --long`) at 03:17 UTC, seeded with the day of the year, and can be run by hand with a seed. It uploads the report as an artifact and fails on any error-level finding. `docs/qa/README.md` says how to reproduce a nightly finding.
 - Merged #174 (closes #89).
 - #89: **the deploy no longer waits for a branch build.** The owner added the `workflow` scope, so this could land at last.

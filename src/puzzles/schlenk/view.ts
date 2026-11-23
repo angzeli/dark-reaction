@@ -205,6 +205,8 @@ export const schlenkView: PuzzleView = {
       tube.textContent = api.t(`puzzle.schlenk.tube.${tubeState(state)}`);
       const text = said();
       setInline(status, text);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (over && state.wrapped) api.solved();
       done.replaceChildren(
         ...(over
           ? [
