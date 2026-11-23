@@ -46,15 +46,18 @@ const VIEWPORTS: Viewport[] = [
 ];
 
 interface Variant {
-  id: 'default' | 'reduce-motion' | 'high-contrast';
+  id: 'default' | 'reduce-motion' | 'high-contrast' | 'largest-text';
   reduceMotion: boolean;
   highContrast: boolean;
+  textSize?: 0 | 1 | 2 | 3;
   viewports: string[];
 }
 const VARIANTS: Variant[] = [
   { id: 'default', reduceMotion: false, highContrast: false, viewports: quick ? ['1440'] : ['390', '768', '1440'] },
   { id: 'reduce-motion', reduceMotion: true, highContrast: false, viewports: quick ? ['390'] : ['390', '1440'] },
   { id: 'high-contrast', reduceMotion: true, highContrast: true, viewports: quick ? ['1440'] : ['390', '1440'] },
+  // The largest text size on a phone: Settings ran off the screen there and nothing else looked (#107).
+  { id: 'largest-text', reduceMotion: true, highContrast: false, textSize: 3, viewports: ['390'] },
 ];
 const LOCALES: Locale[] = ['en', 'zh-Hant-TW'];
 
@@ -83,7 +86,7 @@ async function shoot(browser: Browser, target: Target, variant: Variant, vp: Vie
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(`console: ${m.text()}`);
   });
-  const view: View = { locale, reduceMotion: variant.reduceMotion, highContrast: variant.highContrast };
+  const view: View = { locale, reduceMotion: variant.reduceMotion, highContrast: variant.highContrast, ...(variant.textSize !== undefined ? { textSize: variant.textSize } : {}) };
   const dir = join(out, variant.id, vp.id, locale);
   mkdirSync(dir, { recursive: true });
   const file = join(dir, `${target.name}.png`);
@@ -91,10 +94,14 @@ async function shoot(browser: Browser, target: Target, variant: Variant, vp: Vie
   let axe: Shot['axe'] = [];
   try {
     await loadTarget(page, base, target, view);
-    await page.screenshot({ path: file, fullPage: true, animations: 'disabled' });
+    // Checks first: a full-page screenshot leaves an emulated phone reporting a fine pointer afterwards,
+    // so (pointer: coarse) layouts would be measured as the mouse ones.
     findings = await pageFindings(page, { touch: vp.touch, zh: locale === 'zh-Hant-TW' });
+    await page.screenshot({ path: file, fullPage: true, animations: 'disabled' });
     if (axeOn && (vp.id === '1440' || vp.id === '390')) {
-      const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+      // Infinite Loop's faded repeats of "Run it again" are decoration (aria-hidden; the epilogue says it in
+      // words), which WCAG 1.4.3 exempts as incidental; axe can't tell, so they're left out of its check (#113).
+      const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).exclude('.ending__again').analyze();
       axe = r.violations.map((v) => ({ id: v.id, impact: v.impact ?? 'unknown', nodes: v.nodes.length, help: v.help }));
     }
   } catch (e) {
