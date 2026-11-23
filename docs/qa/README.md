@@ -5,7 +5,7 @@ How Dark Reaction《暗反應》 is checked for what a real player would hit: so
 | Layer | What | Where it runs |
 |---|---|---|
 | 1 | Headless state exploration and a chaotic fuzzer, through the engine | CI (`unit`), and nightly at length |
-| 2 | AI playtesters in a real browser, each a persona | By hand, before a release |
+| 2 | AI playtesters in a real browser, each a persona ([`personas.md`](personas.md)) | By hand, before a release |
 | 3 | A screenshot of every screen, checked and reviewed; visual-regression baselines | The sweep by hand; the baselines in CI (`e2e`) |
 
 ## Layer 1: state exploration
@@ -49,3 +49,26 @@ The affordance check exists because of the canary (`PLAYTEST-REPORT.md`). Layer 
 The report also lists content no state ever showed (choices, scenes, notebook entries, events, text keys) and a table of what every choice says and does, for reviewing promises against effects.
 
 In CI, `tests/qa-explorer.test.ts` runs a short fixed-seed version (every route's nights at 15 states a minute, 150 fuzz runs) and tests that the checks catch what they are for.
+
+## Layer 2: AI playtesters
+
+Five persona agents play the real game in a real browser, through `scripts/qa/drive.ts`. They get only the running build, the player README and a controller, and play as a person does: look at the screen, decide, act, look again. [`personas.md`](personas.md) has the five briefs and how to run a pass.
+
+```sh
+node scripts/qa/drive.ts serve --port 4300 --out qa-play                                       # once
+node scripts/qa/drive.ts chemist start http://localhost:4174/dark-reaction/ --lang zh-TW      # a player
+node scripts/qa/drive.ts chemist look                                                          # a screenshot and the visible controls
+node scripts/qa/drive.ts chemist click-text 合併
+```
+
+The server holds one Chromium. Each player gets their own context: their own storage, viewport, touch screen, motion preference and browser language. Commands:
+- `look` (screenshot and controls), `read` (the visible text);
+- `click`, `click-text`, `tap`, `tap-text`, `key`, `type`;
+- `ime <text> --enter`: composes with an input method and presses Enter while still composing, as a Chinese typist picking a candidate does;
+- `scroll`, `wait`, `reload`, `resize`;
+- `focus`: what has focus, and whether its focus style shows;
+- `a11y`: the ARIA snapshot a screen reader is given.
+
+Every command is logged per player, for repro steps.
+
+Give each agent a copy of the controller outside the working tree. A branch switch or stash that removes `scripts/qa/drive.ts` mid-run breaks every agent's next command; that happened during the v1.0.1 pass.
