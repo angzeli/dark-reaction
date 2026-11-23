@@ -6,8 +6,10 @@
  *   - routes: one per ending, each played through the engine and rendered in both locales
  *   - playtime: the critical path to the true ending is at least 30 minutes in each locale
  *   - fuzz: random walks never throw and never leave the player with nothing to do
+ *   - glyphs: every 繁中 character is in the subset Noto Serif TC the build ships
  * and reports content size (English words, Chinese characters).
  */
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTENT } from '../src/content/index.ts';
@@ -16,6 +18,7 @@ import { TABLES } from '../src/i18n/i18n.ts';
 import { PUZZLE_LOGIC } from '../src/puzzles/logic.ts';
 import {
   checkCoverage,
+  checkGlyphs,
   checkGraph,
   checkLoad,
   checkLocales,
@@ -29,6 +32,7 @@ import {
   WPM_EN,
   type Problem,
 } from './lib/validator.ts';
+import { woff2Codepoints } from './lib/woff2.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const problems: Problem[] = [];
@@ -79,6 +83,18 @@ section('Fuzz');
 const f = fuzz(CONTENT, PUZZLE_LOGIC, 40, 400);
 const reached = Object.entries(f.endings).map(([k, v]) => `${k} ×${v}`).join(', ') || 'none';
 report(f.problems, `40 random walks of up to 400 steps: no crashes, never stuck (endings reached by chance: ${reached})`);
+
+section('Glyphs');
+const fontDir = join(root, 'src/assets/fonts/generated');
+if (!existsSync(join(fontDir, 'noto-serif-tc-400.woff2'))) {
+  report([{ level: 'error', check: 'glyphs', message: `no subset fonts in ${fontDir}: run npm run fonts first` }], '');
+} else {
+  const fonts = {
+    cjk: woff2Codepoints(readFileSync(join(fontDir, 'noto-serif-tc-400.woff2'))),
+    latin: woff2Codepoints(readFileSync(join(fontDir, 'source-serif-4-400.woff2'))),
+  };
+  report(checkGlyphs(TABLES, fonts), `every character of both locales is in a subset font of its own stack (Noto Serif TC: ${fonts.cjk.size} glyphs)`);
+}
 
 section('Size');
 const size = contentSize(TABLES);
