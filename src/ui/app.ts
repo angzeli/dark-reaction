@@ -416,6 +416,18 @@ export class App {
   }
 
   async choose(id: string): Promise<void> {
+    // Opening or closing the travel or wait menu changes only the choices: no re-reveal, the reader keeps
+    // their place, and the menu comes into view where their thumb is (#116).
+    const menuOnly = id === 'meta:travel' || id === 'meta:wait' || (id === 'meta:back' && this.game?.state.menu !== 'none');
+    if (menuOnly) {
+      if (!this.game || this.busy) return;
+      this.game.choose(id);
+      const y = window.scrollY;
+      this.render();
+      window.scrollTo(0, y);
+      this.root.querySelector('.choices')?.lastElementChild?.scrollIntoView({ block: 'nearest' });
+      return;
+    }
     // Only a choice of the player's own has a result worth holding the dark for (#127); a walk, a wait,
     // or a puzzle running out at 03:33 goes straight on.
     this.choiceRanOut = !/^(meta|go|wait):/.test(id);
