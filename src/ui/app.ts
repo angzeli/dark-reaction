@@ -338,13 +338,17 @@ export class App {
     return new Promise((resolve) => {
       const list = this.root.querySelector('.choices');
       if (!list || this.screen !== 'play') return resolve();
+      // The notebook and the menu wait while it's held (#155): their buttons say so (#NEW7).
+      const hudButtons = [...this.root.querySelectorAll<HTMLElement>('.hud__btn')];
       const release = () => {
         if (this.held !== release) return;
         this.held = null;
+        for (const b of hudButtons) b.removeAttribute('aria-disabled');
         list.replaceChildren();
         resolve();
       };
       this.held = release;
+      for (const b of hudButtons) b.setAttribute('aria-disabled', 'true');
       const go = h('button', { type: 'button', class: 'choice choice--meta last-minute' }, h('span', { class: 'choice__n', 'aria-hidden': 'true' }, ''), h('span', { class: 'choice__label' }, t('ui.lastminute')));
       // Pressed once: it goes, so nothing is left to press under the dark. Not by the input that made the
       // choice, though: it appears where the choice was, so a double click's second click or a held

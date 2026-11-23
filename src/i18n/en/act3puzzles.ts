@@ -194,7 +194,7 @@ export const act3puzzles = {
   'puzzle.peakmatch.reference.solvent': 'C₆D₅H 7.16',
   'puzzle.peakmatch.reference.product': '8.41, a satellite either side',
   'puzzle.peakmatch.reference.describe': 'Her reference: the solvent at 7.16 ppm, and at 8.41 ppm a small peak with a satellite on each side.',
-  'puzzle.peakmatch.offset': 'Referencing: {offset} ppm',
+  'puzzle.peakmatch.offset': 'Referencing: {offset} ppm',
   'puzzle.peakmatch.slider': 'Referencing',
   'puzzle.peakmatch.nudge': 'Move the axis by {by} ppm',
   'puzzle.peakmatch.peaks': 'Peaks on the screen',

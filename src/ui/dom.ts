@@ -130,7 +130,8 @@ export function inline(text: string): string {
  * 「3 分鐘」 and 「microSD 卡」 were split across lines at the larger text sizes (#NEW7).
  */
 function glue(html: string): string {
-  return html.replace(/([A-Za-z0-9]) (?=[\u3400-\u9fff\uf900-\ufaff])/g, '$1&nbsp;');
+  // A filename breaks after its underscores, so it never needs an emergency break that strands a 。.
+  return html.replace(/_(?=[A-Za-z0-9])/g, '_<wbr>').replace(/([A-Za-z0-9]) (?=[\u3400-\u9fff\uf900-\ufaff])/g, '$1&nbsp;');
 }
 
 const ARROWS: Record<string, number> = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };

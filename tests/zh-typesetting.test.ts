@@ -14,6 +14,14 @@ describe('繁中 typesetting (#NEW7)', () => {
     expect(inline('a < b & 4 號')).toBe('a &lt; b &amp; 4&nbsp;號');
   });
 
+  it('gives a filename break points after its underscores, so 。 never starts a line after it', () => {
+    expect(inline('*2019-03-14_0333_PROTON_DARK_NOT_MINE.fid*。')).toBe('<em>2019-03-14_<wbr>0333_<wbr>PROTON_<wbr>DARK_<wbr>NOT_<wbr>MINE.fid</em>。');
+  });
+
+  it('keeps ppm with its number in the peak match’s readout', () => {
+    for (const locale of ['en', 'zh-Hant-TW'] as const) expect(TABLES[locale]['puzzle.peakmatch.offset']).toContain('{offset}\u00a0ppm');
+  });
+
   it('calls the reviewer 審查人 throughout', () => {
     for (const [key, value] of Object.entries(TABLES['zh-Hant-TW'])) expect(value, key).not.toContain('審查委員');
   });
