@@ -8,7 +8,7 @@
 import { clockLabel, LOOP_LENGTH } from '../engine/clock.ts';
 import type { Act } from '../engine/types.ts';
 import type { Params } from '../i18n/i18n.ts';
-import { h, inline, keepFocusIn, trapFocus } from '../ui/dom.ts';
+import { arrowsInGroups, h, inline, keepFocusIn, trapFocus } from '../ui/dom.ts';
 import type { PuzzleApi, PuzzleView, PuzzleViewHandle } from './types.ts';
 
 export interface FrameOptions {
@@ -155,9 +155,11 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   host.appendChild(element);
   const untrapFocus = trapFocus(element);
   const unkeep = keepFocusIn(element);
+  const unarrow = arrowsInGroups(element);
   const untrap = () => {
     untrapFocus();
     unkeep();
+    unarrow();
   };
   let handle: PuzzleViewHandle | null = null;
   handle = o.view.mount(body, api, o.data);

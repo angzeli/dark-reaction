@@ -419,16 +419,29 @@ export class App {
       }
       return;
     }
-    if (this.screen !== 'play' || !this.game || this.game.state.puzzle || typing) return;
+    if (this.screen !== 'play' || !this.game || typing) return;
+    if (this.game.state.puzzle) {
+      // In a puzzle the notebook and the menu are a key away too, as the README says (#143); the
+      // puzzle has every other key.
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        this.openOverlay('notebook');
+      } else if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        this.openOverlay('menu');
+      }
+      return;
+    }
 
     if (this.currentReveal?.running && (e.key === ' ' || e.key === 'Enter' || /^[0-9]$/.test(e.key))) {
       e.preventDefault();
       this.currentReveal.complete();
       return;
     }
-    if (/^[1-9]$/.test(e.key)) {
+    if (/^[0-9]$/.test(e.key)) {
+      // 1–9, and 0 for a tenth choice (#143).
       const choices = this.game.choices();
-      const choice = choices[Number(e.key) - 1];
+      const choice = choices[e.key === '0' ? 9 : Number(e.key) - 1];
       if (choice) {
         e.preventDefault();
         void this.choose(choice.id);
@@ -681,10 +694,10 @@ export class App {
                 type: 'button',
                 class: `choice choice--${c.kind}`,
                 dataset: { choice: c.id },
-                'aria-keyshortcuts': i < 9 ? String(i + 1) : undefined,
+                'aria-keyshortcuts': i < 10 ? String((i + 1) % 10) : undefined,
                 onclick: () => void this.choose(c.id),
               },
-              h('span', { class: 'choice__n', 'aria-hidden': 'true' }, i < 9 ? String(i + 1) : ''),
+              h('span', { class: 'choice__n', 'aria-hidden': 'true' }, i < 10 ? String((i + 1) % 10) : ''),
               h('span', { class: 'choice__label' }, t(c.label, c.params)),
               // A wait's label already says its minutes (Wait 1 minute): don't say them twice (#117).
               c.cost > 0 && c.kind !== 'wait' ? h('span', { class: 'choice__cost' }, t('ui.cost', { n: c.cost })) : null,

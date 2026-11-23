@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #182 The held minute: the input that made the choice can't press it, and the Infinite Loop's last night survives a reload (closes #163)
+- **Last merged:** #183 The keys the README promises: M, N and Esc in puzzles, 0 for a tenth choice, arrows in a group (closes #143)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #143: **the keys the README promises.** From the breaker, the first-timer and the accessibility player.
+  - **M, N and Esc in a puzzle:** they did nothing while a puzzle was open, though the README says *M or Esc* and clicking *Menu* worked. They now open the menu and the notebook from a puzzle, except while typing in a field (M is a letter in the console).
+  - **A tenth choice:** in the stairwell, or the NMR suite after the printout, *Wait…* had no number key. 0 chooses it, and it shows a 0.
+  - **The arrow keys** move between the buttons of any group in a puzzle that hadn't had them (`arrowsInGroups`, in the frame): the TLC plate's spots and the console's commands. Left and up go back; right and down go on. The roving groups (the freezer, the cipher, the keypad, …), sliders and text fields keep their own. The plate took 17 Tabs from a spot to the UV lamp.
+  - **Test:** `e2e/keys.spec.ts`; three of its four tests fail without the fix (the fourth is the guard that M still types in the console).
+- Merged #182 (closes #163).
 - #163: **the held minute, followed up.** A second cold review of #155 found these; #155 was merged as a strict improvement with them left for this.
   - **The input that made the choice can't press the button.** "Then the lights go out" appears where the choice was and takes focus. A double click's second click (`detail > 1`) or a held Enter's repeat now does nothing; a fresh press still goes on.
   - **The Infinite Loop's last night:** there the ending is set as the dark falls, so after a reload the title had no Continue, and loading showed the ending first with the dark over its epilogue. A save whose ending card is still to play is offered by Continue, and it opens on the play screen; the card takes it to the ending after the dark.

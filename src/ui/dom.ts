@@ -124,3 +124,29 @@ export function inline(text: string): string {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return escaped.replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
 }
+
+const ARROWS: Record<string, number> = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };
+
+/**
+ * The arrow keys move between the buttons of a group (`role="group"`), as the README promises (#143):
+ * left and up go back, right and down go on. Sliders, text fields and roving groups (src/puzzles/
+ * roving.ts: the freezer, the cipher, the keypad, …) keep their own arrows.
+ */
+export function arrowsInGroups(root: HTMLElement): () => void {
+  const onKey = (e: KeyboardEvent) => {
+    const step = ARROWS[e.key];
+    if (!step || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('[role="slider"], input, textarea, select, [data-roving]')) return;
+    const group = target.closest<HTMLElement>('[role="group"]');
+    if (!group || !root.contains(group)) return;
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('button')].filter((b) => !b.disabled && b.getClientRects().length > 0);
+    const next = buttons[buttons.indexOf(target as HTMLButtonElement) + step];
+    if (buttons.includes(target as HTMLButtonElement) && next) {
+      e.preventDefault();
+      next.focus();
+    }
+  };
+  root.addEventListener('keydown', onKey);
+  return () => root.removeEventListener('keydown', onKey);
+}
