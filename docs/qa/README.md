@@ -72,3 +72,31 @@ The server holds one Chromium. Each player gets their own context: their own sto
 Every command is logged per player, for repro steps.
 
 Give each agent a copy of the controller outside the working tree. A branch switch or stash that removes `scripts/qa/drive.ts` mid-run breaks every agent's next command; that happened during the v1.0.1 pass.
+
+## Layer 3: screenshot sweep
+
+```sh
+npm run build
+node scripts/qa/sweep.ts --serve 4175 --out qa-sweep        # starts vite preview itself
+```
+
+A screenshot of every screen in `lib/targets.ts`:
+- every room in every act, and the scenes inside rooms;
+- all ten puzzles and all six endings;
+- the notebook, the menu, the title, settings, the gallery and the content note.
+
+Each is a game state built from the scripted routes and placed where the screen is, then loaded into the real UI as a save (`lib/browser.ts`).
+
+**The matrix:** en and 繁中, at 390×844 (a touch phone), 768×1024 and 1440×900, plus a reduce-motion variant (390, 1440) and a high-contrast one (390, 1440). That's 812 screenshots.
+
+**Checked on each page without looking:**
+- page overflow;
+- text past the viewport or cut off by its box;
+- choices drawn over each other;
+- tap targets on touch (WCAG 2.5.8's 24 px; 44 recommended);
+- 避頭尾: Chinese punctuation (，。、；：？！」』）】》〉～·％) starting a line, an opening bracket ending one, or a …… or —— pair split across lines;
+- axe at 390 and 1440.
+
+The output is `findings.json`, the screenshots, and contact sheets (`sheets/`, six or eight screenshots to an image) for review.
+
+**Glyphs:** `npm run validate` checks every character of both locales against the subset fonts the build ships, read from the built WOFF2 files themselves (`scripts/lib/woff2.ts`). 繁中 is set in Noto Serif TC, then Source Serif 4. A character only Source Serif has is a warning, since it renders in the Latin face; a character in neither is an error, since it falls back to a system font or a tofu box. `validate` now subsets the fonts first.

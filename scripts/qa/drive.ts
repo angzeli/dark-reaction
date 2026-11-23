@@ -9,7 +9,10 @@
  *   node scripts/qa/drive.ts <player> <command> [args…]             # per move
  *
  * Players are made on first use with `start`:
- *   start <url> [--viewport 390x844] [--touch] [--reduce-motion] [--lang zh-TW]
+ *   start <url> [--viewport 390x844] [--touch] [--reduce-motion] [--lang zh-TW] [--at <target>]
+ *   --at puts a save at one of Layer 3's screens (lib/targets.ts, e.g. act2-office, act3-nmr)
+ *   in the autosave slot, so the player can Continue from deep in the game instead of 02:47
+ *   of a new one (about 220 commands from a new game rarely gets far into Act II).
  * Commands:
  *   look                    screenshot of what is on screen now; prints the file and the
  *                           visible controls with their centres (a person can see them)
@@ -31,6 +34,8 @@ import { appendFileSync, mkdirSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { chromium, type Browser, type BrowserContext, type Page } from '@playwright/test';
+import { envelopeFor } from './lib/browser.ts';
+import { targets } from './lib/targets.ts';
 
 const args = process.argv.slice(2);
 const PORT = Number(process.env.DR_DRIVE_PORT ?? 4300);
@@ -69,6 +74,7 @@ async function client(argv: string[]): Promise<void> {
 }
 
 async function serve(port: number, out: string): Promise<void> {
+  mkdirSync(out, { recursive: true });
   const browser: Browser = await chromium.launch();
   const players = new Map<string, Player>();
 
@@ -95,7 +101,7 @@ async function serve(port: number, out: string): Promise<void> {
   const run = async (name: string, command: string, a: string[]): Promise<string> => {
     if (command === 'start') {
       const url = a[0];
-      if (!url) throw new Error('start <url> [--viewport WxH] [--touch] [--reduce-motion] [--lang zh-TW]');
+      if (!url) throw new Error('start <url> [--viewport WxH] [--touch] [--reduce-motion] [--lang zh-TW] [--at <target>]');
       const old = players.get(name);
       if (old) await old.context.close();
       const vp = (a.includes('--viewport') ? a[a.indexOf('--viewport') + 1]! : '1440x900').split('x').map(Number);
@@ -109,6 +115,18 @@ async function serve(port: number, out: string): Promise<void> {
         reducedMotion: a.includes('--reduce-motion') ? 'reduce' : 'no-preference',
         deviceScaleFactor: 1,
       });
+      if (a.includes('--at')) {
+        const at = a[a.indexOf('--at') + 1];
+        const target = targets().find((x) => x.name === at);
+        if (!target?.state) throw new Error(`no Layer 3 target "${at}" with a game in it: ${targets().filter((x) => x.state).map((x) => x.name).join(', ')}`);
+        const save = envelopeFor(target.state);
+        await context.addInitScript((env) => {
+          if (!sessionStorage.getItem('dr-drive-seeded')) {
+            localStorage.setItem('dark-reaction.save.auto', env);
+            sessionStorage.setItem('dr-drive-seeded', '1');
+          }
+        }, save);
+      }
       const page = await context.newPage();
       const p: Player = { context, page, shots: 0, touch, errors: [] };
       page.on('pageerror', (e) => p.errors.push(`page error: ${e.message}`));
@@ -119,7 +137,7 @@ async function serve(port: number, out: string): Promise<void> {
       mkdirSync(join(out, name), { recursive: true });
       await page.goto(url);
       await page.waitForTimeout(800);
-      return `started ${name} at ${url} (${vp[0]}×${vp[1]}${touch ? ', touch' : ''}${a.includes('--reduce-motion') ? ', reduced motion' : ''}, browser language ${lang})`;
+      return `started ${name} at ${url} (${vp[0]}×${vp[1]}${touch ? ', touch' : ''}${a.includes('--reduce-motion') ? ', reduced motion' : ''}, browser language ${lang}${a.includes('--at') ? `, a save at ${a[a.indexOf('--at') + 1]} to Continue from` : ''})`;
     }
     const p = players.get(name);
     if (!p) throw new Error(`no player "${name}": start one first`);

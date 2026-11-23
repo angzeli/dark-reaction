@@ -6,8 +6,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #100 QA harness, Layer 2: a playtest driver for AI playtesters (closes #92)
-- **In flight:** Layer 3's screenshot sweep (#93); triage of the first pass (all three layers on fd9de92, the build before #87) into issues; the deploy cleanup (#89) and the nightly run (#91), both waiting on the `workflow` scope.
+- **Last merged:** #130 QA harness, Layer 3: screenshot sweep and glyph coverage (refs #93)
+- **In flight:** the fixes, majors first: #101, #102, #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
 
@@ -22,7 +22,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
-- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep and glyphs, #98 the affordance check (the canary); the findings' issues as they're filed
+- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep, glyphs and visual baselines, #98 the affordance check (the canary). The first pass's findings: #101–#129 (majors #101–#107 and #127; `needs-decision` #124, #125).
 
 ## Open decisions and blockers
 
@@ -34,6 +34,17 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #93 (part 1): **Layer 3 of the playtest QA, the screenshot sweep** (`scripts/qa/sweep.ts`), and **glyph coverage** in the validator.
+  - **The sweep:** every room in every act, the scenes inside rooms, all ten puzzles and six endings, and the overlays, as saves loaded into the real UI. It runs in en and 繁中 at 390, 768 and 1440, with reduce-motion and high-contrast variants: 812 screenshots and contact sheets.
+  - **Page checks:** overflow, clipped text, overlapping choices, tap targets, 避頭尾 and axe.
+  - **Glyphs:** the validator reads the built WOFF2 subsets and checks every character of both locales against its own font stack. ≈ ÷ ₂ ₅ ₆ in 繁中 fall back to Source Serif 4, which is a warning. `validate` now runs `fonts` first.
+  - **Layer 2 learns from the canary too:** `drive.ts start --at <target>` starts a player from a save at any Layer 3 screen, because none of the five first-pass players got far enough to meet the NMR bug. It also creates its `--out` folder itself now; a missing one crashed the server on the first command.
+- **The first pass, triaged:** all three layers on fd9de92 and the five personas' reports, deduplicated into #101–#129.
+  - **8 majors:** the door that doesn't open while you wait at it (#101, found by two players); Space/Enter making choice 1 (#102); the notice that never clears (#103); focus lost in puzzles (#104); the notebook tabs (#105); the TLC lamp unannounced (#106); Settings off a phone screen at large text (#107); an action into 03:33 losing its text (#127).
+  - **Two chemistry proposals** for the owner: #124, #125 (`needs-decision`).
+  - **The canary:** Layers 1 to 3 as first built did not catch it. Layer 2's players never reached it. Layer 1 now does (#98).
+  - **The screenshots** the issues link to are in `docs/qa/v1.0.1/` (40 JPEGs, 4 MB, with an index).
+- Merged #100 (closes #92).
 - #92: **Layer 2 of the playtest QA, the playtest driver** (`scripts/qa/drive.ts`, `docs/qa/personas.md`).
   - **The driver:** one Playwright server with a browser context per player, driven by short CLI commands: look, read, click, tap, key, type, IME composition with Enter mid-composition, scroll, reload, resize, focus, a11y. Every command is logged.
   - **The first pass,** on fd9de92, with five personas (first-timer, Taiwanese chemist, breaker, mobile, accessibility): reports are being triaged into issues. One lesson made it into the README: agents need a copy of the controller outside the working tree, because a branch switch here broke their commands for a minute.

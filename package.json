@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "validate": "node scripts/validate.ts",
+    "validate": "npm run fonts && node scripts/validate.ts",
     "e2e": "playwright test"
   },
   "devDependencies": {
