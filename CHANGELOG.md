@@ -1,5 +1,59 @@
 # Changelog
 
+## 1.0.1 (23 November 2026)
+
+**A playtest pass.** Three layers of QA tools played the game far more thoroughly than people can: a headless state explorer and fuzzer, AI playtesters in a real browser, and a screenshot sweep. Their findings were fixed over three passes. `docs/qa/PLAYTEST-REPORT.md` has the whole story.
+
+**Play:** <https://angzeli.github.io/dark-reaction/>
+
+### Fixed
+
+- **What a choice shows in the last minute before 03:33 waits to be read.** Her raw data, read at 03:30, used to vanish under the transition. The page now holds, with one button into the dark, and comes back after a reload. The 03:33 transition can't be skipped by a key or click already on its way.
+- **A solved puzzle stays solved** when you step away before its last button (the UPS keypad was the one that hurt).
+- **Dan's door** opens for a player waiting at it at 03:15, and the unlock is told once, from the side of the door you're on.
+- **Keyboard and screen readers:**
+  - Space and Enter never make a choice you haven't moved to;
+  - focus stays inside puzzles;
+  - the notebook's sections are a real tablist;
+  - the TLC plate announces its lamp and names its spots;
+  - focus rings you can see everywhere, in high contrast too;
+  - headings to jump by;
+  - plain words, never asterisks, for screen readers;
+  - M, N and Esc work in puzzles, 0 picks a tenth choice, and the arrow keys move inside every group.
+- **Phones:**
+  - Settings fits at every text size;
+  - long words wrap rather than pushing the page sideways;
+  - the console's output wraps and its input has room;
+  - the header is opaque;
+  - puzzles open at their top;
+  - the travel and wait menus open where you are;
+  - bigger touch areas in the dense puzzles.
+- **Text:**
+  - save and load notices fade, and follow the language;
+  - puzzles say what reading costs;
+  - room text follows the act and the clock;
+  - shortcuts that would ruin the night say so before you choose them;
+  - 繁中 reads as Taiwanese usage throughout, with a misleading freezer note fixed;
+  - a few chemistry details a chemist would frown at are corrected.
+
+### Added for developers
+
+- `npm run validate` checks every character of both languages against the subset fonts, and spacing between Latin text and Han.
+- `scripts/qa/`: the explorer and fuzzer (a short run in CI, a long one nightly), the playtest driver, and the screenshot sweep. Visual regression baselines live in `e2e/visual.spec.ts-snapshots/`. See `docs/qa/README.md`.
+
+### Measured
+
+- **CI on every change:**
+  - type checks, lint, 547 unit tests and the content validator. The unit tests include a fixed-seed run of the explorer and fuzzer; the validator now checks glyphs against the subset fonts, and spacing in 繁中.
+  - 313 Playwright tests, including 76 visual-regression baselines and the bot that plays all six endings in both languages.
+- **Nightly:** the explorer and fuzzer at length.
+
+### Known issues
+
+- At 1440 × 900 most choices sit below the fold, and on a phone at large text most taps need a scroll first (#152).
+- 4.01's picture shows the inside while you're locked out (#123).
+- Five proposals wait on a decision (#124, #125, #153, #161, #162).
+
 ## 1.0.0 (23 November 2026)
 
 **Dark Reaction《暗反應》 1.0.0.** A time-loop mystery in a chemistry lab at 3 a.m., about what a result is worth. English and 繁體中文, written as two originals.
