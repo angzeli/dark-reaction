@@ -17,6 +17,8 @@ export interface View {
   highContrast: boolean;
   /** Default `instant`, so screenshots never catch a passage half-revealed. */
   textSpeed?: 'slow' | 'normal' | 'fast' | 'instant';
+  /** 0–3, default 1 (the game's own default). */
+  textSize?: 0 | 1 | 2 | 3;
 }
 
 export const SETTINGS_KEY = 'dark-reaction.settings.v1';
@@ -24,7 +26,7 @@ export const SETTINGS_KEY = 'dark-reaction.settings.v1';
 export function settingsFor(view: View, overlay?: string): Record<string, unknown> {
   return {
     locale: view.locale,
-    textSize: 1,
+    textSize: view.textSize ?? 1,
     textSpeed: view.textSpeed ?? 'instant',
     reduceMotion: view.reduceMotion,
     flicker: !view.reduceMotion,
@@ -104,7 +106,13 @@ export async function pageFindings(page: Page, opts: { touch: boolean; zh: boole
       for (const el of document.querySelectorAll('p, li, button, h1, h2, h3, label, td, th, span, a, pre, code, figcaption, .choice')) {
         if (!visible(el) || el.closest('[aria-hidden="true"], svg')) continue;
         const r = el.getBoundingClientRect();
-        if (r.right > vw + 1 && el.closest('[data-scroll-x], .pz__scroll') === null) out.push({ check: 'offscreen', detail: `${describe(el)} ends at ${Math.round(r.right)}px` });
+        // Content inside something built to scroll sideways (the cipher's periodic table) is meant to run past the edge.
+        let scroller = false;
+        for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+          const ox = getComputedStyle(a).overflowX;
+          if ((ox === 'auto' || ox === 'scroll') && a.scrollWidth > a.clientWidth) scroller = true;
+        }
+        if (r.right > vw + 1 && !scroller) out.push({ check: 'offscreen', detail: `${describe(el)} ends at ${Math.round(r.right)}px` });
         const cs = getComputedStyle(el);
         // Screen-reader-only text is clipped to a pixel on purpose.
         if ((el as HTMLElement).clientWidth <= 1 || el.closest('.sr-only, .visually-hidden')) continue;
@@ -123,7 +131,18 @@ export async function pageFindings(page: Page, opts: { touch: boolean; zh: boole
       if (touch) {
         for (const el of document.querySelectorAll('button, a[href], input, select, [role="button"], [role="radio"], [role="tab"], .choice')) {
           if (!visible(el) || el.closest('[aria-hidden="true"]')) continue;
-          const r = el.getBoundingClientRect();
+          // A checkbox or radio inside its label is hit by the whole label: measure that.
+          const label = el instanceof HTMLInputElement ? el.labels?.[0] : null;
+          const box = (label ?? el).getBoundingClientRect();
+          // What a thumb can hit, not only the drawn box: a hit area can reach past it (a ::after, padding).
+          const reach = (dx: number, dy: number) => {
+            const hit = document.elementFromPoint(box.left + box.width / 2 + dx, box.top + box.height / 2 + dy);
+            return !!hit && (hit === el || el.contains(hit) || (label ? label.contains(hit) : false));
+          };
+          const r = {
+            width: box.width >= 24 || (reach(-12, 0) && reach(12, 0)) ? Math.max(box.width, 24) : box.width,
+            height: box.height >= 24 || (reach(0, -12) && reach(0, 12)) ? Math.max(box.height, 24) : box.height,
+          };
           if (r.width < 24 || r.height < 24) out.push({ check: 'tap-target', detail: `${describe(el)} is ${Math.round(r.width)}×${Math.round(r.height)} px (under WCAG 2.5.8’s 24)` });
           else if (r.height < 40 || r.width < 40) out.push({ check: 'tap-target', detail: `${describe(el)} is ${Math.round(r.width)}×${Math.round(r.height)} px (under 44)` });
         }

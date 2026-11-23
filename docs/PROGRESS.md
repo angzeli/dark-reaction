@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #146 Puzzles say what reading costs, and fit a thumb (closes #118, #119)
+- **Last merged:** #147 The sweep at the largest text size, and Infinite Loop's decoration (closes #113)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #113: **the sweep at the largest text size, and Infinite Loop's decoration.**
+  - **#113 was mis-filed:** Infinite Loop's faded repeats of "Run it again" were already `aria-hidden`, so a screen reader never meets them. They're pure decoration, which WCAG 1.4.3 exempts as incidental, but axe can't tell. The sweep's axe run now leaves them out, with the reason in the code and `docs/qa/README.md`. The ending itself doesn't change.
+  - **Largest text:** the sweep gains a largest-text-size variant at 390 px (#107 hid at the default size).
+  - **Tap targets:** a checkbox or radio inside its label is measured by the label it's hit through.
+  - **The page checks run before the full-page screenshot.** In an emulated phone, Playwright's full-page screenshot leaves the page reporting a fine pointer afterwards, so touch layouts were measured as mouse ones. The first pass's tap-target counts overstate because of it.
+  - **Offscreen and tap-target checks:** offscreen skips content inside a sideways scroller (the cipher's periodic table). Tap targets are measured by what a thumb can hit, since a hit area may reach past the drawn box.
+  - **Checked:** the Infinite Loop ending is clean, and Settings at the largest size fits. Only the volume sliders stay under 44 px (about 30 px, above 2.5.8's 24).
+- Merged #146 (closes #118, #119).
 - #118, #119: **puzzles say what reading costs, and fit a thumb.**
   - **Hidden cost:** the TLC plate and the door log charge their two reading minutes on the first action, so the clock jumped with nothing said (the mobile player, the first-timer). Each intro now says reading takes a couple of minutes.
   - **Touch targets:** on a touch screen, TLC spots get a hit area beyond the drawn dot (they were 19 px tall, under WCAG 2.5.8's 24), and the door log's options and the console's chips are 44 px tall. On a phone the freezer's grid keeps its row labels and gaps slim, so its cells stay at least 24 px even at the largest text size in 繁中 (they were 23; the second pass found it). A 9×9 grid can't be 44 px a cell on a 390 px phone.
