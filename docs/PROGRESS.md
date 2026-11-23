@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #167 Focus rings you can see in every puzzle, and in high contrast (closes #111)
+- **Last merged:** #168 Content polish from the playtest (closes #115, #121, #122, #129)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #115, #121, #122, #129: **content polish from the playtest.**
+  - **#115:** the console's booking said "some time in the next forty minutes" even at 03:28 (the chemist and the first-timer). It's now "some time before then" / 「在那之前的某個時刻」.
+  - **#121:** `glovebox.mini.shut` could never be shown (Layer 1): Act II asks for the glovebox solved, so Act III always has it. It's gone with its strings, and the Act III test now checks that reason instead of building a state no game reaches.
+  - **#122:** after 03:19 the purge kept the working purge's label but ruined the sample. Its own label now says the meter is close to 10.
+  - **#129:** from Act II the office picture shows hot desk 7's top box open. The page now says so: "The top box stands open now, its flaps folded back. You didn't open it." (the first-timer).
+  - **Test:** `tests/content-polish.test.ts`. All four fail without the fix.
+- Merged #167 (closes #111).
 - #111: **focus rings you can see in every puzzle, and in high contrast.**
   - **What was wrong:** on the TLC plate's beige, focus was a copper ring on the spots (about 2.7:1) and a green one on "take" (about 1.1:1). Puzzle controls hard-coded the green rather than the `--focus` token, which high contrast turns yellow, and a choice only got its 2 px bar.
   - **The fix:** the plate uses the dark blue every other paper surface uses (#1b5fd0), puzzle controls use `--focus`, and a focused choice gets the full outline in high contrast.

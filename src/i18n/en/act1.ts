@@ -34,6 +34,7 @@ export const act1 = {
   'office.desk7': 'Look at hot desk 7',
   'office.desk7.text':
     'Hot desk 7 is where boxes go to be forgotten: printer paper, a dead centrifuge rotor, a carton of pipette tips that expired in 2021. Nobody hot-desks here. Among the boxes a white mug stands upright and clean, as if someone has just rinsed it and gone to fetch milk. The drawer has a key in it that doesn’t lock anything.',
+  'office.desk7.open': 'The top box stands open now, its flaps folded back. You didn’t open it.',
   'office.mug': 'Pick up the white mug',
   'office.mug.r':
     'Plain white china, chipped a little at the lip. On one side a single character has been brushed in blue: 晨. Inside, a faint brown ring where tea once stood and dried, years ago by the look of it. Yet the mug is clean and cold and there is no dust on it. You put it back exactly where it was. You knew exactly where it was.',
@@ -73,6 +74,7 @@ export const act1 = {
   'glovebox.antechamber': 'Take the vial in through the antechamber',
   'glovebox.antechamber.r': 'You put your hands on the outer door’s wheel.',
   'glovebox.purge': 'Run the purge you worked out (three cycles)',
+  'glovebox.purge.late': 'Run the purge you worked out anyway (three cycles), though the meter is close to 10',
   'glovebox.purge.r':
     'Outer door, vial, shut. Evacuate, refill. Evacuate, refill. Evacuate, refill. Your hands know it now. The tube comes out pale yellow.',
   'glovebox.purge.late.r':
