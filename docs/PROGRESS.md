@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #138 What a choice shows before 03:33 waits to be read (closes #127)
+- **Last merged:** #139 The NMR console on a phone and by keyboard (closes #108)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,23 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #108: **the NMR console on a phone and by keyboard.**
+  - **What was wrong:**
+    - at 390 px, output lines were cut off on the right (the login banner ending "4.08-d"; the queue's STATUS column, PRIORITY · WAITING FOR SAMPLE, lost) in a sideways scroll region no keyboard could reach;
+    - the prompt left the input 80 px wide;
+    - the input had no visible focus;
+    - the console opened focused on its heading, so typing went nowhere;
+    - once solved by typing, focus went back to the command line rather than to "Write it in your notebook".
+
+    Found by Layer 3's axe, the mobile and accessibility players and the chemist.
+  - **The fix:**
+    - output wraps;
+    - the prompt takes its own line on phones;
+    - the input shows a focus ring;
+    - the frame leaves focus where a view puts it on open (the console's command line);
+    - after the solving command, focus stays on the way on, which the note now describes.
+  - **Test:** `e2e/console-fit.spec.ts`, both languages at 390 px. It fails without the fix.
+- Merged #138 (closes #127).
 - #127: **what a choice shows before 03:33 waits to be read.**
   - **What was wrong:** reading the microSD at 03:30 (3 minutes) ran into 03:33. Her raw data, one of the story's central beats, was the lights-out card's `before`, shown under a fade that starts at once: on screen for under a second. The first-timer only found the result in the notebook.
   - **The fix:** when the last minute's page carries a choice's own result, it stays on screen with one button, "Then the lights go out" / 「然後，燈熄了」, focused for keyboard. The signature transition starts when the player chooses. A minute that only passed (a wait, the night's events) goes straight into the dark as before.
