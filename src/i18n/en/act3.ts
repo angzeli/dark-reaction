@@ -4,7 +4,7 @@ export const act3 = {
   'synth.port4.r':
     'A small round-bottomed flask on the joint where nothing has ever been, wrapped in foil to the neck, its tap closed. A paper label in tidy pencil: *DARK · 14/03/19 · do not let it see the light — YCL*. When you hold your hand near it, it is very slightly warm, the way a sleeping animal is warm. Whatever is inside has been reacting for a long time.',
   'synth.foil': 'Take a roll of foil from the drawer',
-  'synth.foil.r': 'The foil drawer sticks, as it always has, then gives all at once. You take a roll. It is the cheap kind, thin enough to read through, and it is exactly what you need.',
+  'synth.foil.r': 'The foil drawer sticks, as it always has, then gives all at once. You take a roll. It is the cheap kind, thin enough to read through, but it is exactly what you need.',
   'glovebox.mini.open': 'Open the small antechamber, her way (three cycles)',
   'glovebox.mini.open.r.1':
     'You peel back seven years of masking tape and work the little door the way the SOP’s pencil taught you: evacuate, refill; evacuate, refill; evacuate, refill. The gauge swings and settles. The inner door opens with a sigh that sounds almost like relief.',

@@ -403,6 +403,25 @@ export function checkGlyphs(tables: Record<Locale, Table>, fonts: { cjk: Set<num
   return problems;
 }
 
+/**
+ * Typesetting in 繁中: Latin letters and digits keep a space from Han characters ("Schlenk line 上",
+ * "7 號"), as everywhere else in the Chinese text. Placeholders get theirs when they're filled in
+ * (`fit` in src/i18n/i18n.ts); this checks the text around them.
+ */
+export function checkSpacing(tables: Record<Locale, Table>): Problem[] {
+  const touching = /([A-Za-z0-9][\u3400-\u9fff\uf900-\ufaff]|[\u3400-\u9fff\uf900-\ufaff][A-Za-z0-9])/u;
+  // An English sentence's stop (or its closing *) runs straight into Han: "CAROUSEL.*樣品槽".
+  const stopTouching = /([A-Za-z0-9][.,;:!?]\*?[\u3400-\u9fff\uf900-\ufaff])/u;
+  const problems: Problem[] = [];
+  for (const [key, value] of Object.entries(tables['zh-Hant-TW'])) {
+    // Placeholders are filled (and spaced) at runtime; their insides, like {n:一頁:幾頁}, aren't text.
+    const text = value.replace(/\{[^}]*\}/g, ' ');
+    const m = touching.exec(text) ?? stopTouching.exec(text);
+    if (m) problems.push(err('spacing', `zh "${key}": "${m[1]}" needs a space between the Latin text and the Han characters`));
+  }
+  return problems;
+}
+
 // ── Size ───────────────────────────────────────────────────────────────────
 
 export function contentSize(tables: Record<Locale, Table>): ReadingTotals {

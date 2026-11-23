@@ -124,7 +124,8 @@ describe('Act III rooms (#64)', () => {
    * Act III may change these rooms; Acts I and II may not.
    */
   const ACTS_1_2: Record<string, string> = {
-    cold: 'd2637f5c08e172e8ee9f864cfaf94d7712adaf000c5ea305ceff6baf3969d3fb',
+    // The solvent cabinets' signs became UK warning triangles in v1.0.1 (#146).
+    cold: 'c0fc3c209e60f92194926919fea97a80c78ef8a6ab89a4020a9638554ceb945c',
     glovebox: '4b564883a42c6573afd14da47b0790c4dabe7f33c655870ac8626414ae9df393',
     office: '7b49bd97b5239d9343143eaf0337a2f3bb79c75d113107fefd3e27f952fe438e',
     pi: '0e2b469b8320eb4d6de048397010c9fbee2fc3fff5f50ef65564fd9a7accbeb3',

@@ -46,11 +46,11 @@ export const world = {
   'nmr.hub.act3.loaded':
     'The NMR suite hums. The cryocooler’s chirp comes in its groups, a few chirps and a pause, patient now, like someone who has stopped drumming their fingers and is simply waiting. The console is the brightest thing in the basement. Holder 13 has her tube in it, the only holder without dust, and the only one that matters tonight.',
   'cold.hub.act3':
-    'B.05 is colder than ever. Frost has crept out from the freezer’s seals and across the floor in thin white feathers, and all of them point the same way: towards the door, towards the stairs, towards the lab four floors up.',
+    'B.05 is cold tonight, properly cold, for the first time in years. Frost has crept out from the freezer’s seals and across the floor in thin white feathers, and all of them point the same way: towards the door, towards the stairs, towards the lab four floors up.',
   'roof.hub.act3':
     'On the roof the rain has thinned to almost nothing, a fine cold mist that hangs rather than falls. The city is very quiet. The cranes’ red lights blink in a slow rhythm you have heard somewhere before. Under the deckchair, the lunchbox waits where she left it.',
   'synth.hub.act1':
-    'Lab 4.12 smells of acetone and warm dust. The fume hoods breathe in unison, sashes down, their lights turning them into three tall aquariums of nothing. Your column fractions wait in a rack on the bench: twenty-four test tubes of almost exactly the same colourless liquid. Someone has labelled the Schlenk line THE KRAKEN on a strip of tape, and nobody has ever taken it off.',
+    'Lab 4.12 smells of acetone and warm dust. The fume hoods breathe in unison, sashes down, their lights turning them into three tall aquariums of nothing. Your column fractions wait in a rack on the bench: twenty-four test tubes of almost exactly the same liquid, colourless or nearly. Someone has labelled the Schlenk line THE KRAKEN on a strip of tape, and nobody has ever taken it off.',
   'glovebox.hub.act1':
     'The glovebox has a small room to itself, like a patient on a ward: a long steel body, two black gloves hanging limp from their ports, a window you can look into but never quite through. The oxygen meter on top glows green. {ppm} ppm. It was lower when you came in.',
   'pi.enter': 'Go in',
@@ -63,7 +63,7 @@ export const world = {
   'nmr.hub.act1':
     'The NMR suite hums at a pitch you stop hearing after a minute and start hearing again at three in the morning. The magnet stands in the middle of the room, a pale drum taller than you, its ladder folded against its side. Behind it the helium compressor keeps time, and every second or so the cryocooler chirps, small and bird-like. The console is the brightest thing in the basement.',
   'cold.hub.act1':
-    'B.05 is the coldest room in the building and knows it. The −80 °C freezer takes up one wall like a white chest in an attic, humming to itself; its display reads −80, which could be reassurance or a threat. Along the other wall the solvent cabinets wear their yellow warning diamonds. Everything smells faintly of acetone and cold metal.',
+    'B.05 is still called the cold room, though it hasn’t been cold since someone put the −80 °C freezer in it. The freezer takes up one wall like a white chest in an attic, humming to itself and breathing its heat into the room; its display reads −80, which could be reassurance or a threat. Along the other wall the solvent cabinets wear their yellow warning triangles. Everything smells faintly of acetone and warm machinery.',
   'roof.hub.act1':
     'The roof door is propped open with a fire extinguisher, a violation the whole building has agreed not to mention. Out here the rain stops being a sound and becomes a whole weather. London lies in every direction, orange at the edges, the cranes standing over it with their red lights on. Under the plant units there is a deckchair that nobody admits to owning.',
 } as const;
