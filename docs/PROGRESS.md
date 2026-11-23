@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #186 Third pass: 繁中 typesetting at the larger sizes, and small layout slips (closes #185)
+- **Last merged:** #187 Visual regression baselines, approved in the v1.0.1 pass (closes #93)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #93: **visual regression baselines** (Layer 3's last part).
+  - **`e2e/visual.spec.ts`** compares 76 screens with the screenshots approved in this pass: every room in Acts I and III, Dan's office in Act II, all ten puzzles, all six endings, the title and the notebook, in both languages at 1440 × 900, plus five screens at 390 × 844. It runs with reduced motion and a 0.2 % pixel tolerance, in CI's `e2e` on every PR.
+  - **The baselines** are Linux renders, taken from CI on the final tree and reviewed one by one. They're 32 MB: the art's film grain doesn't compress. The spec skips on other platforms, where fonts render differently.
+  - **`docs/qa/README.md`** says how to refresh them: delete the ones that changed, push, take the candidates from the `playwright-report` artifact, review them, copy them in.
+  - **Harness:**
+    - `loadTarget` clears the load notice, which is the loader's doing, not part of the screen under test;
+    - a start save (`drive.ts start --at`) counts the night's earlier events as already happened. Without that, the chemist saw 02:50's email arrive after reading it, which can't happen in play.
+- Merged #186 (closes #185).
 - #185: **third pass: 繁中 typesetting at the larger sizes, and small layout slips.** From the mobile player, the breaker and the screenshot review, on the build with every fix. None was a blocker or a major.
   - **繁中 line breaks:**
     - a number or a Latin word keeps to the Han after it, with a no-break space (「4 號」, 「3 分鐘」, 「microSD 卡」);

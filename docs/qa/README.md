@@ -101,4 +101,11 @@ Each is a game state built from the scripted routes and placed where the screen 
 
 The output is `findings.json`, the screenshots, and contact sheets (`sheets/`, six or eight screenshots to an image) for review.
 
+**Visual baselines** (`e2e/visual.spec.ts`): the screenshots approved in the v1.0.1 pass, compared in CI on every PR with a 0.2 % pixel tolerance. That's every room in Acts I and III, all ten puzzles, all six endings, the title and the notebook, in both languages at 1440 × 900, plus five screens at 390 × 844. They're 76 images in all, with reduced motion so nothing moves, and the load notice cleared. Baselines are Linux renders (`*-chromium-linux.png`), since fonts render differently elsewhere, so the spec skips on other platforms.
+
+To refresh them after a deliberate visual change:
+1. Delete the baselines that changed and push. A missing baseline fails, and its candidate is written to `e2e/screenshots/visual/`.
+2. CI uploads the candidates in the `playwright-report` artifact (`gh run download <run> -n playwright-report`).
+3. Review them, every one, and copy the approved ones to `e2e/visual.spec.ts-snapshots/<name>-chromium-linux.png`.
+
 **Glyphs:** `npm run validate` checks every character of both locales against the subset fonts the build ships, read from the built WOFF2 files themselves (`scripts/lib/woff2.ts`). 繁中 is set in Noto Serif TC, then Source Serif 4. A character only Source Serif has is a warning, since it renders in the Latin face; a character in neither is an error, since it falls back to a system font or a tofu box. `validate` now subsets the fonts first.
