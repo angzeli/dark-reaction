@@ -280,3 +280,27 @@ describe('the NMR console after it is solved (#86)', () => {
     expect(keys(g)[0]).toBe('nmr.code.locked');
   });
 });
+
+describe('the last minute before 03:33 (#127)', () => {
+  it('a choice that runs into 03:33 marks its page to wait for the player', () => {
+    const g = actTwo();
+    waitUntil(g, 43);
+    g.state.inventory.push('item.microsd');
+    g.choose('office.microsd');
+    const [card] = drainCards(g);
+    expect(card).toMatchObject({ kind: 'lightsout', hold: true });
+    if (card?.kind === 'lightsout') expect(card.before.map((p) => p.key)).toContain('office.microsd.r.1');
+  });
+
+  it('a wait or a walk into 03:33 goes straight into the dark', () => {
+    const wait = actTwo();
+    waitUntil(wait, 45);
+    wait.choose('meta:wait');
+    wait.choose('wait:1');
+    expect(drainCards(wait)[0]).not.toHaveProperty('hold');
+    const walk = actTwo();
+    waitUntil(walk, 44);
+    goTo(walk, 'nmr');
+    expect(drainCards(walk)[0]).not.toHaveProperty('hold');
+  });
+});

@@ -109,7 +109,7 @@ function paragraphOk(p: unknown): boolean {
 
 function cardOk(c: unknown): boolean {
   if (!isObj(c)) return false;
-  if (c['kind'] === 'lightsout') return isNum(c['loop']) && Array.isArray(c['before']) && c['before'].every(paragraphOk);
+  if (c['kind'] === 'lightsout') return isNum(c['loop']) && Array.isArray(c['before']) && c['before'].every(paragraphOk) && (c['hold'] === undefined || typeof c['hold'] === 'boolean');
   if (c['kind'] === 'act') return [1, 2, 3].includes(c['act'] as number);
   if (c['kind'] === 'ending') return isStr(c['ending']);
   return false;
