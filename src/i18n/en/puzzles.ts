@@ -20,7 +20,7 @@ export const puzzles = {
   // P3 · TLC
   'puzzle.tlc.title': 'The fraction plate',
   'puzzle.tlc.intro':
-    'The column ran this evening; the plate you spotted afterwards is dry now. Twenty-four fractions in the rack, the product in some of them. Your notebook says: *product Rf ≈ 0.35 (3:1 hexane/EtOAc), UV-active.*',
+    'The column ran this evening; the plate you spotted afterwards is dry now. Twenty-four fractions in the rack, the product in some of them. Your notebook says: *product Rf ≈ 0.35 (3:1 hexane/EtOAc), UV-active.* Reading the plate properly takes a couple of minutes.',
   'puzzle.tlc.rule': 'Rf = how far the spot moved ÷ how far the solvent moved, both measured from the pencil baseline.',
   'puzzle.tlc.plate': 'TLC plate, lanes left to right',
   'puzzle.tlc.lane.crude': 'crude',
@@ -160,7 +160,7 @@ export const puzzles = {
   // P6 · Door-access log
   'puzzle.doorlog.title': 'The porter’s terminal',
   'puzzle.doorlog.intro':
-    'A beige terminal with a sticky keyboard and a mug ring on the screen. It shows every badge that touched a door on Level 4 or the ground floor between 02:40 and 03:40, night by night, for the past week. In the corner of the screen the date says MON 23 NOV.',
+    'A beige terminal with a sticky keyboard and a mug ring on the screen. It shows every badge that touched a door on Level 4 or the ground floor between 02:40 and 03:40, night by night, for the past week. In the corner of the screen the date says MON 23 NOV. Reading seven nights of it takes a couple of minutes.',
   'puzzle.doorlog.screen': 'VELLACOTT BUILDING · ACCESS LOG · LEVEL 4 AND GROUND · 02:40–03:40',
   'puzzle.doorlog.nights': 'Night',
   'puzzle.doorlog.doors': 'Door',
