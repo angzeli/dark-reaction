@@ -30,13 +30,14 @@ export const officeScenes: SceneDef[] = [
       { id: 'office.process', label: 'office.process', if: { item: 'item.spectrum.own' }, to: 'office.process' },
       {
         // 03:25: the night's spectrum, by email, if you were here to hear it arrive.
+        // Its countdown starts from the minute it's in your hand: printing it is that minute (#147).
         id: 'office.print',
         label: 'office.print',
         cost: 1,
         if: { all: [{ lflag: 'perfect.mail' }, { not: { item: 'item.printout' } }] },
         effects: [{ give: 'item.printout' }, { chase: 'printout' }, { learn: 'nb.printout' }],
         tags: ['chase'],
-        text: [{ key: 'office.print.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - st.minute }) }],
+        text: [{ key: 'office.print.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - (st.minute + 1) }) }],
       },
       {
         // P9: the printout beside your own spectrum and Figure 3.

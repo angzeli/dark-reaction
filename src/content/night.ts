@@ -35,18 +35,19 @@ export const EVENTS: EventDef[] = [
   { id: 'ev.unlock.door', minute: PI_OPEN.from, until: PI_OPEN.to, if: { all: [{ scene: 'pi.door' }, { not: { lflag: 'pi.unlocked' } }] }, effects: [{ lflag: 'pi.unlocked' }], text: [{ key: 'ev.unlock.door' }] },
   // 03:21: fire exit B is released for the bins.
   { id: 'ev.bins', minute: EXIT_B_OPEN.from, until: EXIT_B_OPEN.to, if: { at: 'stairs' }, text: [{ key: 'ev.bins' }] },
-  // 03:25: the perfect spectrum, printed in the basement or mailed to your desk.
+  // 03:25: the perfect spectrum, printed in the basement or mailed to your desk. Not for a run begun
+  // after 03:25 (\`nmr.run.late\`): the printer had already been and gone that night (#147).
   {
     id: 'ev.perfect.nmr',
     minute: 38,
-    if: { all: [offered, { at: 'nmr' }] },
+    if: { all: [offered, { at: 'nmr' }, { not: { lflag: 'ran.late' } }] },
     effects: [{ lflag: 'perfect.printed' }, { flag: 'perfect.offered' }],
     text: [{ key: 'ev.perfect.nmr' }],
   },
   {
     id: 'ev.perfect.office',
     minute: 38,
-    if: { all: [offered, { at: 'office' }] },
+    if: { all: [offered, { at: 'office' }, { not: { lflag: 'ran.late' } }] },
     effects: [{ lflag: 'perfect.mail' }, { flag: 'perfect.offered' }],
     text: [{ key: 'ev.perfect.office' }],
   },

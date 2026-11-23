@@ -66,6 +66,8 @@ export const act1 = {
   'synth.kraken': 'Look at the Kraken',
   'synth.kraken.r':
     'The Schlenk line runs the length of the back bench: two long glass manifolds, one for vacuum and one for nitrogen, and eight taps along the front, numbered in marker. Flasks and stoppers hang from seven of them. Port 4 has nothing on it. In three years you have never seen anything on port 4, and you couldn’t say why that seems to matter now. At the end of the line the oil bubbler ticks, one bubble at a time, like something keeping count.',
+  'synth.kraken.act3':
+    'The Schlenk line runs the length of the back bench: two long glass manifolds, one for vacuum and one for nitrogen, and eight taps along the front, numbered in marker. Flasks and stoppers hang from seven of them, and tonight from the eighth too: on port 4, where in three years you have never seen anything, a small flask sits wrapped in foil. At the end of the line the oil bubbler ticks, one bubble at a time, like something keeping count.',
   'synth.poster': 'Read the periodic table poster',
   'synth.poster.r':
     'The poster came free with a catalogue in about 2004 and has been fading ever since; the noble gases are almost white. Someone has drawn a small moustache on mendelevium and a halo over gold. In the margin under the lanthanides, in pencil, somebody once wrote *ask Y.C.* and then rubbed it out, not quite enough.',
@@ -74,7 +76,7 @@ export const act1 = {
   'glovebox.antechamber': 'Take the vial in through the antechamber',
   'glovebox.antechamber.r': 'You put your hands on the outer door’s wheel.',
   'glovebox.purge': 'Run the purge you worked out (three cycles)',
-  'glovebox.purge.late': 'Run the purge you worked out anyway (three cycles), though the meter is close to 10',
+  'glovebox.purge.late': 'Run the purge you worked out anyway (three cycles), though the oxygen is already climbing',
   'glovebox.purge.r':
     'Outer door, vial, shut. Evacuate, refill. Evacuate, refill. Evacuate, refill. Your hands know it now. The tube comes out pale yellow.',
   'glovebox.purge.late.r':

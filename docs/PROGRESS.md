@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #179 繁中 that reads as Taiwan does, and chemistry a chemist believes (closes #145, #146, #160)
+- **Last merged:** #180 Lines that follow the clock and the room (closes #147, #157, #158)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,17 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #147, #157, #158: **lines that follow the clock and the room.**
+  - **The 03:25 printer (the first-timer):** a priority-code run begun at 03:26 still set what the printer waits for, so "At 03:25 the printer… starts to print" was told after it. A run begun after 03:25 is now `nmr.run.late`: same label and text, and that night's printer doesn't print for it.
+  - **Countdowns:** the printout's "n minutes from now" counts from the minute it's in your hand.
+  - **The access log** opens with "The log begins here." / 「紀錄從這裡開始。」, not "Nothing older." above older entries.
+  - **Room text (the mobile player):**
+    - in Act III the Kraken has her flask on port 4;
+    - the office's Act III description no longer says "at 02:47" at any hour;
+    - the late purge's label says "the oxygen is already climbing", which is true whenever it's offered.
+  - **The Kraken shortcut without foil** has its own label, which says so (as #122 did for the late purge).
+  - **Tests:** `tests/content-polish.test.ts`; all four fail without the fix.
+- Merged #179 (closes #145, #146, #160).
 - #145, #146, #160: **繁中 that reads as Taiwan does, and chemistry a chemist believes.**
   - **The freezer note:** 「卡在紅蓋子底下」 read as a position (the cell under a red cap), and read that way no cell fits the clues. It now says the card is in a red-capped cryovial (the chemist).
   - **繁中 wording:**

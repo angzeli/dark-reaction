@@ -198,7 +198,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.doorlog.none': '沒有紀錄。',
   'puzzle.doorlog.older': '更早的紀錄',
   'puzzle.doorlog.archive': '每天晚上都重複出現的舊紀錄',
-  'puzzle.doorlog.archive.start': '沒有更早的紀錄。',
+  'puzzle.doorlog.archive.start': '紀錄從這裡開始。',
   'puzzle.doorlog.archive.gap': '……每天晚上都一樣，又重複了 {n} 個晚上……',
   'puzzle.doorlog.archive.noexit': 'LIN Y C：自 {date} {time} 起，沒有任何離開的紀錄。',
   'puzzle.doorlog.tonight': '今晚，11 月 23 日星期一',
