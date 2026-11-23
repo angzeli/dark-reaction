@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #166 The play screen's frame: an opaque header, puzzles that open at their top, headings (closes #110, #112, #120)
+- **Last merged:** #167 Focus rings you can see in every puzzle, and in high contrast (closes #111)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #111: **focus rings you can see in every puzzle, and in high contrast.**
+  - **What was wrong:** on the TLC plate's beige, focus was a copper ring on the spots (about 2.7:1) and a green one on "take" (about 1.1:1). Puzzle controls hard-coded the green rather than the `--focus` token, which high contrast turns yellow, and a choice only got its 2 px bar.
+  - **The fix:** the plate uses the dark blue every other paper surface uses (#1b5fd0), puzzle controls use `--focus`, and a focused choice gets the full outline in high contrast.
+  - **Test:** `e2e/focus-rings.spec.ts`. Both tests fail without the fix.
+- Merged #166 (closes #110, #112, #120).
 - #110, #112, #120: **the play screen's frame.**
   - **The header** is opaque. Text scrolling under it showed through (the mobile player).
   - **Puzzles open at their top,** below the header. The frame scrolls the puzzle into place two frames after mount (the header's height is only known once observed), and also when a view keeps focus itself, as the console does.

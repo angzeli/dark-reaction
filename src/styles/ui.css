@@ -792,6 +792,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 }
 .narrative--puzzle > .narrative__carry { display: none; }
 
+/* In high contrast a focused choice gets the full yellow outline, not only its bar (#111). */
+:root[data-contrast='high'] .choice:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
 /* Keyboard focus rests on the list of choices after a passage (#102): show where it is. */
 .choices:focus-visible {
   outline: 2px solid var(--focus, #9fe3b5);
