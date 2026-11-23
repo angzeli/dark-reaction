@@ -65,6 +65,46 @@ export function trapFocus(root: HTMLElement): () => void {
   return () => root.removeEventListener('keydown', onKey);
 }
 
+/**
+ * Keep keyboard focus inside `root` when the control that had it goes away:
+ * a button that disables itself once pressed ("Put the vial in"), or one a
+ * view redraws. After every click or key inside, if focus has fallen out to
+ * the page, it goes to the nearest usable control from the same place:
+ * the next one, or failing that the one before (#104).
+ */
+const FOCUSABLE_ANY = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+export function keepFocusIn(root: HTMLElement): () => void {
+  let anchor: { el: HTMLElement; index: number } | null = null;
+  const controls = () => [...root.querySelectorAll<HTMLElement>(FOCUSABLE_ANY)];
+  const usable = (el: HTMLElement) =>
+    !(el as HTMLButtonElement).disabled && el.getAttribute('aria-hidden') !== 'true' && el.tabIndex >= 0 && (el.offsetParent !== null || el.getClientRects().length > 0);
+  const restore = () => {
+    const a = anchor;
+    anchor = null;
+    if (!a || !root.isConnected) return;
+    const active = document.activeElement;
+    // Focus moved somewhere on purpose (inside, or into another dialog): leave it.
+    if (active && active !== document.body && active !== document.documentElement) return;
+    const list = controls();
+    const at = a.el.isConnected ? list.indexOf(a.el) : Math.min(a.index, list.length);
+    const target = list.slice(Math.max(0, at)).find(usable) ?? list.slice(0, Math.max(0, at)).reverse().find(usable);
+    target?.focus();
+  };
+  const note = () => {
+    const active = document.activeElement as HTMLElement | null;
+    if (!active || !root.contains(active)) return;
+    anchor = { el: active, index: controls().indexOf(active) };
+    window.setTimeout(restore, 0);
+  };
+  root.addEventListener('keydown', note, true);
+  root.addEventListener('click', note, true);
+  return () => {
+    root.removeEventListener('keydown', note, true);
+    root.removeEventListener('click', note, true);
+  };
+}
+
 /** Escape text for safe insertion and turn *emphasis* and line breaks into markup. */
 export function inline(text: string): string {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
