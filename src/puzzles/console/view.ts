@@ -66,21 +66,26 @@ export const consoleView: PuzzleView = {
       done.replaceChildren(
         ...(consoleLogic.isSolved(state)
           ? [
-              h('p', { class: 'con__note' }, api.t('puzzle.console.solvedNote')),
-              h('button', { type: 'button', class: 'con__finish', dataset: { focusKey: 'con-finish' }, onclick: () => api.finish(true) }, api.t('puzzle.console.done')),
+              // Focus moves to the button once solved; the note is what it says (#108).
+              h('p', { class: 'con__note', id: 'con-note' }, api.t('puzzle.console.solvedNote')),
+              h('button', { type: 'button', class: 'con__finish', 'aria-describedby': 'con-note', dataset: { focusKey: 'con-finish' }, onclick: () => api.finish(true) }, api.t('puzzle.console.done')),
             ]
           : []),
       );
     };
 
+    // Back to the command line after each command, unless that one solved it: then focus is already on the way on (#108).
+    const afterCommand = () => {
+      if (!consoleLogic.isSolved(state) && root.isConnected) input.focus();
+    };
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       submit(input.value);
-      input.focus();
+      afterCommand();
     });
     run.addEventListener('click', () => {
       submit(input.value);
-      input.focus();
+      afterCommand();
     });
     render();
     host.appendChild(root);
