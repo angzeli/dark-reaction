@@ -4,13 +4,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #82 the polish pass (closes #26)
-- **In flight:** the NMR console stays findable (this PR, closes #86), from a stuck report on a real playthrough.
+- **Milestone:** M6 Polish & Release, the last one: this PR closes its last issue (M1–M5 closed)
+- **Last merged:** #87 the NMR console stays findable (closes #86)
+- **In flight:** the bilingual README, credits and v1.0.0 (this PR, closes #27). v1.0.0 is tagged on this PR's merge commit.
 
 ## Next
 
-1. Merge this PR. 2. #27, the last M6 issue: the bilingual README (play link, screenshots, controls, content note, running locally, credits, licence), CREDITS (add axe-core and the test tools), the v1.0.0 tag and GitHub Release with notes, and a live-site check.
+v1.0.0 is the finished game; nothing is planned after it. For a later session:
+1. Reports from players (like #86) become issues and small PRs, as before.
+2. The owner's two settings below remove the last workarounds.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -28,6 +30,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #27: **the README, credits and v1.0.0.**
+  - **README:** rewritten in English and 繁中, with the play link, two screenshots (`docs/images/`), the story, how to play, controls, settings and accessibility, the content note, privacy, running it yourself, how it's made, and credits and licence.
+  - **CREDITS:** now lists the build and test tools with versions and licences: axe-core (MPL-2.0) for the accessibility checks, Playwright, Vitest, Vite, TypeScript, ESLint and subset-font.
+  - **The live site** was checked in a browser after #85: the build loads, a new game starts at 02:47, no errors.
+  - **v1.0.0** is tagged on this PR's merge commit. `CHANGELOG.md` holds its notes (the six endings, the measured route times, the known issues); the GitHub Release takes its text from there.
+- Merged #87 (closes #86).
 - #86: **stuck in the NMR suite** (reported from a real playthrough: no option to open the terminal). The game's problem, not the player's.
   - **What was wrong:** once the console puzzle was solved, the room offered only *Check the queue again*, once a night; after one use the console disappeared until 02:47. A player who had learned Ian's code (RIDLEY-4) and came down without the tube, which resets every night, had nowhere to type it and no hint why.
   - **The fix:**
