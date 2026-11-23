@@ -175,11 +175,11 @@ test.describe('on a phone', () => {
     await d.getByRole('radio', { name: 'Fire exit B' }).tap();
     await expect(d.locator('.dl__entry').first()).toContainText('03:21');
 
-    // Tap where a minute is on tonight's line; the window starts there.
+    // Tap on a minute's place on tonight's line; the window starts at the nearest minute (#151).
     const tapAt = async (row: string, minute: number) => {
       const track = d.getByRole('slider', { name: row });
       const box = (await track.boundingBox())!;
-      await track.tap({ position: { x: ((minute + 0.5) / 46) * box.width, y: box.height / 2 } });
+      await track.tap({ position: { x: (minute / 46) * box.width, y: box.height / 2 } });
     };
     await tapAt('4.01, Prof. Ridley’s office', 23);
     await expect(d.locator('.dl__mark[data-row="pi"] .dl__value')).toHaveText('03:10–03:13');
