@@ -13,7 +13,15 @@ export function readCodepoints(font: Uint8Array): Set<number> {
     if (tag === 'cmap') cmapOffset = view.getUint32(rec + 8);
   }
   if (cmapOffset < 0) throw new Error('Font has no cmap table');
+  return parseCmap(view, cmapOffset);
+}
 
+/** The same, for a cmap table on its own (e.g. one unpacked from a WOFF2 file). */
+export function readCmapTable(table: Uint8Array): Set<number> {
+  return parseCmap(new DataView(table.buffer, table.byteOffset, table.byteLength), 0);
+}
+
+function parseCmap(view: DataView, cmapOffset: number): Set<number> {
   const subtables = view.getUint16(cmapOffset + 2);
   let best = -1;
   let bestFormat = 0;

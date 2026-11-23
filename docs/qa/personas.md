@@ -12,6 +12,8 @@ node scripts/qa/drive.ts serve --port 4300 --out qa-play &         # the control
 
 Give each persona agent a `play` wrapper that runs `node scripts/qa/drive.ts "$@"`, the README, the brief below, and a folder to write its notes and report in. Run the five at once: each has its own browser context, so saves and settings don't mix. Every command is logged to `qa-play/<player>/log.jsonl`, and every `look` saves a numbered screenshot there, which is where repro steps and screenshots come from.
 
+**Start some players deep.** In the v1.0.1 pass, five players with about 220 commands each from a new game got no further than Act II's first nights, and none read the sticky note in Dan's office. So none reached the NMR console bug the canary was about (`PLAYTEST-REPORT.md`). `start <url> --at <target>` puts a save at any of Layer 3's screens (`scripts/qa/lib/targets.ts`: `act2-office`, `act3-nmr`, …) in the autosave slot, and the player Continues from there. A pass should have at least two players start in Act II or III.
+
 Every brief ends the same way. **Play** until you reach an ending or have used about 220 controller commands. Keep notes as you go. Then **report**:
 - **bugs:** severity (blocker = can't continue or progress lost; major = badly wrong, but you can go on; minor; polish), exact repro steps, expected vs actual, and the screenshot;
 - **experience notes:** confused, bored, rushed, lectured; hints that didn't help; anything that broke immersion;

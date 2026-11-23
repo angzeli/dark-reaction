@@ -366,6 +366,43 @@ export function fuzz(content: Content, logic: LogicTable, seeds: number, maxStep
   return { problems, endings };
 }
 
+// ── Glyphs ─────────────────────────────────────────────────────────────────
+
+const describeCp = (cp: number) => `U+${cp.toString(16).toUpperCase().padStart(4, '0')} ${String.fromCodePoint(cp)}`;
+
+/**
+ * Every character a locale's strings use must be in the subset fonts the
+ * build ships (src/assets/fonts/generated/), in that locale's own font
+ * stack (src/styles/fonts.css): otherwise it falls back to a system font,
+ * or to a tofu box where there is none. 繁中 is set in Noto Serif TC, then
+ * Source Serif 4: a character only the second has renders in the Latin
+ * face, which is a warning (it shows, but in the other typeface). English
+ * is Source Serif 4, then Noto Serif TC (names like 林雨晨). Whitespace has
+ * no glyph to check.
+ */
+export function checkGlyphs(tables: Record<Locale, Table>, fonts: { cjk: Set<number>; latin: Set<number> }): Problem[] {
+  const problems: Problem[] = [];
+  const scan = (table: Table, locale: string, first: Set<number>, then: Set<number>, names: [string, string], fallbackIsWarning: boolean) => {
+    const missing = new Map<number, string>();
+    const fallback = new Map<number, string>();
+    for (const [key, value] of Object.entries(table)) {
+      for (const ch of value) {
+        const cp = ch.codePointAt(0)!;
+        if (/\s/u.test(ch) || cp < 0x20 || (cp >= 0xfe00 && cp <= 0xfe0f)) continue;
+        if (first.has(cp)) continue;
+        if (then.has(cp)) {
+          if (fallbackIsWarning && !fallback.has(cp)) fallback.set(cp, key);
+        } else if (!missing.has(cp)) missing.set(cp, key);
+      }
+    }
+    for (const [cp, key] of missing) problems.push(err('glyphs', `${locale} "${key}" uses ${describeCp(cp)}, which neither subset font in its stack (${names.join(', ')}) has: it will fall back to a system font or a tofu box`));
+    for (const [cp, key] of fallback) problems.push(warn('glyphs', `${locale} "${key}" uses ${describeCp(cp)}: not in the subset ${names[0]}, so it renders in ${names[1]}`));
+  };
+  scan(tables['zh-Hant-TW'], 'zh', fonts.cjk, fonts.latin, ['Noto Serif TC', 'Source Serif 4'], true);
+  scan(tables.en, 'en', fonts.latin, fonts.cjk, ['Source Serif 4', 'Noto Serif TC'], false);
+  return problems;
+}
+
 // ── Size ───────────────────────────────────────────────────────────────────
 
 export function contentSize(tables: Record<Locale, Table>): ReadingTotals {
