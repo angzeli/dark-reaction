@@ -48,6 +48,8 @@ The affordance check exists because of the canary (`PLAYTEST-REPORT.md`). Layer 
 
 The report also lists content no state ever showed (choices, scenes, notebook entries, events, text keys) and a table of what every choice says and does, for reviewing promises against effects.
 
+**Nightly** (`.github/workflows/nightly-qa.yml`), the long run goes with the day of the year as its first seed, so every night plays different games. Its Markdown and JSON report is kept as the `qa-report` artifact for 14 days. To reproduce a finding, run with the seed the report's options show: `node scripts/qa/explore.ts --long --first-seed <seed>`. The repro steps for each finding are in the report too. Run it by hand from the Actions tab, with an optional seed.
+
 In CI, `tests/qa-explorer.test.ts` runs a short fixed-seed version (every route's nights at 15 states a minute, 150 fuzz runs) and tests that the checks catch what they are for.
 
 ## Layer 2: AI playtesters
