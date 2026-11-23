@@ -55,6 +55,12 @@ export async function settle(page: Page): Promise<void> {
       dark = true;
       await capture.lightsOut();
     }
+    // A choice's last minute before 03:33 waits for the player to have read it (#127).
+    if ((await page.locator('.last-minute').count()) && !(await page.locator('.dr-lightsout').count())) {
+      await page.locator('.last-minute').click({ timeout: 2_000 }).catch(() => undefined);
+      await page.waitForTimeout(100);
+      continue;
+    }
     if (await page.locator('.act-card:not(.act-card--out)').count()) {
       await page.keyboard.press('Enter');
       await page.waitForTimeout(100);

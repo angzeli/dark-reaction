@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #138 Settings fits a phone at every text size (closes #107)
+- **Last merged:** #155 What a choice shows before 03:33 waits to be read (closes #127, #141)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #127, #141: **what a choice shows before 03:33 waits to be read.**
+  - **What was wrong:** reading the microSD at 03:30 (3 minutes) ran into 03:33. Her raw data, one of the story's central beats, was the lights-out card's `before`, shown under a fade that starts at once: on screen for under a second. The first-timer only found the result in the notebook.
+  - **The fix:** when a choice of the player's own runs into 03:33 and its page carries its result, the engine marks the lights-out card `hold`. The page stays on screen with one button, "Then the lights go out" / 「然後，燈熄了」, focused for keyboard, and the signature transition starts when the player presses it. A minute that only passed (a wait, a walk, the night's events, a puzzle running out) goes straight into the dark as before.
+  - **A cold review of the first version (#139, closed unmerged)** found that opening the notebook or menu during the hold redrew the next loop's page and left the game stuck, and that the autosave had already moved past the held page. Now the notebook and menu wait during the hold, and any other redraw (another tab's save) releases it. The autosave is taken before each card is played and once after the last, so a reload comes back to the held page.
+  - **The transition ignores input in its first 0.8 s** (#141, the breaker). A Space that finished the text, a click on Menu or a double click no longer skips it.
+  - **The bot** presses the button in `settle()`.
+  - **Tests:** `e2e/last-minute.spec.ts` covers the microSD, a wait, a walk, the notebook during the hold, a reload, a double click and a stray Space. `tests/content-act2.test.ts` covers the engine's flag. All but the wait and the walk fail without the fix, and the playthroughs of every ending pass.
+- Merged #138 (closes #107).
 - #107: **Settings fits a phone at every text size.**
   - **What was wrong:** at 390 px, choosing the largest text size made the dialog 430 px wide. Close was pushed off the edge, with a 10 px sliver left and no Escape on a touch screen, and the descriptions were cut off. The cause was the volume sliders' fixed `6rem`/`3.5rem` columns around a range input, plus fieldsets' default min-content width. The mobile player found it; Layer 3 sweeps the default text size only.
   - **The fix:** the slider rows wrap their label on narrow screens, and the sheet and fieldsets may shrink.

@@ -45,6 +45,8 @@ export interface AppOptions {
 
 /** How long a notice stays at the foot of the screen. */
 const STATUS_MS = 4000;
+/** The first moment of the 03:33 transition, when a key or click can't skip it: one made before it began is still arriving. */
+const SKIP_GRACE_MS = 800;
 
 export class App {
   readonly root: HTMLElement;
@@ -78,6 +80,8 @@ export class App {
   private lastFocus: HTMLElement | null = null;
   /** Bumped by every play render and by the last minute before the dark: a reveal only draws the choices of its own page (#80). */
   private playSeq = 0;
+  /** While the last minute before 03:33 waits for the player (#127): lets it go on. */
+  private held: (() => void) | null = null;
   /** The opener's `data-focus-key`, for when closing re-renders it as a new element (the title screen). */
   private lastFocusKey: string | undefined;
 
@@ -239,10 +243,16 @@ export class App {
     if (!game || this.busy) return;
     this.busy = true;
     try {
-      for (let card = game.takeCard(); card; card = game.takeCard()) {
+      // Saved before each card is taken, so a reload plays it again rather than skipping it (the last
+      // minute's held page above all, #127), and once more after the last, so a finished one isn't.
+      let played = false;
+      while (game.state.cards.length > 0) {
         this.autosave();
+        const card = game.takeCard()!;
         await this.playCard(card);
+        played = true;
       }
+      if (played) this.autosave();
     } finally {
       this.busy = false;
     }
@@ -255,6 +265,9 @@ export class App {
   private async playCard(card: Card): Promise<void> {
     if (card.kind === 'lightsout') {
       this.showLastMinute(card.before);
+      // What a choice showed in its last minute is part of the story (her raw data, #127): hold it until
+      // the player has read it. A minute that only passed (a wait, the night's own events) goes straight on.
+      if (card.hold) await this.holdLastMinute();
       audio.cue('lightsout');
       const handle = playLightsOut(document.body, {
         reduceMotion: this.settings.reduceMotion,
@@ -263,9 +276,15 @@ export class App {
         caption: t('ui.loop', { n: card.loop + 1 }),
         onBlack: () => this.render(),
       });
-      const skip = () => handle.skip();
-      document.addEventListener('keydown', skip, { once: true });
-      document.addEventListener('pointerdown', skip, { once: true });
+      // Skippable, but only by a press made once it has begun: not by the Space that finished the text, a
+      // click already on its way, or the second click of a double click on the button above (#X141).
+      const started = performance.now();
+      const skip = (e: Event) => {
+        if (performance.now() - started < SKIP_GRACE_MS || (e instanceof KeyboardEvent && e.repeat)) return;
+        handle.skip();
+      };
+      document.addEventListener('keydown', skip);
+      document.addEventListener('pointerdown', skip);
       await handle.done;
       document.removeEventListener('keydown', skip);
       document.removeEventListener('pointerdown', skip);
@@ -305,6 +324,27 @@ export class App {
     narrative?.querySelector('.choices')?.replaceChildren();
     const clock = this.root.querySelector('.hud__clock');
     if (clock) clock.textContent = clockLabel(LOOP_LENGTH);
+  }
+
+  /** The last minute stays on screen, with one way on: the player's. */
+  private holdLastMinute(): Promise<void> {
+    return new Promise((resolve) => {
+      const list = this.root.querySelector('.choices');
+      if (!list || this.screen !== 'play') return resolve();
+      const release = () => {
+        if (this.held !== release) return;
+        this.held = null;
+        list.replaceChildren();
+        resolve();
+      };
+      this.held = release;
+      const go = h('button', { type: 'button', class: 'choice choice--meta last-minute' }, h('span', { class: 'choice__n', 'aria-hidden': 'true' }, ''), h('span', { class: 'choice__label' }, t('ui.lastminute')));
+      // Pressed once: it goes, so nothing is left to press under the dark.
+      go.addEventListener('click', release, { once: true });
+      list.replaceChildren(h('li', {}, go));
+      go.focus({ preventScroll: true });
+      go.scrollIntoView({ block: 'nearest' });
+    });
   }
 
   private showActCard(act: Act): Promise<void> {
@@ -392,6 +432,8 @@ export class App {
   }
 
   private openOverlay(overlay: Overlay): void {
+    // The held page is the next loop's underneath: the notebook and the menu wait for the dark (#127).
+    if (this.held) return;
     this.lastFocus = document.activeElement as HTMLElement | null;
     this.lastFocusKey = this.lastFocus?.dataset?.['focusKey'];
     this.overlay = overlay;
@@ -437,6 +479,9 @@ export class App {
   // ── Rendering ────────────────────────────────────────────────────────────
 
   render(opts: { reveal?: boolean } = {}): void {
+    // Anything else that redraws the page (another tab's save, #127) lets the held minute go on first:
+    // the page underneath is already the next loop's, and the dark must not wait on a button that's gone.
+    this.held?.();
     // Re-rendering replaces the DOM; put focus back on the same control.
     const focusKey = (document.activeElement as HTMLElement | null)?.dataset?.['focusKey'];
     this.untrap?.();

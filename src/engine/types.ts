@@ -276,7 +276,8 @@ export type Menu = 'none' | 'travel' | 'wait';
 /** A transition the UI must play before continuing (lights-out, act title, ending). */
 export type Card =
   /** The lights go out at 03:33. `before` is what was on screen; `dark` means no reset follows (yet). */
-  | { kind: 'lightsout'; loop: number; before: Paragraph[]; dark?: boolean }
+  /** `hold`: a choice of the player's own ran into 03:33, and what it showed waits to be read (#127). */
+  | { kind: 'lightsout'; loop: number; before: Paragraph[]; dark?: boolean; hold?: boolean }
   | { kind: 'act'; act: Act }
   | { kind: 'ending'; ending: EndingId };
 

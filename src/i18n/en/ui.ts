@@ -25,6 +25,7 @@ export const ui = {
   'ui.wait.minutes': 'Wait {n} {n:minute:minutes}',
   'ui.waited': 'You wait. The building hums to itself for {n} {n:minute:minutes}.',
   'ui.cost': '{n} min',
+  'ui.lastminute': 'Then the lights go out',
   'ui.loop': 'Loop {n}',
   'ui.noted': 'Added to your notebook: {entry}.',
   'ui.phantom.notice': 'There {n:is a page:are pages} in your notebook, in your handwriting, that you don’t remember writing.',
