@@ -15,6 +15,8 @@ export interface View {
   locale: Locale;
   reduceMotion: boolean;
   highContrast: boolean;
+  /** Default `instant`, so screenshots never catch a passage half-revealed. */
+  textSpeed?: 'slow' | 'normal' | 'fast' | 'instant';
 }
 
 export const SETTINGS_KEY = 'dark-reaction.settings.v1';
@@ -23,7 +25,7 @@ export function settingsFor(view: View, overlay?: string): Record<string, unknow
   return {
     locale: view.locale,
     textSize: 1,
-    textSpeed: 'instant',
+    textSpeed: view.textSpeed ?? 'instant',
     reduceMotion: view.reduceMotion,
     flicker: !view.reduceMotion,
     highContrast: view.highContrast,

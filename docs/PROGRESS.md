@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #168 Content polish from the playtest (closes #115, #121, #122, #129)
+- **Last merged:** #169 The travel and wait menus open where you are (closes #116)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #116: **the travel and wait menus open where you are.**
+  - **What was wrong:** on a phone, tapping 「去別的地方……」 or 「等一下……」 redrew the page with the reveal: the passage typed itself out again and the page lost its place, leaving the destinations below the fold (the mobile player).
+  - **The fix:** opening or closing a menu only changes the choices. It now re-renders without a reveal, keeps the scroll position, and brings the menu's last option into view.
+  - **Harness:** Layer 3's `loadTarget` takes an optional text speed (default instant) for tests that need the reveal.
+  - **Test:** `e2e/menu-place.spec.ts` at 390 px in 繁中. It fails without the fix.
+- Merged #168 (closes #115, #121, #122, #129).
 - #115, #121, #122, #129: **content polish from the playtest.**
   - **#115:** the console's booking said "some time in the next forty minutes" even at 03:28 (the chemist and the first-timer). It's now "some time before then" / 「在那之前的某個時刻」.
   - **#121:** `glovebox.mini.shut` could never be shown (Layer 1): Act II asks for the glovebox solved, so Act III always has it. It's gone with its strings, and the Act III test now checks that reason instead of building a state no game reaches.
