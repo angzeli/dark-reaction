@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #177 Long words wrap on a phone (closes #156)
+- **Last merged:** #178 Dan's door unlocks once, seen from the side you're on (closes #142)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #142: **Dan's door unlocks once, seen from the side you're on.**
+  - **What was wrong:** #131's line for the player waiting at the door (`ev.unlock.door`, "at pi") also fired *inside* the office. Arriving while the door stands open takes you straight in, so you were told the lock "clicks back in front of you, nobody at the door but you". And after hearing the corridor's click (`ev.unlock`) from the lab, you got both (the chemist, second pass).
+  - **The fix:** conditions gain `scene`, and the door-side line needs you standing at `pi.door`. Both lines set a loop flag, and each needs it unset, so the unlock is told once a night. The content loader checks that a `scene` condition names a scene that exists.
+  - **Tests:** `tests/content-act2.test.ts` covers the three ways in: heard from the lab, seen at the door then gone down the corridor, and up the stairs after it opened. It fails without the fix. `tests/engine.test.ts` covers the loader check.
+- Merged #177 (closes #156).
 - #156: **long words wrap on a phone.**
   - **What was wrong:** at text sizes 大 and 中, the microSD's filename (`2019-03-14_0333_PROTON_DARK_NOT_MINE.fid`) had nowhere to break. The page grew to 446 px, every paragraph was cut off and 選單 sat past the screen's edge (the mobile player, second pass). The Dark Reaction ending names a file the same way.
   - **Also:** at the largest text size in English, the header's clock, loop and buttons came to 397 px on any page.

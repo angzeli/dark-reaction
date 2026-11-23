@@ -136,6 +136,14 @@ describe('content checks at load', () => {
     expect(() => new Game(c)).toThrow(/exactly one known key/);
   });
 
+  it('rejects a condition on a scene that does not exist', () => {
+    const c = miniContent();
+    c.scenes[0]!.choices[0]!.if = { scene: 'no.such.scene' };
+    expect(() => new Game(c)).toThrow(/no scene "no.such.scene"/);
+    c.scenes[0]!.choices[0]!.if = { scene: c.scenes[0]!.id };
+    expect(() => new Game(c)).not.toThrow();
+  });
+
   it('rejects an effect with two keys', () => {
     const c = miniContent();
     c.scenes[0]!.choices[0]!.effects = [{ give: 'x', lflag: 'y' } as never];
