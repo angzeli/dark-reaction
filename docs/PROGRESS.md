@@ -4,16 +4,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
-- **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #187 Visual regression baselines, approved in the v1.0.1 pass (closes #93)
-- **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
+- **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 and Playtest (v1.0.1) are closed.
+- **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
+- **Last merged:** #188 v1.0.1: the playtest report, the changelog and the version
+- **In flight:** nothing. Open: five `needs-decision` proposals (#124, #125, #153, #161, #162) and two pieces of polish that need an art pass (#123, #152).
 
 ## Next
 
-1. Layers 2 and 3 in (#92, #93); then every finding from the three layers deduplicated into issues under Playtest (v1.0.1), with severity, repro steps and screenshots in `docs/qa/v1.0.1/`.
-2. Bugs fixed in focused PRs, each starting from a regression test that fails before the fix. Experience notes that would change story, puzzles or endings get `needs-decision` and a proposal, for the owner.
-3. The three layers again until no blocker or major is left; `docs/qa/PLAYTEST-REPORT.md`; v1.0.1.
+1. The owner's decisions on the proposals: #124, #125 (chemistry), #153 (4.12 at 03:33), #161 (the chirp without sound), #162 (where to compare the printout).
+2. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
+3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -22,7 +22,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
-- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep, glyphs and visual baselines, #98 the affordance check (the canary). The first pass's findings: #101–#129 (majors #101–#107 and #127; `needs-decision` #124, #125).
+- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep, glyphs and visual baselines, #98 the affordance check (the canary). The first pass's findings: #101–#129 (majors #101–#107 and #127; `needs-decision` #124, #125). The second pass's: #140–#162 (majors #140, #156; `needs-decision` #153, #161, #162; #154 a record of what was left as designed). From cold reviews: #141, #163. The third pass's: #185.
 
 ## Open decisions and blockers
 
@@ -33,9 +33,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- **v1.0.1: the playtest report, the changelog and the version.**
+  - [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md): the canary, what each layer found in each pass, every fix, what's left and why, and the three biggest experience problems.
+  - `CHANGELOG.md` 1.0.1, and `package.json` 1.0.1 (it still said 0.1.0 at v1.0.0).
+  - `docs/qa/v1.0.1/`: the second and third passes' screenshots, indexed with their issues.
+  - After this merges: tag `v1.0.1` and publish the release with the changelog's section, then close the milestone.
+- Merged #187 (closes #93).
 - #93: **visual regression baselines** (Layer 3's last part).
   - **`e2e/visual.spec.ts`** compares 76 screens with the screenshots approved in this pass: every room in Acts I and III, Dan's office in Act II, all ten puzzles, all six endings, the title and the notebook, in both languages at 1440 × 900, plus five screens at 390 × 844. It runs with reduced motion and a 0.2 % pixel tolerance, in CI's `e2e` on every PR.
-  - **The baselines** are Linux renders, taken from CI on the final tree and reviewed one by one. They're 32 MB: the art's film grain doesn't compress. The spec skips on other platforms, where fonts render differently.
+  - **The baselines** are Linux renders, taken from CI on the final tree. 63 were reviewed image by image; 13 that changed late were checked by pixel diff, because the image viewer was unavailable (see the report). They're 32 MB: the art's film grain doesn't compress. The spec skips on other platforms, where fonts render differently.
   - **`docs/qa/README.md`** says how to refresh them: delete the ones that changed, push, take the candidates from the `playwright-report` artifact, review them, copy them in.
   - **Harness:**
     - `loadTarget` clears the load notice, which is the loader's doing, not part of the screen under test;

@@ -1,6 +1,6 @@
 # v1.0.1 playtest screenshots
 
-Screenshots from the first playtest pass (fd9de92, the build just before #87), each linked from the issue it shows. Layer 2 screenshots are the AI playtesters' own (`scripts/qa/drive.ts`, 1440×900 or 390×844); Layer 3's are from the sweep (`scripts/qa/sweep.ts`). JPEG, quality 80. The report is [`../PLAYTEST-REPORT.md`](../PLAYTEST-REPORT.md).
+Screenshots from the three playtest passes, each linked from the issue it shows. The first pass played fd9de92, the build just before #87; the second, the build with the first pass's fixes; the third, the build with every fix. Layer 2 screenshots are the AI playtesters' own (`scripts/qa/drive.ts`, 1440×900 or 390×844); Layer 3's are from the sweep (`scripts/qa/sweep.ts`). JPEG, quality 70–80. The report is [`../PLAYTEST-REPORT.md`](../PLAYTEST-REPORT.md).
 
 | Screenshot | Issue |
 |---|---|
@@ -44,3 +44,48 @@ Screenshots from the first playtest pass (fd9de92, the build just before #87), e
 | [`freezer-asterisks.jpg`](freezer-asterisks.jpg) | #128 The freezer shows *asterisks* around “raw. all of it.” |
 | [`desk7-loop1.jpg`](desk7-loop1.jpg) | #129 Hot desk 7: the picture shows the box opened from Loop 2 |
 | [`desk7-box-open.jpg`](desk7-box-open.jpg) | #129 Hot desk 7: the picture shows the box opened from Loop 2 |
+
+## Second pass (the build with the first pass's fixes)
+
+| Screenshot | Issue |
+|---|---|
+| [`step-away-armed.jpg`](step-away-armed.jpg) | #140 Stepping away from a solved puzzle before its last button throws the solve away |
+| [`step-away-reset.jpg`](step-away-reset.jpg) | #140 Stepping away from a solved puzzle before its last button throws the solve away |
+| [`lightsout-skipped-1.jpg`](lightsout-skipped-1.jpg) | #141 A key or click already on its way skips 03:33 |
+| [`lightsout-skipped-2.jpg`](lightsout-skipped-2.jpg) | #141 A key or click already on its way skips 03:33 |
+| [`door-unlocks-twice.jpg`](door-unlocks-twice.jpg) | #142 Dan’s door unlocks twice, and from outside once you’re in (a regression from #131) |
+| [`puzzle-no-menu-key.jpg`](puzzle-no-menu-key.jpg) | #143 Keys the README promises: M, N and Esc in puzzles, a tenth choice, arrows on the TLC plate |
+| [`puzzle-space-scrolls.jpg`](puzzle-space-scrolls.jpg) | #144 A puzzle’s title scrolls away on Space, and an empty heading stays behind |
+| [`lastminute-asterisks.jpg`](lastminute-asterisks.jpg) | #149 The last page before 03:33 reaches screen readers with *asterisks* |
+| [`doorlog-nothing-older.jpg`](doorlog-nothing-older.jpg) | #147 The 03:25 printer told at 03:33, a countdown a minute off, and “Nothing older.” above older entries |
+| [`tlc-uv-ring.jpg`](tlc-uv-ring.jpg) | #148 The focus ring vanishes on the UV-lit TLC plate, and the console’s input ignores high contrast |
+| [`console-hc-ring.jpg`](console-hc-ring.jpg) | #148 The focus ring vanishes on the UV-lit TLC plate, and the console’s input ignores high contrast |
+| [`console-lang-switch.jpg`](console-lang-switch.jpg) | #150 NMR console: a language switch scrolls the transcript to the top, and long commands aren’t wrapped |
+| [`console-long-command.jpg`](console-long-command.jpg) | #150 NMR console: a language switch scrolls the transcript to the top, and long commands aren’t wrapped |
+| [`doorlog-click-rounds.jpg`](doorlog-click-rounds.jpg) | #151 Door log: a click on the timeline rounds down to the earlier minute |
+| [`choices-below-fold.jpg`](choices-below-fold.jpg) | #152 At 1440 × 900 most choices sit below the fold |
+| [`mail-after-reading.jpg`](mail-after-reading.jpg) | #154 Second pass: reports looked at and left as designed |
+| [`focus-after-0333.jpg`](focus-after-0333.jpg) | #154 Second pass: reports looked at and left as designed |
+| [`filename-overflow-top.jpg`](filename-overflow-top.jpg) | #156 A long filename makes the page scroll sideways on a phone, and pushes 選單 off-screen |
+| [`filename-overflow-line.jpg`](filename-overflow-line.jpg) | #156 A long filename makes the page scroll sideways on a phone, and pushes 選單 off-screen |
+| [`filename-overflow-menu.jpg`](filename-overflow-menu.jpg) | #156 A long filename makes the page scroll sideways on a phone, and pushes 選單 off-screen |
+| [`filename-overflow-medium.jpg`](filename-overflow-medium.jpg) | #156 A long filename makes the page scroll sideways on a phone, and pushes 選單 off-screen |
+| [`kraken-port4-empty.jpg`](kraken-port4-empty.jpg) | #157 Room text that doesn’t follow the state: the Kraken’s port 4, the office “at 02:47”, the late purge’s meter |
+| [`office-0247-later.jpg`](office-0247-later.jpg) | #157 Room text that doesn’t follow the state: the Kraken’s port 4, the office “at 02:47”, the late purge’s meter |
+| [`fabrication-clock-1.jpg`](fabrication-clock-1.jpg) | #159 The three spectra don’t say what reading costs |
+| [`fabrication-clock-2.jpg`](fabrication-clock-2.jpg) | #159 The three spectra don’t say what reading costs |
+| [`zh-orphan-ma.jpg`](zh-orphan-ma.jpg) | #160 繁中 polish from the mobile player: spacing after English, “last night”, the foil, two antechambers alike |
+
+## Third pass (the build with every fix)
+
+| Screenshot | Issue |
+|---|---|
+| [`zh-orphan-suo.jpg`](zh-orphan-suo.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`zh-orphan-ma-large.jpg`](zh-orphan-ma-large.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`zh-split-minutes.jpg`](zh-split-minutes.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`doorlog-stacked-zh.jpg`](doorlog-stacked-zh.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`tlc-crude-label-zh.jpg`](tlc-crude-label-zh.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`note-title-under-close.jpg`](note-title-under-close.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`peakmatch-ppm-split.jpg`](peakmatch-ppm-split.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`hud-during-hold.jpg`](hud-during-hold.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
+| [`freezer-back-in-slot.jpg`](freezer-back-in-slot.jpg) | #185 Third pass: 繁中 typesetting at the larger sizes, and small layout slips |
