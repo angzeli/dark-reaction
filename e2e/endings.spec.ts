@@ -24,6 +24,13 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
     await page.keyboard.press('Enter');
     await expect(page.locator('.choice')).toHaveCount(2);
     await expect(page.locator('.narrative__text')).toContainText(locale === 'en' ? 'The door would let you go.' : '這扇門會讓你走');
+    // Focus waits on the list (#102): another stray Enter does nothing at all.
+    await expect(page.locator('ol.choices')).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.choice')).toHaveCount(2);
+    await expect(page.locator('article.ending')).toHaveCount(0);
+    // Moving into the list, the first choice under the arrow is still the way back (#61).
+    await page.keyboard.press('ArrowDown');
     await expect(page.locator('.choice[data-choice="stairs.door.close"]')).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('.choice[data-choice="stairs.exitb.open"]')).toBeVisible(); // back in the stairwell
@@ -80,6 +87,10 @@ test('Fire Alarm, in 繁中: the door log shows what the building keeps; the cal
   await page.keyboard.press('Enter');
   await expect(page.locator('.choice')).toHaveCount(2);
   await expect(page.locator('.narrative__text')).toContainText('唯一一個設計來讓所有人都出去的東西');
+  await expect(page.locator('ol.choices')).toBeFocused();
+  await page.keyboard.press('Enter'); // a stray Enter on the list does nothing (#102)
+  await expect(page.locator('.choice')).toHaveCount(2);
+  await page.keyboard.press('ArrowDown');
   await expect(page.locator('.choice[data-choice="stairs.alarm.leave"]')).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('.choice[data-choice="stairs.glass"]')).toBeVisible();

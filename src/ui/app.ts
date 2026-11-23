@@ -563,7 +563,7 @@ export class App {
     const paras = s.display.length > 0 ? s.display : game.sceneText(s.scene);
     const text = h('div', { class: 'narrative__text' }, ...paras.map((p) => this.paragraph(p)));
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
-    const choices = h('ol', { class: 'choices', 'aria-label': t('ui.choices') });
+    const choices = h('ol', { class: 'choices', 'aria-label': t('ui.choices'), tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
     const carrying = s.inventory.length
       ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: s.inventory.map((i) => t(i)).join(t('ui.list.sep')) }))
       : null;
@@ -603,7 +603,10 @@ export class App {
           ),
         ),
       );
-      if (this.keyboardUsed && this.overlay === 'none' && !s.puzzle) (choices.querySelector('button') as HTMLElement | null)?.focus({ preventScroll: true });
+      // Focus waits on the list, not on choice 1: Space and Enter finish the text, and must never make a
+      // choice the player hasn't moved to (#102; #61 was the same hazard where choice 1 ends the game).
+      // From the list, 1–9 choose, and Tab or the arrow keys move into it.
+      if (this.keyboardUsed && this.overlay === 'none' && !s.puzzle && list.length) choices.focus({ preventScroll: true });
     };
 
     const seq = ++this.playSeq;
@@ -623,6 +626,18 @@ export class App {
 
     // Not while a card is still to play: a puzzle a card opens (the dark run) mounts once, after it.
     if (s.puzzle && !this.busy && s.cards.length === 0) this.openPuzzle(narrative);
+  }
+
+  /** Up and down the list of choices with the arrow keys (from the list itself, into it). */
+  private choiceArrows(e: KeyboardEvent, list: HTMLElement): void {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    const buttons = [...list.querySelectorAll<HTMLElement>('button.choice')];
+    if (buttons.length === 0) return;
+    e.preventDefault();
+    const at = buttons.indexOf(document.activeElement as HTMLElement);
+    const step = e.key === 'ArrowDown' ? 1 : -1;
+    const next = at < 0 ? (step > 0 ? 0 : buttons.length - 1) : Math.max(0, Math.min(buttons.length - 1, at + step));
+    buttons[next]!.focus();
   }
 
   /** Track the sticky HUD's height in `--hud-h` (it wraps on phones and grows with text size). */
