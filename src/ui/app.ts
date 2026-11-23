@@ -321,7 +321,7 @@ export class App {
       text.replaceChildren(...before.map((p) => this.paragraph(p)));
       for (const el of text.children) el.classList.add('rv-done');
       const live = narrative?.querySelector('[aria-live]');
-      if (live) live.textContent = before.map((p) => t(p.key, p.params)).join(' ');
+      if (live) live.textContent = before.map((p) => plain(t(p.key, p.params))).join(' ');
     }
     narrative?.querySelector('.choices')?.replaceChildren();
     const clock = this.root.querySelector('.hud__clock');

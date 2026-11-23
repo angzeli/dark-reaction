@@ -51,3 +51,17 @@ test('on a phone, setting a time in the door log doesn’t push the timeline dow
   expect(Math.abs(after - before)).toBeLessThan(2);
   await context.close();
 });
+
+/** #144: Space on a puzzle's title doesn't scroll it away, and no empty "What you can do" stays behind. */
+test('a puzzle keeps its title on screen when Space is pressed, and the page has no empty heading (#144)', async ({ page }) => {
+  await loadTarget(page, base, targets().find((t) => t.name === 'puzzle-tlc')!, { locale: 'en', reduceMotion: true, highContrast: false });
+  await expect(page.locator('.pz__title')).toBeFocused();
+  const before = await page.locator('.pz__title').boundingBox();
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(300);
+  expect((await page.locator('.pz__title').boundingBox())!.y).toBeCloseTo(before!.y, 0);
+  await expect(page.getByRole('heading', { name: 'What you can do' })).toHaveCount(0);
+  // Back in the room, the heading names the choices again.
+  await page.locator('.pz__leave').click();
+  await expect(page.getByRole('heading', { name: 'What you can do' })).toHaveCount(1);
+});

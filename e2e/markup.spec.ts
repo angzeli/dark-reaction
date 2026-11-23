@@ -34,3 +34,14 @@ test('the page a screen reader hears has no asterisks, and is cleared once said 
   expect(await live.textContent()).not.toContain('*');
   await expect(live).toHaveText('', { timeout: 6_000 });
 });
+
+test('and the last page before 03:33 is words too, not *asterisks* (#149)', async ({ page }) => {
+  const office = targets().find((t) => t.name === 'act2-office')!;
+  const state = { ...structuredClone(office.state!), minute: 43, inventory: ['item.microsd'] };
+  await loadTarget(page, base, { ...office, state }, { locale: 'en', reduceMotion: true, highContrast: false });
+  await page.locator('.choice[data-choice="office.microsd"]').click();
+  await expect(page.locator('.last-minute')).toBeVisible();
+  const live = page.locator('.narrative [aria-live]');
+  await expect(live).toContainText('NOT_MINE');
+  expect(await live.textContent()).not.toContain('*');
+});

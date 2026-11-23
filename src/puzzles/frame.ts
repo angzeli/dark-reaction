@@ -57,6 +57,11 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   let solvedNow = false;
 
   const title = h('h2', { class: 'pz__title', id: `pz-title-${id}`, tabindex: '-1' });
+  // The title holds focus when a puzzle opens. Space and Enter finish text everywhere else, so they
+  // mustn't scroll the puzzle's own title and intro off the screen here (#144).
+  title.addEventListener('keydown', (e) => {
+    if (e.target === title && (e.key === ' ' || e.key === 'Enter')) e.preventDefault();
+  });
   const clockLabelEl = h('span', { class: 'pz__clock-label' });
   const clockTime = h('time', { class: 'pz__clock-time' });
   const clock = h('p', { class: 'pz__clock' }, clockLabelEl, ' ', clockTime);

@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #180 Lines that follow the clock and the room (closes #147, #157, #158)
+- **Last merged:** #181 Second-pass accessibility: a puzzle's title stays put, rings you can see, words not asterisks (closes #144, #148, #149)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #144, #148, #149: **second-pass accessibility.**
+  - **A puzzle's title stays put (#144):** it holds focus when a puzzle opens, and Space there (players learn Space finishes text) scrolled the title and intro about 250 px off the screen (the breaker). Space and Enter on the title now do nothing.
+  - **No empty heading (#144):** while a puzzle is open, the page kept an empty "What you can do" heading. It's now hidden whenever the choices are empty (`:has(+ .choices:empty)`).
+  - **Rings you can see (#148, the accessibility player):** under the UV lamp the TLC plate turns green, and #167's dark blue ring measured 1.7:1 on its darker edge. There it takes the plate's own ink (4.7:1 or better). In high contrast the console's command line takes the yellow ring like everything else.
+  - **Words, not asterisks (#149, the first-timer):** the last page before 03:33 reached the live region as written, with its `*emphasis*`. It now goes through `plain()` like every other page.
+  - **Tests:** `e2e/frame.spec.ts`, `e2e/focus-rings.spec.ts` and `e2e/markup.spec.ts`. All four fail without the fix.
+- Merged #180 (closes #147, #157, #158).
 - #147, #157, #158: **lines that follow the clock and the room.**
   - **The 03:25 printer (the first-timer):** a priority-code run begun at 03:26 still set what the printer waits for, so "At 03:25 the printer… starts to print" was told after it. A run begun after 03:25 is now `nmr.run.late`: same label and text, and that night's printer doesn't print for it.
   - **Countdowns:** the printout's "n minutes from now" counts from the minute it's in your hand.
