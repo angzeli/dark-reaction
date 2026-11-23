@@ -134,6 +134,7 @@ export const freezerView: PuzzleView = {
             ? api.t('puzzle.freezer.lift.again', { cell: sel })
             : api.t('puzzle.freezer.lift', { cell: sel });
       lift.disabled = !canLift;
+      lift.hidden = over; // over, it read "E5 is back in its slot" with her card in your hand (#185)
       panel.hidden = over;
       const said = report();
       setInline(status, said);

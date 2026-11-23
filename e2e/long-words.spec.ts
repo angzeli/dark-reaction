@@ -19,3 +19,15 @@ for (const name of ['scene-office-microsd', 'ending-dark']) {
     }
   }
 }
+
+/** #185: no lone character on the last line of a paragraph or a choice, where the browser can help. */
+test('paragraphs and choices wrap “pretty” (#185)', async ({ page }) => {
+  await loadTarget(page, base, targets().find((t) => t.name === 'act3-office')!, { locale: 'zh-Hant-TW', reduceMotion: true, highContrast: false, textSize: 2 });
+  for (const selector of ['.narrative__text p', '.choice__label']) {
+    const style = await page.locator(selector).first().evaluate((el) => {
+      const s = getComputedStyle(el);
+      return `${s.getPropertyValue('text-wrap-style')} ${s.getPropertyValue('text-wrap')}`;
+    });
+    expect(style, selector).toContain('pretty');
+  }
+});

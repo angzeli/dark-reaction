@@ -100,7 +100,7 @@ export const tlcView: PuzzleView = {
           h(
             'div',
             { class: 'tlc__lane', dataset: { lane: String(lane) } },
-            h('span', { class: 'tlc__label' }, laneName(lane)),
+            h('span', { class: lane === 'crude' ? 'tlc__label tlc__label--crude' : 'tlc__label' }, laneName(lane)),
             lane === 'crude'
               ? h('span', { class: 'tlc__take tlc__take--none' })
               : h(

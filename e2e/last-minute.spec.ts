@@ -42,8 +42,12 @@ async function heldPage(page: Page) {
 
 test('the notebook and the menu wait while the page is held, and nothing is left stuck (#127)', async ({ page }) => {
   await heldPage(page);
-  await page.locator('[data-focus-key="hud-notebook"]').click();
-  await page.locator('[data-focus-key="hud-menu"]').click();
+  // They say they're waiting (#185), and then they wait.
+  await expect(page.locator('[data-focus-key="hud-notebook"]')).toHaveAttribute('aria-disabled', 'true');
+  await expect(page.locator('[data-focus-key="hud-menu"]')).toHaveAttribute('aria-disabled', 'true');
+  // A player can still click them: force past Playwright's own wait for "enabled".
+  await page.locator('[data-focus-key="hud-notebook"]').click({ force: true });
+  await page.locator('[data-focus-key="hud-menu"]').click({ force: true });
   await expect(page.locator('.overlay')).toHaveCount(0);
   await expect(page.locator('.narrative__text')).toContainText('NOT_MINE');
   await page.locator('.last-minute').click();
