@@ -97,6 +97,8 @@ export const fabricationView: PuzzleView = {
 
     const render = (focusKey?: string) => {
       const solved = fabricationLogic.isSolved(state);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (solved) api.solved();
       overlay.textContent = api.t('puzzle.fabrication.overlay');
       overlay.setAttribute('aria-pressed', String(state.overlay));
       overlay.disabled = solved;

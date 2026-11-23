@@ -53,6 +53,8 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   let spent = Math.max(0, Math.floor(o.restoredMinutes ?? 0));
   let hintsUsed = Math.max(0, Math.min(3, o.hintsUsed));
   let finished = false;
+  /** Solved, waiting for its last button: leaving now must not throw the solve away (#140). */
+  let solvedNow = false;
 
   const title = h('h2', { class: 'pz__title', id: `pz-title-${id}`, tabindex: '-1' });
   const clockLabelEl = h('span', { class: 'pz__clock-label' });
@@ -124,9 +126,12 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
       renderClock();
       o.onMinutes?.(Math.min(LOOP_LENGTH, o.startMinute + spent));
       // The lights go out on everyone, mid-puzzle or not (a puzzle opened at 03:33 itself is past that).
-      if (o.startMinute < LOOP_LENGTH && o.startMinute + spent >= LOOP_LENGTH) finish(false);
+      if (o.startMinute < LOOP_LENGTH && o.startMinute + spent >= LOOP_LENGTH) finish(solvedNow);
     },
     finish,
+    solved: () => {
+      solvedNow = true;
+    },
     saveData: (data) => o.onSaveData(data),
     cue: (cueId) => o.cue(cueId),
   };
@@ -139,7 +144,7 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
     status.textContent = o.t(o.hints[hintsUsed - 1]!);
     (hintList.lastElementChild as HTMLElement | null)?.setAttribute('tabindex', '-1');
   });
-  leave.addEventListener('click', () => finish(false));
+  leave.addEventListener('click', () => finish(solvedNow));
 
   renderChrome();
   host.appendChild(element);

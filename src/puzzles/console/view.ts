@@ -46,6 +46,8 @@ export const consoleView: PuzzleView = {
     };
 
     const render = () => {
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (consoleLogic.isSolved(state)) api.solved();
       card.textContent = api.t('puzzle.console.card');
       transcript.setAttribute('aria-label', api.t('puzzle.console.transcript'));
       transcript.replaceChildren(

@@ -84,6 +84,8 @@ export const freezerView: PuzzleView = {
 
     const render = (focusKey?: string) => {
       const solved = freezerLogic.isSolved(state);
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (solved) api.solved();
       const failed = freezerLogic.isFailed!(state);
       const over = solved || failed;
 

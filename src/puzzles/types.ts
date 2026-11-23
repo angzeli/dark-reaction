@@ -55,6 +55,11 @@ export interface PuzzleApi {
    * Stepping away is the frame's job, not the view's.
    */
   finish(solved: boolean, failed?: boolean): void;
+  /**
+   * The puzzle is solved, though the player hasn't yet pressed its own last button (write it down,
+   * close the box): from now on stepping away, or the lights going out, ends it solved too.
+   */
+  solved(): void;
   /** Persist in-progress data so a reload (or a language switch) keeps it. */
   saveData(data: unknown): void;
   /** Play an audio cue if sound is on. */
