@@ -152,6 +152,8 @@ export const chirpView: PuzzleView = {
         shownStatus = said;
         status.innerHTML = inline(said);
       }
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (state.armed) api.solved();
       done.replaceChildren(
         ...(state.armed
           ? [h('button', { type: 'button', class: 'cp__finish', dataset: { focusKey: 'cp-finish' }, onclick: () => api.finish(true) }, api.t('puzzle.chirp.done'))]

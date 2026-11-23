@@ -46,6 +46,8 @@ export const consoleView: PuzzleView = {
     };
 
     const render = () => {
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (consoleLogic.isSolved(state)) api.solved();
       card.textContent = api.t('puzzle.console.card');
       transcript.setAttribute('aria-label', api.t('puzzle.console.transcript'));
       transcript.replaceChildren(
@@ -89,6 +91,9 @@ export const consoleView: PuzzleView = {
     });
     render();
     host.appendChild(root);
+    // render() scrolls the transcript to its end, but a remount (a language switch, a reload) renders
+    // before it's in the page: once it is, show the latest lines (#150).
+    transcript.scrollTop = transcript.scrollHeight;
     input.focus({ preventScroll: true });
     return { rerender: render, destroy: () => root.remove() };
   },

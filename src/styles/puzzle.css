@@ -162,6 +162,10 @@
 /* On the beige plate: the dark blue every paper surface uses for focus (copper and green were 2.7:1 and 1.1:1, #111). */
 .tlc .tlc__spot:focus-visible,
 .tlc .tlc__take:focus-visible { outline: 3px solid #1b5fd0 !important; outline-offset: 2px; }
+/* Under the UV lamp the plate turns green, and that blue all but vanishes on its darker edge (1.7:1):
+   the plate's own ink instead, 4.7:1 or better across it (#148). */
+.tlc .tlc__plate--uv .tlc__spot:focus-visible,
+.tlc .tlc__plate--uv .tlc__take:focus-visible { outline-color: #0c2416 !important; }
 .tlc__lanes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.2rem; margin-top: 0.3rem; }
 .tlc__lane { display: grid; justify-items: center; gap: 0.3rem; }
 .tlc__label { font-family: var(--font-mono); font-size: 0.7rem; }
@@ -268,7 +272,7 @@
 /* Output wraps rather than scrolling sideways: on a phone the login banner and the queue's STATUS
    column were cut off, in a scroll region no keyboard could reach (#108). */
 .con__line--out { white-space: pre-wrap; overflow-wrap: anywhere; }
-.con__line--in { color: #e7fff0; }
+.con__line--in { color: #e7fff0; overflow-wrap: anywhere; } /* a long command wraps like output (#150) */
 .con__form { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
 .con__prompt { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: #7fd39b; }
 .con__input {
@@ -283,6 +287,7 @@
   caret-color: #9fe3b5;
 }
 .con__input:focus-visible { outline: 2px solid #9fe3b5; outline-offset: 3px; border-bottom-color: #9fe3b5; }
+:root[data-contrast='high'] .con__input:focus-visible { outline-color: var(--focus); border-bottom-color: var(--focus); }
 /* On a phone the prompt takes its own line, so the command line has the width to show what you type. */
 @media (max-width: 34rem) {
   .con__prompt { flex-wrap: wrap; }

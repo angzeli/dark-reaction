@@ -286,7 +286,14 @@ export class Game {
     if (sceneTo) this.navigate(sceneTo);
     s.display = [...result, ...this.notices, ...(sceneTo ? this.sceneText(s.scene) : [])];
     if (s.ending) return;
-    if (!this.advance(minutes)) return;
+    if (!this.advance(minutes)) {
+      // The choice ran into 03:33. If its page carries its own result (her raw data, #127) or a scene it
+      // opened (her box, #163), that page waits for the player before the dark; a walk, a wait or a
+      // puzzle running out never get here.
+      const card = [...s.cards].reverse().find((c) => c.kind === 'lightsout');
+      if (card?.kind === 'lightsout' && (result.length > 0 || sceneTo !== undefined)) card.hold = true;
+      return;
+    }
     if (walkTo) this.walk(walkTo, s.display);
   }
 

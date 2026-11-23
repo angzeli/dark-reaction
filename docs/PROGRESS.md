@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #149 Nightly QA: the long explorer and fuzzer run every night (closes #91)
+- **Last merged:** #183 Puzzle polish: the console after a language switch, the door log's nearest minute, the three spectra's cost (closes #150, #151, #159)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,12 +33,79 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #150, #151, #159: **puzzle polish from the second pass.**
+  - **The console (#150, the breaker):** a language switch remounts it, and the transcript was scrolled to its end before it was in the page, so it showed its top. It now shows the latest lines. A long command wraps like output, rather than running off the right edge.
+  - **The door log (#151, the first-timer):** a click on the timeline marks the nearest minute. It rounded down, so a click on 03:21's tick could mark 03:20.
+  - **The three spectra (#159, the mobile player):** the intro says reading them takes a couple of minutes, as the other puzzles have since #118.
+  - **Test:** `e2e/puzzle-polish.spec.ts`; all four fail without the fix.
+- Merged #182 (closes #143).
+- #143: **the keys the README promises.** From the breaker, the first-timer and the accessibility player.
+  - **M, N and Esc in a puzzle:** they did nothing while a puzzle was open, though the README says *M or Esc* and clicking *Menu* worked. They now open the menu and the notebook from a puzzle, except while typing in a field (M is a letter in the console).
+  - **A tenth choice:** in the stairwell, or the NMR suite after the printout, *Wait…* had no number key. 0 chooses it, and it shows a 0.
+  - **The arrow keys** move between the buttons of any group in a puzzle that hadn't had them (`arrowsInGroups`, in the frame): the TLC plate's spots and the console's commands. Left and up go back; right and down go on. The roving groups (the freezer, the cipher, the keypad, …), sliders and text fields keep their own. The plate took 17 Tabs from a spot to the UV lamp.
+  - **Test:** `e2e/keys.spec.ts`; three of its four tests fail without the fix (the fourth is the guard that M still types in the console).
+- Merged #181 (closes #163).
+- #163: **the held minute, followed up.** A second cold review of #155 found these; #155 was merged as a strict improvement with them left for this.
+  - **The input that made the choice can't press the button.** "Then the lights go out" appears where the choice was and takes focus. A double click's second click (`detail > 1`) or a held Enter's repeat now does nothing; a fresh press still goes on.
+  - **The Infinite Loop's last night:** there the ending is set as the dark falls, so after a reload the title had no Continue, and loading showed the ending first with the dark over its epilogue. A save whose ending card is still to play is offered by Continue, and it opens on the play screen; the card takes it to the ending after the dark.
+  - **Sub-scenes are held too:** a choice that runs into 03:33 and opens a scene (hot desk 7, the logbook, her box) waits like one with a result.
+  - **The held page shows its own loop** after a reload, not the next one's.
+  - **Tests:** three in `e2e/last-minute.spec.ts` (double click, held Enter, the Infinite Loop reload), a loop check in the reload test, and one in `tests/content-act2.test.ts`. All fail without the fix.
+- Merged #180 (closes #144, #148, #149).
+- #144, #148, #149: **second-pass accessibility.**
+  - **A puzzle's title stays put (#144):** it holds focus when a puzzle opens, and Space there (players learn Space finishes text) scrolled the title and intro about 250 px off the screen (the breaker). Space and Enter on the title now do nothing.
+  - **No empty heading (#144):** while a puzzle is open, the page kept an empty "What you can do" heading. It's now hidden whenever the choices are empty (`:has(+ .choices:empty)`).
+  - **Rings you can see (#148, the accessibility player):** under the UV lamp the TLC plate turns green, and #167's dark blue ring measured 1.7:1 on its darker edge. There it takes the plate's own ink (4.7:1 or better). In high contrast the console's command line takes the yellow ring like everything else.
+  - **Words, not asterisks (#149, the first-timer):** the last page before 03:33 reached the live region as written, with its `*emphasis*`. It now goes through `plain()` like every other page.
+  - **Tests:** `e2e/frame.spec.ts`, `e2e/focus-rings.spec.ts` and `e2e/markup.spec.ts`. All four fail without the fix.
+- Merged #179 (closes #147, #157, #158).
+- #147, #157, #158: **lines that follow the clock and the room.**
+  - **The 03:25 printer (the first-timer):** a priority-code run begun at 03:26 still set what the printer waits for, so "At 03:25 the printer… starts to print" was told after it. A run begun after 03:25 is now `nmr.run.late`: same label and text, and that night's printer doesn't print for it.
+  - **Countdowns:** the printout's "n minutes from now" counts from the minute it's in your hand.
+  - **The access log** opens with "The log begins here." / 「紀錄從這裡開始。」, not "Nothing older." above older entries.
+  - **Room text (the mobile player):**
+    - in Act III the Kraken has her flask on port 4;
+    - the office's Act III description no longer says "at 02:47" at any hour;
+    - the late purge's label says "the oxygen is already climbing", which is true whenever it's offered.
+  - **The Kraken shortcut without foil** has its own label, which says so (as #122 did for the late purge).
+  - **Tests:** `tests/content-polish.test.ts`; all four fail without the fix.
+- Merged #178 (closes #145, #146, #160).
+- #145, #146, #160: **繁中 that reads as Taiwan does, and chemistry a chemist believes.**
+  - **The freezer note:** 「卡在紅蓋子底下」 read as a position (the cell under a red cap), and read that way no cell fits the clues. It now says the card is in a red-capped cryovial (the chemist).
+  - **繁中 wording:**
+    - 「你幾乎聽過的曲子」, 「然後一直顯示下去，耐心地，…」 and 「念出了聲音」 read like translation; 「一只」 becomes 「一個」; the drafts go to a couple in Hualien, not "to Hualien".
+    - From the mobile player: 「上一輪」 for "last night" in the loop; 「一整頁的 *j*」; the foil line no longer says the thinness is what you need (the English gets its "but" too); and the two antechamber shortcuts say 大前艙 and 小前艙.
+  - **Spacing:** 「Schlenk line上」 (three times) and 「CAROUSEL.*樣品槽」 / 「HAS RUN.*它」 ran Latin into Han. The README's 「Schlenk 管線」 is now 「Schlenk line」, as in the game. The validator now flags Latin letters, digits and stops touching Han in 繁中, ignoring placeholders.
+  - **Chemistry (the chemist):**
+    - B.05 was "the coldest room in the building" with a −80 along one wall, which in reality warms a room. It's now still called the cold room, though it hasn't been cold since the freezer came, which makes Act III's frost the uncanny thing it should be.
+    - The solvent cabinets carry yellow warning triangles, not diamonds.
+    - The fractions are "colourless or nearly".
+    - `PROTON_DARK`'s single scan stays: it's the ghost's booking, and "one more scan" is the notebook's refrain.
+  - **Tests:** `tests/content-polish.test.ts` and `tests/validator.test.ts`. All five fail without the fix.
+- Merged #177 (closes #142).
+- #142: **Dan's door unlocks once, seen from the side you're on.**
+  - **What was wrong:** #131's line for the player waiting at the door (`ev.unlock.door`, "at pi") also fired *inside* the office. Arriving while the door stands open takes you straight in, so you were told the lock "clicks back in front of you, nobody at the door but you". And after hearing the corridor's click (`ev.unlock`) from the lab, you got both (the chemist, second pass).
+  - **The fix:** conditions gain `scene`, and the door-side line needs you standing at `pi.door`. Both lines set a loop flag, and each needs it unset, so the unlock is told once a night. The content loader checks that a `scene` condition names a scene that exists.
+  - **Tests:** `tests/content-act2.test.ts` covers the three ways in: heard from the lab, seen at the door then gone down the corridor, and up the stairs after it opened. It fails without the fix. `tests/engine.test.ts` covers the loader check.
+- Merged #176 (closes #156).
+- #156: **long words wrap on a phone.**
+  - **What was wrong:** at text sizes 大 and 中, the microSD's filename (`2019-03-14_0333_PROTON_DARK_NOT_MINE.fid`) had nowhere to break. The page grew to 446 px, every paragraph was cut off and 選單 sat past the screen's edge (the mobile player, second pass). The Dark Reaction ending names a file the same way.
+  - **Also:** at the largest text size in English, the header's clock, loop and buttons came to 397 px on any page.
+  - **The fix:** the narrative, ending and overlay text break long tokens where they must (`overflow-wrap: anywhere`). On phones, the header's loop may drop under the clock and its buttons sit a little tighter.
+  - **Harness:** Layer 3 gains a target with her raw data on screen (`scene-office-microsd`). No target had the filename, and the second pass's sweep ran before the largest-text variant existed.
+  - **Test:** `e2e/long-words.spec.ts` checks both pages at 390 px in both languages at three text sizes. Five of the twelve fail without the fix.
+- Merged #175 (closes #140).
+- #140: **a solved puzzle stays solved when you step away from it.**
+  - **What was wrong:** eight puzzles end with a button of their own once solved (*Write the PIN down*, *Write it in your notebook*, the cipher's, the freezer's, …). *Step away* is still there beside it, and it always reported "not solved". So a player who solved the UPS keypad and stepped away walked into 03:33 with it unarmed, and nothing said so (the breaker, second pass).
+  - **The fix:** a view tells the frame when it's solved (`api.solved()`). From then on, stepping away, or the lights going out, ends the puzzle solved, with its usual effects.
+  - **Test:** `e2e/step-away.spec.ts` solves each of the eight puzzles, steps away before its last button and checks the solve is kept. All eight fail without the fix.
+- Merged #174 (closes #91).
 - #91: **nightly QA.** `.github/workflows/nightly-qa.yml` runs Layer 1 at length (`explore.ts --long`) at 03:17 UTC, seeded with the day of the year, and can be run by hand with a seed. It uploads the report as an artifact and fails on any error-level finding. `docs/qa/README.md` says how to reproduce a nightly finding.
-- Merged #148 (closes #89).
+- Merged #173 (closes #89).
 - #89: **the deploy no longer waits for a branch build.** The owner added the `workflow` scope, so this could land at last.
   - **`deploy.yml`:** with the Pages source "GitHub Actions" (set 2026-11-23), there's no branch build left to race, so #85's wait step and its `actions: read` permission are gone. A comment says the source must stay "GitHub Actions".
   - **`CLAUDE.md`:** says `main` is protected (required checks, up to date, no admin bypass, no force pushes) and that a local session signed in to `gh` as the owner can change repository settings, tags and releases.
-- Merged #147 (closes #113).
+- Merged #172 (closes #113).
 - #113: **the sweep at the largest text size, and Infinite Loop's decoration.**
   - **#113 was mis-filed:** Infinite Loop's faded repeats of "Run it again" were already `aria-hidden`, so a screen reader never meets them. They're pure decoration, which WCAG 1.4.3 exempts as incidental, but axe can't tell. The sweep's axe run now leaves them out, with the reason in the code and `docs/qa/README.md`. The ending itself doesn't change.
   - **Largest text:** the sweep gains a largest-text-size variant at 390 px (#107 hid at the default size).
@@ -46,12 +113,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
   - **The page checks run before the full-page screenshot.** In an emulated phone, Playwright's full-page screenshot leaves the page reporting a fine pointer afterwards, so touch layouts were measured as mouse ones. The first pass's tap-target counts overstate because of it.
   - **Offscreen and tap-target checks:** offscreen skips content inside a sideways scroller (the cipher's periodic table). Tap targets are measured by what a thumb can hit, since a hit area may reach past the drawn box.
   - **Checked:** the Infinite Loop ending is clean, and Settings at the largest size fits. Only the volume sliders stay under 44 px (about 30 px, above 2.5.8's 24).
-- Merged #146 (closes #118, #119).
+- Merged #171 (closes #118, #119).
 - #118, #119: **puzzles say what reading costs, and fit a thumb.**
   - **Hidden cost:** the TLC plate and the door log charge their two reading minutes on the first action, so the clock jumped with nothing said (the mobile player, the first-timer). Each intro now says reading takes a couple of minutes.
   - **Touch targets:** on a touch screen, TLC spots get a hit area beyond the drawn dot (they were 19 px tall, under WCAG 2.5.8's 24), and the door log's options and the console's chips are 44 px tall. On a phone the freezer's grid keeps its row labels and gaps slim, so its cells stay at least 24 px even at the largest text size in 繁中 (they were 23; the second pass found it). A 9×9 grid can't be 44 px a cell on a 390 px phone.
   - **Test:** `e2e/touch-targets.spec.ts`. All three fail without the fix.
-- Merged #145 (closes #117, #126).
+- Merged #170 (closes #117, #126).
 - #117, #126: **text and typography slips, and 繁中 that reads like a translation.**
   - **In `t()`:** a value that ends its own sentence ("Y.C.L.") no longer gets the template's full stop too. In 繁中, a value starting or ending with Latin letters or digits gets the space the tables put by hand next to Chinese (「你當時在 4.08 研究生辦公室」).
   - **Save slots** number acts in each language's numerals (第一幕, not 第I幕).
@@ -68,25 +135,25 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
     「惰性氣體」 stays: nitrogen is inert but not a 鈍氣.
   - **Tests:** `tests/i18n.test.ts` (5 new) and `e2e/labels.spec.ts`. 529 unit and 184 e2e pass.
-- Merged #144 (closes #116).
+- Merged #169 (closes #116).
 - #116: **the travel and wait menus open where you are.**
   - **What was wrong:** on a phone, tapping 「去別的地方……」 or 「等一下……」 redrew the page with the reveal: the passage typed itself out again and the page lost its place, leaving the destinations below the fold (the mobile player).
   - **The fix:** opening or closing a menu only changes the choices. It now re-renders without a reveal, keeps the scroll position, and brings the menu's last option into view.
   - **Harness:** Layer 3's `loadTarget` takes an optional text speed (default instant) for tests that need the reveal.
   - **Test:** `e2e/menu-place.spec.ts` at 390 px in 繁中. It fails without the fix.
-- Merged #143 (closes #115, #121, #122, #129).
+- Merged #168 (closes #115, #121, #122, #129).
 - #115, #121, #122, #129: **content polish from the playtest.**
   - **#115:** the console's booking said "some time in the next forty minutes" even at 03:28 (the chemist and the first-timer). It's now "some time before then" / 「在那之前的某個時刻」.
   - **#121:** `glovebox.mini.shut` could never be shown (Layer 1): Act II asks for the glovebox solved, so Act III always has it. It's gone with its strings, and the Act III test now checks that reason instead of building a state no game reaches.
   - **#122:** after 03:19 the purge kept the working purge's label but ruined the sample. Its own label now says the meter is close to 10.
   - **#129:** from Act II the office picture shows hot desk 7's top box open. The page now says so: "The top box stands open now, its flaps folded back. You didn't open it." (the first-timer).
   - **Test:** `tests/content-polish.test.ts`. All four fail without the fix.
-- Merged #142 (closes #111).
+- Merged #167 (closes #111).
 - #111: **focus rings you can see in every puzzle, and in high contrast.**
   - **What was wrong:** on the TLC plate's beige, focus was a copper ring on the spots (about 2.7:1) and a green one on "take" (about 1.1:1). Puzzle controls hard-coded the green rather than the `--focus` token, which high contrast turns yellow, and a choice only got its 2 px bar.
   - **The fix:** the plate uses the dark blue every other paper surface uses (#1b5fd0), puzzle controls use `--focus`, and a focused choice gets the full outline in high contrast.
   - **Test:** `e2e/focus-rings.spec.ts`. Both tests fail without the fix.
-- Merged #141 (closes #110, #112, #120).
+- Merged #166 (closes #110, #112, #120).
 - #110, #112, #120: **the play screen's frame.**
   - **The header** is opaque. Text scrolling under it showed through (the mobile player).
   - **Puzzles open at their top,** below the header. The frame scrolls the puzzle into place two frames after mount (the header's height is only known once observed), and also when a view keeps focus itself, as the console does.
@@ -94,12 +161,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
   - **The door log** gives the time its own line on a phone, with a fixed line height, so setting a time no longer pushes the timeline down 28 px.
   - **Not changed:** after 03:33, focus rests on the list of choices, which may be below the fold while you read. Since #132, Space and Enter there act on nothing, and Tab or ↓ scrolls to the choice they move to.
   - **Test:** `e2e/frame.spec.ts`. The headings, header and door log tests fail without the fix.
-- Merged #140 (closes #109, #128).
+- Merged #165 (closes #109, #128).
 - #109, #128: **emphasis is never asterisks, on screen or to a screen reader.**
   - **On screen:** the freezer showed her slip as `*raw. all of it.*`, because puzzle status lines were set with `textContent`. They now go through `setInline` (italics, as in scenes) in the freezer, cipher, fabrication, door log and Schlenk line.
   - **To a screen reader:** a scene's spoken copy carried the raw markup (NVDA reads "star"), missed the "In your hands" line, and stayed in the page, so browse mode met every passage twice. It's now plain words with every line on screen, cleared 3 s after it's said.
   - **Tests:** `e2e/markup.spec.ts` drives every puzzle with the bot's solutions in both languages, checking each step for asterisks, plus the spoken copy. The freezer and the copy fail without the fix.
-- Merged #139 (closes #108).
+- Merged #164 (closes #108).
 - #108: **the NMR console on a phone and by keyboard.**
   - **What was wrong:**
     - at 390 px, output lines were cut off on the right (the login banner ending "4.08-d"; the queue's STATUS column, PRIORITY · WAITING FOR SAMPLE, lost) in a sideways scroll region no keyboard could reach;
@@ -116,18 +183,20 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
     - the frame leaves focus where a view puts it on open (the console's command line);
     - after the solving command, focus stays on the way on, which the note now describes.
   - **Test:** `e2e/console-fit.spec.ts`, both languages at 390 px. It fails without the fix.
-- Merged #138 (closes #127).
-- #127: **what a choice shows before 03:33 waits to be read.**
+- Merged #155 (closes #127, #141).
+- #127, #141: **what a choice shows before 03:33 waits to be read.**
   - **What was wrong:** reading the microSD at 03:30 (3 minutes) ran into 03:33. Her raw data, one of the story's central beats, was the lights-out card's `before`, shown under a fade that starts at once: on screen for under a second. The first-timer only found the result in the notebook.
-  - **The fix:** when the last minute's page carries a choice's own result, it stays on screen with one button, "Then the lights go out" / 「然後，燈熄了」, focused for keyboard. The signature transition starts when the player chooses. A minute that only passed (a wait, the night's events) goes straight into the dark as before.
-  - **The bot** presses that button in `settle()`.
-  - **Tests:** `e2e/last-minute.spec.ts` covers both cases. The microSD one fails without the fix. All 145 e2e tests pass, including the playthroughs of every ending.
-- Merged #137 (closes #107).
+  - **The fix:** when a choice of the player's own runs into 03:33 and its page carries its result, the engine marks the lights-out card `hold`. The page stays on screen with one button, "Then the lights go out" / 「然後，燈熄了」, focused for keyboard, and the signature transition starts when the player presses it. A minute that only passed (a wait, a walk, the night's events, a puzzle running out) goes straight into the dark as before.
+  - **A cold review of the first version (#139, closed unmerged)** found that opening the notebook or menu during the hold redrew the next loop's page and left the game stuck, and that the autosave had already moved past the held page. Now the notebook and menu wait during the hold, and any other redraw (another tab's save) releases it. The autosave is taken before each card is played and once after the last, so a reload comes back to the held page.
+  - **The transition ignores input in its first 0.8 s** (#141, the breaker). A Space that finished the text, a click on Menu or a double click no longer skips it.
+  - **The bot** presses the button in `settle()`.
+  - **Tests:** `e2e/last-minute.spec.ts` covers the microSD, a wait, a walk, the notebook during the hold, a reload, a double click and a stray Space. `tests/content-act2.test.ts` covers the engine's flag. All but the wait and the walk fail without the fix, and the playthroughs of every ending pass.
+- Merged #138 (closes #107).
 - #107: **Settings fits a phone at every text size.**
   - **What was wrong:** at 390 px, choosing the largest text size made the dialog 430 px wide. Close was pushed off the edge, with a 10 px sliver left and no Escape on a touch screen, and the descriptions were cut off. The cause was the volume sliders' fixed `6rem`/`3.5rem` columns around a range input, plus fieldsets' default min-content width. The mobile player found it; Layer 3 sweeps the default text size only.
   - **The fix:** the slider rows wrap their label on narrow screens, and the sheet and fieldsets may shrink.
   - **Test:** `e2e/settings-fit.spec.ts` checks every text size in both languages at 390 px. Four of the eight fail without the fix.
-- Merged #136 (closes #106, #114).
+- Merged #137 (closes #106, #114).
 - #106, #114: **the TLC plate speaks its lamp, names its spots, and words the crude lane properly in 繁中.**
   - **Unannounced lamp:** turning on the UV lamp, the puzzle's key move, changed nothing a screen reader could hear. Lane 11's hidden spot (the trap) and lane 10's appeared in silence, and several spot buttons had the same name ("Measure the spot in lane crude" ×3).
   - **The 繁中 template:** the lane string was built for numbers, so it read 「量第 粗產物 道的斑點」, with a half-width ", " between spots.

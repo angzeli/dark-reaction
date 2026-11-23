@@ -28,24 +28,26 @@ export const EVENTS: EventDef[] = [
   { id: 'ev.preparing', minute: 43, if: { at: 'nmr' }, text: [{ key: 'ev.preparing' }] },
   // 02:57: Femi, somewhere below, never seen.
   { id: 'ev.whistle', minute: 10, until: 20, if: { at: 'stairs' }, text: [{ key: 'ev.whistle' }] },
-  // 03:15: Dan's office opens for the Monday clean.
-  { id: 'ev.unlock', minute: PI_OPEN.from, until: PI_OPEN.to, if: { all: [onLevel4, { not: { at: 'pi' } }] }, text: [{ key: 'ev.unlock' }] },
-  // …and if you're the one standing at its door, it opens in front of you (the porter still unseen).
-  { id: 'ev.unlock.door', minute: PI_OPEN.from, until: PI_OPEN.to, if: { at: 'pi' }, text: [{ key: 'ev.unlock.door' }] },
+  // 03:15: Dan's office opens for the Monday clean. You hear it once a night: from along the corridor…
+  { id: 'ev.unlock', minute: PI_OPEN.from, until: PI_OPEN.to, if: { all: [onLevel4, { not: { at: 'pi' } }, { not: { lflag: 'pi.unlocked' } }] }, effects: [{ lflag: 'pi.unlocked' }], text: [{ key: 'ev.unlock' }] },
+  // …or, if you're the one standing at its door, it opens in front of you (the porter still unseen).
+  // Only outside it: arriving while it stands open takes you straight in, past the moment it clicked.
+  { id: 'ev.unlock.door', minute: PI_OPEN.from, until: PI_OPEN.to, if: { all: [{ scene: 'pi.door' }, { not: { lflag: 'pi.unlocked' } }] }, effects: [{ lflag: 'pi.unlocked' }], text: [{ key: 'ev.unlock.door' }] },
   // 03:21: fire exit B is released for the bins.
   { id: 'ev.bins', minute: EXIT_B_OPEN.from, until: EXIT_B_OPEN.to, if: { at: 'stairs' }, text: [{ key: 'ev.bins' }] },
-  // 03:25: the perfect spectrum, printed in the basement or mailed to your desk.
+  // 03:25: the perfect spectrum, printed in the basement or mailed to your desk. Not for a run begun
+  // after 03:25 (\`nmr.run.late\`): the printer had already been and gone that night (#147).
   {
     id: 'ev.perfect.nmr',
     minute: 38,
-    if: { all: [offered, { at: 'nmr' }] },
+    if: { all: [offered, { at: 'nmr' }, { not: { lflag: 'ran.late' } }] },
     effects: [{ lflag: 'perfect.printed' }, { flag: 'perfect.offered' }],
     text: [{ key: 'ev.perfect.nmr' }],
   },
   {
     id: 'ev.perfect.office',
     minute: 38,
-    if: { all: [offered, { at: 'office' }] },
+    if: { all: [offered, { at: 'office' }, { not: { lflag: 'ran.late' } }] },
     effects: [{ lflag: 'perfect.mail' }, { flag: 'perfect.offered' }],
     text: [{ key: 'ev.perfect.office' }],
   },

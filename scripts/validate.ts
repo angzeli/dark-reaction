@@ -23,6 +23,7 @@ import {
   checkLoad,
   checkLocales,
   checkRoutes,
+  checkSpacing,
   codeKeys,
   contentSize,
   CPM_ZH,
@@ -56,6 +57,7 @@ report(checkGraph(CONTENT), 'every scene is reachable, nothing is a dead end, ev
 section('Locales');
 const used = new Map([...referencedKeys(CONTENT), ...codeKeys(join(root, 'src'))]);
 report(checkLocales(TABLES, used), `${Object.keys(TABLES.en).length} keys in both locales with matching placeholders; ${used.size} keys used by content and code all present`);
+report(checkSpacing(TABLES), 'Latin text and Han characters are spaced apart throughout 繁中');
 
 section('Routes');
 const routes = Object.values(ROUTES).filter((r): r is Route => !!r);

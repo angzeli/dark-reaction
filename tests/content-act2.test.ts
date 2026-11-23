@@ -117,6 +117,32 @@ describe('Dan’s office', () => {
     waitUntil(g, 28);
     expect(keys(g)).toContain('ev.unlock');
   });
+
+  it('and it unlocks once a night, seen from the side of the door you are on (#142)', () => {
+    // Heard from the lab, then walked over: straight in, with no second click at a door you're already through.
+    const lab = actTwo();
+    goTo(lab, 'synth');
+    waitUntil(lab, 28);
+    expect(keys(lab)).toContain('ev.unlock');
+    goTo(lab, 'pi');
+    expect(lab.state.scene).toBe('pi.hub');
+    expect(keys(lab)).not.toContain('ev.unlock.door');
+    // Seen at the door, then off down the corridor: no second click there either.
+    const door = actTwo();
+    goTo(door, 'pi');
+    waitUntil(door, 28);
+    expect(keys(door)).toContain('ev.unlock.door');
+    goTo(door, 'synth');
+    expect(keys(door)).not.toContain('ev.unlock');
+    // Up the stairs after it opened (off Level 4, so nothing heard): the room, and no door-side line inside it.
+    const late = actTwo();
+    goTo(late, 'stairs');
+    waitUntil(late, 28);
+    goTo(late, 'pi');
+    expect(late.state.minute).toBeLessThan(31);
+    expect(late.state.scene).toBe('pi.hub');
+    expect(keys(late)).not.toContain('ev.unlock.door');
+  });
 });
 
 describe('the night’s offer', () => {
@@ -135,7 +161,8 @@ describe('the night’s offer', () => {
     g.choose('nmr.printout');
     expect(g.state.inventory).toContain('item.printout');
     expect(known(g)).toContain('nb.printout');
-    expect(g.state.display.find((p) => p.key === 'perfect.describe')!.params).toEqual({ n: 8 });
+    // Taken at 03:25, in your hand at 03:26: 03:33 is seven minutes away (#147).
+    expect(g.state.display.find((p) => p.key === 'perfect.describe')!.params).toEqual({ n: 7 });
     expect(g.state.obsession).toBe(1);
   });
 
@@ -278,5 +305,36 @@ describe('the NMR console after it is solved (#86)', () => {
     goTo(g, 'nmr');
     g.choose('nmr.code');
     expect(keys(g)[0]).toBe('nmr.code.locked');
+  });
+});
+
+describe('the last minute before 03:33 (#127)', () => {
+  it('a choice that runs into 03:33 marks its page to wait for the player', () => {
+    const g = actTwo();
+    waitUntil(g, 43);
+    g.state.inventory.push('item.microsd');
+    g.choose('office.microsd');
+    const [card] = drainCards(g);
+    expect(card).toMatchObject({ kind: 'lightsout', hold: true });
+    if (card?.kind === 'lightsout') expect(card.before.map((p) => p.key)).toContain('office.microsd.r.1');
+  });
+
+  it('so does a choice that opens a scene, such as hot desk 7 (#163)', () => {
+    const g = actTwo();
+    waitUntil(g, 45);
+    g.choose('office.desk7');
+    expect(drainCards(g)[0]).toMatchObject({ kind: 'lightsout', hold: true });
+  });
+
+  it('a wait or a walk into 03:33 goes straight into the dark', () => {
+    const wait = actTwo();
+    waitUntil(wait, 45);
+    wait.choose('meta:wait');
+    wait.choose('wait:1');
+    expect(drainCards(wait)[0]).not.toHaveProperty('hold');
+    const walk = actTwo();
+    waitUntil(walk, 44);
+    goTo(walk, 'nmr');
+    expect(drainCards(walk)[0]).not.toHaveProperty('hold');
   });
 });

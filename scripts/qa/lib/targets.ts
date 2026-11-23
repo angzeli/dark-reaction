@@ -37,6 +37,9 @@ function place(base: GameState, scene: string, patch: Partial<GameState> = {}): 
   s.location = def.location;
   s.menu = 'none';
   s.cards = [];
+  // A save at this minute has already lived through the night's earlier events: without this a
+  // player starting here (`drive.ts start --at`) would see 02:50's email arrive after reading it.
+  if (patch.minute !== undefined && !patch.firedEvents) s.firedEvents = CONTENT.events.filter((e) => e.minute < s.minute).map((e) => e.id);
   s.display = game.sceneText(scene);
   return s;
 }
@@ -65,6 +68,12 @@ export function targets(): Target[] {
   const a2 = acts[2];
   out.push({ name: 'scene-office-monitor', screen: 'play', state: place(a2, 'office.monitor', { minute: 12 }) });
   out.push({ name: 'scene-office-desk7', screen: 'play', state: place(a2, 'office.desk7', { minute: 12 }) });
+  // Her raw data, with its unbreakable filename on screen (#156).
+  {
+    const g = new Game(CONTENT, place(a2, 'office.hub', { minute: 12, inventory: ['item.microsd'] }));
+    g.choose('office.microsd');
+    out.push({ name: 'scene-office-microsd', screen: 'play', state: { ...g.state, cards: [] } });
+  }
   out.push({ name: 'scene-glovebox-logbook', screen: 'play', state: place(acts[1], 'glovebox.logbook', { minute: 12 }) });
   out.push({ name: 'scene-pi-box', screen: 'play', state: place(a2, 'pi.box', { minute: 29 }) });
   out.push({ name: 'scene-stairs-door', screen: 'play', state: place(a2, 'stairs.door', { minute: 35 }) });

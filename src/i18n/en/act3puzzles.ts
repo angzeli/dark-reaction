@@ -5,6 +5,7 @@ export const act3puzzles = {
   'synth.kraken.fill.r':
     'You fit her J. Young tube to port 2. A thin steel cannula already runs from the flask on port 4 to the tube’s adaptor, as if someone set it up a long time ago and only stepped away for a moment.',
   'synth.kraken.again': 'Fill her tube the way you did before',
+  'synth.kraken.again.light': 'Fill her tube the way you did before, though you have no foil',
   'synth.kraken.again.r':
     'Nitrogen on, and the bubbler ticking. The tube’s port down to nothing and back up to nitrogen. The flask under nitrogen, the tube closed with its bleed open, and the dark liquid crossing over. Tap shut. Foil. Your hands know the Kraken now.',
   'synth.kraken.again.light.r':
@@ -139,7 +140,7 @@ export const act3puzzles = {
   // ── P9 · The too-perfect spectrum ─────────────────────────────────────────
   'puzzle.fabrication.title': 'Three spectra',
   'puzzle.fabrication.intro':
-    'Your spectrum from tonight, Figure 3 of the 2020 paper, and between them the printout the night made for you. Circle whatever gives the printout away.',
+    'Your spectrum from tonight, Figure 3 of the 2020 paper, and between them the printout the night made for you. Circle whatever gives the printout away. Reading the three side by side takes a couple of minutes.',
   'puzzle.fabrication.own': 'Your spectrum · tonight, 400 MHz',
   'puzzle.fabrication.printout': 'The printout · 03:25',
   'puzzle.fabrication.figure': 'Figure 3 · Ridley, Lin et al., 2020',

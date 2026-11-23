@@ -74,6 +74,8 @@ export const peakmatchView: PuzzleView = {
 
     const render = (focusKey?: string) => {
       const found = state.found;
+      // Solved before its last button is pressed: stepping away keeps it solved (#140).
+      if (found) api.solved();
       head.textContent = api.t('puzzle.peakmatch.screen');
       // The trace, slid along the axis by the referencing.
       const values = trace(DARK, SPAN, state.offset / 100);

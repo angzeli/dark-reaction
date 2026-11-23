@@ -8,7 +8,7 @@
 import { clockLabel, LOOP_LENGTH } from '../engine/clock.ts';
 import type { Act } from '../engine/types.ts';
 import type { Params } from '../i18n/i18n.ts';
-import { h, inline, keepFocusIn, trapFocus } from '../ui/dom.ts';
+import { arrowsInGroups, h, inline, keepFocusIn, trapFocus } from '../ui/dom.ts';
 import type { PuzzleApi, PuzzleView, PuzzleViewHandle } from './types.ts';
 
 export interface FrameOptions {
@@ -53,8 +53,15 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   let spent = Math.max(0, Math.floor(o.restoredMinutes ?? 0));
   let hintsUsed = Math.max(0, Math.min(3, o.hintsUsed));
   let finished = false;
+  /** Solved, waiting for its last button: leaving now must not throw the solve away (#140). */
+  let solvedNow = false;
 
   const title = h('h2', { class: 'pz__title', id: `pz-title-${id}`, tabindex: '-1' });
+  // The title holds focus when a puzzle opens. Space and Enter finish text everywhere else, so they
+  // mustn't scroll the puzzle's own title and intro off the screen here (#144).
+  title.addEventListener('keydown', (e) => {
+    if (e.target === title && (e.key === ' ' || e.key === 'Enter')) e.preventDefault();
+  });
   const clockLabelEl = h('span', { class: 'pz__clock-label' });
   const clockTime = h('time', { class: 'pz__clock-time' });
   const clock = h('p', { class: 'pz__clock' }, clockLabelEl, ' ', clockTime);
@@ -124,9 +131,12 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
       renderClock();
       o.onMinutes?.(Math.min(LOOP_LENGTH, o.startMinute + spent));
       // The lights go out on everyone, mid-puzzle or not (a puzzle opened at 03:33 itself is past that).
-      if (o.startMinute < LOOP_LENGTH && o.startMinute + spent >= LOOP_LENGTH) finish(false);
+      if (o.startMinute < LOOP_LENGTH && o.startMinute + spent >= LOOP_LENGTH) finish(solvedNow);
     },
     finish,
+    solved: () => {
+      solvedNow = true;
+    },
     saveData: (data) => o.onSaveData(data),
     cue: (cueId) => o.cue(cueId),
   };
@@ -139,15 +149,17 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
     status.textContent = o.t(o.hints[hintsUsed - 1]!);
     (hintList.lastElementChild as HTMLElement | null)?.setAttribute('tabindex', '-1');
   });
-  leave.addEventListener('click', () => finish(false));
+  leave.addEventListener('click', () => finish(solvedNow));
 
   renderChrome();
   host.appendChild(element);
   const untrapFocus = trapFocus(element);
   const unkeep = keepFocusIn(element);
+  const unarrow = arrowsInGroups(element);
   const untrap = () => {
     untrapFocus();
     unkeep();
+    unarrow();
   };
   let handle: PuzzleViewHandle | null = null;
   handle = o.view.mount(body, api, o.data);

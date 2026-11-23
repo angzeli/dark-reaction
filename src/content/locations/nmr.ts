@@ -63,8 +63,19 @@ export const nmrScenes: SceneDef[] = [
         label: 'nmr.run',
         cost: 8,
         once: 'loop',
-        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }] },
+        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteLt: 39 }] },
         effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }],
+        text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
+      },
+      {
+        // The same run begun after 03:25 (from 03:26): that night’s printer has been and gone without it, so it
+        // mustn't print for it afterwards (#147). Not a second run: that is nmr.rerun.
+        id: 'nmr.run.late',
+        label: 'nmr.run',
+        cost: 8,
+        once: 'loop',
+        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteGte: 39 }, { not: { used: 'nmr.run' } }] },
+        effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }, { lflag: 'ran.late' }],
         text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
       },
       {
@@ -79,13 +90,14 @@ export const nmrScenes: SceneDef[] = [
       },
       {
         // 03:25: the night prints the spectrum you wanted.
+        // Its countdown starts from the minute it's in your hand: taking it is that minute (#147).
         id: 'nmr.printout',
         label: 'nmr.printout',
         cost: 1,
         if: { all: [{ lflag: 'perfect.printed' }, { not: { item: 'item.printout' } }] },
         effects: [{ give: 'item.printout' }, { chase: 'printout' }, { learn: 'nb.printout' }],
         tags: ['chase'],
-        text: [{ key: 'nmr.printout.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - st.minute }) }],
+        text: [{ key: 'nmr.printout.r' }, { key: 'perfect.describe', params: (st) => ({ n: 46 - (st.minute + 1) }) }],
       },
       { id: 'nmr.magnet', once: 'loop', label: 'nmr.magnet', cost: 1, text: [{ key: 'nmr.magnet.r' }, { key: 'nmr.magnet.act3', if: { act: 3 } }] },
       {

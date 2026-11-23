@@ -39,7 +39,7 @@ At 03:33 the lights go out, and it is 02:47 again.
 
 | | Keyboard | Touch or mouse |
 |---|---|---|
-| Choose | number keys 1–9, or Tab and Enter | tap a choice |
+| Choose | number keys 1–9 (0 for a tenth), or Tab and Enter | tap a choice |
 | Finish the text at once | Space or Enter | tap the text |
 | Notebook | N | Notebook |
 | Menu, settings, saves | M or Esc | Menu |
@@ -93,7 +93,7 @@ By Angze Li. Code under the [MIT License](LICENSE). Story text, illustrations an
 ### 怎麼玩
 
 - **每個行動都要花時間**：時鐘從 02:47 走到 03:33。身上帶的東西，到了 02:47 就沒了；知道的事情會留下來，記在你的筆記本裡。筆記本裡有幾頁是你的筆跡，你卻不記得自己寫過。
-- **三幕、八個房間、十道謎題**，都取材自真實的實驗室日常：TLC 片、手套箱前艙、NMR 主控台、門禁紀錄、筆記本密碼、負八十冰箱、Schlenk 管線、冷凍機的啾聲、三張並排的譜，還有黑暗中的一根峰。不懂化學也能玩，每道謎題也都有三段提示可以看。
+- **三幕、八個房間、十道謎題**，都取材自真實的實驗室日常：TLC 片、手套箱前艙、NMR 主控台、門禁紀錄、筆記本密碼、負八十冰箱、Schlenk line、冷凍機的啾聲、三張並排的譜，還有黑暗中的一根峰。不懂化學也能玩，每道謎題也都有三段提示可以看。
 - **六種結局**，取決於你在所有迴圈裡做了什麼，而不是最後按了哪個按鈕。結局一覽會記住你找到的結局；開新遊戲時，筆記本邊上會留著你上一輪淡淡的鉛筆字。
 - **走到真結局的最短路線大約五十分鐘**；第一次玩通常會更久。遊戲會隨時自動存檔。
 
@@ -101,7 +101,7 @@ By Angze Li. Code under the [MIT License](LICENSE). Story text, illustrations an
 
 | | 鍵盤 | 觸控或滑鼠 |
 |---|---|---|
-| 選擇 | 數字鍵 1–9，或 Tab 加 Enter | 點選項 |
+| 選擇 | 數字鍵 1–9（第十個用 0），或 Tab 加 Enter | 點選項 |
 | 立刻顯示整段文字 | 空白鍵或 Enter | 點文字 |
 | 筆記本 | N | 「筆記本」 |
 | 選單、設定、存檔 | M 或 Esc | 「選單」 |
