@@ -93,7 +93,7 @@ export const act1: Record<keyof typeof en, string> = {
   // ── B.03 NMR 室 ───────────────────────────────────────────────────────────
   'nmr.console': '在主控台前坐下',
   'nmr.console.r': '椅子還是溫的。它一直都是。',
-  'nmr.console.again': '再查一次排程',
+  'nmr.console.again': '到主控台前，再查一次排程',
   'nmr.console.again.r': '樣品槽 13。03:33。ar4217。PROTON_DARK。等待樣品。什麼都沒變，這反而更糟。',
   'nmr.load': '把你的 NMR 管放進自動進樣盤',
   'nmr.load.r':

@@ -55,7 +55,7 @@ export const notebook = {
 
   // Act II
   'nb.priority.title': 'Priority code',
-  'nb.priority.body': 'RIDLEY-4. On a sticky note on Dan’s monitor. Ian says don’t abuse it.',
+  'nb.priority.body': 'RIDLEY-4. On a sticky note on Dan’s monitor. Ian says don’t abuse it. It jumps the queue for one run, if my tube is in the carousel.',
   'nb.femi.title': 'Femi',
   'nb.femi.body': 'Femi Adeyemi, night porter. Radio, flask, crossword in capitals. Whistles. Mondays: bins, through fire exit B. I have never seen him.',
   'nb.email.title': 'Her last email',

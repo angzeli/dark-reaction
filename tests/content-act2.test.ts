@@ -222,3 +222,39 @@ describe('rest, obsession and the doors', () => {
     expect(known(g)).toContain('ph.radium');
   });
 });
+
+describe('the NMR console after it is solved (#86)', () => {
+  it('stays in the room: checking the queue can be done again, and again', () => {
+    const g = actTwo();
+    goTo(g, 'nmr');
+    for (let i = 0; i < 2; i++) {
+      expect(ids(g)).toContain('nmr.console.again');
+      g.choose('nmr.console.again');
+      expect(keys(g)[0]).toBe('nmr.console.again.r');
+    }
+    expect(ids(g)).toContain('nmr.console.again');
+  });
+
+  it('knowing RIDLEY-4 without your tube, you can still type it, and the console says what is missing', () => {
+    const g = actTwo();
+    learnt(g, 'nb.priority');
+    goTo(g, 'nmr');
+    expect(ids(g)).toContain('nmr.code');
+    expect(ids(g)).not.toContain('nmr.run');
+    g.choose('nmr.code');
+    expect(keys(g)[0]).toBe('nmr.code.empty');
+    // With the tube in hand, the code runs it instead.
+    g.state.inventory.push('item.tube.own');
+    expect(ids(g)).toContain('nmr.run');
+    expect(ids(g)).not.toContain('nmr.code');
+  });
+
+  it('in Act I the code is refused until holder 13 has run', () => {
+    const g = new Game(CONTENT);
+    drainCards(g);
+    learnt(g, 'nb.priority');
+    goTo(g, 'nmr');
+    g.choose('nmr.code');
+    expect(keys(g)[0]).toBe('nmr.code.locked');
+  });
+});

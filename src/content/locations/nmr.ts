@@ -25,8 +25,8 @@ export const nmrScenes: SceneDef[] = [
         effects: [{ puzzle: 'console' }],
       },
       {
+        // Once the console is solved it stays in the room: a player who comes back to use it must find it.
         id: 'nmr.console.again',
-        once: 'loop',
         label: 'nmr.console.again',
         cost: 2,
         if: { solved: 'console' },
@@ -44,6 +44,18 @@ export const nmrScenes: SceneDef[] = [
         once: 'loop',
         text: [{ key: 'nmr.load.r' }, { key: 'nmr.load.code', if: { know: 'nb.priority' } }],
         effects: [{ learn: 'nb.queue.locked' }],
+      },
+      {
+        // Ian's code, typed with nothing in the carousel: say why nothing runs, and what to bring.
+        id: 'nmr.code',
+        label: 'nmr.code',
+        cost: 1,
+        once: 'loop',
+        if: { all: [{ know: 'nb.priority' }, { not: { item: 'item.tube.own' } }] },
+        text: [
+          { key: 'nmr.code.locked', if: { act: 1 } },
+          { key: 'nmr.code.empty', if: { actGte: 2 } },
+        ],
       },
       {
         // Act II: Ian's priority code jumps the locked queue for one run (8 min).

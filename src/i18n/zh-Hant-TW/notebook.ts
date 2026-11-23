@@ -54,7 +54,7 @@ export const notebook: Record<keyof typeof en, string> = {
 
   // 第二幕
   'nb.priority.title': '優先代碼',
-  'nb.priority.body': 'RIDLEY-4。貼在 Dan 螢幕上的便利貼。Ian 說不准濫用。',
+  'nb.priority.body': 'RIDLEY-4。貼在 Dan 螢幕上的便利貼。Ian 說不准濫用。只要我的管子在進樣盤裡，它能讓我插隊跑一次。',
   'nb.femi.title': 'Femi',
   'nb.femi.body': 'Femi Adeyemi，夜班警衛。收音機、保溫瓶、用大寫字填的填字遊戲。會吹口哨。週一：倒垃圾，走 B 號逃生門。我從來沒見過他。',
   'nb.email.title': '她的最後一封信',
