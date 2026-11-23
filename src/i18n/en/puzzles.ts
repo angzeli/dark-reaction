@@ -153,7 +153,7 @@ export const puzzles = {
   'puzzle.console.h2': '“queue” only lists bookings it thinks are yours to manage. Add “--all”.',
   'puzzle.console.h3': 'Type queue --all, then info 13.',
   'puzzle.console.solved':
-    'Holder 13. Your username. Booked and submitted at 03:33 tonight, which has not happened yet. The slot it names is empty. Some time in the next forty minutes, somebody is going to load a sample you have never made.',
+    'Holder 13. Your username. Booked and submitted at 03:33 tonight, which has not happened yet. The slot it names is empty. Some time before then, somebody is going to load a sample you have never made.',
   'puzzle.console.left': 'You log out. The cursor keeps blinking anyway.',
   'puzzle.console.margin': 'Console: queue --all, then info 13.',
 

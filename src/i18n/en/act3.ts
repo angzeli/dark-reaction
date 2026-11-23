@@ -10,9 +10,6 @@ export const act3 = {
     'You peel back seven years of masking tape and work the little door the way the SOP’s pencil taught you: evacuate, refill; evacuate, refill; evacuate, refill. The gauge swings and settles. The inner door opens with a sigh that sounds almost like relief.',
   'glovebox.mini.open.r.2':
     'Inside, on a tiny rack, stands a J. Young NMR tube: empty, clean, its screw tap closed, the glass not quite touching the rack, as if it has been waiting very carefully. A paper tag is tied to its neck with cotton thread: *for whoever comes next — YCL*.',
-  'glovebox.mini.shut': 'Try the small antechamber',
-  'glovebox.mini.shut.r':
-    'You pick at the masking tape and stop. If you open it the wrong way, whatever is in there will meet the air, and you don’t yet know the right way. The pencil on the SOP knows. You don’t.',
   'nmr.compressor.act3':
     'The chirp has changed. It isn’t steady any more: a few chirps, a pause, a few more, a long pause, over and over, like someone drumming their fingers on a bench while they think. The green LED on the panel blinks with every chirp. A rhythm. Almost a word.',
   'nmr.postit': 'Read the Post-it on the compressor',

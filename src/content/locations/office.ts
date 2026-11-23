@@ -206,7 +206,8 @@ export const officeScenes: SceneDef[] = [
   {
     id: 'office.desk7',
     location: 'office',
-    text: [{ key: 'office.desk7.text' }],
+    // From Act II the picture shows the top box open; the page says so too (#129).
+    text: [{ key: 'office.desk7.text' }, { key: 'office.desk7.open', if: { actGte: 2 } }],
     choices: [
       {
         id: 'office.mug',

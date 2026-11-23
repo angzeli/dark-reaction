@@ -150,7 +150,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.console.h2': '「queue」只會列出它認為你能管理的預約。加上「--all」。',
   'puzzle.console.h3': '輸入 queue --all，再輸入 info 13。',
   'puzzle.console.solved':
-    '樣品槽 13。你的帳號。預約和送出的時間都是今晚 03:33，而那還沒發生。它指定的槽位是空的。接下來四十分鐘裡的某個時刻，會有人放進一支你從來沒做過的樣品。',
+    '樣品槽 13。你的帳號。預約和送出的時間都是今晚 03:33，而那還沒發生。它指定的槽位是空的。在那之前的某個時刻，會有人放進一支你從來沒做過的樣品。',
   'puzzle.console.left': '你登出了。游標還是一閃一閃的。',
   'puzzle.console.margin': '主控台：queue --all，再 info 13。',
 
