@@ -151,7 +151,9 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   };
   let handle: PuzzleViewHandle | null = null;
   handle = o.view.mount(body, api, o.data);
-  title.focus();
+  // The dialog's title takes focus, unless the view has already put it where play starts
+  // (the console's command line: typing straight away must reach it, #108).
+  if (!body.contains(document.activeElement)) title.focus();
   if (spent > 0) api.setMinutes(spent);
 
   return {
