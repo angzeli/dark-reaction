@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #138 Settings fits a phone at every text size (closes #107)
+- **Last merged:** #139 What a choice shows before 03:33 waits to be read (closes #127)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #127: **what a choice shows before 03:33 waits to be read.**
+  - **What was wrong:** reading the microSD at 03:30 (3 minutes) ran into 03:33. Her raw data, one of the story's central beats, was the lights-out card's `before`, shown under a fade that starts at once: on screen for under a second. The first-timer only found the result in the notebook.
+  - **The fix:** when the last minute's page carries a choice's own result, it stays on screen with one button, "Then the lights go out" / 「然後，燈熄了」, focused for keyboard. The signature transition starts when the player chooses. A minute that only passed (a wait, the night's events) goes straight into the dark as before.
+  - **The bot** presses that button in `settle()`.
+  - **Tests:** `e2e/last-minute.spec.ts` covers both cases. The microSD one fails without the fix. All 145 e2e tests pass, including the playthroughs of every ending.
+- Merged #138 (closes #107).
 - #107: **Settings fits a phone at every text size.**
   - **What was wrong:** at 390 px, choosing the largest text size made the dialog 430 px wide. Close was pushed off the edge, with a 10 px sliver left and no Escape on a touch screen, and the descriptions were cut off. The cause was the volume sliders' fixed `6rem`/`3.5rem` columns around a range input, plus fieldsets' default min-content width. The mobile player found it; Layer 3 sweeps the default text size only.
   - **The fix:** the slider rows wrap their label on narrow screens, and the sheet and fieldsets may shrink.

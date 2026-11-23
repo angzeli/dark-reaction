@@ -78,6 +78,8 @@ export class App {
   private lastFocus: HTMLElement | null = null;
   /** Bumped by every play render and by the last minute before the dark: a reveal only draws the choices of its own page (#80). */
   private playSeq = 0;
+  /** Set while a content choice is being played out, so the last minute before 03:33 can hold its result (#127). */
+  private choiceRanOut = false;
   /** The opener's `data-focus-key`, for when closing re-renders it as a new element (the title screen). */
   private lastFocusKey: string | undefined;
 
@@ -255,6 +257,9 @@ export class App {
   private async playCard(card: Card): Promise<void> {
     if (card.kind === 'lightsout') {
       this.showLastMinute(card.before);
+      // What a choice showed in its last minute is part of the story (her raw data, #127): hold it until
+      // the player has read it. A minute that only passed (a wait, the night's own events) goes straight on.
+      if (this.choiceRanOut && card.before.some((p) => p.style === 'result')) await this.holdLastMinute();
       audio.cue('lightsout');
       const handle = playLightsOut(document.body, {
         reduceMotion: this.settings.reduceMotion,
@@ -305,6 +310,27 @@ export class App {
     narrative?.querySelector('.choices')?.replaceChildren();
     const clock = this.root.querySelector('.hud__clock');
     if (clock) clock.textContent = clockLabel(LOOP_LENGTH);
+  }
+
+  /** The last minute stays on screen, with one way on: the player's. */
+  private holdLastMinute(): Promise<void> {
+    return new Promise((resolve) => {
+      const list = this.root.querySelector('.choices');
+      if (!list || this.screen !== 'play') return resolve();
+      const go = h('button', { type: 'button', class: 'choice choice--meta last-minute' }, h('span', { class: 'choice__n', 'aria-hidden': 'true' }, ''), h('span', { class: 'choice__label' }, t('ui.lastminute')));
+      // Pressed once: it goes, so nothing is left to press under the dark.
+      go.addEventListener(
+        'click',
+        () => {
+          list.replaceChildren();
+          resolve();
+        },
+        { once: true },
+      );
+      list.replaceChildren(h('li', {}, go));
+      go.focus({ preventScroll: true });
+      go.scrollIntoView({ block: 'nearest' });
+    });
   }
 
   private showActCard(act: Act): Promise<void> {
@@ -388,7 +414,11 @@ export class App {
   }
 
   async choose(id: string): Promise<void> {
+    // Only a choice of the player's own has a result worth holding the dark for (#127); a walk, a wait,
+    // or a puzzle running out at 03:33 goes straight on.
+    this.choiceRanOut = !/^(meta|go|wait):/.test(id);
     await this.act((g) => g.choose(id));
+    this.choiceRanOut = false;
   }
 
   private openOverlay(overlay: Overlay): void {

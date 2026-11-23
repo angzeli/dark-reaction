@@ -27,6 +27,7 @@ export const ui: Record<keyof typeof en, string> = {
   'ui.wait.minutes': '等 {n} 分鐘',
   'ui.waited': '你等著。整棟大樓自顧自地嗡嗡響了 {n} 分鐘。',
   'ui.cost': '{n} 分鐘',
+  'ui.lastminute': '然後，燈熄了',
   'ui.loop': '第 {n} 輪',
   'ui.noted': '寫進筆記本：{entry}。',
   'ui.phantom.notice': '筆記本裡多了{n:一頁:幾頁}，是你的字跡。你不記得自己寫過。',
