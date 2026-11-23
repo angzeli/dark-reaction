@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #174 The deploy no longer waits for a branch build (closes #89)
+- **Last merged:** #175 Nightly QA: the long explorer and fuzzer run every night (closes #91)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #91: **nightly QA.** `.github/workflows/nightly-qa.yml` runs Layer 1 at length (`explore.ts --long`) at 03:17 UTC, seeded with the day of the year, and can be run by hand with a seed. It uploads the report as an artifact and fails on any error-level finding. `docs/qa/README.md` says how to reproduce a nightly finding.
+- Merged #174 (closes #89).
 - #89: **the deploy no longer waits for a branch build.** The owner added the `workflow` scope, so this could land at last.
   - **`deploy.yml`:** with the Pages source "GitHub Actions" (set 2026-11-23), there's no branch build left to race, so #85's wait step and its `actions: read` permission are gone. A comment says the source must stay "GitHub Actions".
   - **`CLAUDE.md`:** says `main` is protected (required checks, up to date, no admin bypass, no force pushes) and that a local session signed in to `gh` as the owner can change repository settings, tags and releases.
