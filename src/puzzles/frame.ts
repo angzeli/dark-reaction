@@ -153,7 +153,10 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
   handle = o.view.mount(body, api, o.data);
   // The dialog's title takes focus, unless the view has already put it where play starts
   // (the console's command line: typing straight away must reach it, #108).
-  if (!body.contains(document.activeElement)) title.focus();
+  if (!body.contains(document.activeElement)) title.focus({ preventScroll: true });
+  // Either way the puzzle opens at its top, clear of the sticky header (html's scroll-padding, #110),
+  // two frames on: the header's height reaches --hud-h only once it has been laid out and observed.
+  requestAnimationFrame(() => requestAnimationFrame(() => element.isConnected && element.scrollIntoView({ block: 'start' })));
   if (spent > 0) api.setMinutes(spent);
 
   return {
