@@ -170,7 +170,9 @@ export class App {
     const game = new Game(this.content, state);
     if (!game.index.scenes.has(state.scene)) state.scene = game.entrySceneFor(state.location);
     this.game = game;
-    this.screen = state.ending ? 'ending' : 'play';
+    // An ending whose card is still to play (the Infinite Loop's last night, reloaded on its held last
+    // minute) starts from the play screen: the card takes it to the ending, after the dark (#163).
+    this.screen = state.ending && !state.cards.some((c) => c.kind === 'ending') ? 'ending' : 'play';
     this.overlay = 'none';
     this.render({ reveal: true });
     void this.playCards();
@@ -266,7 +268,7 @@ export class App {
 
   private async playCard(card: Card): Promise<void> {
     if (card.kind === 'lightsout') {
-      this.showLastMinute(card.before);
+      this.showLastMinute(card.before, card.loop);
       // What a choice showed in its last minute is part of the story (her raw data, #127): hold it until
       // the player has read it. A minute that only passed (a wait, the night's own events) goes straight on.
       if (card.hold) await this.holdLastMinute();
@@ -279,7 +281,7 @@ export class App {
         onBlack: () => this.render(),
       });
       // Skippable, but only by a press made once it has begun: not by the Space that finished the text, a
-      // click already on its way, or the second click of a double click on the button above (#X141).
+      // click already on its way, or the second click of a double click on the button above (#141).
       const started = performance.now();
       const skip = (e: Event) => {
         if (performance.now() - started < SKIP_GRACE_MS || (e instanceof KeyboardEvent && e.repeat)) return;
@@ -308,7 +310,7 @@ export class App {
    * The minute before the dark, on the page that is still showing: what just happened (the
    * card's `before`), no choices, 03:33 on the clock. The room itself is left as it was.
    */
-  private showLastMinute(before: Paragraph[]): void {
+  private showLastMinute(before: Paragraph[], loop: number): void {
     if (this.screen !== 'play') return;
     this.playSeq++; // the page's pending reveal must not bring its choices back under the fade
     this.closePuzzle();
@@ -326,6 +328,9 @@ export class App {
     narrative?.querySelector('.choices')?.replaceChildren();
     const clock = this.root.querySelector('.hud__clock');
     if (clock) clock.textContent = clockLabel(LOOP_LENGTH);
+    // Its own loop, too: after a reload the header was drawn from the next one's state (#163).
+    const loopLabel = this.root.querySelector('.hud__loop');
+    if (loopLabel) loopLabel.textContent = t('ui.loop', { n: loop });
   }
 
   /** The last minute stays on screen, with one way on: the player's. */
@@ -341,8 +346,18 @@ export class App {
       };
       this.held = release;
       const go = h('button', { type: 'button', class: 'choice choice--meta last-minute' }, h('span', { class: 'choice__n', 'aria-hidden': 'true' }, ''), h('span', { class: 'choice__label' }, t('ui.lastminute')));
-      // Pressed once: it goes, so nothing is left to press under the dark.
-      go.addEventListener('click', release, { once: true });
+      // Pressed once: it goes, so nothing is left to press under the dark. Not by the input that made the
+      // choice, though: it appears where the choice was, so a double click's second click or a held
+      // Enter's repeat would press it unseen (#163).
+      const press = (e: MouseEvent) => {
+        if (e.detail > 1) return;
+        go.removeEventListener('click', press);
+        release();
+      };
+      go.addEventListener('click', press);
+      go.addEventListener('keydown', (e) => {
+        if (e.repeat) e.preventDefault();
+      });
       list.replaceChildren(h('li', {}, go));
       go.focus({ preventScroll: true });
       go.scrollIntoView({ block: 'nearest' });

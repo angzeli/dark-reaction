@@ -285,8 +285,10 @@ export class SaveStore {
   latest(): SlotId | null {
     let best: { slot: SlotId; at: number } | null = null;
     for (const { slot, result } of this.list()) {
-      if (!result.ok || result.envelope.state.ending) continue;
-      const at = Date.parse(result.envelope.savedAt);
+      // An ended game is over, unless its ending card is still to play (#163).
+      const st = result.ok ? result.envelope.state : null;
+      if (!st || (st.ending && !st.cards.some((c) => c.kind === 'ending'))) continue;
+      const at = Date.parse(result.ok ? result.envelope.savedAt : '');
       if (!Number.isFinite(at)) continue;
       if (!best || at > best.at) best = { slot, at };
     }

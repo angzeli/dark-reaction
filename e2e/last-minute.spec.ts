@@ -62,18 +62,20 @@ test('a reload while the page is held comes back to it (#127)', async ({ page })
   await again.getByRole('button', { name: 'Continue' }).click();
   await expect(again.locator('.last-minute')).toBeVisible();
   await expect(again.locator('.narrative__text')).toContainText('NOT_MINE');
+  // Its own loop in the header, not the next one's (#163).
+  await expect(again.locator('.hud__loop')).toHaveText(`Loop ${targets().find((t) => t.name === 'act2-office')!.state!.loop}`);
   await again.locator('.last-minute').click();
   await expect(again.locator('.hud__clock')).toHaveText('02:47', { timeout: 10_000 });
 });
 
-test('a double click on the button doesn’t skip the dark (#X141)', async ({ page }) => {
+test('a double click on the button doesn’t skip the dark (#141)', async ({ page }) => {
   await heldPage(page);
   await page.locator('.last-minute').dblclick();
   await page.waitForTimeout(300);
   await expect(page.locator('.dr-lightsout')).toHaveCount(1);
 });
 
-test('nor does a Space already on its way when a wait runs into 03:33 (#X141)', async ({ page }) => {
+test('nor does a Space already on its way when a wait runs into 03:33 (#141)', async ({ page }) => {
   const office = targets().find((t) => t.name === 'act2-office')!;
   const state = { ...structuredClone(office.state!), minute: 45 };
   await loadTarget(page, 'http://localhost:4173/dark-reaction/', { ...office, state }, { locale: 'en', reduceMotion: true, highContrast: false });
@@ -96,4 +98,49 @@ test('a walk into 03:33 goes straight into the dark, too', async ({ page }) => {
   await page.locator('.choice[data-choice="go:nmr"]').click();
   await expect(page.locator('.last-minute')).toHaveCount(0);
   await expect(page.locator('.hud__clock')).toHaveText('02:47', { timeout: 10_000 });
+});
+
+/** #163: the input that made the choice can't press the button that appears where it was. */
+async function atTheMicrosd(page: Page) {
+  const office = targets().find((t) => t.name === 'act2-office')!;
+  const state = { ...structuredClone(office.state!), minute: 43, inventory: ['item.microsd'] };
+  await loadTarget(page, 'http://localhost:4173/dark-reaction/', { ...office, state }, { locale: 'en', reduceMotion: true, highContrast: false });
+}
+
+test('a double click on the choice doesn’t also press “Then the lights go out” (#163)', async ({ page }) => {
+  await atTheMicrosd(page);
+  await page.locator('.choice[data-choice="office.microsd"]').dblclick();
+  await page.waitForTimeout(500);
+  await expect(page.locator('.last-minute')).toBeVisible();
+  await expect(page.locator('.dr-lightsout')).toHaveCount(0);
+});
+
+test('nor does a held Enter (#163)', async ({ page }) => {
+  await atTheMicrosd(page);
+  await page.keyboard.press('Tab');
+  await page.locator('.choice[data-choice="office.microsd"]').focus();
+  await page.keyboard.down('Enter');
+  await page.keyboard.down('Enter'); // the key's repeat
+  await page.keyboard.down('Enter');
+  await page.keyboard.up('Enter');
+  await page.waitForTimeout(300);
+  await expect(page.locator('.last-minute')).toBeVisible();
+  // A fresh press still goes on.
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.hud__clock')).toHaveText('02:47', { timeout: 10_000 });
+});
+
+test('the Infinite Loop’s last night: a reload on its held page comes back to it, and the ending follows the dark (#163)', async ({ page }) => {
+  const office = targets().find((t) => t.name === 'act2-office')!;
+  const state = { ...structuredClone(office.state!), minute: 43, inventory: ['item.microsd'], obsession: 10, loop: 6 };
+  await loadTarget(page, 'http://localhost:4173/dark-reaction/', { ...office, state }, { locale: 'en', reduceMotion: true, highContrast: false });
+  await page.locator('.choice[data-choice="office.microsd"]').click();
+  await expect(page.locator('.last-minute')).toBeVisible();
+  const again = await page.context().newPage();
+  await again.goto('http://localhost:4173/dark-reaction/');
+  await again.getByRole('button', { name: 'Continue' }).click();
+  await expect(again.locator('.last-minute')).toBeVisible();
+  await expect(again.locator('.narrative__text')).toContainText('NOT_MINE');
+  await again.locator('.last-minute').click();
+  await expect(again.locator('article.ending[data-ending="infinite"]')).toBeVisible({ timeout: 15_000 });
 });

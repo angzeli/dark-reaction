@@ -319,6 +319,13 @@ describe('the last minute before 03:33 (#127)', () => {
     if (card?.kind === 'lightsout') expect(card.before.map((p) => p.key)).toContain('office.microsd.r.1');
   });
 
+  it('so does a choice that opens a scene, such as hot desk 7 (#163)', () => {
+    const g = actTwo();
+    waitUntil(g, 45);
+    g.choose('office.desk7');
+    expect(drainCards(g)[0]).toMatchObject({ kind: 'lightsout', hold: true });
+  });
+
   it('a wait or a walk into 03:33 goes straight into the dark', () => {
     const wait = actTwo();
     waitUntil(wait, 45);

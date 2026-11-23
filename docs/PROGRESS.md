@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #181 Second-pass accessibility: a puzzle's title stays put, rings you can see, words not asterisks (closes #144, #148, #149)
+- **Last merged:** #182 The held minute: the input that made the choice can't press it, and the Infinite Loop's last night survives a reload (closes #163)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #163: **the held minute, followed up.** A second cold review of #155 found these; #155 was merged as a strict improvement with them left for this.
+  - **The input that made the choice can't press the button.** "Then the lights go out" appears where the choice was and takes focus. A double click's second click (`detail > 1`) or a held Enter's repeat now does nothing; a fresh press still goes on.
+  - **The Infinite Loop's last night:** there the ending is set as the dark falls, so after a reload the title had no Continue, and loading showed the ending first with the dark over its epilogue. A save whose ending card is still to play is offered by Continue, and it opens on the play screen; the card takes it to the ending after the dark.
+  - **Sub-scenes are held too:** a choice that runs into 03:33 and opens a scene (hot desk 7, the logbook, her box) waits like one with a result.
+  - **The held page shows its own loop** after a reload, not the next one's.
+  - **Tests:** three in `e2e/last-minute.spec.ts` (double click, held Enter, the Infinite Loop reload), a loop check in the reload test, and one in `tests/content-act2.test.ts`. All fail without the fix.
+- Merged #181 (closes #144, #148, #149).
 - #144, #148, #149: **second-pass accessibility.**
   - **A puzzle's title stays put (#144):** it holds focus when a puzzle opens, and Space there (players learn Space finishes text) scrolled the title and intro about 250 px off the screen (the breaker). Space and Enter on the title now do nothing.
   - **No empty heading (#144):** while a puzzle is open, the page kept an empty "What you can do" heading. It's now hidden whenever the choices are empty (`:has(+ .choices:empty)`).
