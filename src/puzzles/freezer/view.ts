@@ -5,7 +5,7 @@
  * a slipped finger costs nothing; every cell is a radio with its position
  * and cap colour in words, and what each lift finds is announced.
  */
-import { h } from '../../ui/dom.ts';
+import { h, setInline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop, type Spot } from '../roving.ts';
 import type { PuzzleView } from '../types.ts';
 import {
@@ -134,7 +134,7 @@ export const freezerView: PuzzleView = {
       lift.disabled = !canLift;
       panel.hidden = over;
       const said = report();
-      if (status.textContent !== said) status.textContent = said;
+      setInline(status, said);
 
       done.replaceChildren(
         ...(over

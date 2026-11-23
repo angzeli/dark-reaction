@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #139 The NMR console on a phone and by keyboard (closes #108)
+- **Last merged:** #140 Emphasis is never asterisks, on screen or to a screen reader (closes #109, #128)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #109, #128: **emphasis is never asterisks, on screen or to a screen reader.**
+  - **On screen:** the freezer showed her slip as `*raw. all of it.*`, because puzzle status lines were set with `textContent`. They now go through `setInline` (italics, as in scenes) in the freezer, cipher, fabrication, door log and Schlenk line.
+  - **To a screen reader:** a scene's spoken copy carried the raw markup (NVDA reads "star"), missed the "In your hands" line, and stayed in the page, so browse mode met every passage twice. It's now plain words with every line on screen, cleared 3 s after it's said.
+  - **Tests:** `e2e/markup.spec.ts` drives every puzzle with the bot's solutions in both languages, checking each step for asterisks, plus the spoken copy. The freezer and the copy fail without the fix.
+- Merged #139 (closes #108).
 - #108: **the NMR console on a phone and by keyboard.**
   - **What was wrong:**
     - at 390 px, output lines were cut off on the right (the login banner ending "4.08-d"; the queue's STATUS column, PRIORITY · WAITING FOR SAMPLE, lost) in a sideways scroll region no keyboard could reach;

@@ -8,7 +8,7 @@
  * feature you can circle is a real button over the plot, with a name, and
  * each plot is described in words.
  */
-import { h } from '../../ui/dom.ts';
+import { h, setInline } from '../../ui/dom.ts';
 import { FIGURE_3, fraction, OWN, polyline, PRINTOUT, PRODUCT_PPM, SOLVENT_PPM, trace, type Span, type SpectrumSpec } from '../spectra.ts';
 import type { PuzzleView } from '../types.ts';
 import { fabricationLogic, fabricationSave, TELLS, type FabricationMove, type FabricationState, type Feature } from './logic.ts';
@@ -176,7 +176,7 @@ export const fabricationView: PuzzleView = {
               : f.kind === 'overlayFirst'
                 ? api.t('puzzle.fabrication.overlayFirst')
                 : api.t(f.on ? 'puzzle.fabrication.overlay.on' : 'puzzle.fabrication.overlay.off');
-      if (status.textContent !== said) status.textContent = said;
+      setInline(status, said);
 
       done.replaceChildren(
         ...(solved

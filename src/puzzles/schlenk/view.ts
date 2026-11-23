@@ -7,7 +7,7 @@
  * ("Bleed: shut"), so the name is the state. Everything the diagram shows
  * is also said in words.
  */
-import { h } from '../../ui/dom.ts';
+import { h, setInline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop } from '../roving.ts';
 import type { PuzzleView } from '../types.ts';
 import { FLASK_PORT, PORTS, schlenkLogic, schlenkSave, TAPS, TUBE_PORT, type Bleed, type Port, type SchlenkMove, type SchlenkState } from './logic.ts';
@@ -204,7 +204,7 @@ export const schlenkView: PuzzleView = {
       wrap.disabled = over;
       tube.textContent = api.t(`puzzle.schlenk.tube.${tubeState(state)}`);
       const text = said();
-      if (status.textContent !== text) status.textContent = text;
+      setInline(status, text);
       done.replaceChildren(
         ...(over
           ? [
