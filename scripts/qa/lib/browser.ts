@@ -60,7 +60,15 @@ export async function loadTarget(page: Page, base: string, target: Target, view:
   await page.goto(base);
   await page.waitForSelector('.title, .play, .ending, article.ending', { timeout: 15_000 }).catch(() => undefined);
   if (target.screen !== 'title') {
-    await page.evaluate(() => (window as unknown as { darkReaction: { loadSlot(s: string): boolean } }).darkReaction.loadSlot('auto'));
+    await page.evaluate(() => {
+      const app = (window as unknown as { darkReaction: { loadSlot(s: string): boolean; status: unknown } }).darkReaction;
+      app.loadSlot('auto');
+      // Loading a save says so at the foot of the screen for a few seconds (#103); that notice is the
+      // loader's doing, not part of the screen under test.
+      app.status = null;
+      const notice = document.querySelector('.app__status');
+      if (notice) notice.textContent = '';
+    });
     await page.waitForSelector(target.screen === 'ending' ? 'article.ending' : '.choice, .pz', { timeout: 15_000 });
   }
   if (target.overlay && target.overlay !== 'note') {
