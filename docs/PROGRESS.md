@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #135 The notebook's sections are a proper tablist (closes #105)
+- **Last merged:** #137 The TLC plate speaks its lamp, names its spots, and words the crude lane in 繁中 (closes #106, #114)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #106, #114: **the TLC plate speaks its lamp, names its spots, and words the crude lane properly in 繁中.**
+  - **Unannounced lamp:** turning on the UV lamp, the puzzle's key move, changed nothing a screen reader could hear. Lane 11's hidden spot (the trap) and lane 10's appeared in silence, and several spot buttons had the same name ("Measure the spot in lane crude" ×3).
+  - **The 繁中 template:** the lane string was built for numbers, so it read 「量第 粗產物 道的斑點」, with a half-width ", " between spots.
+  - **The fix:**
+    - the lamp's status line says where spots came out (or went);
+    - spots are named by their place in the lane, from the top ("the top spot in lane 11", 「第 11 道最上面那個斑點」), unique on the plate;
+    - every lane string has a `.crude` twin (「量粗產物那一道…斑點」, 「粗產物：…」);
+    - spots are listed with 、 in 繁中.
+  - **Test:** `e2e/tlc-a11y.spec.ts`, both languages. It fails without the fix.
+- Merged #135 (closes #105).
 - #105: **the notebook's sections are a proper tablist.**
   - **What was wrong:** the arrow keys did nothing, and every tab was a Tab stop. Choosing a tab re-rendered the notebook and sent focus to the "Notebook" heading, which has no focus style, so reading the next section meant tabbing down from the top. The tab panel had no name. The accessibility player found it.
   - **The fix:** one Tab stop (the selected tab). ←/→ and Home/End move and select, wrapping. Each tab keeps focus across the re-render (its focus key), and the panel is labelled by its tab.

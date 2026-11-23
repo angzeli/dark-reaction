@@ -8,6 +8,8 @@ import type { PuzzleView } from '../types.ts';
 import { CONTENTS, distance, LANES, PLATE, tlcLogic, visibleSpots, type Lane, type TlcFeedback, type TlcMove, type TlcState } from './logic.ts';
 
 const pct = (cm: number) => `${(cm / PLATE.height) * 100}%`;
+/** Spots from the top of the plate down (the farthest-run first). */
+const topDown = <C extends Parameters<typeof distance>[0]>(spots: readonly C[]): C[] => [...spots].sort((a, b) => distance(b) - distance(a));
 
 export const tlcView: PuzzleView = {
   mount(host, api, data) {
@@ -22,7 +24,11 @@ export const tlcView: PuzzleView = {
     const root = h('div', { class: 'tlc' }, rule, plate, description, h('div', { class: 'tlc__controls' }, uv, combine), readout);
 
     const laneName = (lane: Lane) => (lane === 'crude' ? api.t('puzzle.tlc.lane.crude') : String(lane));
-    const laneParam = (lane: Lane) => (lane === 'crude' ? '@puzzle.tlc.lane.crude' : lane);
+    // The crude lane has a name, not a number, and each language words that differently (#114):
+    // every lane string has a `.crude` twin.
+    const laneKey = (key: string, lane: Lane) => (lane === 'crude' ? `${key}.crude` : key);
+    /** Where a spot sits in its lane, from the top, so no two spot buttons share a name (#106). */
+    const position = (lane: Lane, index: number, count: number) => (count === 1 ? '@puzzle.tlc.pos.only' : `@puzzle.tlc.pos.${index + 1}`);
 
     const feedbackText = (f: TlcFeedback | null): string => {
       if (!f) return '';
@@ -36,7 +42,7 @@ export const tlcView: PuzzleView = {
         case 'wasteful':
           return api.t('puzzle.tlc.feedback.wasteful', { lane: f.lane });
         case 'measured':
-          return api.t('puzzle.tlc.measured', { lane: laneParam(f.lane), cm: f.cm.toFixed(1), rf: f.rf.toFixed(2) });
+          return api.t(laneKey('puzzle.tlc.measured', f.lane), { lane: f.lane, cm: f.cm.toFixed(1), rf: f.rf.toFixed(2) });
       }
     };
 
@@ -46,8 +52,17 @@ export const tlcView: PuzzleView = {
       api.saveData({ uv: state.uv, selected: state.selected, wrong: state.wrong });
       api.setMinutes(tlcLogic.minutes(state));
       render();
+      // The lamp is the puzzle's turn: say what it changed (#106).
+      if (m.type === 'uv') readout.textContent = uvNews();
       if (focusKey) root.querySelector<HTMLElement>(`[data-focus-key="${focusKey}"]`)?.focus();
       if (tlcLogic.isSolved(state)) api.finish(true);
+    };
+
+    /** What switching the lamp just changed, in words: the lanes where spots came out (or went). */
+    const uvNews = (): string => {
+      const changed = LANES.filter((lane) => visibleSpots(lane, true).length !== visibleSpots(lane, false).length);
+      const lanes = changed.map((lane) => (lane === 'crude' ? api.t('puzzle.tlc.lane.crude') : String(lane))).join(api.t('puzzle.tlc.describe.sep'));
+      return api.t(state.uv ? 'puzzle.tlc.uv.news.on' : 'puzzle.tlc.uv.news.off', { lanes });
     };
 
     const render = () => {
@@ -59,12 +74,12 @@ export const tlcView: PuzzleView = {
         h(
           'div',
           { class: 'tlc__track', dataset: { lane: String(lane) } },
-          ...visibleSpots(lane, state.uv).map((c) =>
+          ...topDown(visibleSpots(lane, state.uv)).map((c, i, all) =>
             h('button', {
               type: 'button',
               class: `tlc__spot tlc__spot--${c}`,
               style: `bottom: ${pct(PLATE.baseline + distance(c))}`,
-              'aria-label': api.t('puzzle.tlc.spot', { lane: laneName(lane) }),
+              'aria-label': api.t(laneKey('puzzle.tlc.spot', lane), { lane, pos: position(lane, i, all.length) }),
               dataset: { lane: String(lane), compound: c, focusKey: `tlc-spot-${lane}-${c}` },
               onclick: () => move({ type: 'measure', lane, compound: c }),
             }),
@@ -106,9 +121,9 @@ export const tlcView: PuzzleView = {
       plate.replaceChildren(sheet, lanes);
       description.replaceChildren(
         ...LANES.map((lane) => {
-          const spots = visibleSpots(lane, state.uv);
-          const list = spots.length ? spots.map((c) => api.t('puzzle.tlc.describe.spot', { cm: distance(c).toFixed(1) })).join(', ') : api.t('puzzle.tlc.describe.none');
-          return h('li', {}, api.t('puzzle.tlc.describe', { lane: laneParam(lane), spots: list }));
+          const spots = topDown(visibleSpots(lane, state.uv));
+          const list = spots.length ? spots.map((c) => api.t('puzzle.tlc.describe.spot', { cm: distance(c).toFixed(1) })).join(api.t('puzzle.tlc.describe.sep')) : api.t('puzzle.tlc.describe.none');
+          return h('li', {}, api.t(laneKey('puzzle.tlc.describe', lane), { lane, spots: list }));
         }),
       );
       uv.textContent = api.t(state.uv ? 'puzzle.tlc.uv.on' : 'puzzle.tlc.uv.off');
