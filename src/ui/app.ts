@@ -603,7 +603,7 @@ export class App {
     const hud = h(
       'header',
       { class: 'hud' },
-      h('p', { class: 'hud__place' }, t(location.name)),
+      h('h1', { class: 'hud__place' }, t(location.name)),
       h(
         'p',
         { class: 'hud__time' },
@@ -622,11 +622,13 @@ export class App {
     const paras = s.display.length > 0 ? s.display : game.sceneText(s.scene);
     const text = h('div', { class: 'narrative__text' }, ...paras.map((p) => this.paragraph(p)));
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
-    const choices = h('ol', { class: 'choices', 'aria-label': t('ui.choices'), tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
+    const choicesHeading = h('h2', { class: 'sr-only', id: 'choices-heading' }, t('ui.choices'));
+    const choices = h('ol', { class: 'choices', 'aria-labelledby': 'choices-heading', tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
     const carrying = s.inventory.length
       ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: s.inventory.map((i) => t(i)).join(t('ui.list.sep')) }))
       : null;
-    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choices, live);
+    // Headings a screen reader can jump by (#112): the room (h1, in the header) and what you can do.
+    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choicesHeading, choices, live);
     const app = this.shell('play', hud, art, narrative);
     this.watchHud(hud);
     app.dataset['decay'] = String(decay);

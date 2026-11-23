@@ -206,12 +206,15 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 0.9rem;
-  background: rgba(7, 14, 22, 0.94);
+  /* Opaque: text scrolling under the header mustn't show through it (#120). */
+  background: rgb(7, 14, 22);
   border-bottom: 1px solid var(--rule);
   font-size: 0.85rem;
 }
 .hud__place {
+  /* The room's name is the page's heading (#112), set as it always was. */
   margin: 0;
+  font: inherit;
   color: var(--text-dim);
   overflow: hidden;
   text-overflow: ellipsis;
