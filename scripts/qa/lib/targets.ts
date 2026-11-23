@@ -37,6 +37,9 @@ function place(base: GameState, scene: string, patch: Partial<GameState> = {}): 
   s.location = def.location;
   s.menu = 'none';
   s.cards = [];
+  // A save at this minute has already lived through the night's earlier events: without this a
+  // player starting here (`drive.ts start --at`) would see 02:50's email arrive after reading it.
+  if (patch.minute !== undefined && !patch.firedEvents) s.firedEvents = CONTENT.events.filter((e) => e.minute < s.minute).map((e) => e.id);
   s.display = game.sceneText(scene);
   return s;
 }
