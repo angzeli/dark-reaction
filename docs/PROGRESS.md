@@ -6,8 +6,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #99 QA harness: a key with nowhere to use it (closes #98)
-- **In flight:** Layer 2's playtest driver (#92) and Layer 3's screenshot sweep (#93); the AI playtesters' first run, on the build just before #87 (the NMR console canary); the deploy cleanup (#89) and the nightly run (#91), both waiting on the `workflow` scope.
+- **Last merged:** #100 QA harness, Layer 2: a playtest driver for AI playtesters (closes #92)
+- **In flight:** Layer 3's screenshot sweep (#93); triage of the first pass (all three layers on fd9de92, the build before #87) into issues; the deploy cleanup (#89) and the nightly run (#91), both waiting on the `workflow` scope.
 
 ## Next
 
@@ -34,6 +34,9 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #92: **Layer 2 of the playtest QA, the playtest driver** (`scripts/qa/drive.ts`, `docs/qa/personas.md`).
+  - **The driver:** one Playwright server with a browser context per player, driven by short CLI commands: look, read, click, tap, key, type, IME composition with Enter mid-composition, scroll, reload, resize, focus, a11y. Every command is logged.
+  - **The first pass,** on fd9de92, with five personas (first-timer, Taiwanese chemist, breaker, mobile, accessibility): reports are being triaged into issues. One lesson made it into the README: agents need a copy of the controller outside the working tree, because a branch switch here broke their commands for a minute.
 - #98: **what the canary taught Layer 1** (`scripts/qa/lib/affordance.ts`).
   - **The canary:** #86's NMR console bug (fixed by #87). Layer 1 ran untold on fd9de92, the build before the fix: 5.5 M states over 102 nights and 2,000 fuzz runs. **It missed it.** Every ending stayed reachable, so no soft-lock check fired. The only finding nearby was a cost warning on `nmr.console.again` (a once-a-night look costing 2).
   - **The new check:** a key with nowhere to use it. A player who knows what a room's choices ask for, with only tonight's part missing (the tube, the hour), must be offered something there that answers it. On fd9de92 it finds the bug unprompted, two steps from the dark route's third night. On `main` it's silent.
