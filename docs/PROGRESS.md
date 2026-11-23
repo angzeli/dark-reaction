@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #97 QA harness, Layer 1: a headless state explorer and chaotic fuzzer (closes #90)
+- **Last merged:** #99 QA harness: a key with nowhere to use it (closes #98)
 - **In flight:** Layer 2's playtest driver (#92) and Layer 3's screenshot sweep (#93); the AI playtesters' first run, on the build just before #87 (the NMR console canary); the deploy cleanup (#89) and the nightly run (#91), both waiting on the `workflow` scope.
 
 ## Next
@@ -22,17 +22,24 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
-- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep and glyphs; the findings' issues as they're filed
+- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep and glyphs, #98 the affordance check (the canary); the findings' issues as they're filed
 
 ## Open decisions and blockers
 
 - **Repository settings are set** (2026-11-23, from a local session signed in to `gh` as the owner; the cloud proxy still blocks settings writes). The Pages source is "GitHub Actions", and `main` is protected: the seven CI checks from GitHub Actions, the branch up to date, no admin bypass, no force pushes. #89 drops `deploy.yml`'s wait for the branch build and records this in `CLAUDE.md`.
+- **Squashing without force-pushing.** This session's auto mode refuses `git push --force-with-lease` on PR branches, which the squash in `CLAUDE.md` §2 needs after any change. So each PR is pushed already squashed (one commit, `(#n)` subject, PROGRESS entry), and a PR that needs changes is replaced by a new one. The owner can allow force-pushes to this repo's PR branches to go back to the documented flow.
 - **The `workflow` scope.** The owner's `gh` login can't push changes under `.github/workflows/` until `gh auth refresh -h github.com -s workflow` is run: #89 and #91 wait for it.
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-23
+- #98: **what the canary taught Layer 1** (`scripts/qa/lib/affordance.ts`).
+  - **The canary:** #86's NMR console bug (fixed by #87). Layer 1 ran untold on fd9de92, the build before the fix: 5.5 M states over 102 nights and 2,000 fuzz runs. **It missed it.** Every ending stayed reachable, so no soft-lock check fired. The only finding nearby was a cost warning on `nmr.console.again` (a once-a-night look costing 2).
+  - **The new check:** a key with nowhere to use it. A player who knows what a room's choices ask for, with only tonight's part missing (the tube, the hour), must be offered something there that answers it. On fd9de92 it finds the bug unprompted, two steps from the dark route's third night. On `main` it's silent.
+  - **Tests:** `tests/qa-affordance.test.ts` rebuilds the pre-#87 NMR suite and keeps the check, and an unprompted search, able to find it. #87's own three unit tests fail on fd9de92 and pass on `main`, so the fix has its regression tests.
+  - **The choice audit** no longer counts the night's reset as part of a choice that runs into 03:33.
+- Merged #97 (closes #90). #94 and #95 were the same change, replaced because this session can't force-push a PR branch to squash it (see *Open decisions*).
 - #90: **Layer 1 of the playtest QA, the headless explorer and fuzzer** (`scripts/qa/`, `docs/qa/README.md`).
   - **The explorer:**
     - searches every night the six routes pass through, minute by minute to 03:33, with every action a player has, and follows the nights they lead to;

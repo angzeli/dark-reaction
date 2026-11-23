@@ -10,6 +10,7 @@ import { newGameState } from '../src/engine/engine.ts';
 import { ROUTES, type Route } from '../src/content/routes.ts';
 import { PUZZLE_LOGIC } from '../src/puzzles/logic.ts';
 import { checkStep } from '../scripts/qa/lib/checks.ts';
+import { AFFORDANCE_CHECKS } from '../scripts/qa/lib/affordance.ts';
 import { DESIGN_STATE_CHECKS } from '../scripts/qa/lib/design.ts';
 import { explore } from '../scripts/qa/lib/explorer.ts';
 import { fuzz } from '../scripts/qa/lib/fuzzer.ts';
@@ -27,10 +28,10 @@ describe('Layer 1: state exploration', () => {
     branches: 0,
     maxStates: 400_000,
     seed: 1,
-    stateChecks: DESIGN_STATE_CHECKS,
+    stateChecks: [...DESIGN_STATE_CHECKS, ...AFFORDANCE_CHECKS],
   });
 
-  it('finds no errors: no soft-locks, the clock, the reset, provenance, costs, saves and both languages hold everywhere', () => {
+  it('finds no errors: no soft-locks or keys with nowhere to use them; the clock, the reset, provenance, costs, saves and both languages hold everywhere', () => {
     expect(errors(report.findings).map((f) => `${f.check}: ${f.message}\n  ${f.repro.slice(-8).join(' → ')}`)).toEqual([]);
   });
 
@@ -45,7 +46,7 @@ describe('Layer 1: state exploration', () => {
 
 describe('Layer 1: the chaotic fuzzer', () => {
   it('plays 150 fixed seeds without an error', () => {
-    const r = fuzz(CONTENT, PUZZLE_LOGIC, { seeds: 150, maxSteps: 400, firstSeed: 1, stateChecks: DESIGN_STATE_CHECKS });
+    const r = fuzz(CONTENT, PUZZLE_LOGIC, { seeds: 150, maxSteps: 400, firstSeed: 1, stateChecks: [...DESIGN_STATE_CHECKS, ...AFFORDANCE_CHECKS] });
     expect(errors(r.findings).map((f) => `seed ${f.seed} ${f.check}: ${f.message}`)).toEqual([]);
     expect(r.steps).toBeGreaterThan(30_000);
     // About 3 s on a laptop and 5–6 s on a CI runner: well past Vitest's default 5 s.
