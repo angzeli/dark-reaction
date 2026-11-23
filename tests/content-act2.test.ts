@@ -89,6 +89,28 @@ describe('Dan’s office', () => {
     expect(known(g)).toEqual(expect.arrayContaining(['nb.email', 'nb.drafts', 'nb.photo', 'nb.priority', 'nb.framed']));
   });
 
+  it('opens for you if you wait at the door: 03:15 comes to you, too (#101)', () => {
+    const g = actTwo();
+    goTo(g, 'pi');
+    expect(g.state.scene).toBe('pi.door');
+    expect(ids(g)).not.toContain('pi.enter');
+    waitUntil(g, 28);
+    expect(g.state.minute).toBe(28); // the lock cuts the wait short
+    expect(keys(g)).toContain('ev.unlock.door');
+    expect(ids(g)[0]).toBe('pi.enter');
+    g.choose('pi.enter');
+    expect(g.state.scene).toBe('pi.hub');
+    expect(g.state.minute).toBe(28);
+  });
+
+  it('and the way in is only there while the porter is cleaning', () => {
+    const g = actTwo();
+    goTo(g, 'pi');
+    waitUntil(g, 31);
+    expect(g.state.scene).toBe('pi.door');
+    expect(ids(g)).not.toContain('pi.enter');
+  });
+
   it('you hear it unlock from anywhere on Level 4', () => {
     const g = actTwo();
     goTo(g, 'synth');
