@@ -129,7 +129,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
 
   // ── P9 · 太完美的譜 ───────────────────────────────────────────────────────
   'puzzle.fabrication.title': '三張譜',
-  'puzzle.fabrication.intro': '你今晚的譜、2020 年那篇論文的圖三，還有夾在中間、今晚替你印好的那張。把那張印出來的譜露出破綻的地方圈起來。',
+  'puzzle.fabrication.intro': '你今晚的譜、2020 年那篇論文的圖三，還有夾在中間、今晚替你印好的那張。把那張印出來的譜露出破綻的地方圈起來。把三張譜並排讀過一遍要花兩分鐘。',
   'puzzle.fabrication.own': '你的譜 · 今晚，400 MHz',
   'puzzle.fabrication.printout': '印出來的譜 · 03:25',
   'puzzle.fabrication.figure': '圖三 · Ridley、Lin 等人，2020',

@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #183 The keys the README promises: M, N and Esc in puzzles, 0 for a tenth choice, arrows in a group (closes #143)
+- **Last merged:** #184 Puzzle polish: the console after a language switch, the door log's nearest minute, the three spectra's cost (closes #150, #151, #159)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #150, #151, #159: **puzzle polish from the second pass.**
+  - **The console (#150, the breaker):** a language switch remounts it, and the transcript was scrolled to its end before it was in the page, so it showed its top. It now shows the latest lines. A long command wraps like output, rather than running off the right edge.
+  - **The door log (#151, the first-timer):** a click on the timeline marks the nearest minute. It rounded down, so a click on 03:21's tick could mark 03:20.
+  - **The three spectra (#159, the mobile player):** the intro says reading them takes a couple of minutes, as the other puzzles have since #118.
+  - **Test:** `e2e/puzzle-polish.spec.ts`; all four fail without the fix.
+- Merged #183 (closes #143).
 - #143: **the keys the README promises.** From the breaker, the first-timer and the accessibility player.
   - **M, N and Esc in a puzzle:** they did nothing while a puzzle was open, though the README says *M or Esc* and clicking *Menu* worked. They now open the menu and the notebook from a puzzle, except while typing in a field (M is a letter in the console).
   - **A tenth choice:** in the stairwell, or the NMR suite after the printout, *Wait…* had no number key. 0 chooses it, and it shows a 0.

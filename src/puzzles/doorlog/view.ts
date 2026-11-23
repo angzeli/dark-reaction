@@ -216,7 +216,8 @@ export const doorlogView: PuzzleView = {
       track.addEventListener('click', (e) => {
         const box = track.getBoundingClientRect();
         if (box.width <= 0) return;
-        mark(row, Math.floor(((e.clientX - box.left) / box.width) * LOOP_LENGTH));
+        // The nearest minute: a click on a minute's own tick, or just short of it, is that minute (#151).
+        mark(row, Math.round(((e.clientX - box.left) / box.width) * LOOP_LENGTH));
       });
       track.addEventListener('keydown', (e) => {
         const to = e.key in STEPS ? (state.marks[row] ?? 0) + STEPS[e.key]! : e.key === 'Home' ? 0 : e.key === 'End' ? LAST_START : null;

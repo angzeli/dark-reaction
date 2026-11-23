@@ -272,7 +272,7 @@
 /* Output wraps rather than scrolling sideways: on a phone the login banner and the queue's STATUS
    column were cut off, in a scroll region no keyboard could reach (#108). */
 .con__line--out { white-space: pre-wrap; overflow-wrap: anywhere; }
-.con__line--in { color: #e7fff0; }
+.con__line--in { color: #e7fff0; overflow-wrap: anywhere; } /* a long command wraps like output (#150) */
 .con__form { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
 .con__prompt { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: #7fd39b; }
 .con__input {

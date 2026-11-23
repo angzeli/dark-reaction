@@ -140,7 +140,7 @@ export const act3puzzles = {
   // ── P9 · The too-perfect spectrum ─────────────────────────────────────────
   'puzzle.fabrication.title': 'Three spectra',
   'puzzle.fabrication.intro':
-    'Your spectrum from tonight, Figure 3 of the 2020 paper, and between them the printout the night made for you. Circle whatever gives the printout away.',
+    'Your spectrum from tonight, Figure 3 of the 2020 paper, and between them the printout the night made for you. Circle whatever gives the printout away. Reading the three side by side takes a couple of minutes.',
   'puzzle.fabrication.own': 'Your spectrum · tonight, 400 MHz',
   'puzzle.fabrication.printout': 'The printout · 03:25',
   'puzzle.fabrication.figure': 'Figure 3 · Ridley, Lin et al., 2020',
