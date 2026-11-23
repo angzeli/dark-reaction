@@ -4,15 +4,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Milestone:** M6 Polish & Release, the last one: this PR closes its last issue (M1–M5 closed)
-- **Last merged:** #87 the NMR console stays findable (closes #86)
-- **In flight:** the bilingual README, credits and v1.0.0 (this PR, closes #27). v1.0.0 is tagged on this PR's merge commit.
+- **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
+- **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
+- **Last merged:** #95 QA harness, Layer 1: a headless state explorer and chaotic fuzzer (closes #90)
+- **In flight:** Layer 2's playtest driver (#92) and Layer 3's screenshot sweep (#93); the AI playtesters' first run, on the build just before #87 (the NMR console canary); the deploy cleanup (#89) and the nightly run (#91), both waiting on the `workflow` scope.
 
 ## Next
 
-v1.0.0 is the finished game; nothing is planned after it. For a later session:
-1. Reports from players (like #86) become issues and small PRs, as before.
-2. The owner's two settings below remove the last workarounds.
+1. Layers 2 and 3 in (#92, #93); then every finding from the three layers deduplicated into issues under Playtest (v1.0.1), with severity, repro steps and screenshots in `docs/qa/v1.0.1/`.
+2. Bugs fixed in focused PRs, each starting from a regression test that fails before the fix. Experience notes that would change story, puzzles or endings get `needs-decision` and a proposal, for the owner.
+3. The three layers again until no blocker or major is left; `docs/qa/PLAYTEST-REPORT.md`; v1.0.1.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -21,15 +22,32 @@ v1.0.0 is the finished game; nothing is planned after it. For a later session:
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
+- **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep and glyphs; the findings' issues as they're filed
 
 ## Open decisions and blockers
 
-- **Repository settings need the owner.** The cloud proxy blocks settings writes. Done by Angze: the repo is public with a description, and Pages is on. Still waiting: set the Pages source to "GitHub Actions" only (the branch build races our deploy and did publish the raw source page, #84; `deploy.yml` now waits for it, but the setting is the real fix), and protect `main` with required status checks only (`attribution`, `typecheck`, `lint`, `unit`, `validate`, `build`, `e2e`).
+- **Repository settings are set** (2026-11-23, from a local session signed in to `gh` as the owner; the cloud proxy still blocks settings writes). The Pages source is "GitHub Actions", and `main` is protected: the seven CI checks from GitHub Actions, the branch up to date, no admin bypass, no force pushes. #89 drops `deploy.yml`'s wait for the branch build and records this in `CLAUDE.md`.
+- **The `workflow` scope.** The owner's `gh` login can't push changes under `.github/workflows/` until `gh auth refresh -h github.com -s workflow` is run: #89 and #91 wait for it.
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-23
+- #90: **Layer 1 of the playtest QA, the headless explorer and fuzzer** (`scripts/qa/`, `docs/qa/README.md`).
+  - **The explorer:**
+    - searches every night the six routes pass through, minute by minute to 03:33, with every action a player has, and follows the nights they lead to;
+    - merges states that play the same;
+    - a night has millions of states (night 1 alone passed 3 million), so each minute is exhaustive up to a cap and a seeded sample past it, with the routes' own states as anchors.
+  - **The fuzzer:** chaotic play, with reloads between moves checked to play on identically.
+  - **Checked everywhere:**
+    - the clock and the reset at 03:33;
+    - persistence;
+    - provenance (nothing appears without a source in that step that can produce it);
+    - costs against content and docs/DESIGN.md, and minutes shown against minutes taken;
+    - soft-locks, and solved puzzles and their shortcuts;
+    - save/load, and both languages.
+  - **CI:** a fixed-seed run in `unit` (~4 s). On `main` the CI-size run reached every ending with no errors (391k states, 300 fuzz runs). Never shown: `glovebox.mini.shut` (dead: Act III always has the glovebox solved), plus a few things only deeper nights reach.
+- **v1.0.0 released** from a local session (the cloud proxy refuses tag pushes): tag on 2b71b0a, notes from `CHANGELOG.md`. #27 and M6 closed. The Pages source and `main`'s protection were set the same day.
 - #27: **the README, credits and v1.0.0.**
   - **README:** rewritten in English and 繁中, with the play link, two screenshots (`docs/images/`), the story, how to play, controls, settings and accessibility, the content note, privacy, running it yourself, how it's made, and credits and licence.
   - **CREDITS:** now lists the build and test tools with versions and licences: axe-core (MPL-2.0) for the accessibility checks, Playwright, Vitest, Vite, TypeScript, ESLint and subset-font.
