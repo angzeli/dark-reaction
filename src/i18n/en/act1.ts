@@ -99,7 +99,7 @@ export const act1 = {
   // ── B.03 NMR suite ────────────────────────────────────────────────────────
   'nmr.console': 'Sit down at the console',
   'nmr.console.r': 'The chair is still warm. It always is.',
-  'nmr.console.again': 'Check the queue again',
+  'nmr.console.again': 'Check the queue on the console again',
   'nmr.console.again.r': 'Holder 13. 03:33. ar4217. PROTON_DARK. Waiting for sample. It hasn’t changed, which is somehow worse.',
   'nmr.load': 'Load your NMR tube into the carousel',
   'nmr.load.r':

@@ -38,6 +38,10 @@ export const act2: Record<keyof typeof en, string> = {
 
   // ── B.03 NMR 室，第二幕 ───────────────────────────────────────────────────
   'nmr.run': '用優先代碼跑你的樣品',
+  'nmr.code': '在主控台輸入 Ian 的優先代碼',
+  'nmr.code.locked': '你輸入 *priority RIDLEY-4*。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.*它還沒跑過。還沒。',
+  'nmr.code.empty':
+    '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後：*PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.*樣品槽 2 是空的。不管你昨晚做了什麼，02:47 都把它還原了：分液又回到樓上的架子上，你的管子得重新做一次，合併、抽乾、送過前艙，這裡才會有東西可以跑。',
   'nmr.run.r.1': '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後解開排程，叮了一聲，聽起來像在道歉。樣品槽 2。你的管子乘著一層氣墊，沉進磁鐵裡。',
   'nmr.run.r.2':
     '八分鐘。自由感應衰減訊號慢慢爬過螢幕，一道細細長長的顫抖，傅立葉轉換把它變成一張譜：溶劑、油汙、6.9 那個永遠都在的包，而 8.41 什麼都沒有。主控台把它存進你的資料夾，一句話也沒說。',

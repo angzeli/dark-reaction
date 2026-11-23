@@ -40,6 +40,10 @@ export const act2 = {
 
   // ── B.03 NMR suite, Act II ────────────────────────────────────────────────
   'nmr.run': 'Run your sample with the priority code',
+  'nmr.code': 'Type Ian’s priority code into the console',
+  'nmr.code.locked': 'You type *priority RIDLEY-4*. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
+  'nmr.code.empty':
+    'You type *priority RIDLEY-4*. The console thinks for a long second, then: *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* Holder 2 is empty. Whatever you did last night, 02:47 undid it: the fractions are back in their rack upstairs, and your tube has to be made again, combined, dried and taken through the antechamber, before there is anything down here to run.',
   'nmr.run.r.1':
     'You type *priority RIDLEY-4*. The console considers it for a long second, then unlocks the queue with a little chime that sounds like an apology. Holder 2. Your tube sinks into the magnet on its cushion of air.',
   'nmr.run.r.2':

@@ -5,12 +5,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Where we are
 
 - **Milestone:** M6 Polish & Release (M3, M4 and M5 closed)
-- **Last merged:** #83 accessibility pass, part 2 (closes #25)
-- **In flight:** the polish pass (this PR, closes #26).
+- **Last merged:** #82 the polish pass (closes #26)
+- **In flight:** the NMR console stays findable (this PR, closes #86), from a stuck report on a real playthrough.
 
 ## Next
 
-1. Merge this PR. 2. #27, the last M6 issue: the bilingual README (play link, screenshots, controls, content note, running locally, credits, licence), CREDITS (add axe-core and the test tools), the v1.0.0 tag and GitHub Release with notes, and a live-site check (the site was verified loading the build after #85).
+1. Merge this PR. 2. #27, the last M6 issue: the bilingual README (play link, screenshots, controls, content note, running locally, credits, licence), CREDITS (add axe-core and the test tools), the v1.0.0 tag and GitHub Release with notes, and a live-site check.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -26,6 +26,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
+
+### 2026-11-23
+- #86: **stuck in the NMR suite** (reported from a real playthrough: no option to open the terminal). The game's problem, not the player's.
+  - **What was wrong:** once the console puzzle was solved, the room offered only *Check the queue again*, once a night; after one use the console disappeared until 02:47. A player who had learned Ian's code (RIDLEY-4) and came down without the tube, which resets every night, had nowhere to type it and no hint why.
+  - **The fix:**
+    - The console stays in the room: *Check the queue on the console again* / 「到主控台前，再查一次排程」, any number of times.
+    - Knowing the code without the tube gives *Type Ian’s priority code into the console*. In Act II and later it answers *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL*, and the text says the tube has to be made again and taken through the antechamber. In Act I it is refused until holder 13 has run.
+    - The notebook's entry for the code now says it needs your tube in the carousel.
+  - **Tests:** three unit tests (the console stays; the code without the tube, then with it; Act I refused) and an e2e in both languages (Act I through the UI, the sticky note at 03:15, then the NMR suite with no tube).
 
 ### 2026-11-22
 - #26: **the polish pass.**
