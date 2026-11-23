@@ -42,6 +42,9 @@ A night still has millions of distinct states, because fragments, rests, fudges 
 | save | Saving and loading gives back the identical state, and a reloaded game plays on identically. |
 | locale, language | Everything on screen and every choice label renders in both languages with no missing keys or unfilled placeholders, and rendering never changes the state. |
 | noop | A choice always shows something. |
+| affordance | A key with nowhere to use it (`lib/affordance.ts`). When the player knows something a room's choices ask for (a code, a PIN), and only tonight's part is missing (the tube, the hour), the room must offer something that answers it, even if only to say what's missing. |
+
+The affordance check exists because of the canary (`PLAYTEST-REPORT.md`). Layer 1 as first built missed the NMR console bug a real player hit before v1.0.0 (#86): every ending stayed reachable, so nothing counted it as stuck. `tests/qa-affordance.test.ts` rebuilds the NMR suite as it was before #87 and checks the explorer finds it unprompted.
 
 The report also lists content no state ever showed (choices, scenes, notebook entries, events, text keys) and a table of what every choice says and does, for reviewing promises against effects.
 

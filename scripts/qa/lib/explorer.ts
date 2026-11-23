@@ -421,8 +421,13 @@ function auditChoice(audit: Map<string, ChoiceAudit>, action: Action & { t: 'c' 
   audit.set(action.id, a);
   const after = next.state;
   a.uses++;
-  if (after.loop === before.loop) a.minutes.add(after.minute - before.minute);
   if (next.shownCost !== undefined) a.shown.add(next.shownCost);
+  // What the choice itself does: a choice that runs into 03:33 also gets the night's reset, which isn't its doing.
+  if (after.loop !== before.loop || next.cards.some((c) => c.kind === 'lightsout')) {
+    a.opened.add('(can run into 03:33)');
+    return;
+  }
+  a.minutes.add(after.minute - before.minute);
   const d = (x: readonly string[], y: readonly string[]) => y.filter((v) => !x.includes(v));
   for (const k of d(before.known.map((k) => k.id), after.known.map((k) => k.id))) a.gained.add(`learn ${k}`);
   for (const k of d(before.inventory, after.inventory)) a.gained.add(`give ${k}`);

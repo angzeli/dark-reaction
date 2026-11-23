@@ -18,6 +18,7 @@ import { PUZZLE_LOGIC } from '../../src/puzzles/logic.ts';
 import { explore, type ExploreReport } from './lib/explorer.ts';
 import { fuzz, type FuzzReport } from './lib/fuzzer.ts';
 import { defaultRoots } from './lib/roots.ts';
+import { AFFORDANCE_CHECKS } from './lib/affordance.ts';
 import { DESIGN_STATE_CHECKS } from './lib/design.ts';
 
 const args = process.argv.slice(2);
@@ -41,7 +42,7 @@ const opts = {
   fuzzSteps: num('fuzz-steps', long ? 1500 : 600),
   firstSeed: num('first-seed', 1),
 };
-const stateChecks = [...DESIGN_STATE_CHECKS];
+const stateChecks = [...DESIGN_STATE_CHECKS, ...AFFORDANCE_CHECKS];
 
 const routes = Object.values(ROUTES) as Route[];
 const roots = defaultRoots(CONTENT, PUZZLE_LOGIC, routes);
