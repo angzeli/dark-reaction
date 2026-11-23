@@ -42,7 +42,8 @@ export const gloveboxScenes: SceneDef[] = [
       },
       {
         id: 'glovebox.purge.late',
-        label: 'glovebox.purge',
+        // Its own label: the meter has already won, and the choice says so before you take it (#122).
+        label: 'glovebox.purge.late',
         cost: PURGE_MINUTES,
         if: { all: [{ item: 'item.vial' }, { solved: 'glovebox' }, { minuteGte: LAST_PURGE_START + 1 }] },
         text: [{ key: 'glovebox.purge.late.r' }],
@@ -70,14 +71,6 @@ export const gloveboxScenes: SceneDef[] = [
         if: { all: [{ act: 3 }, { solved: 'glovebox' }, { not: { item: 'item.tube.jy' } }] },
         effects: [{ give: 'item.tube.jy' }, { fragment: 'yc.tube' }, { learn: 'nb.tube' }],
         text: [{ key: 'glovebox.mini.open.r.1' }, { key: 'glovebox.mini.open.r.2' }],
-      },
-      {
-        id: 'glovebox.mini.shut',
-        label: 'glovebox.mini.shut',
-        cost: 1,
-        once: 'loop',
-        if: { all: [{ act: 3 }, { not: { solved: 'glovebox' } }] },
-        text: [{ key: 'glovebox.mini.shut.r' }],
       },
     ],
   },

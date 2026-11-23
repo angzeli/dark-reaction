@@ -120,13 +120,10 @@ describe('what she left', () => {
     expect(g.state.fragments).toContain('yc.tube');
     expect(ids(g)).not.toContain('glovebox.mini.open');
 
-    const h = readyForThree();
-    endLoop(h);
-    h.state.solved = h.state.solved.filter((p) => p !== 'glovebox');
-    goTo(h, 'glovebox');
-    expect(ids(h)).not.toContain('glovebox.mini.open');
-    h.choose('glovebox.mini.shut');
-    expect(keys(h)).toEqual(['glovebox.mini.shut.r']);
+    // Nobody reaches Act III without the purge: Act II itself asks for the glovebox solved, and
+    // solved stays solved. (The Act III "leave it shut" choice for the unsolved case was dead, #121.)
+    const actTwo = CONTENT.acts.find((a) => a.act === 2)!;
+    expect(JSON.stringify(actTwo.when)).toContain('{"solved":"glovebox"}');
   });
 
   it('Tom’s Post-it, and a chirp that has become a rhythm', () => {
