@@ -12,7 +12,7 @@
  * remounts the view) finds each exactly as it was left.
  */
 import { getLocale } from '../../i18n/i18n.ts';
-import { h } from '../../ui/dom.ts';
+import { h, setInline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop, type Spot } from '../roving.ts';
 import type { PuzzleView } from '../types.ts';
 import {
@@ -241,7 +241,7 @@ export const cipherView: PuzzleView = {
 
     /** The live region stays put; only what it says changes. */
     const say = (said: string) => {
-      if (status.textContent !== said) status.textContent = said;
+      setInline(status, said);
     };
 
     const render = (focusKey?: string) => {

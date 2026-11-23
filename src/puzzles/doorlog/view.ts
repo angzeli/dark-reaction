@@ -7,7 +7,7 @@
  * arrow keys. Nothing needs dragging or hovering.
  */
 import { LOOP_LENGTH } from '../../engine/clock.ts';
-import { h } from '../../ui/dom.ts';
+import { h, setInline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop } from '../roving.ts';
 import type { PuzzleView } from '../types.ts';
 import {
@@ -274,7 +274,7 @@ export const doorlogView: PuzzleView = {
       marks.replaceChildren(...ROWS.map(markRow));
       write.textContent = api.t('puzzle.doorlog.write');
       const said = feedback();
-      if (status.textContent !== said) status.textContent = said;
+      setInline(status, said);
       if (focusKey) root.querySelector<HTMLElement>(`[data-focus-key="${focusKey}"]`)?.focus({ preventScroll: true });
     };
 

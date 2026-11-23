@@ -19,7 +19,7 @@ import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
 import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
 import type { KV } from '../save/storage.ts';
-import { h, inline, trapFocus } from './dom.ts';
+import { h, inline, plain, trapFocus } from './dom.ts';
 import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
 import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
@@ -47,6 +47,8 @@ export interface AppOptions {
 const STATUS_MS = 4000;
 /** The first moment of the 03:33 transition, when a key or click can't skip it: one made before it began is still arriving. */
 const SKIP_GRACE_MS = 800;
+/** How long a page's spoken copy stays in its live region before it's cleared. */
+const LIVE_MS = 3000;
 
 export class App {
   readonly root: HTMLElement;
@@ -669,7 +671,12 @@ export class App {
     const seq = ++this.playSeq;
     this.currentReveal?.complete();
     if (withReveal) {
-      live.textContent = paras.map((p) => t(p.key, p.params)).join(' ');
+      // What a screen reader hears of the new page: plain words (no *asterisks*), every line that's on
+      // screen including what you carry, and then gone, so browse mode doesn't meet it all twice (#109).
+      live.textContent = [...paras.map((p) => plain(t(p.key, p.params))), ...(carrying ? [carrying.textContent ?? ''] : [])].join(' ');
+      window.setTimeout(() => {
+        if (live.isConnected) live.textContent = '';
+      }, LIVE_MS);
       this.currentReveal = reveal([...text.children] as HTMLElement[], revealDelay(this.settings));
       text.addEventListener('click', () => this.currentReveal?.complete());
       void this.currentReveal.done.then(() => {

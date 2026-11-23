@@ -105,6 +105,20 @@ export function keepFocusIn(root: HTMLElement): () => void {
   };
 }
 
+/**
+ * Set an element's text the way the scenes render it: *emphasis* in italics, never as asterisks
+ * (#128). Only touches the DOM when it changes, so a live region doesn't repeat itself.
+ */
+export function setInline(el: HTMLElement, text: string): void {
+  const html = inline(text);
+  if (el.innerHTML !== html) el.innerHTML = html;
+}
+
+/** The same text as plain words, for places that can't carry markup (a live region's copy, #109). */
+export function plain(text: string): string {
+  return text.replace(/\*([^*\n]+)\*/g, '$1');
+}
+
 /** Escape text for safe insertion and turn *emphasis* and line breaks into markup. */
 export function inline(text: string): string {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
