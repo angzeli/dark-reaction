@@ -32,7 +32,7 @@ export const world = {
   'office.hub.act2':
     'The write-up office, again: eleven desks and one person, the rain at the big window, patient as ever, the dying tube. You know the order of the night now. The email at 02:50, the hoover at five past three, the dark at 03:33. On your monitor the queue is open, and the booking is where it always is.',
   'office.hub.act3':
-    'The write-up office at 02:47, and something has changed that you can’t name. The rain is quieter, as if it is listening. The dying tube has stopped flickering and simply burns, steady and too white. On your monitor the queue is open, and the booking at 03:33 is still there, holder 13, ar4217. But the comment has changed. It used to say *it’s still going*. Now it says *nearly done*.',
+    'The write-up office, and something has changed that you can’t name. The rain is quieter, as if it is listening. The dying tube has stopped flickering and simply burns, steady and too white. On your monitor the queue is open, and the booking at 03:33 is still there, holder 13, ar4217. But the comment has changed. It used to say *it’s still going*. Now it says *nearly done*.',
   'synth.hub.act3':
     'Lab 4.12 is colder than it should be. The fume hoods still breathe, but out of step now, one of them lagging behind like a sleeper’s second breath. Your fractions wait in their rack. And on the Kraken, on port 4, where nothing has ever been, there is a flask.',
   'glovebox.hub.act3':

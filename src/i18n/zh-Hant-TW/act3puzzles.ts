@@ -6,6 +6,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
   'synth.kraken.fill': '把 4 號接口那瓶裡的東西裝進她的管子',
   'synth.kraken.fill.r': '你把她的 J. Young 管接上 2 號接口。一根細細的雙頭針早就架好了，從 4 號接口的燒瓶連到管子的接頭，像是有人很久以前就準備好，只是走開了一下。',
   'synth.kraken.again': '照上次的方法裝她的管子',
+  'synth.kraken.again.light': '照上次的方法裝她的管子，雖然身上沒有鋁箔',
   'synth.kraken.again.r': '開氮氣，起泡器開始滴答。管子那個接口抽到真空，再回填氮氣。燒瓶接上氮氣，管子關起來、放氣閥打開，深色的液體慢慢流過去。關活栓。包鋁箔。你的手已經認得這條 Kraken 了。',
   'synth.kraken.again.light.r': '每一步你都做對了，然後才發現沒有東西可以包。你找鋁箔的那一分鐘，她的管子就站在日光燈下，裡面不管是什麼，都放棄了。',
   'nmr.ups': '試試 UPS 面板上的數字鍵',

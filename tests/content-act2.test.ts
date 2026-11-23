@@ -161,7 +161,8 @@ describe('the night’s offer', () => {
     g.choose('nmr.printout');
     expect(g.state.inventory).toContain('item.printout');
     expect(known(g)).toContain('nb.printout');
-    expect(g.state.display.find((p) => p.key === 'perfect.describe')!.params).toEqual({ n: 8 });
+    // Taken at 03:25, in your hand at 03:26: 03:33 is seven minutes away (#147).
+    expect(g.state.display.find((p) => p.key === 'perfect.describe')!.params).toEqual({ n: 7 });
     expect(g.state.obsession).toBe(1);
   });
 

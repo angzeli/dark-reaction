@@ -119,7 +119,7 @@ test('the porter’s terminal by keyboard: the Monday shift, her badge back to 2
   await page.keyboard.press('Enter');
   await expect(older).toHaveAttribute('aria-pressed', 'true');
   const log = d.getByRole('region', { name: 'Access log' });
-  await expect(log).toContainText('Nothing older.');
+  await expect(log).toContainText('The log begins here.');
   await expect(log.locator('.dl__archive .dl__entry').first()).toContainText('03:33');
   await expect(log.locator('.dl__archive .dl__group').nth(1)).toHaveText('14/03/2019');
   await expect(log.locator('.dl__archive .dl__entry[data-badge="lin"]').first()).toContainText('LIN Y C (EXPIRED 30/09/2019)');

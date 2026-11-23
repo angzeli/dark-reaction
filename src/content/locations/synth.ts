@@ -97,15 +97,23 @@ export const synthScenes: SceneDef[] = [
         tags: ['shortcut'],
       },
       {
+        // Without foil it ruins the sample, and the label says so before you choose it (#158).
         id: 'synth.kraken.again.light',
-        label: 'synth.kraken.again',
+        label: 'synth.kraken.again.light',
         cost: SCHLENK_MINUTES,
         if: { all: [{ act: 3 }, { item: 'item.tube.jy' }, { solved: 'schlenk' }, { not: { item: 'item.foil' } }] },
         text: [{ key: 'synth.kraken.again.light.r' }],
         effects: [{ take: 'item.tube.jy' }, { lflag: 'tube.spoiled' }],
       },
       { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }, { key: 'synth.hoods.act3', if: { act: 3 } }] },
-      { id: 'synth.kraken', once: 'loop', label: 'synth.kraken', cost: 1, text: [{ key: 'synth.kraken.r' }] },
+      {
+        id: 'synth.kraken',
+        once: 'loop',
+        label: 'synth.kraken',
+        cost: 1,
+        // In Act III her flask is on port 4, where nothing has ever been (#157).
+        text: [{ key: 'synth.kraken.r', if: { not: { act: 3 } } }, { key: 'synth.kraken.act3', if: { act: 3 } }],
+      },
       { id: 'synth.poster', once: 'loop', label: 'synth.poster', cost: 1, text: [{ key: 'synth.poster.r' }, { key: 'synth.poster.act3', if: { act: 3 } }] },
       { id: 'synth.shelf', once: 'loop', label: 'synth.shelf', cost: 1, text: [{ key: 'synth.shelf.r' }] },
     ],

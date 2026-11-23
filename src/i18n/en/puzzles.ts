@@ -201,7 +201,7 @@ export const puzzles = {
   'puzzle.doorlog.none': 'No entries.',
   'puzzle.doorlog.older': 'Older entries',
   'puzzle.doorlog.archive': 'Older entries that repeat every night',
-  'puzzle.doorlog.archive.start': 'Nothing older.',
+  'puzzle.doorlog.archive.start': 'The log begins here.',
   'puzzle.doorlog.archive.gap': '… the same again, every night, for {n} more nights …',
   'puzzle.doorlog.archive.noexit': 'LIN Y C: no exit recorded since {date} {time}.',
   'puzzle.doorlog.tonight': 'Tonight, Monday 23 November',
