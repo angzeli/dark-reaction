@@ -824,3 +824,5 @@
   .ci__page { padding-inline: 0.75rem; }
   .ci .ci__char { min-width: 2.6rem; }
 }
+/* The crude lane's name stays on one line (「粗產物」 broke as 粗產／物 on a phone, #117). */
+.tlc__label { white-space: nowrap; }

@@ -3,14 +3,14 @@ export const notebook = {
   // Tonight
   'nb.portal.title': 'The deadline',
   'nb.portal.body':
-    'Revised manuscript on the portal by 09:00. Reviewer 2 wants ¹H NMR evidence for the dark-phase product: the formate peak at 8.41 ppm. Then a box to tick: *these data are complete and unaltered*.',
+    'Revised manuscript on the portal by 09:00. Reviewer 2 wants ¹H NMR evidence for the dark-phase product: the formate peak at 8.41 ppm. Then a box to tick: *these data are complete and unaltered*.',
   'nb.tlc.title': 'The fractions',
   'nb.tlc.body': 'Product (Rf 0.35) runs clean in fractions 12–14. Fraction 11 hides a spot that only shows under UV; 15 has a slower one.',
   'nb.sop.title': 'The SOP',
   'nb.sop.body': 'The laminated antechamber SOP says evacuate and refill twice. Someone who signs YCL pencilled in: THREE. Trust me.',
   'nb.purge.title': 'The antechamber',
   'nb.purge.body':
-    'Three evacuate–refill cycles, not two. Whoever pencilled YCL on the SOP was right. The box passes 10 ppm O₂ at about 03:28, so start the purge by 03:18.',
+    'Three evacuate–refill cycles, not two. Whoever pencilled YCL on the SOP was right. The box passes 10 ppm O₂ at about 03:28, so start the purge by 03:18.',
   'nb.logbook.title': 'Glovebox logbook',
   'nb.logbook.body': 'Regeneration overdue since 9 November. Wrote it in the log and emailed the group.',
   'fudge.logbook.title': 'Glovebox logbook',
@@ -34,7 +34,7 @@ export const notebook = {
 
   // Data
   'nb.paper.title': 'Figure 3',
-  'nb.paper.body': 'Ridley, Lin *et al.*, 2020: one clean peak at 8.41 ppm. I have run this reaction thirty-one times and seen noise thirty-one times.',
+  'nb.paper.body': 'Ridley, Lin *et al.*, 2020: one clean peak at 8.41 ppm. I have run this reaction thirty-one times and seen noise thirty-one times.',
   'nb.yield.title': 'Yield',
   'nb.yield.body': '61 %. (The paper says 70.)',
   'fudge.yield.title': 'Yield',
@@ -78,7 +78,7 @@ export const notebook = {
   'nb.ownspectrum.body': 'Run with the priority code. Solvent, grease, the bump at 6.9 that is always there. Nothing at 8.41. Thirty-two runs, thirty-two nothings.',
   'fudge.baseline.title': 'Baseline',
   'fudge.baseline.body': 'Baseline corrected. Clean.',
-  'fudge.integral.title': 'Integral, 8.41 ppm',
+  'fudge.integral.title': 'Integral, 8.41 ppm',
   'fudge.integral.body': '0.08 H. Trace product.',
   'nb.raw.title': 'Her raw data',
   'nb.raw.body':

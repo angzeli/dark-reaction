@@ -36,7 +36,7 @@ export const world = {
   'synth.hub.act3':
     'Lab 4.12 is colder than it should be. The fume hoods still breathe, but out of step now, one of them lagging behind like a sleeper’s second breath. Your fractions wait in their rack. And on the Kraken, on port 4, where nothing has ever been, there is a flask.',
   'glovebox.hub.act3':
-    'The glovebox room is very quiet. The O₂ meter glows {ppm} ppm. On the box’s left flank the taped mini-antechamber has frost on its little window, though nothing in this room is cold, and behind the frost something small and upright is standing very still, waiting.',
+    'The glovebox room is very quiet. The O₂ meter glows {ppm} ppm. On the box’s left flank the taped mini-antechamber has frost on its little window, though nothing in this room is cold, and behind the frost something small and upright is standing very still, waiting.',
   'pi.hub.act3':
     'Dan’s office, warm as ever. Everything is where it was, except that the framed paper hangs very slightly crooked now, as if someone has taken it down to look at it closely and put it back in a hurry.',
   'stairs.hub.act3':
@@ -52,7 +52,7 @@ export const world = {
   'synth.hub.act1':
     'Lab 4.12 smells of acetone and warm dust. The fume hoods breathe in unison, sashes down, their lights turning them into three tall aquariums of nothing. Your column fractions wait in a rack on the bench: twenty-four test tubes of almost exactly the same colourless liquid. Someone has labelled the Schlenk line THE KRAKEN on a strip of tape, and nobody has ever taken it off.',
   'glovebox.hub.act1':
-    'The glovebox has a small room to itself, like a patient on a ward: a long steel body, two black gloves hanging limp from their ports, a window you can look into but never quite through. The oxygen meter on top glows green. {ppm} ppm. It was lower when you came in.',
+    'The glovebox has a small room to itself, like a patient on a ward: a long steel body, two black gloves hanging limp from their ports, a window you can look into but never quite through. The oxygen meter on top glows green. {ppm} ppm. It was lower when you came in.',
   'pi.enter': 'Go in',
   'pi.door.text':
     'Prof. Ridley’s door is shut and locked. Through the frosted glass: the shape of a desk lamp, the shape of a chair. A printed sign at eye level says BOSTON UNTIL 27 NOV — PLEASE EMAIL, in the font Dan uses for everything, including condolence cards.',

@@ -26,7 +26,8 @@ describe('lookup', () => {
     expect(t('puzzle.then', { first: 'The door opens.', second: 'O₂ 1.0 ppm.' }, 'en')).toBe('The door opens. O₂ 1.0 ppm.');
     expect(t('puzzle.then', { first: '門開了。', second: 'O₂ 1.0 ppm。' }, 'zh-Hant-TW')).toBe('門開了。O₂ 1.0 ppm。');
     // Every 繁中 sentence a puzzle status can end with or start with stays full-width at the join.
-    expect(t('puzzle.glovebox.o2.now', { ppm: '1.0', n: 2 }, 'zh-Hant-TW')).toBe('O₂ 1.0 ppm。循環：2 次。');
+    // (A number and its unit never part at a line break: a no-break space, #117.)
+    expect(t('puzzle.glovebox.o2.now', { ppm: '1.0', n: 2 }, 'zh-Hant-TW')).toBe('O₂ 1.0\u00a0ppm。循環：2 次。');
   });
 
   it('marks missing keys and unfilled placeholders visibly instead of crashing', () => {
@@ -82,5 +83,34 @@ describe('parity', () => {
   it('counts a plural selector as a use of its variable', () => {
     expect(placeholders('Wait {n} {n:minute:minutes}')).toEqual(['n']);
     expect(placeholders('{who} saw {n:one:many}')).toEqual(['n', 'who']);
+  });
+});
+
+describe('text and typography slips from the playtest (#117, #126)', () => {
+  const NB = '\u00a0';
+  it('a title that ends with a full stop doesn’t get a second one', () => {
+    expect(t('ui.noted', { entry: '@nb.drawer.title' }, 'en')).toBe('Added to your notebook: Y.C.L.');
+  });
+  it('繁中 spaces a value that starts with digits or Latin letters from the Chinese around it', () => {
+    const row = t('nb.loops.row', { loop: 1, clock: '03:33', place: '@loc.office.name' }, 'zh-Hant-TW');
+    expect(row).toContain('你當時在 4.08');
+    // …and only there: a value that starts with a Chinese character is set close, as before.
+    expect(t('nb.loops.row', { loop: 1, clock: '03:33', place: '@loc.stairs.name' }, 'zh-Hant-TW')).not.toMatch(/在 [\u3400-\u9fff]/);
+  });
+  it('acts are numbered in each language’s own numerals on save slots', () => {
+    expect(t('save.summary', { act: '@act.numeral.1', loop: 1, clock: '02:47', place: 'x' }, 'zh-Hant-TW')).toContain('第一幕');
+    expect(t('save.summary', { act: '@act.numeral.2', loop: 1, clock: '02:47', place: 'x' }, 'en')).toContain('Act II');
+  });
+  it('a number never parts from its unit, and the door log’s separators stay with what comes before', () => {
+    for (const locale of ['en', 'zh-Hant-TW'] as const) {
+      for (const [key, value] of Object.entries(TABLES[locale])) expect(value, `${locale} ${key}`).not.toMatch(/(\d|\{ppm\}) ppm/);
+      expect(t('puzzle.doorlog.screen', undefined, locale)).not.toContain(' · ');
+      expect(t('puzzle.doorlog.screen', undefined, locale)).toContain(`${NB}· `);
+    }
+  });
+  it('繁中 reads as Taiwanese, not as a translation', () => {
+    const all = Object.values(TABLES['zh-Hant-TW']).join('\n');
+    for (const calque of ['Tom 的大寫字', '母音鍵', 'Schlenk 線', '說的就是你', '用我的名字訂的預約', '非常冷的東西被刻意維持在非常冷', '審查人瞇眼', '睡覺是真實存在的東西']) expect(all).not.toContain(calque);
+    expect(all).not.toContain('7 號桌');
   });
 });
