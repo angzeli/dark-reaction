@@ -231,3 +231,28 @@ test('a notice fades after a few seconds, and follows the language while it show
   await expect(page.locator('.app__status')).toHaveText('', { timeout: 6_000 });
   await expect(page.locator('.app__status')).toBeHidden();
 });
+
+test('the notebook’s sections are a tablist: arrows move and select, and focus stays on the tab (#105)', async ({ page }) => {
+  await start(page);
+  await newGame(page);
+  await page.keyboard.press('n');
+  const tab = (name: string) => page.getByRole('tab', { name });
+  await page.keyboard.press('Tab');
+  await expect(tab('Tonight')).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(tab('People')).toBeFocused();
+  await expect(tab('People')).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('End');
+  await expect(tab('Loops')).toBeFocused();
+  await page.keyboard.press('ArrowRight'); // wraps
+  await expect(tab('Tonight')).toBeFocused();
+  // One Tab stop for the whole list: Tab leaves it, into the page of the section.
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('tabpanel')).toBeFocused();
+  await expect(page.getByRole('tabpanel')).toHaveAccessibleName('Tonight');
+  // Clicking (or Enter) on a tab keeps focus on that tab, not the heading.
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await expect(tab('People')).toBeFocused();
+});

@@ -823,24 +823,44 @@ export class App {
   private notebookPanel(): HTMLElement {
     const game = this.game!;
     const s = game.state;
+    // A tablist (#105): one Tab stop, the arrow keys (and Home, End) move and select, and the tab
+    // keeps focus across the re-render (its focus key), instead of focus going back to the heading.
+    const order = [...SECTIONS, 'loops' as const];
+    const select = (section: (typeof order)[number], focus: boolean) => {
+      this.notebookSection = section;
+      this.render();
+      if (focus) this.root.querySelector<HTMLElement>(`[data-focus-key="nb-tab-${section}"]`)?.focus();
+    };
+    const onTabKey = (e: KeyboardEvent) => {
+      const at = order.indexOf(this.notebookSection);
+      const next =
+        e.key === 'ArrowRight' ? (at + 1) % order.length : e.key === 'ArrowLeft' ? (at - 1 + order.length) % order.length : e.key === 'Home' ? 0 : e.key === 'End' ? order.length - 1 : -1;
+      if (next < 0) return;
+      e.preventDefault();
+      select(order[next]!, true);
+    };
     const tabs = h(
       'div',
-      { class: 'nb__tabs', role: 'tablist', 'aria-label': t('ui.notebook') },
-      ...[...SECTIONS, 'loops' as const].map((section) =>
+      { class: 'nb__tabs', role: 'tablist', 'aria-label': t('ui.notebook'), onkeydown: onTabKey },
+      ...order.map((section) =>
         h(
           'button',
           {
             type: 'button',
             role: 'tab',
             class: 'nb__tab',
+            id: `nb-tab-${section}`,
             'aria-selected': String(this.notebookSection === section),
-            onclick: () => ((this.notebookSection = section), this.render()),
+            'aria-controls': 'nb-panel',
+            tabindex: this.notebookSection === section ? '0' : '-1',
+            dataset: { focusKey: `nb-tab-${section}` },
+            onclick: () => select(section, false),
           },
           t(`nb.section.${section}`),
         ),
       ),
     );
-    const entries = h('div', { class: 'nb__page', role: 'tabpanel' });
+    const entries = h('div', { class: 'nb__page', role: 'tabpanel', id: 'nb-panel', 'aria-labelledby': `nb-tab-${this.notebookSection}`, tabindex: '0' });
     if (this.notebookSection === 'loops') {
       const rows = s.loops.map((l) =>
         h('li', { class: 'nb__loop' }, t('nb.loops.row', { loop: l.loop, clock: clockLabel(l.minute), place: `@${this.content.locations.find((x) => x.id === l.location)!.name}` })),
