@@ -180,7 +180,7 @@ export const act3puzzles: Record<keyof typeof en, string> = {
   'puzzle.peakmatch.reference.solvent': 'C₆D₅H 7.16',
   'puzzle.peakmatch.reference.product': '8.41，兩側各一個衛星峰',
   'puzzle.peakmatch.reference.describe': '她的參考譜：溶劑峰在 7.16 ppm；8.41 ppm 有一根小峰，兩側各有一個衛星峰。',
-  'puzzle.peakmatch.offset': '校正：{offset} ppm',
+  'puzzle.peakmatch.offset': '校正：{offset} ppm',
   'puzzle.peakmatch.slider': '校正',
   'puzzle.peakmatch.nudge': '把座標軸移動 {by} ppm',
   'puzzle.peakmatch.peaks': '螢幕上的峰',

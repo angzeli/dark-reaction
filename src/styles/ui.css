@@ -70,7 +70,8 @@ button {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text);
-  background: rgba(7, 14, 22, 0.88);
+  /* Opaque: the text it sits over for a few seconds mustn't show through it (#185). */
+  background: rgb(7, 14, 22);
   border-left: 2px solid var(--copper);
   pointer-events: none;
   z-index: 40;
@@ -243,6 +244,8 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   display: flex;
   gap: 0.4rem;
 }
+/* While the last minute is held the notebook and the menu wait (#155), and say so. */
+.hud__btn[aria-disabled='true'] { opacity: 0.45; cursor: default; }
 .hud__btn {
   min-height: 40px;
   padding: 0.3rem 0.75rem;
@@ -393,6 +396,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 /* "What you can do" heads the choices, and only while there are some: not over a puzzle, nor in the
    moment before the dark (#144). */
 #choices-heading:has(+ .choices:empty) { display: none; }
+/* No lone character on a paragraph's or a choice's last line, which 繁中 at the larger sizes kept
+   making (「縮」, 「碼」, 「鐘。」, #185). Browsers without it wrap as before. */
+.narrative__text p, .ending__text p, .choice__label, .overlay__sheet p { text-wrap: pretty; }
 /* A filename has nowhere to break: on a phone at the larger text sizes, her
    2019-03-14_0333_PROTON_DARK_NOT_MINE.fid pushed the whole page sideways (#156). Long tokens
    break where they must; everything else wraps as before. */
@@ -402,6 +408,8 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   width: min(100%, 44rem);
   padding: 1.5rem 1.25rem 2rem;
 }
+/* The title runs under Close no more: at the largest text "Before you go in" did (#185). */
+#overlay-title { padding-inline-end: 5rem; }
 .overlay__close {
   position: absolute;
   top: 0.75rem;

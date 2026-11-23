@@ -441,6 +441,8 @@
 .dl__log:focus-visible { outline: 2px solid #f7d9a4; outline-offset: 2px; }
 /* `contain` keeps the table's own minimum width from widening the page on a phone. */
 .dl__log { max-height: 20rem; overflow: auto; contain: inline-size; border-block: 1px solid var(--amber-line); }
+/* A door's name keeps to one line ("4.01 Ridley", 「樓梯間 4 樓」); badges still wrap (#185). */
+.dl__door { white-space: nowrap; }
 .dl__table { width: 100%; border-collapse: collapse; font-size: 0.75rem; line-height: 1.35; }
 .dl__table thead th {
   position: sticky;
@@ -809,7 +811,9 @@
   .dl__filter-row { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
   .dl__filter-label { padding-top: 0; }
   .dl__table { font-size: 0.72rem; }
-  .dl__event { white-space: normal; }
+  /* Events may wrap on a phone (HELD OPEN), but only between words: in 繁中 they stacked a character a
+     line (拒/絕, 保/持/開/啟) at the largest text (#185). */
+  .dl__event { white-space: normal; word-break: keep-all; }
   .dl__table td,
   .dl__table thead th { padding-inline: 0.3rem; }
   .ci .ci__slot { min-width: 2.5rem; padding-inline: 0.15rem; }
@@ -831,6 +835,10 @@
 }
 /* The crude lane's name stays on one line (「粗產物」 broke as 粗產／物 on a phone, #117). */
 .tlc__label { white-space: nowrap; }
+/* 粗產物 (and crude) is wider than its lane at the largest text: it gets smaller there, only as much as
+   it must, rather than running into lane 10 (#185). */
+.tlc__lane { container-type: inline-size; }
+.tlc__label--crude { font-size: min(0.7rem, 30cqi); }
 /* On a touch screen every puzzle control can be hit with a thumb (#119): the TLC spots get a hit
    area beyond the drawn dot (19 px tall, under WCAG 2.5.8's 24), and the door log's options and the
    console's command chips are 44 px tall. The freezer's 27 px cells pass 2.5.8 as they are: a 9×9

@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #184 Puzzle polish: the console after a language switch, the door log's nearest minute, the three spectra's cost (closes #150, #151, #159)
+- **Last merged:** #186 Third pass: 繁中 typesetting at the larger sizes, and small layout slips (closes #185)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -33,6 +33,22 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #185: **third pass: 繁中 typesetting at the larger sizes, and small layout slips.** From the mobile player, the breaker and the screenshot review, on the build with every fix. None was a blocker or a major.
+  - **繁中 line breaks:**
+    - a number or a Latin word keeps to the Han after it, with a no-break space (「4 號」, 「3 分鐘」, 「microSD 卡」);
+    - paragraphs and choices wrap `pretty`, so no lone character ends them (「縮」, 「碼」, 「鐘。」);
+    - her filename breaks after its underscores, so 。 never starts a line after it;
+    - the door log's events keep their words whole on a phone (拒/絕 stacked a character a line);
+    - one name for the reviewer (審查人).
+  - **Layout:**
+    - 粗產物 gets smaller only as much as its lane needs, rather than running into lane 10;
+    - an overlay's title clears its Close button;
+    - "+0.00 ppm" keeps together;
+    - notices are opaque over the text they cover.
+  - **The held minute:** the notebook and menu buttons say they're waiting.
+  - **The freezer:** once solved, its lift button goes; it read "E5 is back in its slot" with her card in your hand.
+  - **Tests:** `tests/zh-typesetting.test.ts`, `e2e/third-pass.spec.ts`, and checks in `e2e/long-words.spec.ts` and `e2e/last-minute.spec.ts`. All fail without the fix.
+- Merged #184 (closes #150, #151, #159).
 - #150, #151, #159: **puzzle polish from the second pass.**
   - **The console (#150, the breaker):** a language switch remounts it, and the transcript was scrolled to its end before it was in the page, so it showed its top. It now shows the latest lines. A long command wraps like output, rather than running off the right edge.
   - **The door log (#151, the first-timer):** a click on the timeline marks the nearest minute. It rounded down, so a click on 03:21's tick could mark 03:20.
