@@ -27,7 +27,7 @@
   font-size: 1.25em;
 }
 .pz__title:focus { outline: none; }
-.pz__title:focus-visible { outline: 2px solid var(--tube); outline-offset: 4px; }
+.pz__title:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 .pz__clock {
   margin: 0;
   font-family: var(--font-mono);
@@ -90,7 +90,8 @@
     border-color: var(--tube);
   }
 }
-.pz button:focus-visible { outline: 2px solid var(--tube); outline-offset: 2px; }
+/* --focus is the tube green, and yellow in high contrast (#111). */
+.pz button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .pz button:disabled { opacity: 0.5; cursor: default; }
 .pz__leave { background: transparent !important; }
 
@@ -158,7 +159,9 @@
 /* A larger invisible hit area around each spot for touch. */
 .tlc__spot::after { content: ''; position: absolute; inset: -0.7rem; }
 .tlc__plate--uv .tlc__spot { background: radial-gradient(ellipse, rgba(12, 30, 20, 0.95), rgba(12, 30, 20, 0.4) 70%, transparent 72%) !important; }
-.tlc__spot:focus-visible { outline: 2px solid var(--copper) !important; outline-offset: 3px; }
+/* On the beige plate: the dark blue every paper surface uses for focus (copper and green were 2.7:1 and 1.1:1, #111). */
+.tlc .tlc__spot:focus-visible,
+.tlc .tlc__take:focus-visible { outline: 3px solid #1b5fd0 !important; outline-offset: 2px; }
 .tlc__lanes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.2rem; margin-top: 0.3rem; }
 .tlc__lane { display: grid; justify-items: center; gap: 0.3rem; }
 .tlc__label { font-family: var(--font-mono); font-size: 0.7rem; }
