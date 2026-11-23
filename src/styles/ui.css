@@ -781,3 +781,10 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   color: var(--copper);
 }
 .narrative--puzzle > .narrative__carry { display: none; }
+
+/* Keyboard focus rests on the list of choices after a passage (#102): show where it is. */
+.choices:focus-visible {
+  outline: 2px solid var(--focus, #9fe3b5);
+  outline-offset: 6px;
+  border-radius: 2px;
+}

@@ -192,3 +192,26 @@ test('overlays keep focus inside while open and give it back on close, from the 
     await expect(opener).toBeFocused();
   }
 });
+
+test('Space and Enter never make a choice once the text has finished (#102)', async ({ page }) => {
+  await start(page, { reducedMotion: false });
+  await newGame(page); // dismisses the act card by keyboard, so the game knows a keyboard is in use
+  await expect(page.locator('.choices button')).not.toHaveCount(0, { timeout: 15_000 });
+  const place = await page.locator('.hud__place').textContent();
+  // An impatient player hammering the skip keys after the text is already in: nothing is chosen.
+  for (const key of ['Space', 'Enter', 'Space', 'Enter']) await page.keyboard.press(key);
+  await expect(page.locator('.choice[data-choice="office.monitor"]')).toBeVisible(); // still the office's own choices
+  await expect(clock(page)).toHaveText('02:47');
+  await expect(page.locator('.hud__place')).toHaveText(place!);
+  // Focus waits on the list of choices, not on choice 1.
+  await expect(page.locator('ol.choices')).toBeFocused();
+  // The keys that choose still choose: the arrow moves into the list, Enter takes what it's on.
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('.choice').first()).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('.choice').nth(1)).toBeFocused();
+  await page.keyboard.press('ArrowUp');
+  await expect(page.locator('.choice').first()).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.choice[data-choice="office.queue"]')).toBeVisible(); // the monitor
+});
