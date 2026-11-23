@@ -671,7 +671,8 @@ export class App {
               },
               h('span', { class: 'choice__n', 'aria-hidden': 'true' }, i < 9 ? String(i + 1) : ''),
               h('span', { class: 'choice__label' }, t(c.label, c.params)),
-              c.cost > 0 ? h('span', { class: 'choice__cost' }, t('ui.cost', { n: c.cost })) : null,
+              // A wait's label already says its minutes (Wait 1 minute): don't say them twice (#117).
+              c.cost > 0 && c.kind !== 'wait' ? h('span', { class: 'choice__cost' }, t('ui.cost', { n: c.cost })) : null,
             ),
           ),
         ),
@@ -1026,7 +1027,7 @@ export class App {
     const r: ReadResult = this.saves.list().find((x) => x.slot === slot)!.result;
     const label = r.ok
       ? t('save.summary', {
-          act: NUMERALS[r.envelope.summary.act as Act],
+          act: t(`act.numeral.${r.envelope.summary.act}`),
           loop: r.envelope.summary.loop,
           clock: clockLabel(r.envelope.summary.minute),
           place: `@${this.content.locations.find((l) => l.id === r.envelope.summary.location)!.name}`,

@@ -67,8 +67,8 @@ export const puzzles: Record<keyof typeof en, string> = {
     '樣品瓶得繞遠路進箱子：從外門放進去，把空氣抽掉、換成氮氣，再從內門拿進來。箱子頂上的氧氣計，是現在唯一重要的時鐘。',
   'puzzle.glovebox.sop': '前艙操作（護貝，一角有點融掉）：1. 放入。2. 關外門。3. 抽真空、回填氮氣——兩次。4. 開內門。',
   'puzzle.glovebox.pencil': '三次。相信我。——YCL',
-  'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
-  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm。循環：{n} 次。',
+  'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
+  'puzzle.glovebox.o2.now': 'O₂ {ppm} ppm。循環：{n} 次。',
   'puzzle.glovebox.cycles': '循環：{n} 次',
   'puzzle.glovebox.pressure.atm': '前艙：常壓',
   'puzzle.glovebox.pressure.vac': '前艙：真空',
@@ -120,7 +120,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   // P1 · NMR 主控台
   'puzzle.console.title': 'NMR 主控台',
   'puzzle.console.intro':
-    '一副灰色鍵盤，母音鍵都磨得發亮。這台光譜儀的軟體只有命令列，因為 Ian 深信圖形介面就是樣品被亂退的原因。螢幕邊緣貼著一張護貝的快速參考卡。',
+    '一副灰色鍵盤，常按的那幾顆鍵都磨得發亮。這台光譜儀的軟體只有命令列，因為 Ian 深信圖形介面就是樣品被亂退的原因。螢幕邊緣貼著一張護貝的快速參考卡。',
   'puzzle.console.card':
     '快速參考 · 400 MHz\nqueue · 你自己的預約\nqueue --all · 所有人的預約（看就好，別動）\ninfo <樣品槽> · 預約細節\nlog · 最近紀錄\n絕對不准退掉別人的樣品。我會知道。——I.O.',
   'puzzle.console.input': '輸入指令',
@@ -158,7 +158,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.doorlog.title': '警衛的終端機',
   'puzzle.doorlog.intro':
     '一台米色的終端機，鍵盤黏黏的，螢幕上有一圈杯子印。它記下過去一個星期，每天晚上 02:40 到 03:40 之間，4 樓和一樓每一扇門刷過的每一張卡。螢幕角落的日期寫著 MON 23 NOV。',
-  'puzzle.doorlog.screen': 'VELLACOTT 大樓 · 門禁紀錄 · 4 樓與一樓 · 02:40–03:40',
+  'puzzle.doorlog.screen': 'VELLACOTT 大樓 · 門禁紀錄 · 4 樓與一樓 · 02:40–03:40',
   'puzzle.doorlog.nights': '日期',
   'puzzle.doorlog.doors': '門',
   'puzzle.doorlog.all.nights': '每一晚',

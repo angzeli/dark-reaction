@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #169 The travel and wait menus open where you are (closes #116)
+- **Last merged:** #170 Text and typography slips, and 繁中 that reads like a translation (closes #117, #126)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,23 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #117, #126: **text and typography slips, and 繁中 that reads like a translation.**
+  - **In `t()`:** a value that ends its own sentence ("Y.C.L.") no longer gets the template's full stop too. In 繁中, a value starting or ending with Latin letters or digits gets the space the tables put by hand next to Chinese (「你當時在 4.08 研究生辦公室」).
+  - **Save slots** number acts in each language's numerals (第一幕, not 第I幕).
+  - **No-break joins:** a number never parts from "ppm", and the door log header's "·" stays with what comes before it, so it never starts a line (the 避頭尾 check). The TLC crude lane's label stays on one line.
+  - **Wait options** say their minutes once ("Wait 1 minute", not "… 1 min").
+  - **繁中 wording** (the chemist):
+    - 掛在我名下的預約;
+    - Tom 那手方方正正的字 (大寫 means nothing for Chinese characters);
+    - 常按的那幾顆鍵 (for 母音鍵);
+    - 7 號流動座位 everywhere (the notebook said 7 號桌);
+    - Schlenk line (as Taiwanese labs say it);
+    - 就是在說你;
+    - three English-shaped sentences rewritten.
+
+    「惰性氣體」 stays: nitrogen is inert but not a 鈍氣.
+  - **Tests:** `tests/i18n.test.ts` (5 new) and `e2e/labels.spec.ts`. 529 unit and 184 e2e pass.
+- Merged #169 (closes #116).
 - #116: **the travel and wait menus open where you are.**
   - **What was wrong:** on a phone, tapping 「去別的地方……」 or 「等一下……」 redrew the page with the reveal: the passage typed itself out again and the page lost its place, leaving the destinations below the fold (the mobile player).
   - **The fix:** opening or closing a menu only changes the choices. It now re-renders without a reveal, keeps the scroll position, and brings the menu's last option into view.

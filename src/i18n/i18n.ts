@@ -71,7 +71,26 @@ export function t(key: string, params?: Params, locale: Locale = current): strin
   };
   return template
     .replace(PLURAL, (_, name: string, one: string, many: string) => (Number(params[name]) === 1 ? one : many))
-    .replace(PLACEHOLDER, (_, name: string) => value(name));
+    .replace(PLACEHOLDER, (match: string, name: string, at: number, whole: string) => fit(value(name), whole[at - 1] ?? '', whole[at + match.length] ?? '', locale));
+}
+
+const HAN = /[\u3400-\u9fff\uf900-\ufaff]/;
+const LATIN_START = /^[A-Za-z0-9]/;
+const LATIN_END = /[A-Za-z0-9]$/;
+
+/**
+ * A value set into its template's text. It can't know what's next to it, so: a value that ends its own
+ * sentence ("Y.C.L.") doesn't get the template's full stop as well, and in 繁中 a value that starts or
+ * ends with Latin letters or digits gets the space the tables put by hand between those and Chinese
+ * characters (「你當時在 4.08 研究生辦公室」, #117).
+ */
+function fit(value: string, before: string, after: string, locale: Locale): string {
+  let v = after === '.' && value.endsWith('.') ? value.slice(0, -1) : value;
+  if (locale === 'zh-Hant-TW') {
+    if (HAN.test(before) && LATIN_START.test(v)) v = ` ${v}`;
+    if (HAN.test(after) && LATIN_END.test(v)) v = `${v} `;
+  }
+  return v;
 }
 
 /** The placeholder names a template uses (plural selectors count as uses of their variable). */

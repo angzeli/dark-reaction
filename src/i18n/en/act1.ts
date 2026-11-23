@@ -20,7 +20,7 @@ export const act1 = {
     'At the bottom of the form, above the upload button, the box you will have to tick: *I confirm that these data are complete and unaltered.*',
   'office.data': 'Open the data folder',
   'office.data.r':
-    'Thirty-one spectra, named by date. You open the last three. Each is the same grey line with a fine forest of noise along it, and at 8.41 ppm, where the formate should be, nothing that would survive a reviewer squinting. Pinned beside them, because you look at it more often than you would admit, is the 2020 paper: Ridley, Lin *et al.*, Figure 3. The same region of the same spectrum. A single peak at 8.41, tall and clean as a struck match.',
+    'Thirty-one spectra, named by date. You open the last three. Each is the same grey line with a fine forest of noise along it, and at 8.41 ppm, where the formate should be, nothing that would survive a reviewer squinting. Pinned beside them, because you look at it more often than you would admit, is the 2020 paper: Ridley, Lin *et al.*, Figure 3. The same region of the same spectrum. A single peak at 8.41, tall and clean as a struck match.',
   'office.tea': 'Make tea and drink it at the window',
   'office.tea.r':
     'The kettle takes its time, ticking as it warms. You make tea in your own mug, not the white one on desk 7, and drink it at the window while the rain comes down through the sodium light in long orange threads. A night bus goes by below, lit and empty, and doesn’t stop. For four minutes nothing needs you.',
@@ -81,7 +81,7 @@ export const act1 = {
     'You do every step right, and it doesn’t matter. By the time the inner door opens the meter is past ten, and the film goes green while you watch.',
   'glovebox.meter': 'Read the oxygen meter',
   'glovebox.meter.r':
-    'Green digits behind scratched plastic: {ppm} ppm O₂. While you watch, the last digit changes. A sticker on the housing says *REGEN DUE 09/11* in Tom’s capitals, and under it, in someone else’s hand, *see logbook*. The box should sit below one part per million. Tonight it is breathing in, slowly, through some seal nobody has found.',
+    'Green digits behind scratched plastic: {ppm} ppm O₂. While you watch, the last digit changes. A sticker on the housing says *REGEN DUE 09/11* in Tom’s capitals, and under it, in someone else’s hand, *see logbook*. The box should sit below one part per million. Tonight it is breathing in, slowly, through some seal nobody has found.',
   'glovebox.sop': 'Read the SOP on the wall',
   'glovebox.sop.r':
     'ANTECHAMBER — LOADING, laminated, one corner gone soft where someone once leant a hotplate against it. *Load. Close outer door. Evacuate and refill — TWICE. Open inner door.* Beside TWICE, in small, upright pencil capitals: *THREE. Trust me. — YCL*. The pencil is under the lamination. Whoever corrected the sheet did it before it went through the machine, and whoever laminated it agreed.',
