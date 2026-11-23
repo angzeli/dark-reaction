@@ -9,7 +9,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read
 
 concurrency:
   group: pages
@@ -38,25 +37,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # While the Pages source is still "Deploy from a branch", GitHub also publishes the raw
-      # repository on every push, and whichever deploy finishes last is the site (#84). Go after
-      # it. With the source set to GitHub Actions there is no branch build, and this doesn't wait.
-      - name: Let GitHub's branch build finish first
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          SHA: ${{ github.sha }}
-        run: |
-          if [ "$(gh api "repos/$REPO/pages" --jq .build_type 2>/dev/null)" = "workflow" ]; then
-            echo "Pages builds from GitHub Actions only: nothing to wait for."
-            exit 0
-          fi
-          for i in $(seq 1 40); do
-            states=$(gh api "repos/$REPO/actions/runs?head_sha=$SHA&per_page=20" --jq '[.workflow_runs[] | select(.name == "pages build and deployment") | .status] | join(" ")')
-            echo "branch build: ${states:-not started}"
-            if [ -n "$states" ] && [ -z "$(echo "$states" | tr ' ' '\n' | grep -v '^completed$')" ]; then exit 0; fi
-            sleep 15
-          done
-          echo "::warning::GitHub's branch build didn't finish in 10 minutes; deploying anyway."
+      # The Pages source must stay "GitHub Actions". "Deploy from a branch" makes GitHub publish
+      # the raw repository on every push as well, racing this deploy (#84).
       - id: deployment
         uses: actions/deploy-pages@v4

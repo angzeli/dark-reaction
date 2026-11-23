@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #147 The sweep at the largest text size, and Infinite Loop's decoration (closes #113)
+- **Last merged:** #148 The deploy no longer waits for a branch build (closes #89)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -28,12 +28,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Repository settings are set** (2026-11-23, from a local session signed in to `gh` as the owner; the cloud proxy still blocks settings writes). The Pages source is "GitHub Actions", and `main` is protected: the seven CI checks from GitHub Actions, the branch up to date, no admin bypass, no force pushes. #89 drops `deploy.yml`'s wait for the branch build and records this in `CLAUDE.md`.
 - **Squashing without force-pushing.** This session's auto mode refuses `git push --force-with-lease` on PR branches, which the squash in `CLAUDE.md` §2 needs after any change. So each PR is pushed already squashed (one commit, `(#n)` subject, PROGRESS entry), and a PR that needs changes is replaced by a new one. The owner can allow force-pushes to this repo's PR branches to go back to the documented flow.
-- **The `workflow` scope.** The owner's `gh` login can't push changes under `.github/workflows/` until `gh auth refresh -h github.com -s workflow` is run: #89 and #91 wait for it.
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-23
+- #89: **the deploy no longer waits for a branch build.** The owner added the `workflow` scope, so this could land at last.
+  - **`deploy.yml`:** with the Pages source "GitHub Actions" (set 2026-11-23), there's no branch build left to race, so #85's wait step and its `actions: read` permission are gone. A comment says the source must stay "GitHub Actions".
+  - **`CLAUDE.md`:** says `main` is protected (required checks, up to date, no admin bypass, no force pushes) and that a local session signed in to `gh` as the owner can change repository settings, tags and releases.
+- Merged #147 (closes #113).
 - #113: **the sweep at the largest text size, and Infinite Loop's decoration.**
   - **#113 was mis-filed:** Infinite Loop's faded repeats of "Run it again" were already `aria-hidden`, so a screen reader never meets them. They're pure decoration, which WCAG 1.4.3 exempts as incidental, but axe can't tell. The sweep's axe run now leaves them out, with the reason in the code and `docs/qa/README.md`. The ending itself doesn't change.
   - **Largest text:** the sweep gains a largest-text-size variant at 390 px (#107 hid at the default size).
