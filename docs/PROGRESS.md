@@ -6,8 +6,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #130 QA harness, Layer 3: screenshot sweep and glyph coverage (refs #93)
-- **In flight:** the fixes, majors first: #101, #102, #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
+- **Last merged:** #131 Dan's door opens while you wait at it (closes #101)
+- **In flight:** the fixes, majors first: #102, #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
 
@@ -34,6 +34,8 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #101: **Dan's door opens while you wait at it.** The door log says 4.01 is open 03:15–03:18. Two of five playtesters went early and waited at the door, as you would, and lost the loop. The locked scene is chosen only on arrival, and `ev.unlock` skips anyone at 4.01. Now `ev.unlock.door` (at 4.01, 03:15–03:18; the lock clicks back with nobody there, so the porter stays unseen) interrupts the wait, and the door scene offers "Go in" while it's open, with Knock hidden then. Two unit tests: waiting through 03:15 opens it, and outside the window there's no way in.
+- Merged #130 (refs #93).
 - #93 (part 1): **Layer 3 of the playtest QA, the screenshot sweep** (`scripts/qa/sweep.ts`), and **glyph coverage** in the validator.
   - **The sweep:** every room in every act, the scenes inside rooms, all ten puzzles and six endings, and the overlays, as saves loaded into the real UI. It runs in en and 繁中 at 390, 768 and 1440, with reduce-motion and high-contrast variants: 812 screenshots and contact sheets.
   - **Page checks:** overflow, clipped text, overlapping choices, tap targets, 避頭尾 and axe.

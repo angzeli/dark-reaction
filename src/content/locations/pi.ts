@@ -4,7 +4,11 @@
  * paper, her last email, her box, the 2018 photo, Ian's priority code.
  * docs/DESIGN.md §9.
  */
-import type { SceneDef } from '../../engine/types.ts';
+import type { Cond, SceneDef } from '../../engine/types.ts';
+import { PI_OPEN } from '../world.ts';
+
+/** The porter's Monday clean: the door stands unlocked (03:15–03:18). */
+const cleaning: Cond = { all: [{ minuteGte: PI_OPEN.from }, { minuteLt: PI_OPEN.to }] };
 
 export const piScenes: SceneDef[] = [
   {
@@ -13,7 +17,11 @@ export const piScenes: SceneDef[] = [
     location: 'pi',
     hub: true,
     text: [{ key: 'pi.door.text' }],
-    choices: [{ id: 'pi.knock', label: 'pi.knock', cost: 1, once: 'loop', text: [{ key: 'pi.knock.r' }] }],
+    choices: [
+      // Waiting at the door through 03:15 has to open it too, not only arriving then (playtest).
+      { id: 'pi.enter', label: 'pi.enter', if: cleaning, to: 'pi.hub' },
+      { id: 'pi.knock', label: 'pi.knock', cost: 1, once: 'loop', if: { not: cleaning }, text: [{ key: 'pi.knock.r' }] },
+    ],
   },
   {
     id: 'pi.hub',

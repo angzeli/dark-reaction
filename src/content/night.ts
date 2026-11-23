@@ -30,6 +30,8 @@ export const EVENTS: EventDef[] = [
   { id: 'ev.whistle', minute: 10, until: 20, if: { at: 'stairs' }, text: [{ key: 'ev.whistle' }] },
   // 03:15: Dan's office opens for the Monday clean.
   { id: 'ev.unlock', minute: PI_OPEN.from, until: PI_OPEN.to, if: { all: [onLevel4, { not: { at: 'pi' } }] }, text: [{ key: 'ev.unlock' }] },
+  // …and if you're the one standing at its door, it opens in front of you (the porter still unseen).
+  { id: 'ev.unlock.door', minute: PI_OPEN.from, until: PI_OPEN.to, if: { at: 'pi' }, text: [{ key: 'ev.unlock.door' }] },
   // 03:21: fire exit B is released for the bins.
   { id: 'ev.bins', minute: EXIT_B_OPEN.from, until: EXIT_B_OPEN.to, if: { at: 'stairs' }, text: [{ key: 'ev.bins' }] },
   // 03:25: the perfect spectrum, printed in the basement or mailed to your desk.

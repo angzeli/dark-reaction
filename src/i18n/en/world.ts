@@ -21,6 +21,7 @@ export const world = {
   'ev.preparing': 'The console’s screen wakes by itself. *HOLDER 13 · PREPARING.* Nothing in the carousel moves.',
   'ev.whistle': 'Somewhere below, someone whistles four bars of a tune you almost know, and stops halfway through the fifth, as if they have just remembered something.',
   'ev.unlock': 'Along the corridor a lock clicks back and a door bumps gently against its stop. Then the hoover again, closer, somewhere it wasn’t before.',
+  'ev.unlock.door': 'Behind the frosted glass the lock clicks back on its own. The door eases off its latch an inch, and down the corridor the hoover starts up again, closer than before. There is nobody at the door but you.',
   'ev.bins': 'Down in the lobby something heavy clunks: a bar released. Cold air comes up the stairwell, and with it the rumble of bins being wheeled across wet concrete.',
   'ev.perfect.nmr': 'At 03:25 the printer on its trolley clears its throat and starts to print. One page. The tray takes it gently, the way a hand would.',
   'ev.perfect.office': 'Your inbox chimes. *[NMR 400] Your spectrum is ready: PROTON_DARK (holder 13). PDF attached.*',
@@ -52,6 +53,7 @@ export const world = {
     'Lab 4.12 smells of acetone and warm dust. The fume hoods breathe in unison, sashes down, their lights turning them into three tall aquariums of nothing. Your column fractions wait in a rack on the bench: twenty-four test tubes of almost exactly the same colourless liquid. Someone has labelled the Schlenk line THE KRAKEN on a strip of tape, and nobody has ever taken it off.',
   'glovebox.hub.act1':
     'The glovebox has a small room to itself, like a patient on a ward: a long steel body, two black gloves hanging limp from their ports, a window you can look into but never quite through. The oxygen meter on top glows green. {ppm} ppm. It was lower when you came in.',
+  'pi.enter': 'Go in',
   'pi.door.text':
     'Prof. Ridley’s door is shut and locked. Through the frosted glass: the shape of a desk lamp, the shape of a chair. A printed sign at eye level says BOSTON UNTIL 27 NOV — PLEASE EMAIL, in the font Dan uses for everything, including condolence cards.',
   'pi.hub.text':
