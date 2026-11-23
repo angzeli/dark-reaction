@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #140 Emphasis is never asterisks, on screen or to a screen reader (closes #109, #128)
+- **Last merged:** #141 The play screen's frame: an opaque header, puzzles that open at their top, headings (closes #110, #112, #120)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #110, #112, #120: **the play screen's frame.**
+  - **The header** is opaque. Text scrolling under it showed through (the mobile player).
+  - **Puzzles open at their top,** below the header. The frame scrolls the puzzle into place two frames after mount (the header's height is only known once observed), and also when a view keeps focus itself, as the console does.
+  - **Headings:** the room's name is the page's h1, and a hidden h2 "What you can do" heads the choices, which it names (the accessibility player).
+  - **The door log** gives the time its own line on a phone, with a fixed line height, so setting a time no longer pushes the timeline down 28 px.
+  - **Not changed:** after 03:33, focus rests on the list of choices, which may be below the fold while you read. Since #132, Space and Enter there act on nothing, and Tab or ↓ scrolls to the choice they move to.
+  - **Test:** `e2e/frame.spec.ts`. The headings, header and door log tests fail without the fix.
+- Merged #140 (closes #109, #128).
 - #109, #128: **emphasis is never asterisks, on screen or to a screen reader.**
   - **On screen:** the freezer showed her slip as `*raw. all of it.*`, because puzzle status lines were set with `textContent`. They now go through `setInline` (italics, as in scenes) in the freezer, cipher, fabrication, door log and Schlenk line.
   - **To a screen reader:** a scene's spoken copy carried the raw markup (NVDA reads "star"), missed the "In your hands" line, and stayed in the page, so browse mode met every passage twice. It's now plain words with every line on screen, cleared 3 s after it's said.
