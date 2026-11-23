@@ -22,7 +22,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   // P3 · TLC
   'puzzle.tlc.title': '收集液的 TLC 片',
   'puzzle.tlc.intro':
-    '管柱是今晚跑的，事後點的 TLC 片已經乾了。架上有二十四支收集液，產物在其中幾支裡。你的筆記本寫著：*產物 Rf ≈ 0.35（正己烷：乙酸乙酯 3:1），UV 下可見。*',
+    '管柱是今晚跑的，事後點的 TLC 片已經乾了。架上有二十四支收集液，產物在其中幾支裡。你的筆記本寫著：*產物 Rf ≈ 0.35（正己烷：乙酸乙酯 3:1），UV 下可見。*仔細讀這片要花兩分鐘。',
   'puzzle.tlc.rule': 'Rf = 斑點走的距離 ÷ 溶劑走的距離，兩者都從鉛筆畫的基線量起。',
   'puzzle.tlc.plate': 'TLC 片，各道由左到右',
   'puzzle.tlc.lane.crude': '粗產物',
@@ -157,7 +157,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   // P6 · 門禁紀錄
   'puzzle.doorlog.title': '警衛的終端機',
   'puzzle.doorlog.intro':
-    '一台米色的終端機，鍵盤黏黏的，螢幕上有一圈杯子印。它記下過去一個星期，每天晚上 02:40 到 03:40 之間，4 樓和一樓每一扇門刷過的每一張卡。螢幕角落的日期寫著 MON 23 NOV。',
+    '一台米色的終端機，鍵盤黏黏的，螢幕上有一圈杯子印。它記下過去一個星期，每天晚上 02:40 到 03:40 之間，4 樓和一樓每一扇門刷過的每一張卡。螢幕角落的日期寫著 MON 23 NOV。把七個晚上的紀錄讀完要花兩分鐘。',
   'puzzle.doorlog.screen': 'VELLACOTT 大樓 · 門禁紀錄 · 4 樓與一樓 · 02:40–03:40',
   'puzzle.doorlog.nights': '日期',
   'puzzle.doorlog.doors': '門',

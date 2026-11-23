@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #170 Text and typography slips, and 繁中 that reads like a translation (closes #117, #126)
+- **Last merged:** #172 Puzzles say what reading costs, and fit a thumb (closes #118, #119)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #118, #119: **puzzles say what reading costs, and fit a thumb.**
+  - **Hidden cost:** the TLC plate and the door log charge their two reading minutes on the first action, so the clock jumped with nothing said (the mobile player, the first-timer). Each intro now says reading takes a couple of minutes.
+  - **Touch targets:** on a touch screen, TLC spots get a hit area beyond the drawn dot (they were 19 px tall, under WCAG 2.5.8's 24), and the door log's options and the console's chips are 44 px tall. On a phone the freezer's grid keeps its row labels and gaps slim, so its cells stay at least 24 px even at the largest text size in 繁中 (they were 23; the second pass found it). A 9×9 grid can't be 44 px a cell on a 390 px phone.
+  - **Test:** `e2e/touch-targets.spec.ts`. All three fail without the fix.
+- Merged #170 (closes #117, #126).
 - #117, #126: **text and typography slips, and 繁中 that reads like a translation.**
   - **In `t()`:** a value that ends its own sentence ("Y.C.L.") no longer gets the template's full stop too. In 繁中, a value starting or ending with Latin letters or digits gets the space the tables put by hand next to Chinese (「你當時在 4.08 研究生辦公室」).
   - **Save slots** number acts in each language's numerals (第一幕, not 第I幕).
