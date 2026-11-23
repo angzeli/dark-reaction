@@ -1,0 +1,40 @@
+name: Nightly QA
+
+# Layer 1 of the playtest QA at length (docs/qa/README.md): the explorer and the chaotic
+# fuzzer with the nightly budget and the day's own seed, so every night plays different
+# games. A run fails on any error-level finding; the report says how to reproduce it.
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # 03:17 UTC, between the porter's rounds
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'First seed (default: the day of the year)'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  explore:
+    name: explore and fuzz (long)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Explore and fuzz
+        env:
+          SEED: ${{ inputs.seed }}
+        run: node --max-old-space-size=12288 scripts/qa/explore.ts --long --first-seed "${SEED:-$(date -u +%j)}" --out qa-report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-report
+          path: qa-report
+          retention-days: 14
