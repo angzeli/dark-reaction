@@ -39,7 +39,7 @@ At 03:33 the lights go out, and it is 02:47 again.
 
 | | Keyboard | Touch or mouse |
 |---|---|---|
-| Choose | number keys 1–9, or Tab and Enter | tap a choice |
+| Choose | number keys 1–9 (0 for a tenth), or Tab and Enter | tap a choice |
 | Finish the text at once | Space or Enter | tap the text |
 | Notebook | N | Notebook |
 | Menu, settings, saves | M or Esc | Menu |
@@ -101,7 +101,7 @@ By Angze Li. Code under the [MIT License](LICENSE). Story text, illustrations an
 
 | | 鍵盤 | 觸控或滑鼠 |
 |---|---|---|
-| 選擇 | 數字鍵 1–9，或 Tab 加 Enter | 點選項 |
+| 選擇 | 數字鍵 1–9（第十個用 0），或 Tab 加 Enter | 點選項 |
 | 立刻顯示整段文字 | 空白鍵或 Enter | 點文字 |
 | 筆記本 | N | 「筆記本」 |
 | 選單、設定、存檔 | M 或 Esc | 「選單」 |
