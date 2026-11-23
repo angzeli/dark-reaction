@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0), tagged on 2b71b0a (#88). M1–M6 are closed.
 - **Milestone:** Playtest (v1.0.1): a playtest QA pass (three layers of tools, then the fixes they lead to), ending in v1.0.1.
-- **Last merged:** #132 Space and Enter never make a choice once the text is in (closes #102)
+- **Last merged:** #133 A notice fades, and follows the language (closes #103)
 - **In flight:** the fixes, majors first: #103, #104, #105, #106, #107, #127. The visual baselines (#93) come after the fixes. The deploy cleanup (#89) and the nightly run (#91) wait on the `workflow` scope.
 
 ## Next
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-23
+- #103: **a notice fades, and follows the language.**
+  - **What was wrong:** after Continue, Load or Save, the notice at the foot of the screen ("Loaded the autosave.") stayed for the rest of the session. It covered part of a choice or a line of text on every screen, took taps on a phone, and kept its language after a switch. Layer 3 showed it on every screenshot after a load; the breaker and the mobile player reported it.
+  - **The fix:** the notice is kept as a function, re-translated on every render, and cleared after 4 s. The `role=status` region still speaks it.
+  - **Test:** an e2e saves, switches language (the notice follows), and waits for it to go. It fails without the fix.
+- Merged #132 (closes #102).
 - #102: **Space and Enter never make a choice once the text is in.**
   - **What was wrong:** after a passage, keyboard focus moved to choice 1 by itself. The README says Space and Enter finish the text, so a player pressing them once more (or after the text had finished) made choice 1. The breaker reproduced it three times, and the chemist hit it too. #61 had already put Back first where choice 1 would end the game.
   - **The fix:** focus now waits on the list of choices itself (`ol.choices`, focusable, named "What you can do"), where Space and Enter do nothing. 1–9 choose, Tab enters the list, and the arrow keys now move up and down it.

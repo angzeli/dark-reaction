@@ -43,6 +43,9 @@ export interface AppOptions {
   kv: KV;
 }
 
+/** How long a notice stays at the foot of the screen. */
+const STATUS_MS = 4000;
+
 export class App {
   readonly root: HTMLElement;
   private readonly content: Content;
@@ -68,7 +71,9 @@ export class App {
   private keyboardUsed = false;
   /** The loop and room the play screen last showed: arriving somewhere new starts at the top (#52). */
   private shownAt: string | null = null;
-  private status = '';
+  /** The notice at the foot of the screen (saved, loaded…), kept as a thunk so a language switch re-translates it (#103). */
+  private status: (() => string) | null = null;
+  private statusTimer: number | undefined;
   private untrap: (() => void) | null = null;
   private lastFocus: HTMLElement | null = null;
   /** Bumped by every play render and by the last minute before the dark: a reveal only draws the choices of its own page (#80). */
@@ -146,11 +151,11 @@ export class App {
   loadSlot(slot: SlotId): boolean {
     const r = this.saves.read(slot);
     if (!r.ok) {
-      this.flash(t(`save.reason.${r.reason}`));
+      this.flash(() => t(`save.reason.${r.reason}`));
       return false;
     }
     this.enterGame(r.envelope.state);
-    this.flash(t('save.loaded', { slot: this.slotName(slot) }));
+    this.flash(() => t('save.loaded', { slot: this.slotName(slot) }));
     return true;
   }
 
@@ -412,10 +417,17 @@ export class App {
     };
   }
 
-  private flash(message: string): void {
+  /** A short notice (saved, loaded…): spoken by the status region, gone after a few seconds (#103). */
+  private flash(message: () => string): void {
     this.status = message;
     const el = this.root.querySelector('.app__status');
-    if (el) el.textContent = message;
+    if (el) el.textContent = message();
+    window.clearTimeout(this.statusTimer);
+    this.statusTimer = window.setTimeout(() => {
+      this.status = null;
+      const now = this.root.querySelector('.app__status');
+      if (now) now.textContent = '';
+    }, STATUS_MS);
   }
 
   private slotName(slot: SlotId): string {
@@ -452,7 +464,7 @@ export class App {
   private shell(screen: string, ...children: HTMLElement[]): HTMLElement {
     this.puzzleFrame?.destroy();
     this.puzzleFrame = null;
-    const status = h('p', { class: 'app__status', role: 'status', 'aria-live': 'polite' }, this.status);
+    const status = h('p', { class: 'app__status', role: 'status', 'aria-live': 'polite' }, this.status?.() ?? '');
     const app = h('div', { class: `app app--${screen}` }, ...children, status);
     this.root.replaceChildren(app);
     return app;
@@ -948,7 +960,7 @@ export class App {
                 return;
               }
               const ok = this.saves.write(slot, this.game!.state, getLocale());
-              this.flash(ok ? t('save.saved', { slot: this.slotName(slot) }) : t('save.failed'));
+              this.flash(() => (ok ? t('save.saved', { slot: this.slotName(slot) }) : t('save.failed')));
               this.render();
             },
           },
@@ -963,26 +975,26 @@ export class App {
     const s = this.game.state;
     const text = this.saves.exportText(s, getLocale());
     if (!text) {
-      this.flash(t('save.failed'));
+      this.flash(() => t('save.failed'));
       return;
     }
     downloadText(saveFilename(s.loop, clockLabel(s.minute)), text);
-    this.flash(t('save.exported'));
+    this.flash(() => t('save.exported'));
   }
 
   private async importSave(): Promise<void> {
     const picked = await pickTextFile();
     if (picked.kind === 'cancel') return;
     if (picked.kind === 'error') {
-      this.flash(t(`save.file.${picked.reason}`));
+      this.flash(() => t(`save.file.${picked.reason}`));
       return;
     }
     const r = this.saves.importText(picked.text);
     if (!r.ok) {
-      this.flash(t(`save.reason.${r.reason}`));
+      this.flash(() => t(`save.reason.${r.reason}`));
       return;
     }
     this.enterGame(r.envelope.state);
-    this.flash(t('save.imported'));
+    this.flash(() => t('save.imported'));
   }
 }

@@ -215,3 +215,19 @@ test('Space and Enter never make a choice once the text has finished (#102)', as
   await page.keyboard.press('Enter');
   await expect(page.locator('.choice[data-choice="office.queue"]')).toBeVisible(); // the monitor
 });
+
+test('a notice fades after a few seconds, and follows the language while it shows (#103)', async ({ page }) => {
+  await start(page);
+  await newGame(page);
+  await page.keyboard.press('m');
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await page.locator('.slot[data-slot="1"] .slot__btn').click();
+  await expect(page.locator('.app__status')).toHaveText('Saved to Slot 1.');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: '繁體中文' }).click();
+  await expect(page.locator('.app__status')).toHaveText('已存到存檔 1。');
+  await page.keyboard.press('Escape');
+  // Then it goes, and nothing is left covering the choices.
+  await expect(page.locator('.app__status')).toHaveText('', { timeout: 6_000 });
+  await expect(page.locator('.app__status')).toBeHidden();
+});
