@@ -87,7 +87,7 @@ A screenshot of every screen in `lib/targets.ts`:
 
 Each is a game state built from the scripted routes and placed where the screen is, then loaded into the real UI as a save (`lib/browser.ts`).
 
-**The matrix:** en and 繁中, at 390×844 (a touch phone), 768×1024 and 1440×900, plus a reduce-motion variant (390, 1440) and a high-contrast one (390, 1440). That's 812 screenshots.
+**The matrix:** en and 繁中, at 390×844 (a touch phone), 768×1024 and 1440×900, plus a reduce-motion variant (390, 1440), a high-contrast one (390, 1440) and the largest text size on a phone (#107 hid there). That's about 930 screenshots.
 
 **Checked on each page without looking:**
 - page overflow;
@@ -95,7 +95,7 @@ Each is a game state built from the scripted routes and placed where the screen 
 - choices drawn over each other;
 - tap targets on touch (WCAG 2.5.8's 24 px; 44 recommended);
 - 避頭尾: Chinese punctuation (，。、；：？！」』）】》〉～·％) starting a line, an opening bracket ending one, or a …… or —— pair split across lines;
-- axe at 390 and 1440.
+- axe at 390 and 1440. Infinite Loop's faded repeats are excluded: they're `aria-hidden` decoration, which WCAG 1.4.3 exempts as incidental, and axe can't tell (#113).
 
 The output is `findings.json`, the screenshots, and contact sheets (`sheets/`, six or eight screenshots to an image) for review.
 
