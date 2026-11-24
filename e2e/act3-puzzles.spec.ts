@@ -37,11 +37,13 @@ test('the Kraken by keyboard: a suck-back puts everything back, then her tube is
   await expect(page.locator('.narrative__carry')).toContainText('foil');
   const { d, at } = await open(page, 'synth.kraken.fill');
   await expect(page.getByRole('dialog', { name: 'The Kraken' })).toBeVisible();
-  await expect(d.locator('.sk__rules li')).toHaveCount(5);
+  await expect(d.locator('.sk__rules li')).toHaveCount(6);
+  await expect(d.locator('.sk__rules li.sk__pencil').last()).toHaveText('Pump a vessel down and refill it three times before anything goes into it.');
   const status = d.locator('.sk__status');
   const tube = d.locator('.sk__tube');
   const taps = (n: number) => d.getByRole('radiogroup', { name: `Port ${n} tap` });
   await expect(tube).toHaveText('Her tube: empty, full of the room’s air.');
+  await expect(d.locator('.sk__cycles')).toHaveText('Cycles: 0');
 
   // Rule 1, broken: vacuum on port 2 with the bubbler still. A suck-back, and two minutes gone.
   await taps(2).getByRole('radio', { name: 'Closed' }).focus();
@@ -65,8 +67,18 @@ test('the Kraken by keyboard: a suck-back puts everything back, then her tube is
   await expect(tube).toHaveText('Her tube: pumped down to nothing.');
   await page.keyboard.press('Home');
   await expect(taps(2).getByRole('radio', { name: 'Nitrogen' })).toHaveAttribute('aria-checked', 'true');
-  await expect(tube).toHaveText('Her tube: empty, full of nitrogen.');
+  await expect(tube).toHaveText('Her tube: nitrogen, with some of the room’s air still in it.');
+  await expect(d.locator('.sk__cycles')).toHaveText('Cycles: 1');
   await expect(taps(2).locator('[tabindex="0"]')).toHaveCount(1);
+  // Twice more: three purges, as the card's sixth rule says (#125).
+  for (const n of [2, 3]) {
+    await page.keyboard.press('End');
+    await expect(tube).toHaveText('Her tube: pumped down to nothing.');
+    await page.keyboard.press('Home');
+    await expect(d.locator('.sk__cycles')).toHaveText(`Cycles: ${n}`);
+  }
+  await expect(tube).toHaveText('Her tube: empty, full of nitrogen.');
+  await expect(status).toContainText('for the third time');
 
   // Her flask under nitrogen; her tube closed with its bleed open, and the liquid crosses.
   await taps(4).getByRole('radio', { name: 'Closed' }).focus();
@@ -86,7 +98,7 @@ test('the Kraken by keyboard: a suck-back puts everything back, then her tube is
   await d.getByRole('button', { name: 'Wrap her tube in foil' }).focus();
   await page.keyboard.press('Enter');
   await expect(tube).toHaveText('Her tube: sealed and wrapped in foil.');
-  await expect(d.locator('.pz__clock-time')).toHaveText(at(2 + 6));
+  await expect(d.locator('.pz__clock-time')).toHaveText(at(2 + 12));
   await expect(d.getByRole('button', { name: 'Take her tube' })).toBeFocused();
   await page.keyboard.press('Enter');
 
@@ -106,7 +118,8 @@ test.describe('on a phone', () => {
     expect(await noSideScroll(page)).toBe(true);
     await d.locator('.sk__n2').tap();
     await expect(d.locator('.sk__bubbler')).toHaveText('起泡器在冒泡。');
-    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const) await d.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`).tap();
+    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [2, 'vac'], [2, 'n2'], [2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const)
+      await d.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`).tap();
     await d.getByRole('button', { name: '放氣閥：關' }).first().tap();
     await expect(d.locator('.sk__tube')).toHaveText('她的管子：裝著深色的液體，活栓開著。');
     await d.getByRole('button', { name: '管子的活栓：開' }).tap();
@@ -205,6 +218,13 @@ test('the chirp with the sound off and motion reduced: steady segments count 2 �
   expect(seen.some((s) => s.flash)).toBe(false);
   await expect(d.locator('.cp__heard')).toHaveText('A long pause, and it starts again.');
   await expect(d.locator('.cp__listen')).toHaveText('Listen again');
+  // The groups stay on screen until the next cycle (#161): counted by eye, not held in memory.
+  const tally = d.locator('.cp__tally');
+  await expect(tally).toHaveAttribute('aria-hidden', 'true');
+  await expect(tally.locator('.cp__group')).toHaveText(['Chirp, chirp.', 'Chirp, chirp, chirp, chirp.', 'Chirp.', 'Chirp, chirp, chirp.', 'a long pause']);
+  await d.locator('.cp__listen').click();
+  await expect(tally.locator('.cp__group')).toHaveCount(0);
+  await expect(tally.locator('.cp__group')).toHaveText(['Chirp, chirp.'], { timeout: 5_000 });
 
   // The keypad is one Tab stop; the arrows walk it, the number keys type.
   const keypad = d.getByRole('group', { name: 'UPS keypad' });
@@ -243,6 +263,7 @@ test('the chirp in 繁中, with motion and flicker on: the LED flashes once a ch
   expect(seen.map((s) => s.chirps)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   expect(seen.every((s) => s.flash)).toBe(true);
   await expect(d.locator('.cp__heard')).toHaveText('停了很久，然後又從頭開始。');
+  await expect(d.locator('.cp__tally .cp__group')).toHaveText(['啾、啾。', '啾、啾、啾、啾。', '啾。', '啾、啾、啾。', '停了很久']);
 
   for (const key of ['2', '4', '1', '3']) await d.locator(`.cp__key[data-key="${key}"]`).click();
   await d.getByRole('button', { name: '確定' }).click();
@@ -420,8 +441,9 @@ test.describe('in the harness', () => {
 
   test('the Kraken reads the foil from what you carry: wrapped with it, spoiled without', async ({ page }) => {
     for (const [items, result] of [
-      [['item.foil'], { solved: true, minutes: 6 }],
-      [[], { solved: false, minutes: 6, failed: true }],
+      // A clean run with three purges (#125): CLEAN_MINUTES.
+      [['item.foil'], { solved: true, minutes: 12 }],
+      [[], { solved: false, minutes: 12, failed: true }],
     ] as const) {
       await mount(page, 10, { puzzle: 'schlenk', items: [...items] });
       await SOLVERS['schlenk']!(page);

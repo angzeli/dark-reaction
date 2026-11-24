@@ -51,11 +51,17 @@ const ACT3 = { minute: 30, act: 3 as const };
 describe('the Kraken (Schlenk line)', () => {
   const start = () => schlenkLogic.init(ACT3);
   const play = (moves: SchlenkMove[], s: SchlenkState = start()) => run(schlenkLogic.apply, s, moves);
-  /** The design's solution, step for step (docs/DESIGN.md §11 P5). */
-  const DESIGNED: SchlenkMove[] = [
-    { type: 'n2' },
+  /** One purge of her tube's port: down to vacuum, back up to nitrogen. */
+  const CYCLE: SchlenkMove[] = [
     { type: 'tap', port: 2, to: 'vac' },
     { type: 'tap', port: 2, to: 'n2' },
+  ];
+  /** The design's solution, step for step (docs/DESIGN.md §11 P5): three purges (#125). */
+  const DESIGNED: SchlenkMove[] = [
+    { type: 'n2' },
+    ...CYCLE,
+    ...CYCLE,
+    ...CYCLE,
     { type: 'tap', port: 4, to: 'n2' },
     { type: 'tap', port: 2, to: 'closed' },
     { type: 'bleed', which: 'tube' },
@@ -65,21 +71,40 @@ describe('the Kraken (Schlenk line)', () => {
 
   it('keeps the contract', () => checkPuzzleContract(schlenkLogic, ACT3));
 
-  it('the designed sequence fills, seals and wraps her tube, in the shortcut’s six minutes', () => {
+  /** The designed sequence up to the liquid crossing into her tube. */
+  const FILLED = DESIGNED.length - 2;
+
+  it('the designed sequence fills, seals and wraps her tube, in the shortcut’s twelve minutes', () => {
     const steps = DESIGNED.map((_, i) => play(DESIGNED.slice(0, i + 1)));
-    expect(steps[0]!.last?.kind).toBe('n2On');
-    expect(steps[1]!.last?.kind).toBe('pumped');
-    expect(steps[2]!.last?.kind).toBe('purged');
-    expect(steps[5]!.last?.kind).toBe('transfer');
-    expect(steps[5]!.filled).toBe(true);
+    expect(steps.slice(0, 7).map((s) => s.last?.kind)).toEqual(['n2On', 'pumped', 'refilled', 'pumped', 'refilled', 'pumped', 'purged']);
+    expect(steps.slice(0, 7).map((s) => s.cycles)).toEqual([0, 0, 1, 1, 2, 2, 3]);
+    expect(steps[FILLED - 1]!.last?.kind).toBe('transfer');
+    expect(steps[FILLED - 1]!.filled).toBe(true);
     const done = steps.at(-1)!;
     expect(schlenkLogic.isSolved(done)).toBe(true);
     expect(schlenkLogic.minutes(done)).toBe(CLEAN_MINUTES);
-    expect(CLEAN_MINUTES).toBe(6);
+    expect(CLEAN_MINUTES).toBe(12);
     expect(done.breaches).toBe(0);
   });
 
-  it('its own solution is the shortest way, eight moves from a cold line', () => {
+  it('three purges, as the act has it: after one or two the liquid would meet the room, and the line resets (#125)', () => {
+    const toTransfer: SchlenkMove[] = [{ type: 'tap', port: 4, to: 'n2' }, { type: 'tap', port: 2, to: 'closed' }, { type: 'bleed', which: 'tube' }];
+    for (const n of [1, 2]) {
+      const purgedOnly = play([{ type: 'n2' }, ...Array.from({ length: n }, () => CYCLE).flat()]);
+      expect(purgedOnly.cycles).toBe(n);
+      const after = play(toTransfer, purgedOnly);
+      expect(after.last).toEqual({ kind: 'thin', breach: true });
+      expect(after.filled).toBe(false);
+      expect(after.cycles).toBe(0);
+    }
+    // Pumping down again after the third doesn't undo the purges, but the tube must be refilled first.
+    const repumped = play([{ type: 'tap', port: 2, to: 'vac' }], play(DESIGNED.slice(0, 7)));
+    expect(repumped.cycles).toBe(3);
+    expect(play(toTransfer, repumped).last).toEqual({ kind: 'air', breach: true });
+    expect(play([{ type: 'tap', port: 2, to: 'n2' }, ...toTransfer], repumped).filled).toBe(true);
+  });
+
+  it('its own solution is the shortest way, twelve moves from a cold line', () => {
     const moves = schlenkLogic.solution(start());
     expect(moves).toHaveLength(DESIGNED.length);
     expect(schlenkLogic.isSolved(play(moves))).toBe(true);
@@ -94,7 +119,8 @@ describe('the Kraken (Schlenk line)', () => {
       ['flaskRoom', [{ type: 'bleed', which: 'flask' }]],
       ['air', [{ type: 'n2' }, { type: 'tap', port: 4, to: 'n2' }, { type: 'bleed', which: 'tube' }]],
       ['suckback', [{ type: 'n2' }, { type: 'tap', port: 1, to: 'vac' }, { type: 'n2' }]],
-      ['drained', [...DESIGNED.slice(0, 6), { type: 'tap', port: 2, to: 'vac' }]],
+      ['thin', [{ type: 'n2' }, ...CYCLE, { type: 'tap', port: 4, to: 'n2' }, { type: 'tap', port: 2, to: 'closed' }, { type: 'bleed', which: 'tube' }]],
+      ['drained', [...DESIGNED.slice(0, FILLED), { type: 'tap', port: 2, to: 'vac' }]],
     ];
     for (const [kind, moves] of cases) {
       const before = play(moves.slice(0, -1));
@@ -102,18 +128,18 @@ describe('the Kraken (Schlenk line)', () => {
       expect(after.last, kind).toEqual({ kind, breach: true });
       expect(after.breaches, kind).toBe(before.breaches + 1);
       expect(schlenkLogic.minutes(after) - schlenkLogic.minutes(before), kind).toBe(COST.breach);
-      expect({ n2: after.n2, taps: after.taps, bleed: after.bleed, filled: after.filled, purged: after.purged }, kind).toEqual({
+      expect({ n2: after.n2, taps: after.taps, bleed: after.bleed, filled: after.filled, cycles: after.cycles }, kind).toEqual({
         n2: false,
         taps: ['closed', 'closed', 'closed', 'closed'],
         bleed: { tube: false, flask: false },
         filled: false,
-        purged: false,
+        cycles: 0,
       });
     }
   });
 
   it('rule 4: liquid only moves while the flask is on nitrogen and the tube is closed with its bleed open', () => {
-    const purged = play(DESIGNED.slice(0, 3));
+    const purged = play(DESIGNED.slice(0, 7));
     // Tube open to nitrogen, or the flask merely closed: nothing moves.
     expect(play([{ type: 'bleed', which: 'tube' }], purged).filled).toBe(false);
     expect(play([{ type: 'tap', port: 2, to: 'closed' }, { type: 'bleed', which: 'tube' }], purged).filled).toBe(false);
@@ -122,11 +148,12 @@ describe('the Kraken (Schlenk line)', () => {
   });
 
   it('with the nitrogen main off, nothing pushes: no refill, no transfer, until it is back on', () => {
-    // Pumped down, then port 2 closed and the main off (legal: nothing is on vacuum).
-    const pumped = play([{ type: 'n2' }, { type: 'tap', port: 2, to: 'vac' }, { type: 'tap', port: 2, to: 'closed' }, { type: 'n2' }]);
+    // Two purges, pumped down for the third, then port 2 closed and the main off (legal: nothing is on vacuum).
+    const pumped = play([{ type: 'n2' }, ...CYCLE, ...CYCLE, { type: 'tap', port: 2, to: 'vac' }, { type: 'tap', port: 2, to: 'closed' }, { type: 'n2' }]);
     expect(pumped.pumped).toBe(true);
     const dead = play([{ type: 'tap', port: 2, to: 'n2' }], pumped);
-    expect(dead.purged).toBe(false);
+    expect(dead.cycles).toBe(2);
+    expect(dead.pumped).toBe(true);
     const purged = play([{ type: 'n2' }], dead);
     expect(purged.last?.kind).toBe('purged');
     // Set up for the transfer with the main off: it waits for the gas.
@@ -148,7 +175,7 @@ describe('the Kraken (Schlenk line)', () => {
 
   it('the foil: wrapping needs a filled, sealed tube; without foil in hand, the light spoils it', () => {
     expect(play([{ type: 'wrap', foil: true }]).last?.kind).toBe('needsFill');
-    const filled = play(DESIGNED.slice(0, 6));
+    const filled = play(DESIGNED.slice(0, FILLED));
     expect(play([{ type: 'wrap', foil: true }], filled).last?.kind).toBe('needsSeal');
     const sealed = play([{ type: 'jy' }], filled);
     const dark = play([{ type: 'wrap', foil: false }], sealed);
@@ -183,8 +210,12 @@ describe('the Kraken (Schlenk line)', () => {
     const broken = schlenkLogic.init({ ...ACT3, data: { n2: false, taps: ['closed', 'vac', 'closed', 'closed'], minutes: 5, breaches: 2 } });
     expect(breach(broken)).toBeNull();
     expect(broken).toEqual({ ...start(), minutes: 5, breaches: 2 });
-    const spoiled = play([{ type: 'jy' }, { type: 'wrap', foil: false }], play(DESIGNED.slice(0, 6)));
+    const spoiled = play([{ type: 'jy' }, { type: 'wrap', foil: false }], play(DESIGNED.slice(0, FILLED)));
     expect(schlenkLogic.isFailed!(schlenkLogic.init({ ...ACT3, data: roundTrip(schlenkSave(spoiled)) }))).toBe(true);
+    // A save from before three purges (#125) had one, and says so as \`purged\`: it counts as one cycle.
+    const legacy = schlenkLogic.init({ ...ACT3, data: { n2: true, taps: ['closed', 'n2', 'closed', 'closed'], bleed: { tube: false, flask: false }, jyOpen: true, pumped: false, purged: true, filled: false } });
+    expect(legacy.cycles).toBe(1);
+    expect(schlenkLogic.solution(legacy)).toHaveLength(DESIGNED.length - 3);
   });
 });
 
@@ -536,7 +567,7 @@ describe('Act III puzzles in the building', () => {
   });
 
   it('each puzzle has three hints, its design par and a margin note', () => {
-    const par: Record<string, number> = { schlenk: 3, chirp: 2.5, fabrication: 3, peakmatch: 2 };
+    const par: Record<string, number> = { schlenk: 3.5, chirp: 2.5, fabrication: 3, peakmatch: 2 };
     for (const [id, p] of Object.entries(par)) {
       const def = CONTENT.puzzles.find((x) => x.id === id)!;
       expect(def.hints).toEqual([`puzzle.${id}.h1`, `puzzle.${id}.h2`, `puzzle.${id}.h3`]);
@@ -548,11 +579,12 @@ describe('Act III puzzles in the building', () => {
 
 describe('the keys the Act III views build at run time exist in both languages', () => {
   const keys = [
-    ...['n2On', 'n2Off', 'tap', 'bleedOpen', 'bleedShut', 'jyOpen', 'jyShut', 'pumped', 'purged', 'transfer', 'needsFill', 'needsSeal', 'wrapped', 'light'].map((k) => `puzzle.schlenk.ev.${k}`),
-    ...['suckback', 'pump', 'crack', 'flaskVac', 'flaskRoom', 'air', 'drained'].map((k) => `puzzle.schlenk.ev.${k}`),
-    ...['air', 'vacuum', 'nitrogen', 'filled', 'sealed', 'wrapped', 'spoiled'].map((k) => `puzzle.schlenk.tube.${k}`),
+    ...['n2On', 'n2Off', 'tap', 'bleedOpen', 'bleedShut', 'jyOpen', 'jyShut', 'pumped', 'refilled', 'purged', 'transfer', 'needsFill', 'needsSeal', 'wrapped', 'light'].map((k) => `puzzle.schlenk.ev.${k}`),
+    ...['suckback', 'pump', 'crack', 'flaskVac', 'flaskRoom', 'air', 'thin', 'drained'].map((k) => `puzzle.schlenk.ev.${k}`),
+    ...['air', 'vacuum', 'thin', 'nitrogen', 'filled', 'sealed', 'wrapped', 'spoiled'].map((k) => `puzzle.schlenk.tube.${k}`),
     ...[1, 2, 3, 4].map((n) => `puzzle.schlenk.port.${n}`),
-    ...[1, 2, 3, 4].map((n) => `puzzle.schlenk.card.${n}`),
+    ...[1, 2, 3, 4, 5, 6].map((n) => `puzzle.schlenk.card.${n}`),
+    'puzzle.schlenk.cycles',
     ...TAPS.map((t) => `puzzle.schlenk.tap.${t}`),
     // Picked by a condition, so the validator's search for t('…') doesn't see them.
     ...['n2.on', 'n2.off', 'bubbler.on', 'bubbler.off', 'bleed.open', 'bleed.shut', 'jy.open', 'jy.shut', 'done', 'giveup'].map((k) => `puzzle.schlenk.${k}`),

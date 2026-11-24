@@ -5,8 +5,10 @@
  * has sound on) and a light. With flicker allowed and motion not reduced,
  * the LED flashes; otherwise each chirp lights one steady segment, and the
  * segments clear when the next group begins, so nothing flashes. A screen
- * reader hears each group as words. The keypad is a 3 × 4 grid: arrow keys,
- * taps, or the number keys.
+ * reader hears each group as words. The groups heard since the last long
+ * pause stay on screen as words too (#161), so a player without sound
+ * counts them without holding them in memory. The keypad is a 3 × 4 grid:
+ * arrow keys, taps, or the number keys.
  */
 import { h, inline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop } from '../roving.ts';
@@ -34,7 +36,10 @@ export const chirpView: PuzzleView = {
     const postit = h('p', { class: 'cp__postit' });
     const listen = h('button', { type: 'button', class: 'cp__listen', dataset: { focusKey: 'cp-listen' } });
     const heard = h('p', { class: 'sr-only cp__heard', 'aria-live': 'polite' });
-    const panel = h('div', { class: `cp__panel cp__panel--${flash ? 'flash' : 'steady'}` }, h('div', { class: 'cp__light' }, flash ? led : strip, ledLabel), postit, listen, heard);
+    // What a hearing player keeps in their ear, on screen: each group as it ends, then the long pause.
+    // A screen reader has already heard each one from \`heard\`, so this is for the eye only.
+    const tally = h('p', { class: 'cp__tally', 'aria-hidden': 'true' });
+    const panel = h('div', { class: `cp__panel cp__panel--${flash ? 'flash' : 'steady'}` }, h('div', { class: 'cp__light' }, flash ? led : strip, ledLabel), tally, postit, listen, heard);
     const screen = h('p', { class: 'cp__screen' });
     const digits = h('p', { class: 'cp__digits' });
     const keypad = h('div', { class: 'cp__keypad', role: 'group' });
@@ -50,6 +55,14 @@ export const chirpView: PuzzleView = {
 
     let timers: number[] = [];
     let playing = false;
+    /** The groups heard since the cycle began (chirps in each), and whether its long pause has come. */
+    let groups: number[] = [];
+    let paused = false;
+    const renderTally = () =>
+      tally.replaceChildren(
+        ...groups.map((n) => h('span', { class: 'cp__group' }, api.t(`puzzle.chirp.sr.${n}`))),
+        ...(paused ? [h('span', { class: 'cp__group cp__group--pause' }, api.t('puzzle.chirp.tally.pause'))] : []),
+      );
     const later = (ms: number, f: () => void) => timers.push(window.setTimeout(f, ms));
     const lit = (n: number) => segments.forEach((seg, i) => seg.classList.toggle('cp__seg--on', i < n));
 
@@ -67,6 +80,9 @@ export const chirpView: PuzzleView = {
       strip.dataset['chirps'] = '0';
       lit(0);
       heard.textContent = '';
+      groups = [];
+      paused = false;
+      renderTally();
       renderListen();
       SCHEDULE.times.forEach((at, i) => {
         const group = GROUP_OF[i]!;
@@ -80,13 +96,19 @@ export const chirpView: PuzzleView = {
           } else {
             lit(inGroup + 1);
           }
-          // The group's last chirp: say it in words, for anyone who can't see the light.
-          if (inGroup === PATTERN[group]! - 1) heard.textContent = api.t(`puzzle.chirp.sr.${PATTERN[group]}`);
+          // The group's last chirp: say it in words, for anyone who can't see the light, and keep it on screen.
+          if (inGroup === PATTERN[group]! - 1) {
+            heard.textContent = api.t(`puzzle.chirp.sr.${PATTERN[group]}`);
+            groups = [...groups, PATTERN[group]!];
+            renderTally();
+          }
         });
       });
       later(LEAD_IN + SCHEDULE.length * 1000, () => {
         playing = false;
         heard.textContent = api.t('puzzle.chirp.sr.cycle');
+        paused = true;
+        renderTally();
         renderListen();
       });
     };
@@ -121,6 +143,7 @@ export const chirpView: PuzzleView = {
     const render = (focusKey?: string) => {
       ledLabel.textContent = api.t('puzzle.chirp.led');
       postit.textContent = api.t('puzzle.chirp.postit');
+      renderTally();
       renderListen();
       screen.textContent = api.t(state.armed ? 'puzzle.chirp.display.armed' : 'puzzle.chirp.display.hold');
       screen.dataset['armed'] = String(state.armed);

@@ -29,7 +29,7 @@ export const SHORTCUTS: Array<{ puzzle: string; scene: string; choice: string | 
     scene: 'synth.hub',
     choice: ['synth.kraken.again', 'synth.kraken.again.light'],
     when: { all: [{ act: 3 }, { item: 'item.tube.jy' }] },
-    note: '"Fill her tube the way you did before (6 min)"',
+    note: '"Fill her tube the way you did before (12 min)"',
   },
   { puzzle: 'chirp', scene: 'nmr.hub', choice: 'nmr.ups.again', when: { all: [{ act: 3 }, { not: { lflag: 'ups.armed' } }] }, note: 'key the PIN in again' },
 ];

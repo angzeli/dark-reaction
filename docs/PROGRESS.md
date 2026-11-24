@@ -4,16 +4,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Where we are
 
-- **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 and Playtest (v1.0.1) are closed.
+- **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #191 The owner's decisions, in the text: a reason for the box, the chemist's touches, her card at 03:33 in 4.12 (closes #124, #153; part of #125)
+- **Last merged:** #193 The Kraken wants three purges; the chirp's groups stay on screen (closes #125, #161)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** the puzzle changes from those decisions (the Kraken's three purges, #125; the chirp's running line, #161), then the art pass (#152, #123).
+- **In flight:** the art pass (#152, #123). Open: #192 (a flaky e2e test).
 
 ## Next
 
-1. The puzzle PR: the Kraken wants three purge cycles (#125's last item) and the chirp keeps the groups heard on screen (#161).
-2. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
+1. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
+2. #192: the 03:33 shell test's race.
 3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
 ### Issue map
@@ -34,6 +34,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #125, #161: **the Kraken wants three purges; the chirp's groups stay on screen.** The two puzzle changes from the owner's decisions.
+  - **Three purges (#125):** one pump-and-refill cycle was enough to make up her tube, which undercut the act's 「三次」 (the mobile player). The Kraken now counts cycles and needs three.
+    - The card gains a sixth rule, in her pencil like the fifth: *Pump a vessel down and refill it three times before anything goes into it.*
+    - The tube's readout counts the cycles, and a refill says when some of the room is still in it.
+    - Letting the liquid cross after one or two cycles is a new reset (`thin`); the hints, the margin note, the notebook and the shortcut's text all say three.
+    - A clean run is 12 minutes, not 6, as each cycle costs what the antechamber's does. The par is 3.5. The true ending's route still fits (50.7 min EN, 51.5 min 繁中).
+    - A save from before this counts its `purged` as one cycle.
+  - **The chirp's groups on screen (#161):** with sound off, the only cue was the LED, and the groups had to be held in memory. Each group now stays on screen as it ends, in words (*Chirp, chirp.* · *Chirp, chirp, chirp, chirp.* · …), then *a long pause*, until the next cycle. The words, not "×2": the player still counts; they just don't have to remember. It's `aria-hidden`, since a screen reader already hears each group.
+  - **Tests:** `tests/puzzles-act3.test.ts` (three purges, the reset after one or two, the old save) and `e2e/act3-puzzles.spec.ts` (the Kraken by keyboard and by touch with three cycles, the tally in both languages, cleared by *Listen again*); the bot purges three times.
+  - **Baselines:** the Kraken and the UPS panel, from CI's candidates, reviewed by eye.
 - #124, #125, #153: **the owner's decisions, in the text.** The owner took the playtest's proposals: #124's one-line reason, all of #125, #153, #161, not #162.
   - **A reason for the box (#124):** a chemist asked why a product that went through a column in air needs a glovebox. The antechamber's intro now says it: dry, it shrugs off air for an hour; dissolved, it lasts minutes, so the dried C₆D₆ lives in the box and the sample is made up in there. So it goes green as it dissolves, not as a dry film (the ruined transfer and the late purge say so).
   - **The chemist's touches (#125):**
