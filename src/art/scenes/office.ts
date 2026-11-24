@@ -30,7 +30,7 @@ function steadyTube(x: number, y: number, w: number): string {
 const whiteEdges = () =>
   group(
     'office-white-edges',
-    path('M1145.5 235.6 A42 42 0 0 1 1224.5 235.6', 'none', { stroke: TOO_WHITE, 'stroke-width': 2, opacity: 0.3 }),
+    path('M1145.5 275.6 A42 42 0 0 1 1224.5 275.6', 'none', { stroke: TOO_WHITE, 'stroke-width': 2, opacity: 0.3 }),
     rect(1009, 395, 252, 2, TOO_WHITE, { opacity: 0.3, rx: 1 }),
     rect(940, 600, 450, 2, TOO_WHITE, { opacity: 0.2 }),
     rect(1390, 250, 170, 2, TOO_WHITE, { opacity: 0.22 }),
@@ -92,12 +92,12 @@ export function office(ctx: ArtContext): string {
 
   const tubes = group('layer-light', tube(240, 46, 380, { on: true }), dim ? steadyTube(980, 46, 380) : tube(980, 46, 380, { flicker: true, on: true }));
 
-  // Wall clock, showing the time in the loop.
+  // Wall clock, showing the time in the loop; low enough to stay whole in the play screen's crop (#152).
   const clock = group(
     'clock',
-    circle(1185, 250, 42, '#0c141c', { stroke: C.steelLit, 'stroke-width': 4 }),
-    clockHands(1185, 250, ctx.minute),
-    circle(1185, 250, 3, '#c9d3da'),
+    circle(1185, 290, 42, '#0c141c', { stroke: C.steelLit, 'stroke-width': 4 }),
+    clockHands(1185, 290, ctx.minute),
+    circle(1185, 290, 3, '#c9d3da'),
   );
 
   // Notice board by the kettle.
@@ -183,7 +183,7 @@ export function office(ctx: ArtContext): string {
   );
 
   // Chair, and the sofa in the foreground, high enough that the play screen's
-  // wide crop still shows its back.
+  // crop (y 240–660 at its tightest, #152) still shows its back and cushions.
   const chair = group(
     'chair',
     rect(1080, 560, 120, 150, '#0d141c', { rx: 14 }),
@@ -193,9 +193,9 @@ export function office(ctx: ArtContext): string {
   );
   const sofa = group(
     'layer-fg',
-    path('M20 900 v-216 q0 -40 40 -40 h360 q40 0 40 40 v216 z', '#161c1a'),
-    path('M60 694 q0 -26 26 -26 h300 q26 0 26 26 v40 h-352 z', '#1d2522'),
-    path('M300 669 q40 -12 90 4 l-6 30 q-44 -10 -84 0 z', '#2d3a44', { opacity: 0.9 }),
+    path('M20 900 v-256 q0 -40 40 -40 h360 q40 0 40 40 v256 z', '#161c1a'),
+    path('M60 654 q0 -26 26 -26 h300 q26 0 26 26 v40 h-352 z', '#1d2522'),
+    path('M300 629 q40 -12 90 4 l-6 30 q-44 -10 -84 0 z', '#2d3a44', { opacity: 0.9 }),
   );
 
   return svg(
