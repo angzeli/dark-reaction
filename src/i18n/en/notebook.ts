@@ -36,7 +36,7 @@ export const notebook = {
   'nb.paper.title': 'Figure 3',
   'nb.paper.body': 'Ridley, Lin *et al.*, 2020: one clean peak at 8.41 ppm. I have run this reaction thirty-one times and seen noise thirty-one times.',
   'nb.yield.title': 'Yield',
-  'nb.yield.body': '61 %. (The paper says 70.)',
+  'nb.yield.body': '61 %, not yet dry. (The paper says 70.)',
   'fudge.yield.title': 'Yield',
   'fudge.yield.body': '68 %. (Balance drifting?)',
 

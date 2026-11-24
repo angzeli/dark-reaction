@@ -36,7 +36,7 @@ export const notebook: Record<keyof typeof en, string> = {
   'nb.paper.title': '圖三',
   'nb.paper.body': 'Ridley、Lin 等人，2020：8.41 ppm 一根乾淨的峰。這個反應我跑了三十一次，看到了三十一次雜訊。',
   'nb.yield.title': '產率',
-  'nb.yield.body': '61%。（論文寫 70。）',
+  'nb.yield.body': '61%，還沒抽乾。（論文寫 70。）',
   'fudge.yield.title': '產率',
   'fudge.yield.body': '68%。（天平在飄？）',
 

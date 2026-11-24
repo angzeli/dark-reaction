@@ -54,9 +54,9 @@ export const act1 = {
   'synth.rotavap.r':
     'The rotavap hums and turns. Solvent beads on the coil and runs down into the collecting flask, and a thin yellow film creeps up the inside of yours. You scrape it into a vial. It is the colour of a desk lamp seen through fog.',
   'synth.rotavap.r.weigh':
-    'You weigh it. The balance’s draft shield clicks shut and the numbers drift, settle, drift, and settle again: 61 per cent. The 2020 paper says 70.',
+    'You weigh it straight off the rotavap, still warm and not quite dry, which flatters it. The balance’s draft shield clicks shut and the numbers drift, settle, drift, and settle again: 61 per cent. The 2020 paper says 70.',
   'synth.yield.honest': 'Write down 61 %',
-  'synth.yield.honest.r': 'You write *61 %*, the date and the time. It looks like what it is.',
+  'synth.yield.honest.r': 'You write *61 %*, the date and the time, and after it *not yet dry*. It looks like what it is.',
   'synth.yield.fudge': 'Write down 68 % (the balance has been drifting)',
   'synth.yield.fudge.r':
     'You write *68 %*. The balance has been drifting all term; everyone says so. The new number sits on the page as if it has always been there, and the page looks better for it.',
@@ -80,7 +80,7 @@ export const act1 = {
   'glovebox.purge.r':
     'Outer door, vial, shut. Evacuate, refill. Evacuate, refill. Evacuate, refill. Your hands know it now. The tube comes out pale yellow.',
   'glovebox.purge.late.r':
-    'You do every step right, and it doesn’t matter. By the time the inner door opens the meter is past ten, and the film goes green while you watch.',
+    'You do every step right, and it doesn’t matter. By the time the inner door opens the meter is past ten, and the sample goes green as you make it up.',
   'glovebox.meter': 'Read the oxygen meter',
   'glovebox.meter.r':
     'Green digits behind scratched plastic: {ppm} ppm O₂. While you watch, the last digit changes. A sticker on the housing says *REGEN DUE 09/11* in Tom’s capitals, and under it, in someone else’s hand, *see logbook*. The box should sit below one part per million. Tonight it is breathing in, slowly, through some seal nobody has found.',

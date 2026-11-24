@@ -64,7 +64,7 @@ test('the whole Act I chain: plate, rotavap, antechamber, console, a locked queu
   await choose(page, 'Take the vial in through the antechamber');
   await purge(page, 3);
   const d = page.getByRole('dialog', { name: 'The antechamber' });
-  await expect(d.locator('.gb__status')).toContainText('The film is still yellow');
+  await expect(d.locator('.gb__status')).toContainText('The solution stays yellow');
   await d.getByRole('button', { name: 'Bring the NMR tube out' }).click();
   await expect(page.locator('.narrative__carry')).toContainText('your NMR tube');
 

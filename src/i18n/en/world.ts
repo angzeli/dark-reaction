@@ -26,6 +26,7 @@ export const world = {
   'ev.perfect.nmr': 'At 03:25 the printer on its trolley clears its throat and starts to print. One page. The tray takes it gently, the way a hand would.',
   'ev.perfect.office': 'Your inbox chimes. *[NMR 400] Your spectrum is ready: PROTON_DARK (holder 13). PDF attached.*',
   'ev.dim': 'Every light in the building dims for the length of a breath, then comes back a shade too yellow.',
+  'ev.keeps': 'Out in the corridor the badge reader beeps once, the short note it gives a card it accepts, and the lock clicks back. Nobody comes in. The door doesn’t even move.',
 
   'office.hub.act1':
     'The write-up office holds eleven desks and one person. Rain works at the big window in long, patient strokes, and the street lamp outside turns every drop sodium orange. One of the two tubes overhead is dying in a way that only bothers you when you notice it. On your monitor, the NMR queue is still open.',

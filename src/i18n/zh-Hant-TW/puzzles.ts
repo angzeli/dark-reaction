@@ -22,7 +22,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   // P3 · TLC
   'puzzle.tlc.title': '收集液的 TLC 片',
   'puzzle.tlc.intro':
-    '管柱是今晚跑的，事後點的 TLC 片已經乾了。架上有二十四支收集液，產物在其中幾支裡。你的筆記本寫著：*產物 Rf ≈ 0.35（正己烷：乙酸乙酯 3:1），UV 下可見。*仔細讀這片要花兩分鐘。',
+    '管柱是今晚跑的。跑完你點了一片 TLC，泡了 anisaldehyde、用熱風槍烤到斑點顯出紫色，才想到還沒拿到 UV 燈下看。架上有二十四支收集液，產物在其中幾支裡。你的筆記本寫著：*產物 Rf ≈ 0.35（正己烷：乙酸乙酯 3:1），UV 下可見。*仔細讀這片要花兩分鐘。',
   'puzzle.tlc.rule': 'Rf = 斑點走的距離 ÷ 溶劑走的距離，兩者都從鉛筆畫的基線量起。',
   'puzzle.tlc.plate': 'TLC 片，各道由左到右',
   'puzzle.tlc.lane.crude': '粗產物',
@@ -57,14 +57,14 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.tlc.h1': '筆記本上寫 Rf 0.35。Rf 是斑點走的距離除以溶劑走的距離。',
   'puzzle.tlc.h2': '溶劑走了 6 公分，所以要找基線上方大約 2.1 公分的斑點，而且那一道只有它。記得也用 UV 燈照照看。',
   'puzzle.tlc.h3': '第 12、13、14 管。',
-  'puzzle.tlc.solved': '你把第 12、13、14 管倒進圓底瓶。剩下的倒進廢液桶，每一次跑完管柱，都伴隨著這種小小的、私人的哀悼。',
+  'puzzle.tlc.solved': '你把第 12、13、14 管倒進圓底瓶。第 11 和 15 管另外倒進一個瓶子，標上 *混合管，待重跑*，留給哪個時間比較多的晚上。剩下的倒進廢液桶，每一次跑完管柱，都伴隨著這種小小的、私人的哀悼。',
   'puzzle.tlc.left': '你把 TLC 片放下。它還會在這裡，你也是。',
   'puzzle.tlc.margin': 'TLC：12–14。第 11 道會騙人（開 UV）。',
 
   // P2 · 手套箱前艙
   'puzzle.glovebox.title': '手套箱前艙',
   'puzzle.glovebox.intro':
-    '樣品瓶得繞遠路進箱子：從外門放進去，把空氣抽掉、換成氮氣，再從內門拿進來。箱子頂上的氧氣計，是現在唯一重要的時鐘。',
+    '樣品瓶得繞遠路進箱子：從外門放進去，把空氣抽掉、換成氮氣，再從內門拿進來。產物是乾的時候，在空氣裡撐得過一個小時，夠你跑完管柱；一溶開，碰到空氣就撐不過幾分鐘，所以乾燥過的 C₆D₆ 放在箱子裡，樣品也在箱子裡配。箱子頂上的氧氣計，是現在唯一重要的時鐘。',
   'puzzle.glovebox.sop': '前艙操作（護貝，一角有點融掉）：1. 放入。2. 關外門。3. 抽真空、回填氮氣——兩次。4. 開內門。',
   'puzzle.glovebox.pencil': '三次。相信我。——YCL',
   'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
@@ -105,15 +105,15 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.glovebox.ev.innerOuterOpen': '你的手停在門閂上。外門還開著。',
   'puzzle.glovebox.ev.innerClose': '你關上內門。',
   'puzzle.glovebox.ev.transferNeedsInner': '樣品瓶在一扇關著的門的另一邊。',
-  'puzzle.glovebox.ev.transferred': '你把樣品瓶拿進箱子。那層膜還是黃的。你把它溶解、裝進 NMR 管、蓋好，肩膀這才放下來一公分。',
-  'puzzle.glovebox.ev.ruined': '你把樣品瓶拿進箱子，眼睜睜看著那層黃色的膜從邊緣開始變綠，接著整片都綠了。一價銅變成二價銅。今晚的樣品沒了。',
+  'puzzle.glovebox.ev.transferred': '你把樣品瓶拿進箱子，用 C₆D₆ 把那層膜溶開。溶液還是黃的。你把它裝進 NMR 管、蓋好，肩膀這才放下來一公分。',
+  'puzzle.glovebox.ev.ruined': '你把樣品瓶拿進箱子，把那層膜溶開，眼睜睜看著黃色從邊緣開始變綠，接著整瓶都綠了。一價銅變成二價銅。今晚的樣品沒了。',
   'puzzle.glovebox.done': '把 NMR 管拿出來',
   'puzzle.glovebox.giveup': '把手從手套裡抽出來',
   'puzzle.glovebox.h1': '牆上那張護貝的 SOP，有一處用鉛筆改過。',
   'puzzle.glovebox.h2': '抽真空之前，兩扇門都要關。抽真空、回填要做三次，才能開內門。',
   'puzzle.glovebox.h3': '開外門 → 放樣品瓶 → 關外門 →（抽真空、回填）×3 → 開內門 → 拿進來。',
   'puzzle.glovebox.solved': '你把蓋好的管子從前艙原路送出來。淡淡的黃色。沒錯。',
-  'puzzle.glovebox.failed': '你把手從手套裡抽出來。樣品瓶是綠的。今晚不會再有另一瓶了。',
+  'puzzle.glovebox.failed': '你把手從手套裡抽出來。箱子裡現在都是房間的空氣，沒有地方能配樣品了。今晚不會再有另一瓶了。',
   'puzzle.glovebox.left': '你從箱子前退開。氧氣計沒有你也照樣在數。',
   'puzzle.glovebox.margin': '前艙：三次，不是兩次。03:18 前開始。',
 
@@ -135,7 +135,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'console.out.date': '2026 年 11 月 23 日（一）{clock}:00 GMT',
   'console.out.queue': '沒有你可以管理的預約。\n（只顯示你自己的預約。請看參考卡。）',
   'console.out.queue.all':
-    'HOLDER  TIME   USER     EXPERIMENT    STATUS\n04      02:58  tom_h    COSY          QUEUED\n07      03:10  ian_o    TEST_400      QUEUED\n13      03:33  ar4217   PROTON_DARK   PRIORITY · WAITING FOR SAMPLE',
+    'HOLDER  TIME   USER     EXPERIMENT    STATUS\n04      02:58  tom_h    COSY          HELD · PRIORITY 13\n07      03:10  ian_o    TEST_400      HELD · PRIORITY 13\n13      03:33  ar4217   PROTON_DARK   PRIORITY · WAITING FOR SAMPLE',
   'console.out.info.13':
     'HOLDER 13 · PROTON_DARK · 1 scan\nuser       ar4217\nbooked     23/11/2026 03:33:00\nsubmitted  23/11/2026 03:33:00\npriority   FACILITY OVERRIDE\nsample     none detected\ncomment    它還在反應',
   'console.out.info.4': 'HOLDER 04 · COSY · 8 scans\nuser       tom_h\ncomment    拜託不要退，論文要靠它（又一次）',

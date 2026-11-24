@@ -269,9 +269,20 @@ export class App {
   private async playCard(card: Card): Promise<void> {
     if (card.kind === 'lightsout') {
       this.showLastMinute(card.before, card.loop);
-      // What a choice showed in its last minute is part of the story (her raw data, #127): hold it until
-      // the player has read it. A minute that only passed (a wait, the night's own events) goes straight on.
-      if (card.hold) await this.holdLastMinute();
+      // What a choice showed in its last minute is part of the story (her raw data, #127), and so is an
+      // event that holds (her card at 4.12's door, #153): hold it until the player has read it. A minute
+      // that only passed (a wait, the night's other events) goes straight on.
+      if (card.hold) {
+        // Not under a dialog: a fudge struck from the notebook at 03:32 can run into the dark. Closed
+        // without a redraw, since the page underneath is already the next loop's.
+        if (this.overlay !== 'none') {
+          this.overlay = 'none';
+          this.untrap?.();
+          this.untrap = null;
+          this.root.querySelector('.overlay')?.remove();
+        }
+        await this.holdLastMinute();
+      }
       audio.cue('lightsout');
       const handle = playLightsOut(document.body, {
         reduceMotion: this.settings.reduceMotion,
