@@ -103,6 +103,11 @@ export const act1: Record<keyof typeof en, string> = {
   'nmr.load.r':
     '你把管子插進轉子，放進樣品槽 2。主控台立刻拒絕：QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER。Ian 的電話寫在門邊的牌子上。現在是凌晨三點。',
   'nmr.load.code': '你還是試了 Ian 的代碼。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* 它還沒跑過。還沒。',
+  'nmr.load.unmade': '把你的樣品放進自動進樣盤',
+  'nmr.load.vial.r':
+    '走到樣品槽 2 前面，你才發現問題。自動進樣盤收的是 NMR 管，比鉛筆還細，一支一支插在轉子裡；你手上拿的卻是一小瓶黃色固體。它得先配成樣品：上樓到手套箱，經由前艙送進去，溶開、封進管子裡。這樣，這裡才會有東西可以跑。',
+  'nmr.load.fractions.r':
+    '自動進樣盤收的是比鉛筆還細的管子，你手上拿的卻是一瓶第 12–14 管的收集液，裡面大半還是溶劑。得先回樓上用旋轉濃縮儀抽乾，再經由手套箱的前艙封進管子裡，這裡才會有東西可以跑。',
   'nmr.magnet': '站到磁鐵旁邊',
   'nmr.magnet.r':
     '靠近了看，磁鐵是一根淺色烤漆的大柱子，梯子折起來靠在它身上，像一隻累了的手臂。地上貼著一道黃黑相間的膠帶，標出你的金融卡從哪裡開始不再是金融卡。它發出的聲音其實不算嗡嗡聲。那是某個極冷的東西，被硬撐在極冷狀態的聲音，每一天的每一秒，不管有沒有人在看。',

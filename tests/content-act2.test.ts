@@ -308,6 +308,84 @@ describe('the NMR console after it is solved (#86)', () => {
   });
 });
 
+describe('your sample brought down before it is a tube (#196)', () => {
+  /** Act II, at the NMR suite, holding `item` (and RIDLEY-4 if `code`). */
+  function holding(item: string | null, code: boolean, act: 1 | 2 = 2): Game {
+    const g = act === 2 ? actTwo() : new Game(CONTENT);
+    drainCards(g);
+    if (code) learnt(g, 'nb.priority');
+    if (item) g.state.inventory.push(item);
+    goTo(g, 'nmr');
+    return g;
+  }
+
+  for (const [item, load, reply] of [
+    ['item.vial', 'nmr.load.vial.r', 'nmr.code.vial'],
+    ['item.fractions', 'nmr.load.fractions.r', 'nmr.code.fractions'],
+  ] as const) {
+    it(`without the code, ${item} can be loaded, and the room says it has to be made into a tube first`, () => {
+      const g = holding(item, false);
+      expect(ids(g)).not.toContain('nmr.load');
+      expect(ids(g)).not.toContain('nmr.code');
+      g.choose('nmr.load.unmade');
+      expect(keys(g)).toEqual([load]);
+      // Said once a night; you still have what you came down with.
+      expect(ids(g)).not.toContain('nmr.load.unmade');
+      expect(g.state.inventory).toContain(item);
+    });
+
+    it(`with the code, typing it with ${item} in hand says what is missing, not that the night undid it`, () => {
+      const g = holding(item, true);
+      expect(ids(g)).toContain('nmr.load.unmade');
+      g.choose('nmr.code');
+      expect(keys(g)).toEqual([reply]);
+    });
+  }
+
+  it('with the code and nothing in hand, the night undid it (as before)', () => {
+    const g = holding(null, true);
+    expect(ids(g)).not.toContain('nmr.load.unmade');
+    g.choose('nmr.code');
+    expect(keys(g)).toEqual(['nmr.code.empty']);
+  });
+
+  it('with the code after the sample went green in the glovebox, there is no tube tonight', () => {
+    const g = holding(null, true);
+    g.state.lflags.push('sample.ruined', 'fractions.taken');
+    g.choose('nmr.code');
+    expect(keys(g)).toEqual(['nmr.code.ruined']);
+  });
+
+  it('with your tube in hand, the tube is what gets loaded', () => {
+    const g = holding('item.tube.own', false);
+    expect(ids(g)).toContain('nmr.load');
+    expect(ids(g)).not.toContain('nmr.load.unmade');
+  });
+
+  it('in Act I too: the vial at the NMR suite on the first night says where it has to go', () => {
+    const g = holding('item.vial', false, 1);
+    expect(g.state.act).toBe(1);
+    g.choose('nmr.load.unmade');
+    expect(keys(g)).toEqual(['nmr.load.vial.r']);
+  });
+
+  it('the route that runs your sample is unchanged: vial to the glovebox, then the tube runs', () => {
+    const g = actTwo();
+    learnt(g, 'nb.priority');
+    goTo(g, 'synth');
+    g.choose('synth.combine');
+    g.choose('synth.rotavap');
+    goTo(g, 'nmr');
+    g.choose('nmr.load.unmade');
+    goTo(g, 'glovebox');
+    g.choose('glovebox.purge');
+    goTo(g, 'nmr');
+    expect(ids(g)).not.toContain('nmr.load.unmade');
+    g.choose('nmr.run');
+    expect(g.state.inventory).toContain('item.spectrum.own');
+  });
+});
+
 describe('the last minute before 03:33 (#127)', () => {
   it('a choice that runs into 03:33 marks its page to wait for the player', () => {
     const g = actTwo();

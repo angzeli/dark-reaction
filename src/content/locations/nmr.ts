@@ -46,7 +46,21 @@ export const nmrScenes: SceneDef[] = [
         effects: [{ learn: 'nb.queue.locked' }],
       },
       {
+        // Your sample before it is a tube: the vial (or the fractions) brought down too soon.
+        // The room says what's missing instead of offering nothing at all (#196).
+        id: 'nmr.load.unmade',
+        label: 'nmr.load.unmade',
+        cost: 1,
+        once: 'loop',
+        if: { all: [{ any: [{ item: 'item.vial' }, { item: 'item.fractions' }] }, { not: { item: 'item.tube.own' } }] },
+        text: [
+          { key: 'nmr.load.vial.r', if: { item: 'item.vial' } },
+          { key: 'nmr.load.fractions.r', if: { item: 'item.fractions' } },
+        ],
+      },
+      {
         // Ian's code, typed with nothing in the carousel: say why nothing runs, and what to bring.
+        // What to bring depends on what you're holding (#196).
         id: 'nmr.code',
         label: 'nmr.code',
         cost: 1,
@@ -54,7 +68,13 @@ export const nmrScenes: SceneDef[] = [
         if: { all: [{ know: 'nb.priority' }, { not: { item: 'item.tube.own' } }] },
         text: [
           { key: 'nmr.code.locked', if: { act: 1 } },
-          { key: 'nmr.code.empty', if: { actGte: 2 } },
+          { key: 'nmr.code.vial', if: { all: [{ actGte: 2 }, { item: 'item.vial' }] } },
+          { key: 'nmr.code.fractions', if: { all: [{ actGte: 2 }, { item: 'item.fractions' }] } },
+          { key: 'nmr.code.ruined', if: { all: [{ actGte: 2 }, { lflag: 'sample.ruined' }] } },
+          {
+            key: 'nmr.code.empty',
+            if: { all: [{ actGte: 2 }, { not: { item: 'item.vial' } }, { not: { item: 'item.fractions' } }, { not: { lflag: 'sample.ruined' } }] },
+          },
         ],
       },
       {

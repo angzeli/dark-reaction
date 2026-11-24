@@ -44,6 +44,12 @@ export const act2 = {
   'nmr.code.locked': 'You type *priority RIDLEY-4*. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
   'nmr.code.empty':
     'You type *priority RIDLEY-4*. The console thinks for a long second, then: *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* Holder 2 is empty. Whatever you did last night, 02:47 undid it: the fractions are back in their rack upstairs, and your tube has to be made again, combined, dried and taken through the antechamber, before there is anything down here to run.',
+  'nmr.code.vial':
+    'You type *priority RIDLEY-4*. The console thinks for a long second, then: *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* Holder 2 is empty, and the vial in your hand won’t fill it: the carousel takes tubes. Your solid still has to go up to the glovebox, in through the antechamber and into a tube, before there is anything down here to run.',
+  'nmr.code.fractions':
+    'You type *priority RIDLEY-4*. The console thinks for a long second, then: *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* Holder 2 is empty, and the flask in your hand is a long way from filling it. The fractions still have to be dried on the rotavap and taken in through the glovebox’s antechamber into a tube, before there is anything down here to run.',
+  'nmr.code.ruined':
+    'You type *priority RIDLEY-4*. The console thinks for a long second, then: *PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* Holder 2 is empty, and tonight it will stay that way: your sample went green in the glovebox, and the fractions are spent. There is nothing left to make another tube from before 03:33.',
   'nmr.run.r.1':
     'You type *priority RIDLEY-4*. The console considers it for a long second, then unlocks the queue with a little chime that sounds like an apology. Holder 2. Your tube sinks into the magnet on its cushion of air.',
   'nmr.run.r.2':

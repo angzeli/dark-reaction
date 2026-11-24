@@ -42,6 +42,12 @@ export const act2: Record<keyof typeof en, string> = {
   'nmr.code.locked': '你輸入 *priority RIDLEY-4*。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* 它還沒跑過。還沒。',
   'nmr.code.empty':
     '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後：*PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* 樣品槽 2 是空的。不管你上一輪做了什麼，02:47 都把它還原了：分液又回到樓上的架子上，你的管子得重新做一次，合併、抽乾、送過前艙，這裡才會有東西可以跑。',
+  'nmr.code.vial':
+    '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後：*PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* 樣品槽 2 是空的，你手上那瓶也填不了它：進樣盤收的是管子。你的固體還得上樓到手套箱，經由前艙送進去、封進管子裡，這裡才會有東西可以跑。',
+  'nmr.code.fractions':
+    '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後：*PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* 樣品槽 2 是空的，你手上那瓶收集液離填滿它還遠得很。得先用旋轉濃縮儀抽乾，再經由手套箱的前艙封進管子裡，這裡才會有東西可以跑。',
+  'nmr.code.ruined':
+    '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後：*PRIORITY ACCEPTED · NO SAMPLE IN CAROUSEL.* 樣品槽 2 是空的，今晚也只會一直空著：你的樣品在手套箱裡變綠了，分液也用完了。03:33 之前，沒有東西能再做出一支管子。',
   'nmr.run.r.1': '你輸入 *priority RIDLEY-4*。主控台考慮了很長的一秒，然後解開排程，叮了一聲，聽起來像在道歉。樣品槽 2。你的管子乘著一層氣墊，沉進磁鐵裡。',
   'nmr.run.r.2':
     '八分鐘。自由感應衰減訊號慢慢爬過螢幕，一道細細長長的顫抖，傅立葉轉換把它變成一張譜：溶劑、油汙、6.9 那個永遠都在的包，而 8.41 什麼都沒有。主控台把它存進你的資料夾，一句話也沒說。',
