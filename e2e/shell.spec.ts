@@ -91,6 +91,9 @@ test('03:33: the lights go out and it is 02:47 again, loop 2', async ({ page }) 
   await newGame(page);
   // Wait out the night; the building's own events cut some waits short.
   for (let i = 0; i < 15; i++) {
+    // The 02:47 page is drawn under the dark before the dark lifts, so read the loop only once it has:
+    // read too early, it still says loop 1 while a choice of loop 2 is there to click (#192).
+    await expect(page.locator('.dr-lightsout')).toHaveCount(0, { timeout: 10_000 });
     if ((await page.locator('.hud__loop').textContent()) === 'Loop 2') break;
     const wait = page.locator('.choice').filter({ hasText: 'Wait…' });
     if ((await wait.count()) === 0) {
