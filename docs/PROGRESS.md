@@ -6,13 +6,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #200 From 03:25 the run says it can't beat 03:33, as the late purge does (closes #198)
+- **Last merged:** #201 Refused at the NMR queue, you remember the sticky note on Dan's monitor (closes #197)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** #197 (nothing points from the refused tube to Ian's code on Dan's monitor). The owner left the choice of wording to Claude (2026-11-24); its PR follows this one.
+- **In flight:** nothing. The issues from triaging the real player's report (#196, #197, #198) are closed.
 
 ## Next
 
-1. Land #197, then close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
+1. Close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
 2. On a phone at the largest text sizes the choices still start below the fold: the passage itself is long there, and a new page starts at its top on purpose (#116). A way to reach the choices sooner (a skip link, say) would be a design decision for the owner.
 3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
@@ -34,6 +34,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #197: **refused at the NMR queue, you remember the sticky note on Dan's monitor.** The owner left the choice among the three options to Claude, which chose the one at the point of need.
+  - After the console refuses your tube (*QUEUE LOCKED · CONTACT FACILITY MANAGER*), nothing pointed to where an override might be. The code is on Dan's monitor in 4.01, open only 03:15–03:18.
+  - When you don't know the code yet, the refusal gains a paragraph (`nmr.load.dan`): you once read that sticky note upside down from the wrong side of Dan's desk, Ian's capitals and the word PRIORITY. Dan is in Boston, and his door is locked. This applies in Act I (the night's last puzzle step) and Act II.
+  - The notebook's entry for the locked queue (`nb.queue.locked`) says the same, so it's there to reread.
+  - Neither gives the porter's window away: the door log and the 03:15 click still do that.
+  - Not chosen: a line in Dan's 02:50 email (it changes a text every player reads in Act I, before it means anything), and a phantom page (it arrives only a night later).
+  - Unit tests (Acts I and II, with and without the code; both locales name Dan's monitor and the locked door, and no time); the Act I e2e path checks the refusal and the notebook.
+  - **Baselines:** the notebook overlay at 1440 in both languages (the locked-queue entry is longer), from CI's candidates, reviewed by eye.
 - #198: **from 03:25 the run says it can't beat 03:33, as the late purge does** (#122). The owner's call: keep it consistent with the glovebox.
   - *Run your sample with the priority code* takes 8 minutes, so from 03:25 it always runs into 03:33 and the spectrum goes with the reset. It still happens (DESIGN §5), but it read exactly like the run that works.
   - From 03:25 its label is *Run your sample with the priority code anyway, though 03:33 will come before it finishes* (`nmr.run.late`), in the glovebox's voice.

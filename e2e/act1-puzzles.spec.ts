@@ -86,11 +86,14 @@ test('the whole Act I chain: plate, rotavap, antechamber, console, a locked queu
 
   await choose(page, 'Load your NMR tube into the carousel');
   await expect(page.locator('.narrative__text')).toContainText('QUEUE LOCKED');
+  // Refused, you remember where a priority code is kept (#197).
+  await expect(page.locator('.narrative__text')).toContainText('sticky note on Dan’s monitor');
 
   await page.keyboard.press('n');
   const nb = page.getByRole('dialog', { name: 'Notebook' });
   await expect(nb).toContainText('The fractions');
   await expect(nb).toContainText('The antechamber');
+  await expect(nb).toContainText('behind his locked door');
   await nb.getByRole('tab', { name: 'Anomalies' }).click();
   await expect(nb).toContainText('The 03:33 booking');
 });

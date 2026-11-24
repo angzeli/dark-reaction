@@ -16,7 +16,7 @@ export const notebook = {
   'fudge.logbook.title': 'Glovebox logbook',
   'fudge.logbook.body': 'Regeneration check: done.',
   'nb.queue.locked.title': 'The queue is locked',
-  'nb.queue.locked.body': 'The 400 won’t take my sample: the 03:33 priority booking locks the queue. Only the facility manager can override it.',
+  'nb.queue.locked.body': 'The 400 won’t take my sample: the 03:33 priority booking locks the queue. Only the facility manager can override it. Ian once gave Dan a code: it’s on a sticky note on Dan’s monitor, behind his locked door.',
 
   // People
   'nb.dan.title': 'Dan',

@@ -103,6 +103,8 @@ export const act1: Record<keyof typeof en, string> = {
   'nmr.load.r':
     '你把管子插進轉子，放進樣品槽 2。主控台立刻拒絕：QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER。Ian 的電話寫在門邊的牌子上。現在是凌晨三點。',
   'nmr.load.code': '你還是試了 Ian 的代碼。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* 它還沒跑過。還沒。',
+  'nmr.load.dan':
+    '然後你想起來了：Dan 的螢幕上貼著一張黃色便利貼，你曾經從他桌子的另一邊倒著讀過：Ian 的大寫字母，還有 PRIORITY 這個字。Dan 人在波士頓，他的門是鎖著的。',
   'nmr.load.unmade': '把你的樣品放進自動進樣盤',
   'nmr.load.vial.r':
     '走到樣品槽 2 前面，你才發現問題。自動進樣盤收的是 NMR 管，比鉛筆還細，一支一支插在轉子裡；你手上拿的卻是一小瓶黃色固體。它得先配成樣品：上樓到手套箱，經由前艙送進去，溶開、封進管子裡。這樣，這裡才會有東西可以跑。',
