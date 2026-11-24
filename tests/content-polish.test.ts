@@ -70,14 +70,60 @@ describe('playtest content polish', () => {
     for (let c = g.takeCard(); c; c = g.takeCard());
     Object.assign(g.state, { act: 2, location: 'nmr', scene: 'nmr.hub', minute: 39, inventory: ['item.tube.own'] });
     g.state.known.push({ id: 'nb.priority', loop: 1, minute: 0 });
-    // At 03:26 the run is the late one, under the same label.
+    // At 03:26 the run is the late one (under its own label since #198).
     expect(g.choices().map((c) => c.id)).toContain('nmr.run.late');
-    expect(choice('nmr.run.late')!.label).toBe(choice('nmr.run')!.label);
     g.choose('nmr.run.late');
     const [card] = [g.takeCard()];
     expect(card?.kind).toBe('lightsout');
     if (card?.kind === 'lightsout') expect(card.before.map((p) => p.key)).not.toContain('ev.perfect.nmr');
     expect(g.state.flags).not.toContain('perfect.offered');
+  });
+
+  describe('the run that can’t beat 03:33 says so before you take it, as the late purge does (#198)', () => {
+    /** Act II at the NMR suite at `minute`, tube in hand, RIDLEY-4 known. */
+    const at = (minute: number) => {
+      const g = new Game(CONTENT);
+      for (let c = g.takeCard(); c; c = g.takeCard());
+      Object.assign(g.state, { act: 2, location: 'nmr', scene: 'nmr.hub', minute, inventory: ['item.tube.own'] });
+      g.state.known.push({ id: 'nb.priority', loop: 1, minute: 0 });
+      return g;
+    };
+    const runs = (g: Game) => g.choices().filter((c) => c.id.startsWith('nmr.run'));
+
+    it('at 03:24 the run ends at 03:32, under the plain label', () => {
+      expect(runs(at(37)).map((c) => [c.id, c.label])).toEqual([['nmr.run', 'nmr.run']]);
+    });
+
+    it('from 03:25 (8 min would reach 03:33) the label is the late one, in both locales', () => {
+      for (const minute of [38, 39, 45]) {
+        const offered = runs(at(minute));
+        expect(offered).toHaveLength(1);
+        expect(offered[0]!.label).toBe('nmr.run.late');
+      }
+      expect(choice('glovebox.purge.late')!.label).not.toBe(choice('glovebox.purge')!.label);
+      for (const locale of ['en', 'zh-Hant-TW'] as const) {
+        expect(t('nmr.run.late', undefined, locale)).toContain(t('nmr.run', undefined, locale));
+        expect(t('nmr.run.late', undefined, locale)).toContain('03:33');
+      }
+    });
+
+    it('at 03:25 only the label changes: the run still happens, and the printer still prints for it', () => {
+      const g = at(38);
+      g.choose('nmr.run.last');
+      const card = g.takeCard();
+      expect(card?.kind).toBe('lightsout');
+      if (card?.kind === 'lightsout') expect(card.before.map((p) => p.key)).toEqual(expect.arrayContaining(['nmr.run.r.1', 'ev.perfect.nmr']));
+      expect(g.state.flags).toEqual(expect.arrayContaining(['ran.own', 'perfect.offered']));
+    });
+
+    it('a run already made that night is not offered again at 03:25 or after', () => {
+      const g = at(29);
+      g.choose('nmr.run');
+      for (const minute of [38, 39]) {
+        g.state.minute = minute;
+        expect(runs(g)).toEqual([]);
+      }
+    });
   });
 
   it('the access log says where it begins, rather than “Nothing older.” above older entries (#147)', () => {

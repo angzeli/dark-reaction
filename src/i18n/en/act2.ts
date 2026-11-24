@@ -40,6 +40,7 @@ export const act2 = {
 
   // ── B.03 NMR suite, Act II ────────────────────────────────────────────────
   'nmr.run': 'Run your sample with the priority code',
+  'nmr.run.late': 'Run your sample with the priority code anyway, though 03:33 will come before it finishes',
   'nmr.code': 'Type Ian’s priority code into the console',
   'nmr.code.locked': 'You type *priority RIDLEY-4*. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
   'nmr.code.empty':
