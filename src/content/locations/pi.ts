@@ -16,6 +16,8 @@ export const piScenes: SceneDef[] = [
     id: 'pi.door',
     location: 'pi',
     hub: true,
+    // Its own picture: this side of the frosted door, not the room behind it (#123).
+    art: ['door'],
     text: [{ key: 'pi.door.text' }],
     choices: [
       // Waiting at the door through 03:15 has to open it too, not only arriving then (playtest).

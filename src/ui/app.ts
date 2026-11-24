@@ -572,7 +572,7 @@ export class App {
     return app;
   }
 
-  private mountStage(host: HTMLElement, art: string, ctx: { act: Act; minute: number; dark?: boolean }): void {
+  private mountStage(host: HTMLElement, art: string, ctx: { act: Act; minute: number; dark?: boolean; details?: readonly string[] }): void {
     this.stage?.destroy();
     this.stage = createStage(host, { motion: !this.settings.reduceMotion });
     this.stage.show(art, ctx);
@@ -694,7 +694,7 @@ export class App {
       this.shownAt = where;
       window.scrollTo(0, 0);
     }
-    this.mountStage(art, location.art, { act: s.act, minute: s.minute, dark: s.darkRun });
+    this.mountStage(art, location.art, { act: s.act, minute: s.minute, dark: s.darkRun, details: game.index.scenes.get(s.scene)?.art });
 
     const drawChoices = () => {
       const list = game.choices();

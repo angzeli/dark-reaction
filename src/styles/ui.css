@@ -262,6 +262,11 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 .play__art .dr-stage {
   max-height: 46vh;
 }
+/* On a screen wider than 4:3 the picture gives way to the choices (#152), but only down to the art's
+   essentials band: y 240–660 of its 900, 420 units, which is 26.25 % of its width (CLAUDE.md, Art). */
+@media (min-aspect-ratio: 4/3) {
+  .play__art .dr-stage { max-height: min(46vh, 26.25vw); }
+}
 
 .narrative {
   width: 100%;
@@ -674,7 +679,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   .hud > * { min-width: 0; }
   .hud__time { flex-wrap: wrap; row-gap: 0; }
   .hud__btn { padding-inline: 0.55rem; }
-  .play__art .dr-stage { max-height: 34vh; }
+  /* A phone's picture is as wide as the screen and showed all 900 units: it keeps the safe band,
+     y 150–760, 610 units, which is 38.125 % of its width (#152). */
+  .play__art .dr-stage { max-height: min(34vh, 38.125vw); }
   .narrative { padding-top: 1rem; }
 }
 
@@ -820,4 +827,11 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   outline: 2px solid var(--focus, #9fe3b5);
   outline-offset: 6px;
   border-radius: 2px;
+}
+
+/* On a short screen wider than 4:3 (a 1440 × 900 laptop), a little less air above the passage and the
+   choices, so the first five choices are on screen after a typical passage (#152). Last, so it wins. */
+@media (min-aspect-ratio: 4/3) and (max-height: 960px) {
+  .narrative { padding-top: 1rem; }
+  .choices { margin-top: 1.25rem; }
 }

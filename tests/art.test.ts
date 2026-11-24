@@ -5,7 +5,8 @@ import { hash, rain, seeded } from '../src/art/svg.ts';
 import type { ArtContext } from '../src/art/types.ts';
 import { ENDINGS, EPILOGUES } from '../src/content/endings.ts';
 import { o2At } from '../src/content/lab.ts';
-import { LOCATIONS } from '../src/content/world.ts';
+import { CONTENT } from '../src/content/index.ts';
+import { LOCATIONS, PI_OPEN } from '../src/content/world.ts';
 
 const contexts: ArtContext[] = [
   { act: 1, minute: 0 },
@@ -127,8 +128,9 @@ describe('Act III rooms (#64)', () => {
     // The solvent cabinets' signs became UK warning triangles in v1.0.1 (#146).
     cold: 'c0fc3c209e60f92194926919fea97a80c78ef8a6ab89a4020a9638554ceb945c',
     glovebox: '4b564883a42c6573afd14da47b0790c4dabe7f33c655870ac8626414ae9df393',
-    office: '7b49bd97b5239d9343143eaf0337a2f3bb79c75d113107fefd3e27f952fe438e',
-    pi: '0e2b469b8320eb4d6de048397010c9fbee2fc3fff5f50ef65564fd9a7accbeb3',
+    // The wall clocks came down into the play screen's crop, and the office sofa up into it (#152).
+    office: '77e228ef499e553bde46795f354a147cf860afe1f86769a260776969600c260e',
+    pi: '5eeaf4edf2bdd980757d266629fbde73153572845ac8375d6b7265cb5fb4c7fe',
     roof: '2219ae82a2c13dc17b5e3dba27b2cd6b66f1c9ebf450542d6e392f4f9815ea08',
     stairs: '545a2afdf09841dfb68e58dbf325506588e6ff1712a195793c263850d4bfd9df',
   };
@@ -218,5 +220,31 @@ describe('helpers', () => {
     const big = rain('q', 0, 0, 600, 400);
     expect(small).toContain('clip-path="url(#clip-p)"');
     expect((big.match(/dr-rain/g) ?? []).length).toBeGreaterThan((small.match(/dr-rain/g) ?? []).length);
+  });
+});
+
+describe('4.01’s locked door has its own picture (#123)', () => {
+  const door = (minute: number, act: 1 | 2 | 3 = 1) => SCENES['pi']!({ act, minute, details: ['door'] });
+
+  it('the corridor side of the frosted door, with Dan’s sign on it, not the room behind it', () => {
+    const svg = door(5);
+    expect(svg).toContain('data-art="pi"');
+    expect(svg).toContain('data-detail="door-sign"');
+    for (const word of ['BOSTON', 'UNTIL', '27 NOV', 'PLEASE EMAIL', 'PROF. D. RIDLEY']) expect(svg).toContain(word);
+    // The room's own furniture isn't drawn: the framed paper, the photo, the bookcase.
+    expect(svg).not.toContain('framed-paper');
+    expect(SCENES['pi']!({ act: 1, minute: 5 })).not.toContain('door-sign');
+  });
+
+  it('it stands off its latch, the reader green, only during the porter’s clean (03:15–03:18)', () => {
+    expect(door(PI_OPEN.from - 1)).not.toContain('door-ajar');
+    expect(door(PI_OPEN.from)).toContain('door-ajar');
+    expect(door(PI_OPEN.to - 1)).toContain('door-ajar');
+    expect(door(PI_OPEN.to)).not.toContain('door-ajar');
+  });
+
+  it('the locked door’s scene asks for it', () => {
+    expect(CONTENT.scenes.find((s) => s.id === 'pi.door')!.art).toEqual(['door']);
+    expect(CONTENT.scenes.find((s) => s.id === 'pi.hub')!.art).toBeUndefined();
   });
 });

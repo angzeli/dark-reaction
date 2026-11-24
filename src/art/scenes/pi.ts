@@ -6,11 +6,18 @@
  * up, the framed 2020 paper with Figure 3 and its brass plate, the 2018 group
  * photo, the wall clock, the document box on the floor behind the desk,
  * hoover tracks in the carpet, rain on the window and the frosted door with
- * its push bar (the same picture serves the locked door).
+ * its push bar.
+ *
+ * The locked door (`details: ['door']`, the scene `pi.door`) has its own
+ * picture (#123): the corridor side of that frosted door, close up, with the
+ * shapes of the lamp and the chair through the glass, Dan's printed sign, the
+ * brass plate and the badge reader. During the porter's clean it stands off
+ * its latch, and the reader is green.
  * Part of the creative content (CC BY-NC-SA 4.0).
  */
+import { PI_OPEN } from '../../content/world.ts';
 import type { ArtContext } from '../types.ts';
-import { C, circle, clockHands, glow, group, hash, label, line, path, poly, rain, rect, seeded, svg } from '../svg.ts';
+import { C, circle, clockHands, glow, group, halo, hash, label, line, path, poly, rain, rect, seeded, svg, tube } from '../svg.ts';
 
 const FLOOR = 648;
 
@@ -205,8 +212,9 @@ function cabinet(): string {
   );
 }
 
+/** Between the framed paper and the photo, low enough to stay whole in the play screen's crop (#152). */
 function wallClock(minute: number): string {
-  return group('clock', circle(1260, 238, 30, '#0c141c', { stroke: '#4a4038', 'stroke-width': 4 }), clockHands(1260, 238, minute), circle(1260, 238, 3, '#c9d3da'));
+  return group('clock', circle(1145, 286, 30, '#0c141c', { stroke: '#4a4038', 'stroke-width': 4 }), clockHands(1145, 286, minute), circle(1145, 286, 3, '#c9d3da'));
 }
 
 function desk(): string {
@@ -262,7 +270,108 @@ const streetLight = () =>
   poly([[352, 524], [586, 524], [1240, 900], [520, 900]], C.sodium, { opacity: 0.06 }) +
   poly([[600, 300], [600, 520], [1180, 560], [1180, 420]], C.sodium, { opacity: 0.025 });
 
+/** The corridor side of the frosted door, close up (#123). */
+function lockedDoor(ctx: ArtContext): string {
+  const dim = ctx.act === 3;
+  const open = ctx.minute >= PI_OPEN.from && ctx.minute < PI_OPEN.to;
+  const floor = 700;
+  // The door: frame 560–1040, leaf 576–1024; the frosted pane at eye level.
+  const gx = 650;
+  const gy = 244;
+  const gw = 300;
+  const gh = 300;
+  const wall = group(
+    'layer-bg',
+    `<defs><linearGradient id="pidoor-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1823"/><stop offset="1" stop-color="#172636"/></linearGradient>
+      <clipPath id="pidoor-frost"><rect x="${gx}" y="${gy}" width="${gw}" height="${gh}"/></clipPath></defs>`,
+    rect(0, 0, 1600, floor, 'url(#pidoor-wall)'),
+    rect(0, floor, 1600, 900 - floor, '#0b131b'),
+    rect(0, floor - 2, 1600, 4, '#1d2c3b'),
+    // The corridor's tube, and its light on the floor.
+    tube(700, 64, 200, { on: true }),
+    glow(800, 160, 520, 120, C.tube, dim ? 0.05 : 0.08),
+    poly([[380, floor], [1220, floor], [1380, 900], [220, 900]], C.tube, { opacity: dim ? 0.02 : 0.035 }),
+  );
+  // A noticeboard of seminar flyers nobody took down.
+  const flyers = [
+    [252, 316, 70, 92, '#d9d2bf', -3],
+    [332, 304, 64, 84, '#c9d4cf', 2],
+    [404, 322, 58, 78, '#e0c9a6', -1],
+    [270, 420, 84, 40, '#cfc8d8', 1.5],
+    [372, 414, 76, 54, '#d6d0b8', -2],
+  ] as const;
+  const board = group(
+    'noticeboard',
+    rect(232, 290, 248, 196, '#3b2f24'),
+    rect(240, 298, 232, 180, '#5a4634'),
+    ...flyers.map(([x, y, w, h, fill, r]) => rect(x, y, w, h, fill, { opacity: dim ? 0.35 : 0.5, transform: `rotate(${r} ${x + w / 2} ${y + h / 2})` })),
+    ...flyers.map(([x, y, w]) => circle(x + w / 2, y + 6, 3, C.red, { opacity: 0.8 })),
+  );
+  // What the frosted glass lets through: the street lamp from the office window, the chair, the lamp.
+  const through = `<g clip-path="url(#pidoor-frost)">${[
+    rect(gx, gy, gw, gh, '#1c1915'),
+    glow(gx + 90, gy + 230, 120, 90, C.sodium, dim ? 0.16 : 0.24),
+    // The chair's back, nearer the door, and the lamp's arm and shade on the desk beyond.
+    rect(gx + 46, gy + 150, 84, 150, '#0f0c0a', { rx: 22, opacity: 0.85, filter: 'url(#dr-blur-sm)' }),
+    path(`M${gx + 196} ${gy + 236} L${gx + 214} ${gy + 162} L${gx + 236} ${gy + 148}`, 'none', { stroke: '#120e0b', 'stroke-width': 9, 'stroke-linecap': 'round', opacity: 0.8, filter: 'url(#dr-blur-sm)' }),
+    path(`M${gx + 226} ${gy + 138} l46 8 l-8 30 l-46 -12 z`, '#120e0b', { opacity: 0.8, filter: 'url(#dr-blur-sm)' }),
+    rect(gx + 150, gy + 236, 150, 64, '#130f0c', { opacity: 0.7, filter: 'url(#dr-blur-sm)' }),
+    // The frosting itself: pale, and lit from this side.
+    rect(gx, gy, gw, gh, '#a7b6c0', { opacity: 0.2 }),
+    glow(gx + gw / 2, gy + 40, 160, 60, C.tube, 0.08),
+  ].join('')}</g>`;
+  // Dan's sign, taped at eye level: BOSTON UNTIL 27 NOV — PLEASE EMAIL.
+  const sx = 740;
+  const sy = 270;
+  const sign = `<g class="door-sign" data-detail="door-sign">${[
+    rect(sx, sy, 120, 150, C.paper, { opacity: dim ? 0.82 : 0.92 }),
+    label(sx + 60, sy + 42, 'BOSTON', 18, '#26201a', { 'text-anchor': 'middle', 'font-weight': 600 }),
+    label(sx + 60, sy + 70, 'UNTIL', 12, '#26201a', { 'text-anchor': 'middle' }),
+    label(sx + 60, sy + 90, '27 NOV', 15, '#26201a', { 'text-anchor': 'middle', 'font-weight': 600 }),
+    line(sx + 40, sy + 106, sx + 80, sy + 106, '#26201a', 1.2),
+    label(sx + 60, sy + 126, 'PLEASE EMAIL', 9, '#26201a', { 'text-anchor': 'middle' }),
+    rect(sx - 8, sy - 6, 30, 12, '#e9e4cf', { opacity: 0.55, transform: `rotate(-24 ${sx + 7} ${sy})` }),
+    rect(sx + 98, sy - 6, 30, 12, '#e9e4cf', { opacity: 0.55, transform: `rotate(24 ${sx + 113} ${sy})` }),
+  ].join('')}</g>`;
+  const leaf = group(
+    'door',
+    rect(560, 150, 480, floor - 150, '#1b1d24'),
+    rect(576, 166, 448, floor - 166, '#33271d'),
+    rect(588, 178, 424, floor - 190, '#3a2d21'),
+    through,
+    rect(gx - 10, gy - 10, gw + 20, 10, '#2a2119'),
+    rect(gx - 10, gy + gh, gw + 20, 10, '#2a2119'),
+    rect(gx - 10, gy, 10, gh, '#2a2119'),
+    rect(gx + gw, gy, 10, gh, '#2a2119'),
+    sign,
+    // The lever handle, and the kick plate scuffed by trolleys.
+    rect(966, 578, 14, 30, '#5e6b77', { rx: 4 }),
+    rect(934, 584, 46, 10, '#8794a0', { rx: 5 }),
+    rect(592, 640, 416, 52, '#2a2f36'),
+    rect(592, 640, 416, 2, '#8794a0', { opacity: 0.3 }),
+    // Off its latch during the clean: a dark inch down the leading edge.
+    open ? rect(1018, 166, 8, floor - 166, '#070a0e', { 'data-detail': 'door-ajar' }) : '',
+    // Under the door, the street lamp's sodium on the office carpet.
+    rect(578, floor - 3, 444, 3, C.sodium, { opacity: open ? 0.5 : 0.28 }),
+  );
+  // Beside the door: the brass plate and the badge reader.
+  const ledColour = open ? '#3fcf7a' : C.red;
+  const plate = group(
+    'plate',
+    rect(1072, 300, 140, 46, '#7d6141'),
+    rect(1076, 304, 132, 38, '#9a7a52'),
+    label(1142, 320, 'PROF. D. RIDLEY', 10, '#2a1d12', { 'text-anchor': 'middle', 'font-weight': 600 }),
+    label(1142, 336, '4.01', 10, '#2a1d12', { 'text-anchor': 'middle' }),
+    rect(1084, 418, 26, 44, '#11171d', { rx: 3 }),
+    rect(1089, 438, 16, 18, '#1b232b', { rx: 2 }),
+    circle(1097, 428, 3, ledColour),
+    halo(1097, 428, 8, ledColour, 0.45),
+  );
+  return svg('pi', [wall, board, leaf, plate].join(''), { dark: ctx.dark ?? false });
+}
+
 export function pi(ctx: ArtContext): string {
+  if (ctx.details?.includes('door')) return lockedDoor(ctx);
   const dim = ctx.act === 3;
   return svg(
     'pi',

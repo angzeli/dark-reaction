@@ -127,6 +127,8 @@ export interface SceneDef {
   noBack?: boolean;
   /** List Back first instead of last, where the first choice would otherwise end the game (#61). */
   backFirst?: boolean;
+  /** Details for the location's picture while this scene is shown (`ArtContext.details`), e.g. the locked door's own picture (#123). */
+  art?: readonly string[];
 }
 
 export interface LocationDef {

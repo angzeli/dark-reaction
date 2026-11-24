@@ -12,10 +12,15 @@ import { C, circle, ellipse, glow, group, hash, label, line, path, poly, rect, s
 /** Furniture is drawn standing on y 690 and lifted 30 to the floor line, inside the play crop. */
 const FLOOR = 690;
 const LIFT = 30;
+/**
+ * In Act III the room stands higher still, so the floor the frost crosses is in the picture: the
+ * play screen shows only about y 240–660 at some sizes (#152), and the floor began at 660.
+ */
+const LIFT_ACT3 = 60;
 const FROST = '#eef7fb';
 
-function room(dim: boolean): string {
-  const seams = Array.from({ length: 13 }, (_, i) => line(120 + i * 120, 120, 120 + i * 120, FLOOR - LIFT, '#0d1720', 2, { opacity: 0.6 }));
+function room(dim: boolean, lift: number): string {
+  const seams = Array.from({ length: 13 }, (_, i) => line(120 + i * 120, 120, 120 + i * 120, FLOOR - lift, '#0d1720', 2, { opacity: 0.6 }));
   // A caged strip light, cold rather than green.
   const light = group(
     `cold-light${dim ? ' dr-flicker' : ''}`,
@@ -34,10 +39,10 @@ function room(dim: boolean): string {
       // Basement services overhead.
       rect(0, 70, 1600, 14, '#121c26'),
       rect(0, 90, 1600, 8, '#101922'),
-      rect(0, FLOOR - LIFT, 1600, 210 + LIFT, '#0b141c'),
-      rect(0, FLOOR - LIFT - 2, 1600, 4, '#1d2e3e'),
+      rect(0, FLOOR - lift, 1600, 210 + lift, '#0b141c'),
+      rect(0, FLOOR - lift - 2, 1600, 4, '#1d2e3e'),
       // Cold settling on the floor.
-      glow(560, FLOOR - LIFT + 10, 420, 26, '#cfe6f2', 0.07),
+      glow(560, FLOOR - lift + 10, 420, 26, '#cfe6f2', 0.07),
     ),
     light,
     glow(700, 300, 520, 220, C.screen, 0.05),
@@ -133,8 +138,8 @@ function feather(rnd: () => number, from: [number, number], to: [number, number]
 function frostFeathers(): string {
   const rnd = seeded(hash('cold-feathers'));
   // Drawn where the furniture is lifted to: the lid's seal, the floor line.
-  const seal = 497 - LIFT;
-  const base = FLOOR - LIFT;
+  const seal = 497 - LIFT_ACT3;
+  const base = FLOOR - LIFT_ACT3;
   const door: [number, number] = [118, base + 4];
   const out: string[] = [];
   // Out of the seal and down the front, leaning towards the door.
@@ -160,7 +165,8 @@ function frostFeathers(): string {
   ];
   for (const [rx, bulge, reach] of trails) {
     const root: [number, number] = [rx, base + 3];
-    const ctrl: [number, number] = [(rx + door[0]) / 2, base + 3 + bulge * 2];
+    // Bowed out over the floor, but no further than the strip of it in the picture (#152).
+    const ctrl: [number, number] = [(rx + door[0]) / 2, base + 3 + bulge * 0.6];
     const along = (t: number): [number, number] => [
       (1 - t) * (1 - t) * root[0] + 2 * (1 - t) * t * ctrl[0] + t * t * door[0],
       (1 - t) * (1 - t) * root[1] + 2 * (1 - t) * t * ctrl[1] + t * t * door[1],
@@ -170,7 +176,7 @@ function frostFeathers(): string {
       const step = (40 + rnd() * 34) / span;
       const t1 = Math.min(t + step, reach);
       const [a, b] = [along(t), along(t1)];
-      const near = (a[1] - base) / 80;
+      const near = (a[1] - base) / 24;
       out.push(feather(rnd, a, b, { flat: 0.3, width: 1 + near * 0.6, opacity: 0.28 + rnd() * 0.22 + near * 0.12 }));
       t = t1 + (6 + rnd() * 10) / span;
     }
@@ -291,6 +297,7 @@ function tomsBoxes(): string {
 
 export function cold(ctx: ArtContext): string {
   const dim = ctx.act === 3;
-  const lifted = `<g transform="translate(0 ${-LIFT})">${[door(), wall(), freezer(), cabinets(), dewar(), tomsBoxes()].join('')}</g>`;
-  return svg('cold', room(dim) + lifted + (dim ? frostFeathers() : ''), { dark: ctx.dark ?? false });
+  const lift = dim ? LIFT_ACT3 : LIFT;
+  const lifted = `<g transform="translate(0 ${-lift})">${[door(), wall(), freezer(), cabinets(), dewar(), tomsBoxes()].join('')}</g>`;
+  return svg('cold', room(dim, lift) + lifted + (dim ? frostFeathers() : ''), { dark: ctx.dark ?? false });
 }

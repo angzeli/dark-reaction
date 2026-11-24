@@ -6,14 +6,15 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #194 e2e: the 03:33 shell test waits for the dark to lift before reading the loop (closes #192)
+- **Last merged:** #195 The picture gives way to the choices; 4.01's locked door has its own picture (closes #152, #123)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** the art pass (#152, #123).
+- **In flight:** nothing. Every playtest issue is closed.
 
 ## Next
 
-1. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
-2. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
+1. Close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
+2. On a phone at the largest text sizes the choices still start below the fold: the passage itself is long there, and a new page starts at its top on purpose (#116). A way to reach the choices sooner (a skip link, say) would be a design decision for the owner.
+3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -33,6 +34,20 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #152, #123: **the picture gives way to the choices; 4.01's locked door has its own picture.** The art pass the playtest left.
+  - **The fold (#152):** at 1440 × 900 the picture took 46 vh, and most rooms' fifth choice was below the fold.
+    - On a screen wider than 4:3 the picture gives way down to the art's essentials band, y 240–660 (`min(46vh, 26.25vw)`), and no further: a bigger screen keeps all of it.
+    - On a short one (under 960 px) there's a little less air above the passage and the choices.
+    - On a phone it keeps the safe band, y 150–760 (`min(34vh, 38.125vw)`), about 70 px shorter than before.
+    - Rooms showing their first five choices without a scroll (the 02:47 page aside, which is long on purpose): at 1440 × 900, 16 → 25 of 25 in English and 13 → 25 in 繁中; on a 390 px phone, 13 → 24 and 21 → 26 of 28. At the largest text size on a phone, no change: the passage itself fills the screen (see Next).
+  - **Every scene's crop, checked:** each room in Acts I and III was drawn with both bands on it. What fell outside was moved in:
+    - both wall clocks (the office's, Dan's) came down; the office sofa came up;
+    - Act III's cold room stands 30 units higher, so the frost crossing the floor to the door (what its text describes) is in the picture; its trails stay on the strip of floor that shows.
+    - The Acts I–II hashes in `tests/art.test.ts` are updated for the office and Dan's office, with the reason.
+  - **The locked door (#123):** at `pi.door` the picture was the inside of the office. Scenes can now ask for picture details (`SceneDef.art`, passed as `ArtContext.details`), and `pi.door` asks for `door`: the corridor side of the frosted door, close up, with the shapes of the lamp and the chair through the glass, Dan's printed sign (BOSTON UNTIL 27 NOV — PLEASE EMAIL), the brass plate and the badge reader. During the porter's clean the reader is green and the door stands off its latch, as the text says.
+  - **CLAUDE.md's art notes** say the crop is now exact.
+  - **Tests:** `e2e/fold.spec.ts` (every room's first five choices at 1440 × 900 in both languages, and the bands held at 1440, 1920 and 390; the two 1440 tests fail without the change; the door in the real UI), and `tests/art.test.ts` (the door's picture, its open state, and the scene asking for it).
+  - **Baselines:** 60 changed (every play screen and puzzle at 1440, the 02:47 office and the three phone puzzles at 390), from CI's candidates, all reviewed by eye.
 - #192: **the 03:33 shell test's race.** `e2e/shell.spec.ts` waits out the first night and expects 02:47 of loop 2. It read the HUD's loop label, then looked for *Wait…*; the 02:47 page is drawn under the dark before the dark lifts, so between the two it could find loop 2's *Wait…* while the label said loop 1, wait once more, and read 02:50 (02:50's email cuts the wait). It was flaky in #191's CI. It now waits for the dark to lift before reading the label. 20 runs in a row pass locally.
 - #125, #161: **the Kraken wants three purges; the chirp's groups stay on screen.** The two puzzle changes from the owner's decisions.
   - **Three purges (#125):** one pump-and-refill cycle was enough to make up her tube, which undercut the act's 「三次」 (the mobile player). The Kraken now counts cycles and needs three.
