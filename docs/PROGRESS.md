@@ -6,15 +6,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #193 The Kraken wants three purges; the chirp's groups stay on screen (closes #125, #161)
+- **Last merged:** #194 e2e: the 03:33 shell test waits for the dark to lift before reading the loop (closes #192)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** the art pass (#152, #123). Open: #192 (a flaky e2e test).
+- **In flight:** the art pass (#152, #123).
 
 ## Next
 
 1. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
-2. #192: the 03:33 shell test's race.
-3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
+2. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -34,6 +33,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #192: **the 03:33 shell test's race.** `e2e/shell.spec.ts` waits out the first night and expects 02:47 of loop 2. It read the HUD's loop label, then looked for *Wait…*; the 02:47 page is drawn under the dark before the dark lifts, so between the two it could find loop 2's *Wait…* while the label said loop 1, wait once more, and read 02:50 (02:50's email cuts the wait). It was flaky in #191's CI. It now waits for the dark to lift before reading the label. 20 runs in a row pass locally.
 - #125, #161: **the Kraken wants three purges; the chirp's groups stay on screen.** The two puzzle changes from the owner's decisions.
   - **Three purges (#125):** one pump-and-refill cycle was enough to make up her tube, which undercut the act's 「三次」 (the mobile player). The Kraken now counts cycles and needs three.
     - The card gains a sixth rule, in her pencil like the fifth: *Pump a vessel down and refill it three times before anything goes into it.*
