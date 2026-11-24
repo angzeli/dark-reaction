@@ -186,6 +186,7 @@ export const DESIGN_COSTS: Record<string, number> = {
   'roof.rain': 2,
   'synth.rotavap': 5,
   'nmr.run': 8,
+  'nmr.run.last': 8,
   'nmr.run.late': 8,
   'nmr.rerun': 8,
   'glovebox.purge': 9,

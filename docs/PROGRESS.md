@@ -6,13 +6,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #199 Your sample at the NMR suite before it's a tube: the room says what's missing (closes #196)
+- **Last merged:** #200 From 03:25 the run says it can't beat 03:33, as the late purge does (closes #198)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** two issues from triaging a real player's report (#196): #197 (`needs-decision`: nothing points from the refused tube to Ian's code on Dan's monitor) and #198 (polish: from 03:25 *Run your sample* can't finish before 03:33 but its label doesn't say so).
+- **In flight:** #197 (nothing points from the refused tube to Ian's code on Dan's monitor). The owner left the choice of wording to Claude (2026-11-24); its PR follows this one.
 
 ## Next
 
-1. Settle #197 (the owner's call on wording) and #198, then close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
+1. Land #197, then close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
 2. On a phone at the largest text sizes the choices still start below the fold: the passage itself is long there, and a new page starts at its top on purpose (#116). A way to reach the choices sooner (a skip link, say) would be a design decision for the owner.
 3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
@@ -34,6 +34,11 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #198: **from 03:25 the run says it can't beat 03:33, as the late purge does** (#122). The owner's call: keep it consistent with the glovebox.
+  - *Run your sample with the priority code* takes 8 minutes, so from 03:25 it always runs into 03:33 and the spectrum goes with the reset. It still happens (DESIGN §5), but it read exactly like the run that works.
+  - From 03:25 its label is *Run your sample with the priority code anyway, though 03:33 will come before it finishes* (`nmr.run.late`), in the glovebox's voice.
+  - The run begun at exactly 03:25 is its own choice, `nmr.run.last`, so only the label changes. The printer still prints for it at 03:25, which offers the night's spectrum (`perfect.offered`, needed for Act III); that's why the true ending's route starts its run then. From 03:26, `nmr.run.late` stays as #147 left it. `nmr.run` now ends at 03:24.
+  - The true ending's route names `nmr.run.last`; the QA model knows its 8 minutes. #147's test no longer expects the same label.
 - #196: **your sample at the NMR suite before it's a tube.** A real player was stuck in Act II, unable to submit their sample at the NMR suite.
   - **Triage** (headless, every Act II state at B.03): the run itself works whenever you hold your tube and know RIDLEY-4; the latest start that still reaches the portal is 03:21. What strands a player is the vial. Brought down before the glovebox, it got no option and no text, and with the code known the console said "the fractions are back in their rack upstairs", which is untrue with the vial in your hand.
   - **The fix:** *Load your sample into the carousel* (`nmr.load.unmade`) is offered, once a night, when you hold the vial or the fractions without a tube, in any act. It says what's missing: the glovebox (vial), or the rotavap and then the glovebox (fractions).

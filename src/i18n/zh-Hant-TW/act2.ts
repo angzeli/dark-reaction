@@ -38,6 +38,7 @@ export const act2: Record<keyof typeof en, string> = {
 
   // ── B.03 NMR 室，第二幕 ───────────────────────────────────────────────────
   'nmr.run': '用優先代碼跑你的樣品',
+  'nmr.run.late': '還是用優先代碼跑你的樣品，雖然它還沒跑完，03:33 就會先到',
   'nmr.code': '在主控台輸入 Ian 的優先代碼',
   'nmr.code.locked': '你輸入 *priority RIDLEY-4*。*PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* 它還沒跑過。還沒。',
   'nmr.code.empty':

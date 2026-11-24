@@ -78,23 +78,36 @@ export const nmrScenes: SceneDef[] = [
         ],
       },
       {
-        // Act II: Ian's priority code jumps the locked queue for one run (8 min).
+        // Act II: Ian's priority code jumps the locked queue for one run (8 min), begun by 03:24 so it ends before 03:33.
         id: 'nmr.run',
         label: 'nmr.run',
         cost: 8,
         once: 'loop',
-        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteLt: 39 }] },
+        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteLt: 38 }] },
+        effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }],
+        text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
+      },
+      {
+        // The same run begun at 03:25: it can't end before 03:33, and its label says so before you take it,
+        // as the late purge's does (#198). Otherwise it is the run above: the printer still prints for it at 03:25.
+        id: 'nmr.run.last',
+        label: 'nmr.run.late',
+        cost: 8,
+        once: 'loop',
+        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteGte: 38 }, { minuteLt: 39 }, { not: { used: 'nmr.run' } }] },
         effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }],
         text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
       },
       {
         // The same run begun after 03:25 (from 03:26): that night’s printer has been and gone without it, so it
-        // mustn't print for it afterwards (#147). Not a second run: that is nmr.rerun.
+        // mustn't print for it afterwards (#147). Not a second run: that is nmr.rerun. Its label is the late one (#198).
         id: 'nmr.run.late',
-        label: 'nmr.run',
+        label: 'nmr.run.late',
         cost: 8,
         once: 'loop',
-        if: { all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteGte: 39 }, { not: { used: 'nmr.run' } }] },
+        if: {
+          all: [{ item: 'item.tube.own' }, { know: 'nb.priority' }, { actGte: 2 }, { minuteGte: 39 }, { not: { used: 'nmr.run' } }, { not: { used: 'nmr.run.last' } }],
+        },
         effects: [{ give: 'item.spectrum.own' }, { flag: 'ran.own' }, { lflag: 'ran.late' }],
         text: [{ key: 'nmr.run.r.1' }, { key: 'nmr.run.r.2' }],
       },

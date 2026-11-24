@@ -155,7 +155,8 @@ export const ROUTES: Partial<Record<EndingId, Route>> = {
         { do: 'pi.notebook' },
         { solve: 'cipher' },
         { go: 'nmr' },
-        { do: 'nmr.run' },
+        // 03:25: the run that can't end before 03:33, under the label that says so (#198).
+        { do: 'nmr.run.last' },
       ],
       // Loop 3: rack one and her raw data; the porter's log; her rain log.
       [
