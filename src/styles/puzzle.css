@@ -642,6 +642,7 @@
 .sk__main { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 0.9rem; }
 .sk__bubbler,
 .sk__tube { margin: 0; font-family: var(--font-mono); font-size: 0.82rem; color: #e6d7c0; }
+.sk__cycles { margin: 0; font-family: var(--font-mono); font-size: 0.82rem; color: #c8d3dc; }
 .sk__ports { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.75rem; }
 .sk__port { min-width: 0; margin: 0; padding: 0.45rem 0.6rem 0.6rem; border: 1px solid #2c4357; border-radius: 3px; }
 .sk__legend { padding: 0 0.3rem; font-size: 0.85rem; color: #e6d7c0; }
@@ -669,6 +670,11 @@
 .cp__seg { width: 1.1rem; height: 1.7rem; border-radius: 2px; background: #173022; border: 1px solid #0b1a12; }
 .cp__seg--on { background: #7dff9a; border-color: #b4ffc6; }
 .cp__led-label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #c8d3dc; }
+/* The groups heard so far (#161): one chip a group, wrapping as it must, never one chirp from the next group. */
+.cp__tally { display: flex; flex-wrap: wrap; gap: 0.35rem 0.45rem; min-height: 1.9rem; margin: 0; }
+.cp__group { padding: 0.15rem 0.5rem; font-size: 0.85rem; line-height: 1.4; color: #e6eef4; background: #1d262f; border: 1px solid #4a5866; border-radius: 3px; white-space: nowrap; }
+.cp__group--pause { font-style: italic; color: #c8d3dc; border-style: dashed; }
+:lang(zh-Hant-TW) .cp__group--pause { font-style: normal; }
 .cp__postit {
   max-width: 16rem;
   margin: 0;

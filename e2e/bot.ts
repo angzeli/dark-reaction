@@ -160,7 +160,9 @@ export const SOLVERS: Record<string, (page: Page, press?: Press) => Promise<void
   },
   async schlenk(page, press = click) {
     await press(page.locator('.sk__n2'));
-    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const) await press(page.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`));
+    // Three purges of her tube's port (#125), then the flask under nitrogen and the tube closed.
+    for (const [port, tap] of [[2, 'vac'], [2, 'n2'], [2, 'vac'], [2, 'n2'], [2, 'vac'], [2, 'n2'], [4, 'n2'], [2, 'closed']] as const)
+      await press(page.locator(`.sk__tap[data-port="${port}"][data-tap="${tap}"]`));
     await press(page.locator('.sk__bleed[data-bleed="tube"]'));
     await press(page.locator('.sk__jy'));
     await press(page.locator('.sk__wrap'));

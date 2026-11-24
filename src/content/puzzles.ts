@@ -67,7 +67,8 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   // ── Act III ─────────────────────────────────────────────────────────────
   {
     id: 'schlenk',
-    par: 3,
+    // Three purges now (#125): four more moves than the one it was.
+    par: 3.5,
     hints: hints('schlenk'),
     onSolve: [{ take: 'item.tube.jy' }, { give: 'item.tube.dark' }, { learn: 'nb.schlenk' }],
     // Without foil, the filled tube sits in the lab light: spoiled for the night.

@@ -3,9 +3,9 @@
  * with a bubbler, a vacuum manifold on an old pump, and four ports with
  * three-way taps (nitrogen / closed / vacuum). Her dark-run flask is on
  * port 4 and her J. Young tube on port 2's adaptor, joined by a cannula;
- * those two ports have bleeds. Get the flask's contents into the tube
- * without breaking the laminated rules, shut the tube's tap and wrap it in
- * foil. Breaking a rule is a suck-back or a hiss: everything goes back to
+ * those two ports have bleeds. Purge the tube three times (#125: the act's
+ * three, as in the antechamber), get the flask's contents into it without
+ * breaking the laminated rules, shut the tube's tap and wrap it in foil. Breaking a rule is a suck-back or a hiss: everything goes back to
  * how it was, two minutes later.
  *
  * These are the game's rules, not a procedure: no quantities, pressures or
@@ -40,6 +40,8 @@ export type Breach =
   | 'flaskRoom'
   /** Rule 5 again: the liquid would run into a tube still full of the room's air. */
   | 'air'
+  /** Rule 6: purged, but not three times; some of the room is still in the tube. */
+  | 'thin'
   /** Her filled tube put on vacuum with its tap open: the pump drinks it. */
   | 'drained';
 
@@ -52,6 +54,9 @@ export type SchlenkEvent =
   | 'jyOpen'
   | 'jyShut'
   | 'pumped'
+  /** Refilled with nitrogen, but fewer than three times so far. */
+  | 'refilled'
+  /** The third refill: no room air left. */
   | 'purged'
   | 'transfer'
   | 'needsFill'
@@ -69,8 +74,8 @@ export interface SchlenkState {
   jyOpen: boolean;
   /** The tube has been pumped down since it last held a gas. */
   pumped: boolean;
-  /** Pumped down and refilled with nitrogen: no room air left in it. */
-  purged: boolean;
+  /** Times the tube has been pumped down and refilled with nitrogen (up to PURGES): at PURGES, no room air is left. */
+  cycles: number;
   /** The flask's contents are in the tube. */
   filled: boolean;
   /** Sealed and wrapped in foil: done. */
@@ -90,10 +95,12 @@ export type SchlenkMove =
   /** Wrap the sealed tube. `foil` is whether the player is carrying any (the view asks the game). */
   | { type: 'wrap'; foil: boolean };
 
-/** In-game minutes: pumping the tube down, letting nitrogen back in, the transfer, the foil. */
+/** Pump-and-refill cycles before the tube may take anything (rule 6, in her pencil). */
+export const PURGES = 3;
+/** In-game minutes: pumping the tube down, letting nitrogen back in (each, per cycle), the transfer, the foil. */
 export const COST = { pump: 2, refill: 1, transfer: 2, wrap: 1, breach: 2 } as const;
 /** What a clean run costs, as the later-loop shortcut charges it. */
-export const CLEAN_MINUTES = COST.pump + COST.refill + COST.transfer + COST.wrap;
+export const CLEAN_MINUTES = PURGES * (COST.pump + COST.refill) + COST.transfer + COST.wrap;
 
 const tapOf = (s: SchlenkState, port: Port) => s.taps[port - 1]!;
 
@@ -104,7 +111,7 @@ const APPARATUS = {
   bleed: { tube: false, flask: false },
   jyOpen: true,
   pumped: false,
-  purged: false,
+  cycles: 0,
   filled: false,
 };
 
@@ -137,19 +144,24 @@ const reset = (s: SchlenkState, kind: Breach): SchlenkState => ({
   last: { kind, breach: true },
 });
 
+/** Pumped down and refilled three times, and not pumped down again since: ready to take the liquid. */
+export const purged = (s: Pick<SchlenkState, 'pumped' | 'cycles'>) => !s.pumped && s.cycles >= PURGES;
+
 /** After a legal change: the tube pumps down, fills with nitrogen, or takes the flask's contents. */
 function settle(s: SchlenkState, last: SchlenkState['last']): SchlenkState {
   const broken = breach(s);
   if (broken) return s;
   let next = { ...s, last };
   if (!next.filled && next.jyOpen && tapOf(next, TUBE_PORT) === 'vac' && !next.pumped) {
-    next = { ...next, pumped: true, purged: false, minutes: next.minutes + COST.pump, last: { kind: 'pumped', port: TUBE_PORT } };
+    next = { ...next, pumped: true, minutes: next.minutes + COST.pump, last: { kind: 'pumped', port: TUBE_PORT } };
   }
   if (!next.filled && next.n2 && next.jyOpen && tapOf(next, TUBE_PORT) === 'n2' && next.pumped) {
-    next = { ...next, pumped: false, purged: true, minutes: next.minutes + COST.refill, last: { kind: 'purged', port: TUBE_PORT } };
+    const cycles = Math.min(PURGES, next.cycles + 1);
+    next = { ...next, pumped: false, cycles, minutes: next.minutes + COST.refill, last: { kind: cycles >= PURGES ? 'purged' : 'refilled', port: TUBE_PORT } };
   }
   if (transferring(next)) {
-    if (!next.purged) return reset(s, 'air');
+    // Never purged (or pumped down again since): the room's air. Purged, but not three times: some of it.
+    if (!purged(next)) return reset(s, next.cycles > 0 && !next.pumped ? 'thin' : 'air');
     next = { ...next, filled: true, minutes: next.minutes + COST.transfer, last: { kind: 'transfer' } };
   }
   return next;
@@ -164,7 +176,7 @@ const isTap = (v: unknown): v is Tap => v === 'n2' || v === 'closed' || v === 'v
 const count = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? Math.min(999, Math.max(0, Math.floor(v))) : 0);
 
 /** The state's apparatus as a key, for the search. */
-const key = (s: SchlenkState) => `${+s.n2}${s.taps.join('')}${+s.bleed.tube}${+s.bleed.flask}${+s.jyOpen}${+s.pumped}${+s.purged}${+s.filled}`;
+const key = (s: SchlenkState) => `${+s.n2}${s.taps.join('')}${+s.bleed.tube}${+s.bleed.flask}${+s.jyOpen}${+s.pumped}${s.cycles}${+s.filled}`;
 const MOVES: SchlenkMove[] = [
   { type: 'n2' },
   ...PORTS.flatMap((port) => TAPS.map((to): SchlenkMove => ({ type: 'tap', port, to }))),
@@ -182,13 +194,16 @@ export const schlenkLogic: PuzzleLogic<SchlenkState, SchlenkMove> = {
     const taps = Array.isArray(d.taps) && d.taps.length === 4 && d.taps.every(isTap) ? (d.taps as SchlenkState['taps']) : fresh().taps;
     const b = (d.bleed && typeof d.bleed === 'object' ? d.bleed : {}) as Partial<Record<Bleed, unknown>>;
     const filled = flag(d.filled);
+    const legacy = d as Record<string, unknown>;
+    // Saves from before three purges (#125) say only whether the tube was purged: that was one cycle.
+    const cycles = filled ? PURGES : d.cycles !== undefined ? Math.min(PURGES, count(d.cycles)) : flag(legacy['purged']) ? 1 : 0;
     const restored: SchlenkState = {
       n2: flag(d.n2),
       taps: [...taps],
       bleed: { tube: flag(b.tube), flask: flag(b.flask) },
       jyOpen: d.jyOpen === undefined ? true : flag(d.jyOpen),
       pumped: flag(d.pumped) && !filled,
-      purged: flag(d.purged) || filled,
+      cycles,
       filled,
       wrapped: flag(d.wrapped) && filled,
       spoiled: flag(d.spoiled) && filled,

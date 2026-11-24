@@ -10,7 +10,7 @@
 import { h, setInline } from '../../ui/dom.ts';
 import { bindRoving, setTabStop } from '../roving.ts';
 import type { PuzzleView } from '../types.ts';
-import { FLASK_PORT, PORTS, schlenkLogic, schlenkSave, TAPS, TUBE_PORT, type Bleed, type Port, type SchlenkMove, type SchlenkState } from './logic.ts';
+import { FLASK_PORT, PORTS, PURGES, schlenkLogic, schlenkSave, TAPS, TUBE_PORT, type Bleed, type Port, type SchlenkMove, type SchlenkState } from './logic.ts';
 
 const X: Record<Port, number> = { 1: 150, 2: 270, 3: 390, 4: 510 };
 const N2_Y = 40;
@@ -24,7 +24,8 @@ function tubeState(s: SchlenkState): string {
   if (s.wrapped) return 'wrapped';
   if (s.filled) return s.jyOpen ? 'filled' : 'sealed';
   if (s.pumped) return 'vacuum';
-  return s.purged ? 'nitrogen' : 'air';
+  if (s.cycles >= PURGES) return 'nitrogen';
+  return s.cycles > 0 ? 'thin' : 'air';
 }
 
 /** The line as SVG (decorative: the controls and readouts carry the same information). */
@@ -99,6 +100,7 @@ export const schlenkView: PuzzleView = {
     const ports = h('div', { class: 'sk__ports' });
     const wrap = h('button', { type: 'button', class: 'sk__wrap', dataset: { focusKey: 'sk-wrap' } });
     const tube = h('p', { class: 'sk__tube' });
+    const cycles = h('p', { class: 'sk__cycles' });
     const status = h('p', { class: 'sk__status', role: 'status', 'aria-live': 'polite' });
     const done = h('div', { class: 'sk__done' });
     const root = h(
@@ -107,7 +109,7 @@ export const schlenkView: PuzzleView = {
       h('div', { class: 'sk__top' }, picture, card),
       h('div', { class: 'sk__main' }, n2, bubbler),
       ports,
-      h('div', { class: 'sk__end' }, wrap, tube),
+      h('div', { class: 'sk__end' }, wrap, tube, cycles),
       status,
       done,
     );
@@ -192,7 +194,13 @@ export const schlenkView: PuzzleView = {
       picture.dataset['n2'] = String(state.n2);
       card.replaceChildren(
         h('figcaption', { class: 'sk__card-title' }, api.t('puzzle.schlenk.card.title')),
-        h('ol', { class: 'sk__rules' }, ...[1, 2, 3, 4].map((n) => h('li', {}, api.t(`puzzle.schlenk.card.${n}`))), h('li', { class: 'sk__pencil' }, api.t('puzzle.schlenk.card.5'))),
+        h(
+          'ol',
+          { class: 'sk__rules' },
+          ...[1, 2, 3, 4].map((n) => h('li', {}, api.t(`puzzle.schlenk.card.${n}`))),
+          // Rules 5 and 6 are hers, in pencil; 6 is the act's three (#125).
+          ...[5, 6].map((n) => h('li', { class: 'sk__pencil' }, api.t(`puzzle.schlenk.card.${n}`))),
+        ),
         h('p', { class: 'sr-only' }, api.t('puzzle.schlenk.card.5.note')),
       );
       n2.textContent = api.t(state.n2 ? 'puzzle.schlenk.n2.on' : 'puzzle.schlenk.n2.off');
@@ -203,6 +211,9 @@ export const schlenkView: PuzzleView = {
       wrap.textContent = api.t('puzzle.schlenk.wrap');
       wrap.disabled = over;
       tube.textContent = api.t(`puzzle.schlenk.tube.${tubeState(state)}`);
+      // How many times it has been purged, until it is filled.
+      cycles.textContent = state.filled ? '' : api.t('puzzle.schlenk.cycles', { n: state.cycles });
+      cycles.hidden = state.filled;
       const text = said();
       setInline(status, text);
       // Solved before its last button is pressed: stepping away keeps it solved (#140).
