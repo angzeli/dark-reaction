@@ -109,6 +109,11 @@ export const act1 = {
   'nmr.load.r':
     'You drop the tube into its spinner and set it in holder 2. The console refuses it at once: QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER. Ian’s number is on a sign by the door. It is three in the morning.',
   'nmr.load.code': 'You try Ian’s code anyway. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
+  'nmr.load.unmade': 'Load your sample into the carousel',
+  'nmr.load.vial.r':
+    'You get as far as holder 2 before you see the problem. The carousel takes NMR tubes, thinner than a pencil, each in its spinner, and what you have is a vial of yellow solid. It has to be made up first: up to the glovebox, in through the antechamber, dissolved and sealed into a tube. Then there is something down here to run.',
+  'nmr.load.fractions.r':
+    'The carousel takes tubes thinner than a pencil, and you are holding a flask of fractions 12 to 14, still mostly solvent. It has to go back up to the rotavap first, then in through the glovebox’s antechamber and into a tube, before there is anything down here to run.',
   'nmr.magnet': 'Stand by the magnet',
   'nmr.magnet.r':
     'Up close the magnet is a column of pale enamel with a ladder folded against it like a tired arm. A line of yellow and black tape on the floor marks where your bank card would stop being a bank card. The sound it makes is not really a hum. It is the sound of something very cold being kept very cold, on purpose, every second of every day, whether anybody is watching or not.',

@@ -6,13 +6,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #195 The picture gives way to the choices; 4.01's locked door has its own picture (closes #152, #123)
+- **Last merged:** #199 Your sample at the NMR suite before it's a tube: the room says what's missing (closes #196)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** nothing. Every playtest issue is closed.
+- **In flight:** two issues from triaging a real player's report (#196): #197 (`needs-decision`: nothing points from the refused tube to Ian's code on Dan's monitor) and #198 (polish: from 03:25 *Run your sample* can't finish before 03:33 but its label doesn't say so).
 
 ## Next
 
-1. Close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
+1. Settle #197 (the owner's call on wording) and #198, then close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
 2. On a phone at the largest text sizes the choices still start below the fold: the passage itself is long there, and a new page starts at its top on purpose (#116). A way to reach the choices sooner (a skip link, say) would be a design decision for the owner.
 3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
@@ -34,6 +34,12 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #196: **your sample at the NMR suite before it's a tube.** A real player was stuck in Act II, unable to submit their sample at the NMR suite.
+  - **Triage** (headless, every Act II state at B.03): the run itself works whenever you hold your tube and know RIDLEY-4; the latest start that still reaches the portal is 03:21. What strands a player is the vial. Brought down before the glovebox, it got no option and no text, and with the code known the console said "the fractions are back in their rack upstairs", which is untrue with the vial in your hand.
+  - **The fix:** *Load your sample into the carousel* (`nmr.load.unmade`) is offered, once a night, when you hold the vial or the fractions without a tube, in any act. It says what's missing: the glovebox (vial), or the rotavap and then the glovebox (fractions).
+  - **The code's reply** (`nmr.code`) now matches what you carry: the vial, the fractions, a sample that went green in the glovebox tonight (`sample.ruined`: no tube before 03:33), or nothing (the night undid it, as before). Act I's refusal is unchanged.
+  - Unit tests for each state and the unchanged route (`tests/content-act2.test.ts`); an e2e path through the real UI in both languages (`e2e/nmr-console.spec.ts`).
+  - Split off from the triage: #197 and #198 (see *In flight*).
 - #152, #123: **the picture gives way to the choices; 4.01's locked door has its own picture.** The art pass the playtest left.
   - **The fold (#152):** at 1440 × 900 the picture took 46 vh, and most rooms' fifth choice was below the fold.
     - On a screen wider than 4:3 the picture gives way down to the art's essentials band, y 240–660 (`min(46vh, 26.25vw)`), and no further: a bigger screen keeps all of it.

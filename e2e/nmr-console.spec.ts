@@ -32,3 +32,30 @@ for (const [locale, empty, again] of [
     await expect(page.locator('.choice[data-choice="nmr.console.again"]')).toBeVisible();
   });
 }
+
+/**
+ * #196: your sample brought down to the NMR suite as a vial, before the
+ * glovebox has made it into a tube. The room offers to load it and says what
+ * is missing; once the code is known, typing it says the same, not that the
+ * night undid everything.
+ */
+for (const [locale, load, reply] of [
+  ['en', 'It has to be made up first', 'the vial in your hand won’t fill it'],
+  ['zh-Hant-TW', '它得先配成樣品', '你手上那瓶也填不了它'],
+] as const) {
+  test(`${locale}: the vial at the NMR suite says it has to go through the glovebox first`, async ({ page }) => {
+    test.setTimeout(150_000);
+    await newGame(page, locale);
+    await play(page, ACT_ONE);
+    await expect(page.locator('.hud__loop')).toContainText('2');
+    await play(page, [{ go: 'synth' }, { do: 'synth.combine' }, { do: 'synth.rotavap' }, { go: 'nmr' }]);
+    await expect(page.locator('.choice[data-choice="nmr.load"]')).toHaveCount(0);
+    await pick(page, 'nmr.load.unmade');
+    await expect(page.locator('.narrative__text')).toContainText(load);
+    // 03:15: Ian's code from Dan's monitor, then back down with the vial still in hand.
+    await play(page, [{ go: 'stairs' }, { until: 28 }, { go: 'pi' }, { do: 'pi.sticky' }, { go: 'nmr' }]);
+    await expect(page.locator('.choice[data-choice="nmr.run"]')).toHaveCount(0);
+    await pick(page, 'nmr.code');
+    await expect(page.locator('.narrative__text')).toContainText(reply);
+  });
+}
