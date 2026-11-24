@@ -20,7 +20,7 @@ export const puzzles = {
   // P3 · TLC
   'puzzle.tlc.title': 'The fraction plate',
   'puzzle.tlc.intro':
-    'The column ran this evening; the plate you spotted afterwards is dry now. Twenty-four fractions in the rack, the product in some of them. Your notebook says: *product Rf ≈ 0.35 (3:1 hexane/EtOAc), UV-active.* Reading the plate properly takes a couple of minutes.',
+    'The column ran this evening. Afterwards you spotted a plate, dipped it in anisaldehyde and heated it until the spots came up purple, all before you thought to look at it under the lamp. Twenty-four fractions in the rack, the product in some of them. Your notebook says: *product Rf ≈ 0.35 (3:1 hexane/EtOAc), UV-active.* Reading the plate properly takes a couple of minutes.',
   'puzzle.tlc.rule': 'Rf = how far the spot moved ÷ how far the solvent moved, both measured from the pencil baseline.',
   'puzzle.tlc.plate': 'TLC plate, lanes left to right',
   'puzzle.tlc.lane.crude': 'crude',
@@ -57,14 +57,14 @@ export const puzzles = {
   'puzzle.tlc.h2': 'The solvent ran 6 cm, so you want a spot about 2.1 cm up, in lanes where it is alone. Look under the UV lamp too.',
   'puzzle.tlc.h3': 'Fractions 12, 13 and 14.',
   'puzzle.tlc.solved':
-    'You pour fractions 12, 13 and 14 into a round-bottomed flask. The rest go into the waste bottle with the small private grief every column ends in.',
+    'You pour fractions 12, 13 and 14 into a round-bottomed flask. Fractions 11 and 15 go into a flask of their own, labelled *mixed: re-column*, for a night with more hours in it. The rest go into the waste bottle with the small private grief every column ends in.',
   'puzzle.tlc.left': 'You put the plate down. It will still be here. So will you.',
   'puzzle.tlc.margin': 'TLC: 12–14. Lane 11 lies (switch on the UV).',
 
   // P2 · Glovebox antechamber
   'puzzle.glovebox.title': 'The antechamber',
   'puzzle.glovebox.intro':
-    'The vial goes into the box the long way round: through the outer door, the air pumped out and replaced with nitrogen, then through the inner door. The O₂ meter on top is the only clock that matters now.',
+    'The vial goes into the box the long way round: through the outer door, the air pumped out and replaced with nitrogen, then through the inner door. Dry, the product shrugs off air for an hour, long enough for a column; dissolved, it lasts minutes in air, which is why the dried C₆D₆ lives in the box and the sample is made up in there. The O₂ meter on top is the only clock that matters now.',
   'puzzle.glovebox.sop': 'ANTECHAMBER (laminated, one corner slightly melted): 1. Load. 2. Close outer door. 3. Evacuate and refill — TWICE. 4. Open inner door.',
   'puzzle.glovebox.pencil': 'THREE. Trust me. — YCL',
   'puzzle.glovebox.o2': 'O₂ {ppm} ppm',
@@ -107,16 +107,16 @@ export const puzzles = {
   'puzzle.glovebox.ev.innerClose': 'You close the inner door.',
   'puzzle.glovebox.ev.transferNeedsInner': 'The vial is on the other side of a closed door.',
   'puzzle.glovebox.ev.transferred':
-    'You lift the vial into the box. The film is still yellow. You dissolve it, fill an NMR tube, cap it, and your shoulders come down a centimetre.',
+    'You lift the vial into the box and dissolve the film in C₆D₆. The solution stays yellow. You fill an NMR tube, cap it, and your shoulders come down a centimetre.',
   'puzzle.glovebox.ev.ruined':
-    'You lift the vial into the box and watch the yellow film go green at the edges, then all the way through. Copper(I) to copper(II). The night’s sample is gone.',
+    'You lift the vial into the box and dissolve the film, and watch the yellow go green at the edges, then all the way through. Copper(I) to copper(II). The night’s sample is gone.',
   'puzzle.glovebox.done': 'Bring the NMR tube out',
   'puzzle.glovebox.giveup': 'Take your hands out of the gloves',
   'puzzle.glovebox.h1': 'The laminated SOP on the wall has a pencilled correction.',
   'puzzle.glovebox.h2': 'Shut both doors before you evacuate. Evacuate and refill three times before you open the inner door.',
   'puzzle.glovebox.h3': 'Outer door open → vial in → outer door shut → (evacuate, refill) ×3 → inner door open → bring the vial in.',
   'puzzle.glovebox.solved': 'You pass the capped tube back out through the antechamber. Pale yellow. Right.',
-  'puzzle.glovebox.failed': 'You take your hands out of the gloves. The vial is green. There won’t be another one tonight.',
+  'puzzle.glovebox.failed': 'You take your hands out of the gloves. The box is full of the room now, and there is nowhere left to make the sample up. There won’t be another one tonight.',
   'puzzle.glovebox.left': 'You step back from the box. The meter keeps counting without you.',
   'puzzle.glovebox.margin': 'Antechamber: three cycles, not two. Start by 03:18.',
 
@@ -138,7 +138,7 @@ export const puzzles = {
   'console.out.date': 'Mon 23 Nov 2026 {clock}:00 GMT',
   'console.out.queue': 'No bookings you can manage.\n(Showing your own bookings only. See the card.)',
   'console.out.queue.all':
-    'HOLDER  TIME   USER     EXPERIMENT    STATUS\n04      02:58  tom_h    COSY          QUEUED\n07      03:10  ian_o    TEST_400      QUEUED\n13      03:33  ar4217   PROTON_DARK   PRIORITY · WAITING FOR SAMPLE',
+    'HOLDER  TIME   USER     EXPERIMENT    STATUS\n04      02:58  tom_h    COSY          HELD · PRIORITY 13\n07      03:10  ian_o    TEST_400      HELD · PRIORITY 13\n13      03:33  ar4217   PROTON_DARK   PRIORITY · WAITING FOR SAMPLE',
   'console.out.info.13':
     'HOLDER 13 · PROTON_DARK · 1 scan\nuser       ar4217\nbooked     23/11/2026 03:33:00\nsubmitted  23/11/2026 03:33:00\npriority   FACILITY OVERRIDE\nsample     none detected\ncomment    it’s still going',
   'console.out.info.4': 'HOLDER 04 · COSY · 8 scans\nuser       tom_h\ncomment    PLEASE do not eject, thesis depends on it (again)',

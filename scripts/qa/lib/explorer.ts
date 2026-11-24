@@ -199,13 +199,21 @@ export function explore(content: Content, logic: LogicTable, roots: Root[], opts
       else found.set(fi.sig, { ...fi, count: 1, repro: extra ? [...path(at), extra] : path(at) });
     }
   };
+  const eventByKey = new Map(content.events.flatMap((e) => e.text.map((ref) => [ref.key, e.id] as const)));
   /** What a state shows, counted on every transition (a look that repeats a page leads to a state already seen). */
   const observeShown = (s: GameState, cards: Step['cards'] = []) => {
     coverage.scenes.add(s.scene);
     for (const k of s.known) coverage.learned.add(k.id);
     for (const e of s.firedEvents) coverage.events.add(e);
     for (const p of s.display) coverage.keysShown.add(p.key);
-    for (const c of cards) if (c.kind === 'lightsout') for (const p of c.before) coverage.keysShown.add(p.key);
+    // An event at 03:33 (ev.keeps, #153) is only ever seen on the last page: the reset clears firedEvents.
+    for (const c of cards)
+      if (c.kind === 'lightsout')
+        for (const p of c.before) {
+          coverage.keysShown.add(p.key);
+          const ev = eventByKey.get(p.key);
+          if (ev) coverage.events.add(ev);
+        }
     if (s.puzzle) coverage.puzzlesOpened.add(s.puzzle);
     for (const p of s.solved) coverage.puzzlesSolved.add(p);
   };

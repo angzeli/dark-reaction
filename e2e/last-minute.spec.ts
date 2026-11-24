@@ -148,3 +148,43 @@ test('the Infinite Loop’s last night: a reload on its held page comes back to 
   await again.locator('.last-minute').click();
   await expect(again.locator('article.ending[data-ending="infinite"]')).toBeVisible({ timeout: 15_000 });
 });
+
+/** #153: in Lab 4.12 at 03:33, with the door log read, her card is let in, and the page waits to be read. */
+test('waiting out 03:33 in 4.12, having read the log, holds the page with her card let in', async ({ page }) => {
+  const synth = targets().find((t) => t.name === 'act3-synth')!;
+  const state = structuredClone(synth.state!);
+  expect(state.known.some((k) => k.id === 'nb.keeps')).toBe(true);
+  Object.assign(state, { minute: 45, firedEvents: [...state.firedEvents, 'ev.preparing', 'ev.dim', 'ev.o2alarm'] });
+  await loadTarget(page, 'http://localhost:4173/dark-reaction/', { ...synth, state }, { locale: 'en', reduceMotion: true, highContrast: false });
+  await page.locator('.choice[data-choice="meta:wait"]').click();
+  await page.locator('.choice[data-choice="wait:1"]').click();
+  await expect(page.locator('.last-minute')).toBeFocused();
+  await page.waitForTimeout(1500);
+  await expect(page.locator('.dr-lightsout')).toHaveCount(0);
+  await expect(page.locator('.narrative__text')).toContainText('the badge reader beeps once');
+  await page.locator('.last-minute').click();
+  await expect(page.locator('.hud__clock')).toHaveText('02:47', { timeout: 10_000 });
+});
+
+/** #153, from the cold review: a fudge struck in the notebook at 03:32 runs into the dark; the held page isn't left under the notebook. */
+test('striking a fudge from the notebook at 03:32 in 4.12 closes the notebook and holds the page', async ({ page }) => {
+  const synth = targets().find((t) => t.name === 'act3-synth')!;
+  const state = structuredClone(synth.state!);
+  Object.assign(state, {
+    minute: 45,
+    firedEvents: [...state.firedEvents, 'ev.preparing', 'ev.dim', 'ev.o2alarm'],
+    fudges: [{ id: 'fudge.yield', corrected: false, loop: state.loop }],
+    fudgesEver: 1,
+    known: [...state.known.filter((k) => k.id !== 'nb.yield'), { id: 'fudge.yield', loop: state.loop, minute: 10 }],
+  });
+  await loadTarget(page, 'http://localhost:4173/dark-reaction/', { ...synth, state }, { locale: 'en', reduceMotion: true, highContrast: false });
+  await page.keyboard.press('n');
+  await expect(page.locator('.overlay--notebook')).toBeVisible();
+  await page.locator('#nb-tab-data').click();
+  await page.locator('.nb__strike').first().click();
+  await expect(page.locator('.overlay')).toHaveCount(0);
+  await expect(page.locator('.last-minute')).toBeFocused();
+  await expect(page.locator('.narrative__text')).toContainText('the badge reader beeps once');
+  await page.locator('.last-minute').click();
+  await expect(page.locator('.hud__clock')).toHaveText('02:47', { timeout: 10_000 });
+});

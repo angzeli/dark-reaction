@@ -142,6 +142,8 @@ export class Game {
   state: GameState;
   /** System paragraphs produced by effects during the current action. */
   private notices: Paragraph[] = [];
+  /** An event that holds the last page (`EventDef.hold`) fired at 03:33, in the action now under way. */
+  private holdDark = false;
 
   constructor(content: Content, state?: GameState) {
     this.content = content;
@@ -289,7 +291,7 @@ export class Game {
     if (!this.advance(minutes)) {
       // The choice ran into 03:33. If its page carries its own result (her raw data, #127) or a scene it
       // opened (her box, #163), that page waits for the player before the dark; a walk, a wait or a
-      // puzzle running out never get here.
+      // puzzle running out never get here (though an event that holds, #153, holds them too).
       const card = [...s.cards].reverse().find((c) => c.kind === 'lightsout');
       if (card?.kind === 'lightsout' && (result.length > 0 || sceneTo !== undefined)) card.hold = true;
       return;
@@ -507,6 +509,7 @@ export class Game {
       if (!holds(event.if, s)) continue;
       s.firedEvents.push(event.id);
       fired = true;
+      if (event.hold && s.minute >= LOOP_LENGTH) this.holdDark = true;
       this.notices = [];
       for (const effect of event.effects ?? []) this.apply(effect);
       s.display = [...s.display, ...this.paragraphs(event.text, 'event'), ...this.notices];
@@ -517,8 +520,17 @@ export class Game {
 
   private lightsOut(): void {
     const s = this.state;
+    const hold = this.holdDark;
+    this.holdDark = false;
     if (s.ending) return;
     const before = s.display;
+    this.darkFalls(before);
+    if (hold) for (const c of s.cards) if (c.kind === 'lightsout' && c.before === before) c.hold = true;
+  }
+
+  /** 03:33: the first lights-out rule that holds decides what happens, or the loop resets. */
+  private darkFalls(before: Paragraph[]): void {
+    const s = this.state;
     s.minute = LOOP_LENGTH;
     s.puzzle = null;
     s.menu = 'none';

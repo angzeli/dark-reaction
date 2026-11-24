@@ -190,6 +190,11 @@ export interface EventDef {
   if?: Cond;
   effects?: Effect[];
   text: TextRef[];
+  /**
+   * Fired in the last minute, its page waits to be read before the dark, as a choice's own page
+   * does (#127), even after a wait, which otherwise goes straight on (#153).
+   */
+  hold?: boolean;
 }
 
 /** A notebook page in your handwriting that you don't remember writing. */
@@ -278,7 +283,7 @@ export type Menu = 'none' | 'travel' | 'wait';
 /** A transition the UI must play before continuing (lights-out, act title, ending). */
 export type Card =
   /** The lights go out at 03:33. `before` is what was on screen; `dark` means no reset follows (yet). */
-  /** `hold`: a choice of the player's own ran into 03:33, and what it showed waits to be read (#127). */
+  /** `hold`: a choice of the player's own ran into 03:33, or an event that holds fired then, and what it showed waits to be read (#127, #153). */
   | { kind: 'lightsout'; loop: number; before: Paragraph[]; dark?: boolean; hold?: boolean }
   | { kind: 'act'; act: Act }
   | { kind: 'ending'; ending: EndingId };

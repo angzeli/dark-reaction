@@ -4,6 +4,7 @@
  * All three acts. At 03:33 the dark run's rules come first (§12), then the first night's.
  */
 import type { ActDef, Cond, EventDef, LightsOutRule, PhantomDef } from '../engine/types.ts';
+import { LOOP_LENGTH } from '../engine/clock.ts';
 import { EXIT_B_OPEN, PI_OPEN } from './world.ts';
 
 const onLevel4 = { any: [{ at: 'office' as const }, { at: 'synth' as const }, { at: 'glovebox' as const }, { at: 'pi' as const }] };
@@ -53,6 +54,10 @@ export const EVENTS: EventDef[] = [
   },
   // 03:31: every light in the building dims, once.
   { id: 'ev.dim', minute: 44, text: [{ key: 'ev.dim' }] },
+  // 03:33 in Lab 4.12, once you've read the door log: her card is let in, as it is every night, and
+  // nobody comes through the door (#153). It lands on the last page before the dark, and nowhere else.
+  // A wait would go straight into the dark, so its page is held to be read.
+  { id: 'ev.keeps', minute: LOOP_LENGTH, hold: true, if: { all: [{ at: 'synth' }, { know: 'nb.keeps' }] }, text: [{ key: 'ev.keeps' }] },
 ];
 
 export const PHANTOMS: PhantomDef[] = [

@@ -6,12 +6,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 and Playtest (v1.0.1) are closed.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #190 The playtest report: the last 13 baselines have been reviewed by eye (closes #189)
-- **In flight:** nothing. Open: five `needs-decision` proposals (#124, #125, #153, #161, #162) and two pieces of polish that need an art pass (#123, #152).
+- **Last merged:** #191 The owner's decisions, in the text: a reason for the box, the chemist's touches, her card at 03:33 in 4.12 (closes #124, #153; part of #125)
+- **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
+- **In flight:** the puzzle changes from those decisions (the Kraken's three purges, #125; the chirp's running line, #161), then the art pass (#152, #123).
 
 ## Next
 
-1. The owner's decisions on the proposals: #124, #125 (chemistry), #153 (4.12 at 03:33), #161 (the chirp without sound), #162 (where to compare the printout).
+1. The puzzle PR: the Kraken wants three purge cycles (#125's last item) and the chirp keeps the groups heard on screen (#161).
 2. #152: choices below the fold on short screens and phones, with an art pass to check every scene's crop; #123 (4.01's picture while you're locked out) in the same pass.
 3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
 
@@ -33,6 +34,22 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-24
+- #124, #125, #153: **the owner's decisions, in the text.** The owner took the playtest's proposals: #124's one-line reason, all of #125, #153, #161, not #162.
+  - **A reason for the box (#124):** a chemist asked why a product that went through a column in air needs a glovebox. The antechamber's intro now says it: dry, it shrugs off air for an hour; dissolved, it lasts minutes, so the dried C₆D₆ lives in the box and the sample is made up in there. So it goes green as it dissolves, not as a dry film (the ruined transfer and the late purge say so).
+  - **The chemist's touches (#125):**
+    - the TLC plate's purple spots are an anisaldehyde dip, done before you thought to look under the lamp (which is why lane 11 lies in room light);
+    - fractions 11 and 15 go into a flask of their own, *mixed: re-column*, not the waste;
+    - the yield is weighed straight off the rotavap, not quite dry, which flatters it: the honest note says *not yet dry*, and so does the notebook;
+    - `queue --all` shows Tom's COSY and Ian's test as HELD · PRIORITY 13, not QUEUED long past their times.
+    - The Kraken's three purges change a puzzle, so they're in the next PR.
+  - **03:33 in Lab 4.12 (#153):** with the door log read, her card is let in at 03:33 as the log says: the reader beeps, the lock clicks, nobody comes in. It's an event at 03:33 (`ev.keeps`), so it's on the last page before the dark. A wait goes straight into the dark, which would leave the line on screen for a second, so events gain `hold`: fired in the last minute, the page waits to be read, as a choice's own page does (#127).
+  - **From the cold review:**
+    - a held page isn't left under the notebook: striking a fudge there at 03:32 runs into the dark, so a held card closes the dialog first, without a redraw;
+    - the antechamber's failed text no longer says the vial is green (opening both doors spoils the box while the product is still dry);
+    - the QA explorer counts an event seen only on the last page (the reset clears `firedEvents`), so `ev.keeps` isn't reported as never firing.
+  - **Tests:** four in `tests/content-polish.test.ts` (three fail without the change; the fourth checks it's nowhere else), and two in `e2e/last-minute.spec.ts` (the wait, and the notebook, which fails without its fix).
+  - **Baselines:** the TLC and antechamber screens, from CI's candidates, reviewed by eye.
+  - **Found on the way:** #192, a race in `e2e/shell.spec.ts`'s 03:33 test (flaky in this PR's CI, passed on retry).
 - #189: **the last 13 visual baselines have been reviewed by eye.** At #187's merge the image viewer was down, so the 13 baselines that changed with the third pass's fixes were checked by pixel diff only. They have now been looked at one by one: the cold room's triangles, the Dark Reaction filename wrapping after an underscore at 390 px, and re-wrapped lines in five texts. Nothing needed changing, and the report says so.
 - Merged #188 (v1.0.1).
 

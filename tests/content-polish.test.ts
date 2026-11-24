@@ -103,3 +103,55 @@ describe('playtest content polish', () => {
     expect(t(choice('synth.kraken.again.light')!.label, undefined, 'zh-Hant-TW')).toContain('沒有鋁箔');
   });
 });
+
+describe('the owner’s decisions on the playtest proposals', () => {
+  const both = ['en', 'zh-Hant-TW'] as const;
+
+  it('the box has a reason: the product survives air dry, not dissolved, and the dried C₆D₆ is in the box (#124)', () => {
+    for (const locale of both) {
+      expect(t('puzzle.glovebox.intro', undefined, locale)).toContain('C₆D₆');
+      // It goes green as it dissolves, not as a dry film: dry, it came through the column in air.
+      for (const key of ['puzzle.glovebox.ev.ruined', 'glovebox.purge.late.r']) expect(t(key, undefined, locale), key).toMatch(/dissolve|make it up|溶開/);
+    }
+  });
+
+  it('the chemist’s small touches: the stain, the mixed fractions, the wet weight, the held queue (#125)', () => {
+    for (const locale of both) {
+      expect(t('puzzle.tlc.intro', undefined, locale)).toContain('anisaldehyde');
+      expect(t('puzzle.tlc.solved', undefined, locale)).toMatch(/11 (and|和) 15/);
+      for (const key of ['synth.rotavap.r.weigh', 'synth.yield.honest.r', 'nb.yield.body']) expect(t(key, undefined, locale), key).toMatch(/not (quite|yet) dry|還沒抽乾/);
+      const queue = t('console.out.queue.all', undefined, locale);
+      expect(queue).not.toContain('QUEUED');
+      expect(queue.match(/HELD · PRIORITY 13/g)).toHaveLength(2);
+    }
+  });
+
+  /** A game at 03:32 in `at`, the door log read or not, waiting the last minute out. */
+  const lastPage = (at: 'synth' | 'office', readLog: boolean) => {
+    const g = new Game(CONTENT);
+    for (let c = g.takeCard(); c; c = g.takeCard());
+    Object.assign(g.state, { act: 2, location: at, scene: `${at}.hub`, minute: 45, firedEvents: CONTENT.events.filter((e) => e.minute < 45).map((e) => e.id) });
+    g.state.known.push({ id: 'nb.reset', loop: 1, minute: 46 });
+    if (readLog) g.state.known.push({ id: 'nb.keeps', loop: 1, minute: 20 });
+    g.choose('meta:wait');
+    g.choose('wait:1');
+    const card = g.takeCard();
+    expect(card?.kind).toBe('lightsout');
+    return card?.kind === 'lightsout' ? { keys: card.before.map((p) => p.key), hold: card.hold === true } : { keys: [], hold: false };
+  };
+
+  it('in 4.12 at 03:33, having read the door log, the last page before the dark has her card let in (#153)', () => {
+    const page = lastPage('synth', true);
+    expect(page.keys).toContain('ev.keeps');
+    // A wait goes straight into the dark; this page waits to be read.
+    expect(page.hold).toBe(true);
+    for (const locale of both) expect(t('ev.keeps', undefined, locale)).not.toMatch(/^\[\[/);
+  });
+
+  it('nowhere else, and not before the log is read (#153)', () => {
+    for (const page of [lastPage('synth', false), lastPage('office', true)]) {
+      expect(page.keys).not.toContain('ev.keeps');
+      expect(page.hold).toBe(false);
+    }
+  });
+});
