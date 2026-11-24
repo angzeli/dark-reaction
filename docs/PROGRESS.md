@@ -6,7 +6,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 and Playtest (v1.0.1) are closed.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #188 v1.0.1: the playtest report, the changelog and the version
+- **Last merged:** #190 The playtest report: the last 13 baselines have been reviewed by eye (closes #189)
 - **In flight:** nothing. Open: five `needs-decision` proposals (#124, #125, #153, #161, #162) and two pieces of polish that need an art pass (#123, #152).
 
 ## Next
@@ -32,6 +32,10 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 ## Log
 
+### 2026-11-24
+- #189: **the last 13 visual baselines have been reviewed by eye.** At #187's merge the image viewer was down, so the 13 baselines that changed with the third pass's fixes were checked by pixel diff only. They have now been looked at one by one: the cold room's triangles, the Dark Reaction filename wrapping after an underscore at 390 px, and re-wrapped lines in five texts. Nothing needed changing, and the report says so.
+- Merged #188 (v1.0.1).
+
 ### 2026-11-23
 - **v1.0.1: the playtest report, the changelog and the version.**
   - [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md): the canary, what each layer found in each pass, every fix, what's left and why, and the three biggest experience problems.
@@ -41,7 +45,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - Merged #187 (closes #93).
 - #93: **visual regression baselines** (Layer 3's last part).
   - **`e2e/visual.spec.ts`** compares 76 screens with the screenshots approved in this pass: every room in Acts I and III, Dan's office in Act II, all ten puzzles, all six endings, the title and the notebook, in both languages at 1440 × 900, plus five screens at 390 × 844. It runs with reduced motion and a 0.2 % pixel tolerance, in CI's `e2e` on every PR.
-  - **The baselines** are Linux renders, taken from CI on the final tree. 63 were reviewed image by image; 13 that changed late were checked by pixel diff, because the image viewer was unavailable (see the report). They're 32 MB: the art's film grain doesn't compress. The spec skips on other platforms, where fonts render differently.
+  - **The baselines** are Linux renders, taken from CI on the final tree. All 76 were reviewed by eye. The 13 that changed late were checked by pixel diff at merge time, because the image viewer was unavailable, and looked at the next day (#189). They're 32 MB: the art's film grain doesn't compress. The spec skips on other platforms, where fonts render differently.
   - **`docs/qa/README.md`** says how to refresh them: delete the ones that changed, push, take the candidates from the `playwright-report` artifact, review them, copy them in.
   - **Harness:**
     - `loadTarget` clears the load notice, which is the loader's doing, not part of the screen under test;

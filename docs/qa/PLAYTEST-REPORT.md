@@ -141,7 +141,7 @@ Two players, the breaker and the mobile player, who had found the second pass's 
 **Reviewing the screenshots.**
 - In the first pass, each of the sweep's findings was checked against its screenshot. The second pass's sweep ran on the unfixed harness, and the third pass superseded it.
 - The third pass's 144 sheets were read in three parallel reviews against a written checklist, with spot checks by me; every finding they raised was then checked on a real 390 px screen.
-- The visual baselines: 63 of the 76 are byte-identical to an earlier CI render I reviewed image by image. The 13 that changed after the third pass's fixes were checked by pixel diff and by the tests that assert their layout, because the image viewer was unavailable at the end of the session. I had reviewed each of those screens in its earlier render. Their changes are only the cabinet signs and re-wrapped lines of text.
+- The visual baselines: all 76 were reviewed by eye. 63 were reviewed before #187 merged, as byte-identical copies of an earlier CI render. The 13 that changed with the third pass's fixes (the cabinet signs, re-wrapped lines of text) were checked by pixel diff at merge time, because the image viewer was unavailable, and then looked at one by one the next day (#189). Nothing needed changing.
 - **Real, at 390 px and the largest text, and fixed in #186:**
   - the door log's events stacked a character a line in 繁中;
   - 粗產物 ran into lane 10;
@@ -150,7 +150,7 @@ Two players, the breaker and the mobile player, who had found the second pass's 
   - after her filename, 。 could start a line.
 - **Artefacts of the full-page capture:** the sticky header over puzzle titles (on a real screen the title sits below it), and the load notice over text (the notice fades after 4 s, and the sweep's loader now clears it).
 
-**Visual baselines.** 76 screens (`e2e/visual.spec.ts`; `docs/qa/README.md` says which). They're Linux renders from CI on the final tree, reviewed as described above, and they run in CI's `e2e` from #187 on.
+**Visual baselines.** 76 screens (`e2e/visual.spec.ts`; `docs/qa/README.md` says which). They're Linux renders from CI on the final tree, all reviewed by eye (see above), and they run in CI's `e2e` from #187 on.
 
 ## 4. What was fixed
 
