@@ -109,6 +109,8 @@ export const act1 = {
   'nmr.load.r':
     'You drop the tube into its spinner and set it in holder 2. The console refuses it at once: QUEUE LOCKED · PRIORITY BOOKING 03:33 (HOLDER 13) · CONTACT FACILITY MANAGER. Ian’s number is on a sign by the door. It is three in the morning.',
   'nmr.load.code': 'You try Ian’s code anyway. *PRIORITY REQUESTS SUSPENDED UNTIL HOLDER 13 HAS RUN.* It hasn’t run. Not yet.',
+  'nmr.load.dan':
+    'Then you remember a yellow sticky note on Dan’s monitor, read upside down from the wrong side of his desk: Ian’s capitals, and the word PRIORITY. Dan is in Boston, and his door is locked.',
   'nmr.load.unmade': 'Load your sample into the carousel',
   'nmr.load.vial.r':
     'You get as far as holder 2 before you see the problem. The carousel takes NMR tubes, thinner than a pencil, each in its spinner, and what you have is a vial of yellow solid. It has to be made up first: up to the glovebox, in through the antechamber, dissolved and sealed into a tube. Then there is something down here to run.',

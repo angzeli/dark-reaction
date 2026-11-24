@@ -42,7 +42,12 @@ export const nmrScenes: SceneDef[] = [
         // Act I: the code is refused until holder 13 has run (i.e. until you have lived a 03:33).
         if: { all: [{ item: 'item.tube.own' }, { any: [{ act: 1 }, { not: { know: 'nb.priority' } }] }] },
         once: 'loop',
-        text: [{ key: 'nmr.load.r' }, { key: 'nmr.load.code', if: { know: 'nb.priority' } }],
+        // Refused, and not knowing the code yet: you remember where you once saw one (#197).
+        text: [
+          { key: 'nmr.load.r' },
+          { key: 'nmr.load.code', if: { know: 'nb.priority' } },
+          { key: 'nmr.load.dan', if: { not: { know: 'nb.priority' } } },
+        ],
         effects: [{ learn: 'nb.queue.locked' }],
       },
       {

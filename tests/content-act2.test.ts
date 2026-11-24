@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { CONTENT } from '../src/content/index.ts';
 import { Game } from '../src/engine/engine.ts';
 import type { Card, LocationId } from '../src/engine/types.ts';
+import { t } from '../src/i18n/i18n.ts';
 
 function drainCards(g: Game): Card[] {
   const out: Card[] = [];
@@ -305,6 +306,45 @@ describe('the NMR console after it is solved (#86)', () => {
     goTo(g, 'nmr');
     g.choose('nmr.code');
     expect(keys(g)[0]).toBe('nmr.code.locked');
+  });
+});
+
+describe('the refused tube points toward the code (#197)', () => {
+  /** At the NMR suite with your tube, in `act`, knowing RIDLEY-4 or not. */
+  function refused(act: 1 | 2, code: boolean): Game {
+    const g = act === 2 ? actTwo() : new Game(CONTENT);
+    drainCards(g);
+    if (code) learnt(g, 'nb.priority');
+    g.state.inventory.push('item.tube.own');
+    goTo(g, 'nmr');
+    g.choose('nmr.load');
+    return g;
+  }
+  /** What the refusal says, without the notebook's notice. */
+  const said = (g: Game) => keys(g).filter((k) => !k.startsWith('ui.'));
+
+  it('not knowing the code, the refusal remembers the sticky note on Dan’s monitor, in Act I and Act II', () => {
+    for (const act of [1, 2] as const) {
+      const g = refused(act, false);
+      expect(said(g)).toEqual(['nmr.load.r', 'nmr.load.dan']);
+      expect(known(g)).toContain('nb.queue.locked');
+    }
+  });
+
+  it('knowing it already (Act I), the refusal says the code is suspended instead, as before', () => {
+    expect(said(refused(1, true))).toEqual(['nmr.load.r', 'nmr.load.code']);
+  });
+
+  it('the pointer and the notebook name Dan’s monitor and his locked door, and don’t give the porter’s window away', () => {
+    for (const locale of ['en', 'zh-Hant-TW'] as const) {
+      for (const key of ['nmr.load.dan', 'nb.queue.locked.body']) {
+        const text = t(key, undefined, locale);
+        expect(text, `${locale} ${key}`).toContain('Dan');
+        expect(text, `${locale} ${key}`).toMatch(locale === 'en' ? /monitor/ : /螢幕/);
+        expect(text, `${locale} ${key}`).toMatch(locale === 'en' ? /locked/ : /鎖/);
+        expect(text, `${locale} ${key}`).not.toMatch(/03:1[5-8]|Monday|週一|星期一/);
+      }
+    }
   });
 });
 

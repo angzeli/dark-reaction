@@ -16,7 +16,7 @@ export const notebook: Record<keyof typeof en, string> = {
   'fudge.logbook.title': '手套箱紀錄本',
   'fudge.logbook.body': '再生檢查：完成。',
   'nb.queue.locked.title': '排程被鎖住了',
-  'nb.queue.locked.body': '400 不收我的樣品：03:33 的優先預約把排程鎖住了。只有設施管理員能覆寫。',
+  'nb.queue.locked.body': '400 不收我的樣品：03:33 的優先預約把排程鎖住了。只有設施管理員能覆寫。Ian 給過 Dan 一組代碼：就貼在 Dan 螢幕上的便利貼，在他上鎖的門後面。',
 
   // 人
   'nb.dan.title': 'Dan',
