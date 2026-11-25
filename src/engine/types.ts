@@ -148,6 +148,8 @@ export interface SceneDef {
   art?: readonly string[];
   /** How the scene feels, act by act (docs/HUMOUR.md §3). */
   tone: ToneTag;
+  /** The notebook records nothing in here: a 03:33 here is logged with no place (the toilets, docs/HUMOUR.md §4.7). */
+  unrecorded?: boolean;
 }
 
 export interface LocationDef {
@@ -321,6 +323,8 @@ export interface Content {
   endings: EndingDef[];
   /** Loop-start text shown above the office hub (e.g. "You come to…"). */
   loopStart: TextRef[];
+  /** Applied at every 02:47, before the phantom pages: what you always have on you (your lanyard). */
+  onLoopStart?: Effect[];
   /** Thresholds for the obsession track. */
   obsession: { decay1: number; decay2: number; infinite: number; infiniteFromLoop: number };
   /** The anomaly registry. */
@@ -352,6 +356,8 @@ export interface LoopRecord {
   location: LocationId;
   /** Minute the loop ended (46 unless it ended early). */
   minute: number;
+  /** The loop ended somewhere the notebook doesn't record (`SceneDef.unrecorded`). */
+  unrecorded?: true;
 }
 
 export type Menu = 'none' | 'travel' | 'wait';

@@ -48,6 +48,7 @@ function activeSources(model: Model, before: GameState, action: Action, after: G
     }
     for (const r of model.content.lightsOut) out.push(`rule:${r.id}`);
     for (const p of model.content.phantoms) out.push(`phantom:${p.entry}`);
+    out.push('loopstart:02:47');
   } else {
     for (const id of diff(before.firedEvents, after.firedEvents)) out.push(`event:${id}`);
     if (step.cards.some((c) => c.kind === 'lightsout')) for (const r of model.content.lightsOut) out.push(`rule:${r.id}`);
@@ -114,7 +115,11 @@ export function checkStep(model: Model, before: GameState, action: Action, step:
   for (const fu of before.fudges) if (!after.fudges.some((x) => x.id === fu.id)) out.push(f('error', 'persist', `fudge:${fu.id}`, `${what} ${at}: fudge ${fu.id} vanished from the notebook`));
   if (after.fudgesEver < before.fudgesEver) out.push(f('error', 'persist', 'fudgesEver', `${what} ${at}: fudgesEver went down`));
   if (newLoop && !after.ending) {
-    if (after.inventory.length) out.push(f('error', 'reset', `items:${after.inventory.join(',')}`, `${what} ${at}: carried into the next loop: ${after.inventory.join(', ')}`));
+    // Items go at 03:33; 02:47 gives back only what every loop starts with (your lanyard).
+    const always = new Set((model.content.onLoopStart ?? []).flatMap((e) => ('give' in e ? [e.give] : [])));
+    const carried = after.inventory.filter((i) => !always.has(i));
+    if (carried.length) out.push(f('error', 'reset', `items:${carried.join(',')}`, `${what} ${at}: carried into the next loop: ${carried.join(', ')}`));
+    for (const i of always) if (!after.inventory.includes(i)) out.push(f('error', 'reset', `start:${i}`, `${what} ${at}: the next loop starts without ${i}`));
     if (after.usedLoop.length || after.chaseUsed.length || after.restUsed.length) out.push(f('error', 'reset', 'used', `${what} ${at}: tonight's used choices carried into the next loop`));
     if (after.location !== model.content.start.location) out.push(f('error', 'reset', 'start', `${what} ${at}: the next loop starts in ${after.location}`));
     const quiet = action.t === 'wait' || action.t === 'go';

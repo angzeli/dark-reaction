@@ -1,5 +1,5 @@
 /**
- * 4.08 Write-up office, 02:47. Rain on the big window, sodium light from
+ * 4.08 Research Write-Up Room, 02:47. Rain on the big window, sodium light from
  * the street, two tubes (one of them dying), your monitor with the NMR
  * queue open, hot desk 7 buried in boxes, the kettle on the windowsill,
  * the sofa.

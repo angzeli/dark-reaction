@@ -22,7 +22,7 @@ Three rules for every scene:
 
 ## 2. Premise
 
-It is **02:47 on Monday 23 November**, in the near-empty **Vellacott Building** of **Kingsmere College London** (fictional). You are a final-year PhD researcher in the Ridley group, on Level 4. You came back for one last spectrum: reviewer 2 wants proof of the "dark-phase product" before the revised manuscript is due on the journal portal at **09:00**. Your supervisor is at a conference in Boston and has left the upload to you.
+It is **02:47 on Monday 23 November**, in the near-empty **Vellacott Building** of an unnamed London university (until v1.1.0 the design called it Kingsmere College London; the game never names it). You are a final-year PhD researcher in the Ridley group, on Level 4. You came back for one last spectrum: reviewer 2 wants proof of the "dark-phase product" before the revised manuscript is due on the journal portal at **09:00**. Your supervisor is at a conference in Boston and has left the upload to you.
 
 On the departmental NMR queue, there is a booking under **your** username, `ar4217`, for holder 13 at **03:33**, forty-six minutes from now. You didn't make it. The glovebox oxygen reading is climbing. It is raining.
 
@@ -48,16 +48,16 @@ The truth: the reaction is real but very, very slow. The 2020 figure was never r
 
 ## 4. Setting and map
 
-The Vellacott Building, Kingsmere College London. Eight explorable locations.
+The Vellacott Building. Eight explorable locations, and from v1.1.0 a few small spots off the critical path inside them (the toilets, the dark room, the professors' corridor; `HUMOUR.md`).
 
 | ID | Location | Floor | Notes |
 |---|---|---|---|
-| `office` | **4.08 Write-up office** 研究生辦公室 | Level 4 | Start of every loop. Your desk and computer (journal portal, data folder, the 2020 PDF), kettle, sofa, window onto rain and sodium light, Y.C.'s old desk (now "hot desk 7", stacked with boxes). |
+| `office` | **4.08 Research Write-Up Room** (until v1.1.0, the write-up office) | Level 4 | Start of every loop. Your desk and computer (journal portal, data folder, the 2020 PDF), kettle, sofa, window onto rain and sodium light, Y.C.'s old desk (now "hot desk 7", stacked with boxes). |
 | `synth` | **4.12 Synthesis lab** 合成實驗室 | Level 4 | Fume hoods, the Schlenk line Tom calls "the Kraken", rotary evaporator, tonight's column fractions, the periodic table poster, foil drawer. |
 | `glovebox` | **4.14 Glovebox room** 手套箱室 | Level 4 | The glovebox, its O₂ meter, the main antechamber, a sealed mini-antechamber taped "DO NOT OPEN — YCL", the glovebox logbook. |
 | `pi` | **4.01 Prof. Ridley's office** 老闆辦公室 | Level 4 | Locked except while the porter cleans it (Mondays 03:15–03:18). Framed 2020 paper, desk, a box of Y.C.'s effects, Ian's sticky note. |
 | `stairs` | **Stairwell & ground-floor lobby** 樓梯間與一樓大廳 | All | Hub between floors. Fire alarm call point, sodium-lit window, porter's empty desk with radio and access-log terminal, main entrance (your badge is refused), fire exit B. |
-| `nmr` | **B.03 NMR suite** NMR 室 | Basement | The 400 MHz magnet, console terminal, autosampler carousel (holder 13 is empty), helium compressor and cryocooler with an indicator LED, a printer. |
+| `nmr` | **B12 NMR suite** NMR 室 (until v1.1.0, B.03) | Basement | The 400 MHz magnet, console terminal, autosampler carousel (holder 13 is empty), helium compressor and cryocooler with an indicator LED, a printer. |
 | `cold` | **B.05 Cold room & solvent store** 冷藏室與溶劑庫 | Basement | The −80 °C freezer, solvent cabinets, the smell of acetone. |
 | `roof` | **Roof** 頂樓 | Roof | Door propped open with a fire extinguisher (a violation the whole building has agreed not to mention). Rain, the skyline, the plant units, a deckchair, Y.C.'s rain log in a lunchbox. The only phone signal in the building. |
 
@@ -79,7 +79,7 @@ All Level 4 rooms are 1 minute from each other and 1 minute from the stairwell. 
 ## 5. The loop
 
 - Each loop runs **46 in-game minutes**, from **02:47** (minute 0) to **03:33** (minute 46).
-- Every loop starts in the write-up office. You come to with your cheek on the keyboard.
+- Every loop starts in the Research Write-Up Room. You come to with your cheek on the keyboard.
 - **Actions cost minutes.** Looking closely costs 1, and a look is spent for the rest of the loop (the room is as it was at the next 02:47); readings that change, such as the O₂ meter, can be checked again. Walking costs the travel time. Lab work costs what it would really cost, compressed: rotary evaporation 5, an NMR run 8, an antechamber purge cycle 3.
 - If an action would run past 03:33 it still happens, and then the lights go out.
 - **At 03:33 the lights go out.** This is the signature transition (see §12). Then, unless an ending triggers:
@@ -194,7 +194,7 @@ Each location has its own illustration (§12), ambience (§13) and secrets. Hub 
 - **Glovebox room (4.14).** The O₂ meter (starts 1.8 ppm, +0.2 ppm/min, over 10 ppm by 03:28). Main antechamber (puzzle). SOP with Y.C.'s correction. Logbook (fudge). Mini-antechamber "DO NOT OPEN — YCL 14/03/19" (Act III: opens with the purge you know; item: J. Young tube).
 - **PI office (4.01).** Open 03:15–03:18 on Mondays; push-bar from inside lets you out any time. Framed 2020 paper. Her email, printed and kept. Her effects box: notebook (cipher), 晨 tea tin, a cardigan, a sticky note "Contact family? — D (2019)". The 2018 group photo. Ian's sticky note on the monitor: "NMR priority: RIDLEY-4. Don't abuse it. — I.O."
 - **Stairwell & lobby.** The fire alarm call point ("Weekly test: Tuesdays 11:00"); from Act II, once you have looked at it and know what the building keeps, you can put your thumb on the glass and then break it or take your thumb away (Fire Alarm). The porter's desk: radio murmuring, a flask of tea, the access-log terminal (puzzle). Main entrance: "Card not valid at this time." Fire exit B (bar won't move unless released). The window, sodium light through rain. **Rest:** sit on the stairs.
-- **NMR suite (B.03).** The magnet, singing faintly. The console (puzzle; later `priority`, `ups`). The autosampler carousel, holder 13 empty. The compressor and cryocooler chirping, LED blinking with it (Act III puzzle). Ian's signs. The printer (03:25: the perfect spectrum).
+- **NMR suite (B12).** The magnet, singing faintly. The console (puzzle; later `priority`, `ups`). The autosampler carousel, holder 13 empty. The compressor and cryocooler chirping, LED blinking with it (Act III puzzle). Ian's signs. The printer (03:25: the perfect spectrum).
 - **Cold room & solvent store (B.05).** The −80 °C freezer and its racks (puzzle). Solvent cabinets, acetone, a dewar breathing. A stack of Tom's boxes.
 - **Roof.** Rain, the city, the deckchair, the plant units humming. Y.C.'s rain log in a lunchbox under the deckchair: thirty-one months of 03:00 rainfall entries, the last on 14/03/19. Phone signal: Priya. **Rest:** reply to Priya, stand in the rain.
 
@@ -213,6 +213,7 @@ Items exist only within a loop.
 | `item.foil` | Synthesis lab drawer | Keeps the dark tube dark |
 | `item.tube.jy` | Mini-antechamber | Schlenk transfer |
 | `item.tube.dark` | Schlenk puzzle (needs foil) | Load into holder 13 |
+| `item.lanyard` | Round your neck at every 02:47 (`onLoopStart`) | Worn; comes off in the Research Write-Up Room or the toilets (v1.1.0, `HUMOUR.md` §4.4) |
 
 ## 11. Puzzles
 

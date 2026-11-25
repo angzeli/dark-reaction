@@ -61,7 +61,7 @@ test('looking away from her peak ends the night: the button says so, and the dar
     choices: document.querySelectorAll('.choice').length,
     text: document.querySelector('.narrative__text')?.textContent ?? '',
   }));
-  expect(fading).toMatchObject({ puzzle: 0, place: 'B.03 NMR 室', choices: 0 });
+  expect(fading).toMatchObject({ puzzle: 0, place: 'B12 NMR 室', choices: 0 });
   expect(fading.text).toContain('黑暗就靠了過來');
   await settle(page);
   await expect(page.locator('.hud__clock')).toHaveText('02:47');

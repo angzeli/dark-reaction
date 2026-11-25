@@ -4,6 +4,7 @@
  */
 import type { Content } from '../engine/types.ts';
 import { ANOMALIES } from './anomalies.ts';
+import { LANYARD } from './lanyard.ts';
 import { coldScenes } from './locations/cold.ts';
 import { gloveboxScenes } from './locations/glovebox.ts';
 import { nmrScenes } from './locations/nmr.ts';
@@ -29,6 +30,8 @@ export const CONTENT: Content = {
     { key: 'loop.start.act3', if: { all: [{ loopGte: 3 }, { act: 3 }] } },
   ],
   obsession: { decay1: 4, decay2: 7, infinite: 10, infiniteFromLoop: 4 },
+  // Round your neck at every 02:47 (docs/HUMOUR.md §4.4).
+  onLoopStart: [{ give: LANYARD }],
   scenes: [...officeScenes, ...synthScenes, ...gloveboxScenes, ...piScenes, ...stairsScenes, ...nmrScenes, ...coldScenes, ...roofScenes],
   notebook: NOTEBOOK,
   puzzles: PUZZLE_DEFS,

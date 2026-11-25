@@ -1,9 +1,10 @@
 /**
- * 4.08 Write-up office: where every loop starts. Your monitor (the queue,
+ * 4.08 Research Write-Up Room: where every loop starts. Your monitor (the queue,
  * Dan's email, the portal, the data), the kettle and the sofa (rest), the
  * window, hot desk 7 (Y.C.'s mug and drawer), your phone. docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { lanyard } from '../lanyard.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const officeScenes: SceneDef[] = [
@@ -90,6 +91,20 @@ export const officeScenes: SceneDef[] = [
         effects: [{ learn: 'nb.priya' }],
         text: [{ key: 'office.phone.r' }, { key: 'office.phone.act3', if: { act: 3 } }],
       },
+      // v1.1.0: the room's small things are one look away, so the hub keeps its number keys (#204).
+      { id: 'office.around', label: 'office.around', to: 'office.around' },
+    ],
+  },
+  {
+    // The Research Write-Up Room, looked at properly (docs/HUMOUR.md §4.2, §4.4): the door plate, and
+    // your lanyard, which you can take off here.
+    id: 'office.around',
+    location: 'office',
+    tone: CALM_UNTIL_ACT3,
+    text: [{ key: 'office.around.text' }],
+    choices: [
+      { id: 'office.plate', label: 'office.plate', cost: 1, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'plate' }], text: [{ key: 'fun.plate' }] },
+      ...lanyard('office'),
     ],
   },
   {

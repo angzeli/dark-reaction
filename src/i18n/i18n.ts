@@ -82,7 +82,7 @@ const LATIN_END = /[A-Za-z0-9]$/;
  * A value set into its template's text. It can't know what's next to it, so: a value that ends its own
  * sentence ("Y.C.L.") doesn't get the template's full stop as well, and in 繁中 a value that starts or
  * ends with Latin letters or digits gets the space the tables put by hand between those and Chinese
- * characters (「你當時在 4.08 研究生辦公室」, #117).
+ * characters (「你當時在 4.08 Research Write-Up Room」, #117).
  */
 function fit(value: string, before: string, after: string, locale: Locale): string {
   let v = after === '.' && value.endsWith('.') ? value.slice(0, -1) : value;

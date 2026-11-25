@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #213 Tone tags, the anomaly registry and the validator's humour checks (closes #203)
+- **Last merged:** #214 Campus in-jokes: B12, the Research Write-Up Room, lanyards, the lift, the lab door, the toilets, the corridor (closes #204)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#204** campus in-jokes and the B12 relabel (most visual baselines change here, once); **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,46 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #204: **campus in-jokes.** `docs/HUMOUR.md` §4, for anyone who studied in a building like this one.
+  - **B12:**
+    - the NMR suite is *B12 NMR suite* /「B12 NMR 室」 in the location name, the e2e selectors, the art notes and `DESIGN.md`;
+    - the console's banner is *NMR Facility · B12 · 400 MHz*, and no longer names a university;
+    - a new fire plan by the lift puts B12 on the building's own signs (the game had no floor plan, and the door log has no basement doors);
+    - ids, puzzle logic and costs are unchanged.
+  - **The Research Write-Up Room:**
+    - *4.08 Research Write-Up Room* in both locales, as the door plate says it;
+    - the English narration calls it that, and the 繁中 narration says 「Write-Up Room」;
+    - display strings only, so ids and saves are untouched;
+    - its door plate is under the new *Look around the room* (`office.around`).
+  - **Your lanyard:**
+    - `item.lanyard` is given at every 02:47 (`Content.onLoopStart`), and the play screen says *Around your neck: your lanyard.* in a line after the choices (what you carry stays above them, as before);
+    - it comes off and goes back on in `office.around` and in the toilets (`src/content/lanyard.ts`); taking it off sets `lanyard.offEver` for *Visible at All Times* (#208);
+    - her lanyard: she is the only one still wearing hers in the 2018 photo, and it isn't in her box;
+    - Clocking Off has the lanyard beat after the building goes dark, if you're wearing it, as its only joke.
+    - **Save schema 3:** a mid-night save from before the lanyard gets it, unless the game had ended.
+  - **The lift:** *Go over to the lift* (`stairs.lift`), a spot of its own in the lobby.
+    - On 0 its doors are open, as they always are, and from loop 2 it was waiting like this at 03:33 too. In Act III it is only waiting.
+    - *Press 4* is there, along with the floor plan and the toilets' door.
+    - The sofa's lift and Fire Alarm's lift no longer move.
+  - **The lab door:**
+    - its contradictory notices, every night (3 min);
+    - this month's safety poster, which changes every loop (`{ loopMod: [5, k] }`);
+    - each poster read is kept (`poster.k`).
+  - **The toilets** (`stairs.toilets`): *NO NETWORK ACCESS*. The scene is `unrecorded`: the notebook says *Nothing is being written down in here*, and a 03:33 in there is logged with no place.
+  - **The professors' corridor** (`pi.corridor`): three more doors, with their signs verbatim and no names.
+  - **The shuttle:** its timetable by the main entrance (*LAST SERVICE 18:15. It is {clock}.*), which is the stairwell's one light line in Act III. Clocking Off walks past the shuttle stop to the night bus.
+  - **Registered anomalies:** `plate`, `shuttle.timetable`, `lanyard.off`, `lift`, `labdoor`, `toilets`, `corridor`. 15 joke keys, 5 localised variants.
+  - **Hubs keep their number keys:**
+    - the office's new things are one look away, so it stays at ten choices in loop 1;
+    - the stairwell is at eleven, so its *Wait…* is reached by the arrow keys;
+    - the lanyard's line comes after the choices, because B.05 had 4 px to spare before its fifth choice left the fold at 1440 × 900 (#152).
+  - **QA:** the explorer's reset check allows what every 02:47 gives (and requires it), and the provenance model knows `onLoopStart`.
+  - **Tests:**
+    - `tests/campus.test.ts` (16);
+    - the save tests for schema 3;
+    - `e2e/campus.spec.ts`: the lift on 0 before and after 03:33, and the lanyard off and back at 02:47, in both languages;
+    - existing tests updated for the lanyard and the names.
+  - **Playtime:** 51.2 min EN / 52.0 min 繁中 (from 51.1 / 52.0).
 - #203: **tone tags, the anomaly registry and the validator's humour checks.** The machinery the rest of M7 stands on. Nothing a player sees changes.
   - **Tone tags:** every scene and puzzle has a `tone` (`SceneDef.tone`, `PuzzleDef.tone`), as `docs/HUMOUR.md` §3 tabulates. A tag is one tone or one per act (`src/content/tone.ts`), and the engine's shape check refuses a scene or puzzle without one.
   - **The validator** gains a *Tone* section:

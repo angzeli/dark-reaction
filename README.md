@@ -12,7 +12,7 @@ A time-loop mystery in a chemistry lab at 3 a.m., about what a result is worth. 
 一個發生在凌晨三點化學實驗室裡的時間迴圈懸疑故事，關於一個結果到底值多少。英文與繁體中文各自原創書寫。不用註冊、不用下載，什麼都不會傳出去。
 
 <p>
-<img src="docs/images/office.jpg" width="420" alt="The write-up office at 02:47: rain on the window, the NMR queue on your monitor, a booking under your username at 03:33.">
+<img src="docs/images/office.jpg" width="420" alt="The Research Write-Up Room at 02:47: rain on the window, the NMR queue on your monitor, a booking under your username at 03:33.">
 <img src="docs/images/peakmatch.jpg" width="420" alt="The NMR suite in the dark: a green spectrum on the console, running on the UPS.">
 </p>
 

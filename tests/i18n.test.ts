@@ -18,8 +18,8 @@ describe('lookup', () => {
   });
 
   it('resolves params that are keys, in the same locale', () => {
-    expect(t('ui.noted', { entry: '@loc.office.name' })).toBe('Added to your notebook: 4.08 Write-up office.');
-    expect(t('ui.noted', { entry: '@loc.office.name' }, 'zh-Hant-TW')).toBe('寫進筆記本：4.08 研究生辦公室。');
+    expect(t('ui.noted', { entry: '@loc.office.name' })).toBe('Added to your notebook: 4.08 Research Write-Up Room.');
+    expect(t('ui.noted', { entry: '@loc.office.name' }, 'zh-Hant-TW')).toBe('寫進筆記本：4.08 Research Write-Up Room。');
   });
 
   it('puts two sentences one after the other the way each language does (#66)', () => {
@@ -61,7 +61,7 @@ describe('switching language', () => {
     setLocale('zh-Hant-TW');
     const chinese = render();
     expect(english).toContain('3 minutes');
-    expect(chinese).toContain('B.03 NMR 室');
+    expect(chinese).toContain('B12 NMR 室');
     expect(JSON.stringify(display)).toBe(before);
   });
 });

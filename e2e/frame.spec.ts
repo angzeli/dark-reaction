@@ -8,7 +8,7 @@ const view = { locale: 'en' as const, reduceMotion: true, highContrast: false };
 
 test('the play screen has headings to jump by: the room, then what you can do (#112)', async ({ page }) => {
   await loadTarget(page, base, target('act2-office'), view);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('4.08 Write-up office');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('4.08 Research Write-Up Room');
   await expect(page.getByRole('heading', { level: 2, name: 'What you can do' })).toBeAttached();
   await expect(page.getByRole('list', { name: 'What you can do' })).toBeAttached();
 });

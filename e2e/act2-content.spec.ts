@@ -64,7 +64,7 @@ test('into Act II: the doors, Dan’s office at 03:15, your noise, and the spect
   await press('Open the inner door');
   await press('Bring the vial into the box');
   await box.getByRole('button', { name: 'Bring the NMR tube out' }).click();
-  await go(page, 'B.03 NMR suite');
+  await go(page, 'B12 NMR suite');
   await choose(page, 'Sit down at the console');
   const con = page.getByRole('dialog', { name: 'The NMR console' });
   await con.locator('.con__chip[data-command="queue --all"]').click();
@@ -96,7 +96,7 @@ test('into Act II: the doors, Dan’s office at 03:15, your noise, and the spect
   await go(page, '4.14 Glovebox room');
   await choose(page, 'Run the purge you worked out');
   await expect(page.locator('.narrative__carry')).toContainText('your NMR tube');
-  await go(page, '4.08 Write-up office');
+  await go(page, '4.08 Research Write-Up Room');
   await waitUntil(page, '03:15');
   await expect(text(page)).toContainText('a lock clicks back');
   await go(page, '4.01 Prof. Ridley');
@@ -107,7 +107,7 @@ test('into Act II: the doors, Dan’s office at 03:15, your noise, and the spect
   await expect(text(page)).toContainText('RIDLEY-4');
 
   // The code jumps the queue: noise. The night prints the rest.
-  await go(page, 'B.03 NMR suite');
+  await go(page, 'B12 NMR suite');
   await choose(page, 'Run your sample with the priority code');
   await expect(text(page)).toContainText('at 8.41 nothing at all');
   await expect(text(page)).toContainText('the printer on its trolley clears its throat');

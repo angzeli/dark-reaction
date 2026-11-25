@@ -132,7 +132,7 @@ export const puzzles = {
   'puzzle.console.transcript': 'Console output',
   'puzzle.console.done': 'Write it in your notebook',
   'puzzle.console.solvedNote': 'You read the comment line twice.',
-  'console.out.motd': 'Kingsmere NMR Facility · 400 MHz\nLast login: Mon 23 Nov 02:41 from 4.08-desk-04\nType help for commands.',
+  'console.out.motd': 'NMR Facility · B12 · 400 MHz\nLast login: Mon 23 Nov 02:41 from 4.08-desk-04\nType help for commands.',
   'console.out.help': 'queue           your bookings\nqueue --all     everyone’s bookings\ninfo <holder>   details of a booking\nlog             recent activity\nwhoami · date · clear · exit',
   'console.out.whoami': 'ar4217 (Ridley group) · user level: STANDARD · bookings this month: 31',
   'console.out.date': 'Mon 23 Nov 2026 {clock}:00 GMT',

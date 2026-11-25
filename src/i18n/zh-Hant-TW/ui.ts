@@ -33,12 +33,12 @@ export const ui: Record<keyof typeof en, string> = {
   'ui.phantom.notice': '筆記本裡多了{n:一頁:幾頁}，是你的字跡。你不記得自己寫過。',
   'ui.fudge.corrected': '你在「{entry}」上畫一條線，旁邊簽上縮寫和日期。',
 
-  'loc.office.name': '4.08 研究生辦公室',
+  'loc.office.name': '4.08 Research Write-Up Room',
   'loc.synth.name': '4.12 合成實驗室',
   'loc.glovebox.name': '4.14 手套箱室',
   'loc.pi.name': '4.01 老闆辦公室',
   'loc.stairs.name': '樓梯間',
-  'loc.nmr.name': 'B.03 NMR 室',
+  'loc.nmr.name': 'B12 NMR 室',
   'loc.cold.name': 'B.05 冷藏室',
   'loc.roof.name': '頂樓',
 
@@ -136,4 +136,8 @@ export const ui: Record<keyof typeof en, string> = {
   'act.2.title': '痕跡',
   'act.3.title': '暗處',
   'ending.return': '回到標題畫面',
+
+  // ── v1.1.0 ──────────────────────────────────────────────────────────────────
+  'nb.loops.row.unrecorded': '第 {loop} 輪：燈在 {clock} 熄滅。',
+  'ui.notebook.unrecorded': '在這裡，什麼都不會被記下來。',
 };

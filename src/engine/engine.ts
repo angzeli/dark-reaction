@@ -41,7 +41,7 @@ import type {
   TextRef,
 } from './types.ts';
 
-export const STATE_VERSION = 2;
+export const STATE_VERSION = 3;
 export const WAIT_OPTIONS = [1, 5, 10] as const;
 
 interface Index {
@@ -571,7 +571,7 @@ export class Game {
     s.minute = LOOP_LENGTH;
     s.puzzle = null;
     s.menu = 'none';
-    s.loops.push({ loop: s.loop, location: s.location, minute: LOOP_LENGTH });
+    s.loops.push({ loop: s.loop, location: s.location, minute: LOOP_LENGTH, ...(this.index.scenes.get(s.scene)?.unrecorded ? { unrecorded: true as const } : {}) });
     if (s.chasedThisLoop && !s.restedThisLoop) s.obsession += 1;
 
     for (const rule of this.content.lightsOut) {
@@ -646,6 +646,7 @@ export class Game {
     const s = this.state;
     const c = this.content;
     this.notices = [...pages];
+    for (const effect of c.onLoopStart ?? []) this.apply(effect);
     for (const phantom of c.phantoms) {
       if (!s.known.some((k) => k.id === phantom.entry) && holds(phantom.when, s)) this.learn(phantom.entry);
     }

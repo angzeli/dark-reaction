@@ -59,8 +59,9 @@ export const endings = {
   'ending.clocking.1':
     'You step out. The door swings shut behind you on its closer with a soft, final click, and no alarm sounds, and the bins stand in their row like people who have seen everything. The rain finds your face at once. It is cold and it smells of the river and wet tarmac and somebody’s chip paper, and it is the best thing you have felt in weeks.',
   'ending.clocking.2': 'You don’t go back for your laptop. You think of it once, open on your desk with the queue on the screen and the booking in bold, and you keep walking.',
+  'ending.clocking.shuttle': 'The service road takes you round the side of the building and out past the shuttle stop. Nobody is waiting at it, and nothing is coming. You walk on to the night bus.',
   'ending.clocking.3':
-    'The service road takes you round the side of the building to the street. The bus shelter is lit like an aquarium and empty. You stand in it with your hands in your pockets and your hair dripping until a night bus comes, lit and almost empty, and you get on without checking the number. It doesn’t matter where it goes. It goes away.',
+    'The bus shelter on the street is lit like an aquarium and empty. You stand in it with your hands in your pockets and your hair dripping until a night bus comes, lit and almost empty, and you get on without checking the number. It doesn’t matter where it goes. It goes away.',
   'ending.clocking.3b':
     'The driver nods at you as if he picks up people who look like you every night, which he probably does. You touch your card to the reader and it beeps green without having to think about it, and you nearly cry at that: at a machine that simply lets you through.',
   'ending.clocking.4':
@@ -137,7 +138,7 @@ export const endings = {
   'ending.fire.1':
     'You break the glass. It is smaller and less dramatic than you imagined, a little plastic pane that gives under your thumb with a click like a biro, and for a second nothing happens and you feel extremely silly.',
   'ending.fire.2':
-    'Then the building screams. Every sounder on every floor, a rising two-note wail that goes through the concrete and up your spine, and the green running men over the doors seem, for the first time, to be actually running. Doors you have never seen open swing open on their magnets. Somewhere above, the lift sinks to the ground floor, opens its doors and stays there, sulking. The building is doing what it was designed to do. It is evacuating, by protocol, everyone and everything in it.',
+    'Then the building screams. Every sounder on every floor, a rising two-note wail that goes through the concrete and up your spine, and the green running men over the doors seem, for the first time, to be actually running. Doors you have never seen open swing open on their magnets. On 0 the lift, which has held its doors open all night, goes on holding them open, now officially. The building is doing what it was designed to do. It is evacuating, by protocol, everyone and everything in it.',
   'ending.fire.3':
     'You go out through the main entrance. Your badge isn’t needed; the doors stand wide open, held by the alarm, and the rain blows in across the lobby floor. Nothing stops you. You walk out into the car park and turn and look at the Vellacott Building, lit from top to bottom and howling. It will still be lit at 03:33, when every light in it stays on, because the rules say they must.',
   'ending.fire.4':

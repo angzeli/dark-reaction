@@ -31,12 +31,12 @@ export const ui = {
   'ui.phantom.notice': 'There {n:is a page:are pages} in your notebook, in your handwriting, that you don’t remember writing.',
   'ui.fudge.corrected': 'You strike “{entry}” through with a single line, then initial and date it.',
 
-  'loc.office.name': '4.08 Write-up office',
+  'loc.office.name': '4.08 Research Write-Up Room',
   'loc.synth.name': '4.12 Synthesis lab',
   'loc.glovebox.name': '4.14 Glovebox room',
   'loc.pi.name': '4.01 Prof. Ridley’s office',
   'loc.stairs.name': 'Stairwell',
-  'loc.nmr.name': 'B.03 NMR suite',
+  'loc.nmr.name': 'B12 NMR suite',
   'loc.cold.name': 'B.05 Cold room',
   'loc.roof.name': 'Roof',
 
@@ -135,4 +135,8 @@ export const ui = {
   'act.2.title': 'Traces',
   'act.3.title': 'In the Dark',
   'ending.return': 'Return to the title screen',
+
+  // ── v1.1.0 ──────────────────────────────────────────────────────────────────
+  'nb.loops.row.unrecorded': 'Loop {loop}: the lights went out at {clock}.',
+  'ui.notebook.unrecorded': 'Nothing is being written down in here.',
 } as const;
