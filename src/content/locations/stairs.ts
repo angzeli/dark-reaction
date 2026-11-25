@@ -7,6 +7,7 @@
 import { clockLabel } from '../../engine/clock.ts';
 import type { SceneDef } from '../../engine/types.ts';
 import { lanyard } from '../lanyard.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { EXIT_B_OPEN } from '../world.ts';
 
@@ -145,6 +146,7 @@ export const stairsScenes: SceneDef[] = [
       { id: 'stairs.lift.press', label: 'stairs.lift.press', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.lift.press' }] },
       { id: 'stairs.plan', label: 'stairs.plan', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.plan' }] },
       { id: 'stairs.toilets', label: 'stairs.toilets', cost: 1, effects: [{ anomaly: 'toilets' }], to: 'stairs.toilets' },
+      squid('stairs'),
     ],
   },
   {

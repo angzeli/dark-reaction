@@ -146,4 +146,18 @@ export const act1: Record<keyof typeof en, string> = {
   'office.pencil': '撿起地上的鉛筆',
   'office.thesis': '打開你的論文第四章',
   'nmr.chart': '看控制台旁邊的表',
+
+  // ── v1.1.0：實驗室的小東西、暗房、Squiddy ───────────────────────────────────────────────
+  'synth.around': '環顧實驗室',
+  'synth.around.text': '實驗桌、罩著防風罩的天平、門邊的白板，還有角落裡一個用遮光簾當門的儲藏室。',
+  'synth.tare': '把天平歸零',
+  'synth.darkroom': '進暗房',
+  'synth.darkroom.act3': '暗房更暗了。燈是關著的。你覺得它已經關了很久，而這裡的黑，不是任何人關燈關出來的。',
+  'synth.darkcontrol': '做暗對照組：關燈，一直待到 03:33',
+  'synth.darkcontrol.r': '你關掉燈，拉上簾子，跟那瓶還在攪拌的反應一起坐在黑暗裡。每一個結果都需要一個對照組。',
+  'nb.darkcontrol.title': '暗對照組',
+  'nb.squiddy.title': 'Squiddy',
+  'squid.look': '看那個塗鴉',
+  'synth.darkcontrol.late': '想想暗對照組',
+  'synth.darkcontrol.late.r': '要做一個像樣的暗對照組，得在 02:47 就直接過來，關著燈坐滿一整夜。今晚是來不及了。',
 };

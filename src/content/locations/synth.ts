@@ -3,6 +3,7 @@
  * yield you write down, the fume hoods, the Kraken, the poster. docs/DESIGN.md §9.
  */
 import type { ChoiceDef, Cond, SceneDef } from '../../engine/types.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { CLEAN_MINUTES as SCHLENK_MINUTES } from '../../puzzles/schlenk/logic.ts';
 
@@ -149,6 +150,59 @@ export const synthScenes: SceneDef[] = [
           text: [{ key: 'fun.labdoor' }, { key: `fun.labdoor.poster.${k}` }],
         }),
       ),
+      // The lab's small things, one look away so the hub keeps its number keys (#204).
+      { id: 'synth.around', label: 'synth.around', to: 'synth.around' },
+    ],
+  },
+  {
+    // The balance that won't stop drifting, the dark room, and (on its loop) Squiddy (docs/HUMOUR.md §7).
+    id: 'synth.around',
+    location: 'synth',
+    tone: CALM_UNTIL_ACT3,
+    text: [{ key: 'synth.around.text' }],
+    choices: [
+      { id: 'synth.tare.1', label: 'synth.tare', cost: 1, if: { all: [{ not: { lflag: 'tare.1' } }, { not: { act: 3 } }] }, effects: [{ lflag: 'tare.1' }], text: [{ key: 'fun.tare.1' }] },
+      { id: 'synth.tare.2', label: 'synth.tare', cost: 1, if: { all: [{ lflag: 'tare.1' }, { not: { lflag: 'tare.2' } }, { not: { act: 3 } }] }, effects: [{ lflag: 'tare.2' }], text: [{ key: 'fun.tare.2' }] },
+      // The third time it gives up and reads 104 %: the anomaly, and 104% Yield.
+      {
+        id: 'synth.tare.3',
+        label: 'synth.tare',
+        cost: 1,
+        once: 'loop',
+        if: { all: [{ lflag: 'tare.2' }, { not: { act: 3 } }] },
+        effects: [{ anomaly: 'balance' }],
+        text: [{ key: 'fun.tare.3' }],
+      },
+      { id: 'synth.darkroom', label: 'synth.darkroom', to: 'synth.darkroom' },
+      squid('synth'),
+    ],
+  },
+  {
+    // The photoreactor cupboard. Straight there from 02:47, once you know about 03:33, you can run the
+    // dark control: a whole loop with the lamp off. Nothing happens, as expected (lo.darkcontrol).
+    id: 'synth.darkroom',
+    location: 'synth',
+    tone: CALM_UNTIL_ACT3,
+    text: [
+      { key: 'fun.darkroom', if: { not: { act: 3 } } },
+      { key: 'synth.darkroom.act3', if: { act: 3 } },
+    ],
+    choices: [
+      {
+        id: 'synth.darkcontrol',
+        label: 'synth.darkcontrol',
+        if: { all: [{ know: 'nb.reset' }, { minuteLt: 4 }, { not: { act: 3 } }] },
+        effects: [{ lflag: 'dark.control' }, { timeTo: 46 }],
+        text: [{ key: 'synth.darkcontrol.r' }],
+      },
+      {
+        // Too late tonight: say so, and when it would have to start.
+        id: 'synth.darkcontrol.late',
+        label: 'synth.darkcontrol.late',
+        once: 'loop',
+        if: { all: [{ know: 'nb.reset' }, { minuteGte: 4 }, { not: { act: 3 } }] },
+        text: [{ key: 'synth.darkcontrol.late.r' }],
+      },
     ],
   },
 ];

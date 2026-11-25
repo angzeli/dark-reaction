@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #218 Achievements, the anomaly counter and the credits (closes #208)
+- **Last merged:** #219 Hidden eggs: the slide, 03:33, Mole Day, Squiddy, the dark control, the balance (closes #209)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,35 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #209: **the hidden eggs** (`docs/HUMOUR.md` §7).
+  - **The Konami code** (↑ ↑ ↓ ↓ ← → ← → B A) turns a calm room into a badly made group-meeting slide:
+    - the room's name *(preliminary)* as the title;
+    - the page's first sentences as bullets in three sizes;
+    - *Results look very promising!!* in red, *Future work: everything*;
+    - clip art and *Slide 13 of 47 · CONFIDENTIAL*;
+    - a dialog closed by *No questions* /「沒有問題」.
+
+    It does nothing in an uneasy or dread scene, in a puzzle or under an overlay. It has no motion, and in high contrast it is black on white. Anomaly `slide`; *Any Questions?* /「被電」.
+  - **The title:**
+    - opened at 03:33 local time it says *It's 03:33. Go to bed.* (*Go to Bed* /「快去睡」);
+    - on 23 October it is Mole Day, with Avogadro to four figures (*Mole Day* /「莫耳日快樂」).
+    - `App` takes a `now` option; the visual and sweep harness fixes the clock at an ordinary afternoon, so the eggs can't flake a screenshot.
+  - **Squiddy**, signed, in a different room each loop of six (Acts I–II): the lab, by the lift, B.05, the glovebox room, the roof, the Research Write-Up Room (`src/content/squid.ts`).
+    - Each sighting is an anomaly, kept in the gallery, so the six can be found across playthroughs.
+    - All six earn *Cephalopod Census* /「烏賊點名」, a page (`nb.squiddy`) at the next 02:47, and a seventh squid drawn beside the gallery's counter.
+  - **The dark room** (`synth.darkroom`, under the lab's new *Look around the lab*): *VISIBLE LIGHT (λ > 420 nm)*, *(MOSTLY HEAT)*.
+    - Straight there from 02:47, once you know about 03:33, *Run the dark control* sits out the whole night (`timeTo: 46`, shown as its 45 minutes).
+    - At 03:33 `lo.darkcontrol` writes *Result: nothing happened, as expected. (Repeat in triplicate for the SI.)* and earns *Dark Control*.
+    - Later in the night, *Think about a dark control* says when it would have to start (the affordance check asked for it).
+  - **The balance** (`synth.tare`), under *Look around the lab*: it drifts after every tare, and the third time it reads *104 %* (*104% Yield* /「產率 104%」).
+  - **Two 繁中 fixes the checks caught:**
+    - 「Tom 的大寫字」, a calque already banned by `tests/i18n.test.ts`, is now 「Tom 那手方方正正的字」;
+    - 「負八十冰箱」 against *the −80* is now 「−80 冰箱」.
+  - **The harness** triggers keys, the clock, the date and panels.
+  - **Totals:** 41 anomalies, 16 achievements, 69 joke keys.
+  - **Tests:**
+    - `tests/eggs.test.ts` (8);
+    - `e2e/eggs.spec.ts`: the slide in a calm room and not at her desk, and the title at 03:33 and on Mole Day, in both languages.
 - #208: **achievements, the anomaly counter and the credits** (`docs/HUMOUR.md` §6–7).
   - **Ten achievements now**, the rest with the eggs in #209 (`src/content/achievements.ts`, `AchievementDef`). Each is named in each language on its own terms: *Writing-Up Year* /「延畢」, *Instant Reply* /「老闆秒回」, *Sorry* /「乖乖保佑」. They are earned three ways:
     - by an anomaly that names it: *Normal Termination* (`g16`), *Instant Reply* (`ping supervisor`), *This Incident Will Be Reported* (`sudo`), *Risk Assessed* (the pencil), *Sorry* (the fume hood), *Uncredited (As Requested)* (the credits);

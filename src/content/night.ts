@@ -5,6 +5,7 @@
  */
 import type { ActDef, Cond, EventDef, LightsOutRule, PhantomDef } from '../engine/types.ts';
 import { LOOP_LENGTH } from '../engine/clock.ts';
+import { CENSUS } from './squid.ts';
 import { EXIT_B_OPEN, PI_OPEN } from './world.ts';
 
 const onLevel4 = { any: [{ at: 'office' as const }, { at: 'synth' as const }, { at: 'glovebox' as const }, { at: 'pi' as const }] };
@@ -81,6 +82,8 @@ export const PHANTOMS: PhantomDef[] = [
   { entry: 'ph.decay2', when: { obsessionGte: 7 } },
   { entry: 'ph.port4', when: { actGte: 3 } },
   { entry: 'ph.booking', when: { all: [{ actGte: 3 }, { loopsInActGte: 2 }] } },
+  // Squiddy, all six (docs/HUMOUR.md §7): written at the next 02:47, as something you found out.
+  { entry: 'nb.squiddy', when: CENSUS },
 ];
 
 /** The dark run (#20): you in the NMR suite at 03:33, her tube in holder 13. */
@@ -113,5 +116,7 @@ export const LIGHTS_OUT: LightsOutRule[] = [
   // Everything in place: the run, in the dark, and her peak to find (Dark Reaction, if you do).
   // No text: the peak match takes the narrative's place at once, and its intro says it.
   { id: 'lo.dark.run', if: inPlace, puzzle: 'peakmatch' },
+  // The dark control (docs/HUMOUR.md §7): a whole loop in the dark room with the lamp off. Nothing happens.
+  { id: 'lo.darkcontrol', if: { lflag: 'dark.control' }, effects: [{ learn: 'nb.darkcontrol' }, { anomaly: 'darkcontrol' }] },
   { id: 'lo.first', if: { not: { know: 'nb.reset' } }, effects: [{ learn: 'nb.reset' }], text: [{ key: 'lo.first' }] },
 ];

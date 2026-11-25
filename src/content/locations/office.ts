@@ -5,6 +5,7 @@
  */
 import type { SceneDef } from '../../engine/types.ts';
 import { lanyard } from '../lanyard.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const officeScenes: SceneDef[] = [
@@ -107,6 +108,7 @@ export const officeScenes: SceneDef[] = [
       // A COSHH assessment for a pencil (docs/HUMOUR.md §8): the form takes longer than the pencil.
       { id: 'office.pencil', label: 'office.pencil', cost: 2, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'coshh' }], text: [{ key: 'fun.pencil' }] },
       ...lanyard('office'),
+      squid('office'),
     ],
   },
   {

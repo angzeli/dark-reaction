@@ -55,4 +55,28 @@ export const humour = {
 
   // ── The credits (§7) ────────────────────────────────────────────────────────
   'credits.reviewer': 'Reviewer 2 — uncredited (as requested)',
+
+  // ── The hidden eggs (§7) ────────────────────────────────────────────────────
+  'fun.squid.synth':
+    'On the tape along your fume hood’s sash, in biro, a squid the size of a thumbnail, holding a tiny round-bottomed flask. Under it, very small: *Squiddy*.',
+  'fun.squid.stairs': 'On the lift’s inspection certificate, beside a signature nobody can read, a squid in biro wearing a tiny hi-vis jacket. *Squiddy.*',
+  'fun.squid.cold': 'On a frosted label on the −80’s door, in marker: a squid in a woolly hat. *Squiddy*, it says, and, smaller, *brr*.',
+  'fun.squid.glovebox': 'In the dust on the outside of the glovebox’s window, drawn with a fingertip: a squid with all its arms in the gloves. *Squiddy.*',
+  'fun.squid.roof': 'In chalk on the side of the plant unit, half rained away: a squid under an umbrella that isn’t helping. *Squiddy.*',
+  'fun.squid.office': 'On a Post-it stuck to the kettle: a squid holding a mug in every arm, all ten of them. *Squiddy.*',
+  'nb.squiddy.body': 'Six squid, six rooms, one signature. Nobody in the group is called Squiddy. You checked.',
+  'fun.darkroom':
+    'The dark room is a cupboard with ambitions: a blackout curtain, a xenon lamp in a fan-cooled box, a stirrer plate, and on the lamp housing a strip of tape in Tom’s capitals: *VISIBLE LIGHT (λ > 420 nm)*. Under it, smaller: *(MOSTLY HEAT).*',
+  'nb.darkcontrol.body': 'Catalyst, CO₂, solvent; no light; 02:47 to 03:33. Result: nothing happened, as expected. (Repeat in triplicate for the SI.)',
+  'fun.tare.1': 'You tare it. 0.0000 g. Then 0.0002. Then 0.0005, climbing gently, as if it’s thinking about something.',
+  'fun.tare.2': 'You tare it again. 0.0000. Then −0.0003, which is worse.',
+  'fun.tare.3':
+    'A third time. The display goes blank, thinks, and comes back in percentage mode, which nobody has ever used on purpose: *104 %*. Of what, it doesn’t say.',
+  'slide.preliminary': '(preliminary)',
+  'slide.promising': 'Results look very promising!!',
+  'slide.future': 'Future work: everything',
+  'slide.footer': 'Slide 13 of 47 · CONFIDENTIAL — DO NOT DISTRIBUTE',
+  'slide.close': 'No questions',
+  'title.egg.bed': 'It’s 03:33. Go to bed.',
+  'title.egg.mole': '23 October: Mole Day. Somewhere, 6.022 × 10²³ PhD students are still in the lab.',
 } as const;

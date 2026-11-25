@@ -10,7 +10,7 @@ import { HIDDEN, respond } from '../../src/puzzles/console/logic.ts';
 import { CONTENT } from '../../src/content/index.ts';
 import { Gallery } from '../../src/save/gallery.ts';
 import { memoryStorage } from '../../src/save/storage.ts';
-import { keepOutside, PANEL_ANOMALIES } from '../../src/ui/eggs.ts';
+import { keepOutside, konamiStep, KONAMI, PANEL_ANOMALIES, titleEgg } from '../../src/ui/eggs.ts';
 
 /** A game at 02:47 of loop 1, then moved to where the setup says. */
 export function placed(content: Content, setup: AnomalySetup): Game {
@@ -58,6 +58,27 @@ export const OUTSIDE: Partial<Record<AnomalyDef['trigger']['kind'], (a: AnomalyD
     const key = reply && typeof reply === 'object' ? reply.key : '';
     return { found: HIDDEN[key] === a.id, shown: key ? [key] : [] };
   },
+  // The keys, pressed in a calm scene (the office at 02:47): the App's slide, found in the game.
+  keys: (a) => {
+    if (a.trigger.kind !== 'keys') throw new Error('not keys');
+    const done = a.trigger.keys.reduce((p, k) => konamiStep(p, k), 0) === KONAMI.length;
+    const g = new Game(CONTENT);
+    while (g.takeCard());
+    const tag = g.index.scenes.get(g.state.scene)!.tone;
+    const calm = (typeof tag === 'string' ? tag : tag[g.state.act]) === 'calm';
+    if (done && calm) g.discover(a.id);
+    return { found: g.state.anomalies.includes(a.id) && (!a.achievement || g.state.achievements.includes(a.achievement)), shown: [...a.keys] };
+  },
+  // Opened at this local time, on the title screen: the gallery keeps it.
+  clock: (a) => {
+    if (a.trigger.kind !== 'clock') throw new Error('not a clock');
+    const [hh, mm] = a.trigger.at.split(':').map(Number);
+    return outsideAt(a, new Date(2026, 10, 25, hh, mm));
+  },
+  date: (a) => {
+    if (a.trigger.kind !== 'date') throw new Error('not a date');
+    return outsideAt(a, new Date(2026, a.trigger.month - 1, a.trigger.day, 12, 0));
+  },
   // Opened on the title screen: the gallery keeps the find, and its achievement.
   panel: (a) => {
     if (a.trigger.kind !== 'panel') throw new Error('not a panel');
@@ -68,6 +89,15 @@ export const OUTSIDE: Partial<Record<AnomalyDef['trigger']['kind'], (a: AnomalyD
     return { found: data.anomalies.includes(a.id) && (!a.achievement || a.achievement in data.achievements), shown: [...a.keys] };
   },
 };
+
+/** The title screen opened at `when`: if its egg is this anomaly, the gallery keeps it. */
+function outsideAt(a: AnomalyDef, when: Date): Triggered {
+  const gallery = new Gallery(memoryStorage());
+  const egg = titleEgg(when);
+  if (egg) keepOutside(CONTENT, gallery, egg);
+  const data = gallery.data();
+  return { found: egg === a.id && data.anomalies.includes(a.id) && (!a.achievement || a.achievement in data.achievements), shown: [...a.keys] };
+}
 
 export function trigger(content: Content, a: AnomalyDef): Triggered {
   const tr = a.trigger;

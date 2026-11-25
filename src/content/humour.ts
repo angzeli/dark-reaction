@@ -41,6 +41,8 @@ export const LOCALISED_VARIANTS: ReadonlySet<string> = new Set<JokeKey>([
   // 繁中: "Yes, you're still here." / "They said it was the last one last month, too."
   'fun.pa.test',
   'fun.pa.car',
+  // 繁中 writes the date as 10 月 23 日, so it has one more 10.
+  'title.egg.mole',
 ]);
 
 /** The only epilogues a joke may appear in: Fire Alarm's, all of it; Clocking Off's, only its lanyard beat. */

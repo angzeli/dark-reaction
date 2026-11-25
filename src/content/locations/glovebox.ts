@@ -4,6 +4,7 @@
  * sealed mini-antechamber. docs/DESIGN.md §9.
  */
 import type { Cond, SceneDef } from '../../engine/types.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { LAST_PURGE_START, PURGE_MINUTES } from '../../puzzles/glovebox/logic.ts';
 import { o2At } from '../lab.ts';
@@ -74,6 +75,7 @@ export const gloveboxScenes: SceneDef[] = [
         effects: [{ give: 'item.tube.jy' }, { fragment: 'yc.tube' }, { learn: 'nb.tube' }],
         text: [{ key: 'glovebox.mini.open.r.1' }, { key: 'glovebox.mini.open.r.2' }],
       },
+      squid('glovebox'),
     ],
   },
   {

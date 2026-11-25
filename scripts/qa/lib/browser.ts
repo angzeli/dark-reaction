@@ -57,6 +57,8 @@ export async function loadTarget(page: Page, base: string, target: Target, view:
     },
     [SETTINGS_KEY, settings, save] as const,
   );
+  // A fixed, ordinary afternoon: the title's eggs (03:33, Mole Day) can't change a screenshot (#209).
+  await page.clock.setFixedTime(new Date('2026-11-24T14:00:00'));
   await page.goto(base);
   await page.waitForSelector('.title, .play, .ending, article.ending', { timeout: 15_000 }).catch(() => undefined);
   if (target.screen !== 'title') {

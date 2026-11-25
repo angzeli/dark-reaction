@@ -17,7 +17,7 @@ import { mountPuzzleFrame, type FrameHandle } from '../puzzles/frame.ts';
 import type { PuzzleModule } from '../puzzles/types.ts';
 import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
 import { LANYARD } from '../content/lanyard.ts';
-import { keepOutside, PANEL_ANOMALIES } from './eggs.ts';
+import { bullets, keepOutside, KONAMI, konamiStep, PANEL_ANOMALIES, titleEgg } from './eggs.ts';
 import { holds } from '../engine/conditions.ts';
 import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
@@ -27,9 +27,19 @@ import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
 import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
 
+/** Squiddy, drawn once you've found all six (docs/HUMOUR.md §7): ten arms, a signature. */
+const SQUID_SVG =
+  '<svg viewBox="0 0 40 40" width="28" height="28"><path d="M20 4c-6 0-9 6-9 12 0 4 2 6 4 7l-3 12M20 4c6 0 9 6 9 12 0 4-2 6-4 7l3 12M17 24l-2 12M23 24l2 12M20 24v13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17" cy="14" r="1.4" fill="currentColor"/><circle cx="23" cy="14" r="1.4" fill="currentColor"/></svg>';
+
+function squidMark(): HTMLElement {
+  const el = h('span', { class: 'gal__squid', 'aria-hidden': 'true' });
+  el.innerHTML = SQUID_SVG;
+  return el;
+}
+
 /** Items worn rather than carried: said as what's round your neck (docs/HUMOUR.md §4.4). */
 const WORN: ReadonlySet<string> = new Set([LANYARD]);
-type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery' | 'credits';
+type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery' | 'credits' | 'slide';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
 const SECTIONS: NotebookSection[] = ['tonight', 'people', 'places', 'data', 'anomalies'];
@@ -46,6 +56,8 @@ export interface AppOptions {
   content: Content;
   puzzles: Record<string, PuzzleModule>;
   kv: KV;
+  /** The local time (for the title's 03:33 and Mole Day, docs/HUMOUR.md §7). */
+  now?: () => Date;
 }
 
 /** How long a notice stays at the foot of the screen. */
@@ -62,6 +74,9 @@ export class App {
   private readonly kv: KV;
   private readonly saves: SaveStore;
   private readonly gallery: Gallery;
+  /** How far into the Konami code the keys so far have got. */
+  private konami = 0;
+  private readonly now: () => Date;
   /** Pages drawn by actions so far: every action (a choice, a puzzle's end, a strike) makes a new one. */
   private page = 0;
   /** Achievements new to the gallery, said once on the page they belong to (re-renders keep them). */
@@ -104,6 +119,7 @@ export class App {
     this.puzzles = opts.puzzles;
     this.kv = opts.kv;
     this.saves = new SaveStore(opts.kv, { content: opts.content });
+    this.now = opts.now ?? (() => new Date());
     this.gallery = new Gallery(opts.kv);
     this.settings = loadSettings(opts.kv);
     applySettings(this.settings);
@@ -461,6 +477,15 @@ export class App {
 
   private onKey(e: KeyboardEvent): void {
     this.keyboardUsed = true;
+    // ↑ ↑ ↓ ↓ ← → ← → B A, counted before anything else takes the key (the arrows also move between choices).
+    this.konami = konamiStep(this.konami, e.key);
+    if (this.konami === KONAMI.length) {
+      this.konami = 0;
+      if (this.trySlide()) {
+        e.preventDefault();
+        return;
+      }
+    }
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     if (this.busy) return;
     const target = e.target as HTMLElement | null;
@@ -653,6 +678,9 @@ export class App {
   }
 
   private renderTitle(): void {
+    // Opened at 03:33, or on Mole Day, the tagline notices (docs/HUMOUR.md §7).
+    const egg = titleEgg(this.now());
+    if (egg) this.discover(egg);
     const art = h('div', { class: 'title__art' });
     const latest = this.saves.latest();
     const buttons: HTMLElement[] = [];
@@ -684,7 +712,7 @@ export class App {
       'div',
       { class: 'title__panel' },
       h('h1', { class: 'title__name' }, h('span', { lang: 'en-GB' }, 'Dark Reaction'), ' ', h('span', { lang: 'zh-Hant-TW', class: 'title__zh' }, '《暗反應》')),
-      h('p', { class: 'title__tagline' }, t('ui.tagline')),
+      h('p', { class: 'title__tagline' }, t(egg ? `title.egg.${egg}` : 'ui.tagline')),
       h('nav', { class: 'title__menu', 'aria-label': t('ui.menu') }, ...buttons),
       h('div', { class: 'title__toggles' }, this.langToggle(), this.soundToggle()),
     );
@@ -935,8 +963,11 @@ export class App {
                 ? this.galleryPanel()
                 : this.overlay === 'credits'
                   ? this.creditsPanel()
-                  : this.menuPanelEl();
-    const close = this.overlay === 'conflict' ? null : h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
+                  : this.overlay === 'slide'
+                    ? this.slidePanel()
+                    : this.menuPanelEl();
+    const close =
+      this.overlay === 'conflict' ? null : h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t(this.overlay === 'slide' ? 'slide.close' : 'ui.close'));
     const dialog = h(
       'section',
       { class: `overlay overlay--${this.overlay}`, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'overlay-title' },
@@ -987,7 +1018,52 @@ export class App {
             : h('li', { class: 'gal__ach gal__ach--locked' }, h('span', { class: 'gal__ach-title' }, t('gallery.locked'))),
         ),
       ),
-      h('p', { class: 'gal__anomalies' }, t('gallery.anomalies', { n: data.anomalies.filter((id) => this.content.anomalies.some((a) => a.id === id)).length, total: this.content.anomalies.length })),
+      h(
+        'p',
+        { class: 'gal__anomalies' },
+        // Squiddy, all six found: a seventh, here (docs/HUMOUR.md §7).
+        data.achievements['census'] ? squidMark() : null,
+        t('gallery.anomalies', { n: data.anomalies.filter((id) => this.content.anomalies.some((a) => a.id === id)).length, total: this.content.anomalies.length }),
+      ),
+    );
+  }
+
+  /**
+   * The Konami code: in a calm scene, the room as a badly made group-meeting slide (docs/HUMOUR.md §7).
+   * Nothing happens anywhere uneasy or dread, in a puzzle, under an overlay or while the dark is coming.
+   */
+  private trySlide(): boolean {
+    const g = this.game;
+    if (this.screen !== 'play' || !g || this.overlay !== 'none' || this.busy || g.busy) return false;
+    const tag = g.index.scenes.get(g.state.scene)?.tone;
+    if (!tag || (typeof tag === 'string' ? tag : tag[g.state.act]) !== 'calm') return false;
+    this.discover('slide');
+    this.openOverlay('slide');
+    return true;
+  }
+
+  private slidePanel(): HTMLElement {
+    const g = this.game!;
+    const place = this.content.locations.find((l) => l.id === g.state.location)!;
+    const paras = g.state.display.length > 0 ? g.state.display : g.sceneText(g.state.scene);
+    const points = bullets(paras.filter((p) => p.style !== 'system').map((p) => t(p.key, p.params)));
+    const beaker = h('div', { class: 'slide__art', 'aria-hidden': 'true' });
+    // Clip art: a beaker with sparkles. Static, so motion settings have nothing to stop.
+    beaker.innerHTML =
+      '<svg viewBox="0 0 120 120" width="120" height="120"><path d="M40 20h40M46 20v30L24 98a8 8 0 0 0 7 12h58a8 8 0 0 0 7-12L74 50V20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M33 80h54l9 18a6 6 0 0 1-5 9H29a6 6 0 0 1-5-9z" fill="#7fd1ae"/><path d="M98 14l4 10 10 4-10 4-4 10-4-10-10-4 10-4zM18 36l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#f2c14e"/></svg>';
+    return h(
+      'div',
+      { class: 'slide' },
+      h('h2', { id: 'overlay-title', class: 'slide__title', tabindex: '-1' }, `${t(place.name)} `, h('span', { class: 'slide__pre' }, t('slide.preliminary'))),
+      h(
+        'ul',
+        { class: 'slide__bullets' },
+        ...points.map((b, i) => h('li', { class: `slide__bullet slide__bullet--${i % 3}` }, b)),
+        h('li', { class: 'slide__bullet slide__bullet--red' }, t('slide.promising')),
+        h('li', { class: 'slide__bullet slide__bullet--1' }, t('slide.future')),
+      ),
+      beaker,
+      h('p', { class: 'slide__footer' }, t('slide.footer')),
     );
   }
 

@@ -742,6 +742,39 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   letter-spacing: 0.06em;
   color: var(--text-dim);
 }
+/* Squiddy's seventh, beside the counter once all six are found. */
+.gal__squid { display: inline-block; vertical-align: middle; margin-right: 0.5rem; color: var(--copper); }
+:root[data-contrast='high'] .gal__squid { color: inherit; }
+
+/* The Konami slide (docs/HUMOUR.md §7): a group-meeting slide made in a hurry. White, centred, three
+   bullet sizes, one bullet in red, clip art. Nothing moves. */
+/* Headings that take focus when their overlay opens, without a ring (like the gallery's): the Konami code is typed. */
+.slide__title:focus, .credits__title:focus { outline: none; }
+.overlay--slide .overlay__sheet { background: #fdfdf8; color: #1a1a1a; border: 6px double #2c5fa8; }
+.slide { padding: 2.75rem 0.25rem 0; text-align: center; }
+.slide__title {
+  margin: 0 0 1.25rem;
+  font-size: 2rem;
+  font-weight: 600;
+  text-decoration: underline wavy #d6336c 2px;
+  text-underline-offset: 0.3em;
+}
+.slide__pre { font-size: 1.1rem; font-style: italic; color: #7a7a7a; }
+.slide__bullets { margin: 0 auto; padding-left: 1.5rem; max-width: 40rem; text-align: left; }
+.slide__bullet { margin: 0.4rem 0; }
+.slide__bullet--0 { font-size: 1.35rem; }
+.slide__bullet--1 { font-size: 1rem; }
+.slide__bullet--2 { font-size: 1.15rem; font-style: italic; }
+.slide__bullet--red { font-size: 1.25rem; font-weight: 600; color: #c8102e; }
+.slide__art { margin: 1rem auto 0; color: #2c5fa8; }
+.slide__footer { margin: 1rem 0 0; font-family: var(--font-mono); font-size: 0.7rem; color: #555; }
+:root[data-contrast='high'] .overlay--slide .overlay__sheet { background: #fff; color: #000; border-color: #000; }
+:root[data-contrast='high'] .slide__pre,
+:root[data-contrast='high'] .slide__footer,
+:root[data-contrast='high'] .slide__bullet--red,
+:root[data-contrast='high'] .slide__art { color: #000; }
+:root[data-contrast='high'] .slide__title { text-decoration-color: #000; }
+
 /* The credits: plain lines, the last one a little apart. */
 .credits__title { margin: 0 0 1rem; }
 .credits__line { margin: 0.6rem 0; }

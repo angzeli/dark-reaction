@@ -5,8 +5,12 @@
  * every entry, and the validator checks the tone of the scene each one lives in.
  */
 import type { AnomalyDef, AnomalySetup } from '../engine/types.ts';
+import { KONAMI } from '../ui/eggs.ts';
+import { SQUID_ROOMS, squidId } from './squid.ts';
 
 const hub = (scene: string, extra: AnomalySetup = {}): AnomalySetup => ({ scene, ...extra });
+/** Where each room's squid is drawn: its hub, or, where the hub is full, its small things. */
+const SQUID_SCENE: Record<(typeof SQUID_ROOMS)[number], string> = { synth: 'synth.around', stairs: 'stairs.lift', cold: 'cold.hub', glovebox: 'glovebox.hub', roof: 'roof.hub', office: 'office.around' };
 const cmd = (id: string, command: string, key: string, more: string[] = [], achievement?: string): AnomalyDef => ({
   id: `cmd.${id}`,
   trigger: { kind: 'command', command },
@@ -27,6 +31,22 @@ export const ANOMALIES: AnomalyDef[] = [
   { id: 'toilets', trigger: { kind: 'choice', choice: 'stairs.toilets', setup: hub('stairs.lift') }, scene: 'stairs.toilets', tone: 'calm', keys: ['stairs.toilets.text'] },
   // ── The title screen (§7) ───────────────────────────────────────────────────
   { id: 'credits', trigger: { kind: 'panel', panel: 'credits' }, scene: 'ui:title', tone: 'calm', keys: ['credits.reviewer'], achievement: 'uncredited' },
+  // ── The hidden eggs (§7) ──────────────────────────────────────────────────
+  { id: 'slide', trigger: { kind: 'keys', keys: KONAMI }, scene: 'ui:play', tone: 'calm', keys: ['slide.preliminary', 'slide.promising', 'slide.future', 'slide.footer', 'slide.close'], achievement: 'slide' },
+  { id: 'bed', trigger: { kind: 'clock', at: '03:33' }, scene: 'ui:title', tone: 'calm', keys: ['title.egg.bed'], achievement: 'bed' },
+  { id: 'mole', trigger: { kind: 'date', month: 10, day: 23 }, scene: 'ui:title', tone: 'calm', keys: ['title.egg.mole'], achievement: 'mole' },
+  ...SQUID_ROOMS.map(
+    (room, i): AnomalyDef => ({
+      id: squidId(room),
+      trigger: { kind: 'choice', choice: squidId(room), setup: { loop: i + 1, scene: SQUID_SCENE[room] } },
+      scene: SQUID_SCENE[room],
+      tone: 'calm',
+      keys: [`fun.squid.${room}`],
+      acts: [1, 2],
+    }),
+  ),
+  { id: 'darkcontrol', trigger: { kind: 'lightsout', rule: 'lo.darkcontrol', setup: { scene: 'synth.darkroom', minute: 45, lflags: ['dark.control'], known: ['nb.reset'] } }, scene: 'synth.darkroom', tone: 'calm', keys: ['nb.darkcontrol.body'], acts: [1, 2], achievement: 'dark' },
+  { id: 'balance', trigger: { kind: 'choice', choice: 'synth.tare.3', setup: hub('synth.around', { lflags: ['tare.1', 'tare.2'] }) }, scene: 'synth.around', tone: 'calm', keys: ['fun.tare.1', 'fun.tare.2', 'fun.tare.3'], acts: [1, 2], achievement: 'yield' },
   // ── The rooms (§8) ────────────────────────────────────────────────────────
   { id: 'coshh', trigger: { kind: 'choice', choice: 'office.pencil', setup: hub('office.around') }, scene: 'office.around', tone: 'calm', keys: ['fun.pencil'], acts: [1, 2], achievement: 'coshh' },
   { id: 'sorry', trigger: { kind: 'choice', choice: 'synth.sorry', setup: hub('synth.hub', { usedLoop: ['synth.hoods'] }) }, scene: 'synth.hub', tone: 'calm', keys: ['synth.sorry', 'fun.sorry'], acts: [1, 2], achievement: 'sorry' },
