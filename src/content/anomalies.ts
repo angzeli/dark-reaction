@@ -27,6 +27,8 @@ export const ANOMALIES: AnomalyDef[] = [
   // ── The rooms (§8) ────────────────────────────────────────────────────────
   { id: 'coshh', trigger: { kind: 'choice', choice: 'office.pencil', setup: hub('office.around') }, scene: 'office.around', tone: 'calm', keys: ['fun.pencil'], acts: [1, 2] },
   { id: 'sorry', trigger: { kind: 'choice', choice: 'synth.sorry', setup: hub('synth.hub', { usedLoop: ['synth.hoods'] }) }, scene: 'synth.hub', tone: 'calm', keys: ['synth.sorry', 'fun.sorry'], acts: [1, 2] },
+  { id: 'pa.test', trigger: { kind: 'event', event: 'ev.pa.test', setup: hub('stairs.hub', { minute: 7 }) }, scene: 'stairs.hub', tone: 'calm', keys: ['fun.pa.test'], acts: [1, 2] },
+  { id: 'pa.car', trigger: { kind: 'event', event: 'ev.pa.car', setup: hub('roof.hub', { minute: 24 }) }, scene: 'roof.hub', tone: 'calm', keys: ['fun.pa.car'], acts: [1, 2] },
   // ── The console's hidden commands (§5): Acts I–II; in Act III it stops joking ─
   cmd('sudo', 'sudo', 'console.out.sudo'),
   cmd('rm', 'rm -rf /', 'console.out.rm'),

@@ -18,6 +18,9 @@ export const ACTS: ActDef[] = [
   { act: 3, when: { all: [{ know: 'nb.raw' }, { know: 'nb.email' }, { flag: 'perfect.offered' }] }, title: 'act.3.title' },
 ];
 
+/** Where the PA is heard: the calm rooms (not her desk, not Dan's office, not the toilets). */
+const PA_HEARD: Cond = { any: ['office.hub', 'office.around', 'synth.hub', 'glovebox.hub', 'pi.door', 'stairs.hub', 'stairs.lift', 'nmr.hub', 'cold.hub', 'roof.hub'].map((scene) => ({ scene })) };
+
 export const EVENTS: EventDef[] = [
   // 02:50: Dan's email (21:50 in Boston). If you're elsewhere, it's waiting when you get back.
   { id: 'ev.mail', minute: 3, until: 30, if: { at: 'office' }, text: [{ key: 'ev.mail' }] },
@@ -58,6 +61,10 @@ export const EVENTS: EventDef[] = [
   // nobody comes through the door (#153). It lands on the last page before the dark, and nowhere else.
   // A wait would go straight into the dark, so its page is held to be read.
   { id: 'ev.keeps', minute: LOOP_LENGTH, hold: true, if: { all: [{ at: 'synth' }, { know: 'nb.keeps' }] }, text: [{ key: 'ev.keeps' }] },
+  // The PA (docs/HUMOUR.md §7): heard only in the calm rooms, in Acts I–II, and never in the toilets,
+  // the one place the building can't reach. In the background: neither cuts a wait short.
+  { id: 'ev.pa.test', minute: 8, until: 11, ambient: true, if: { all: [PA_HEARD, { not: { act: 3 } }] }, effects: [{ anomaly: 'pa.test' }], text: [{ key: 'fun.pa.test' }] },
+  { id: 'ev.pa.car', minute: 25, until: 28, ambient: true, if: { all: [PA_HEARD, { not: { act: 3 } }] }, effects: [{ anomaly: 'pa.car' }], text: [{ key: 'fun.pa.car' }] },
 ];
 
 export const PHANTOMS: PhantomDef[] = [

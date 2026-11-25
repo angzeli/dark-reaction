@@ -537,6 +537,14 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   text-transform: uppercase;
 }
 .nb__margins ul { margin: 0; padding-left: 1rem; font-style: italic; }
+/* Past-you's pencil beside an entry: your hand, slanted, faint (docs/HUMOUR.md §8). */
+.nb__aside {
+  margin: 0.35rem 0 0 1.5rem;
+  font-style: italic;
+  font-size: 0.9em;
+  color: #5d6675;
+}
+:root[data-contrast='high'] .nb__aside { color: inherit; }
 /* In the toilets: nothing is being written down (docs/HUMOUR.md §4.7). Pencil-faint, like the margins. */
 .nb__unrecorded {
   margin: 0 0 0.75rem;

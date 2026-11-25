@@ -34,6 +34,13 @@ export const LOCALISED_VARIANTS: ReadonlySet<string> = new Set<JokeKey>([
   'fun.chart',
   // 繁中: COSHH glossed as hazardous-chemicals paperwork plus a reimbursement form, times three.
   'fun.pencil',
+  // 繁中: every lab has one; Taiwan's say 「學長的，勿丟」.
+  'fun.cold.box',
+  // 繁中: what a meal deal is, and how the second year feels about it.
+  'fun.cold.fridge',
+  // 繁中: "Yes, you're still here." / "They said it was the last one last month, too."
+  'fun.pa.test',
+  'fun.pa.car',
 ]);
 
 /** The only epilogues a joke may appear in: Fire Alarm's, all of it; Clocking Off's, only its lanyard beat. */

@@ -9,6 +9,19 @@ const entry = (id: string, section: NotebookDef['section'], kind?: NotebookDef['
   ...(kind ? { kind } : {}),
 });
 
+/**
+ * Marginalia from past-you (docs/HUMOUR.md §8): from the third night, faint pencil beside a few entries,
+ * in your hand, which you don't remember writing.
+ */
+const ASIDES: Readonly<Record<string, string>> = {
+  'nb.tlc': 'nb.aside.tlc',
+  'nb.yield': 'nb.aside.yield',
+  'nb.purge': 'nb.aside.purge',
+  'nb.reset': 'nb.aside.reset',
+  'nb.ian': 'nb.aside.ian',
+};
+const withAsides = (def: NotebookDef): NotebookDef => (ASIDES[def.id] ? { ...def, asides: [{ key: ASIDES[def.id]!, if: { loopGte: 3 } }] } : def);
+
 export const NOTEBOOK: NotebookDef[] = [
   // Act I: tonight
   entry('nb.portal', 'tonight'),
@@ -85,4 +98,4 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('nb.ups', 'tonight'),
   entry('nb.fabrication', 'data'),
   entry('nb.peak', 'data'),
-];
+].map(withAsides);

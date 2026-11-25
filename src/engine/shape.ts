@@ -99,6 +99,7 @@ export function checkContent(content: Content): void {
     texts(ev.text, `event ${ev.id}.text`);
   }
   for (const ph of content.phantoms) cond(ph.when, `phantom ${ph.entry}.when`);
+  for (const n of content.notebook) texts(n.asides, `notebook ${n.id}.asides`);
   for (const rule of content.lightsOut) {
     cond(rule.if, `lightsOut ${rule.id}.if`);
     all(rule.effects, `lightsOut ${rule.id}.effects`, PASSIVE);
