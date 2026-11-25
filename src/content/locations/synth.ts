@@ -3,6 +3,7 @@
  * yield you write down, the fume hoods, the Kraken, the poster. docs/DESIGN.md §9.
  */
 import type { Cond, SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { CLEAN_MINUTES as SCHLENK_MINUTES } from '../../puzzles/schlenk/logic.ts';
 
 /** The yield is written down once, honestly or not, and never offered again. */
@@ -12,6 +13,7 @@ export const synthScenes: SceneDef[] = [
   {
     id: 'synth.hub',
     location: 'synth',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     text: [
       { key: 'synth.hub.act1', if: { not: { act: 3 } } },

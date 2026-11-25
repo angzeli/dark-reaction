@@ -4,6 +4,7 @@
  * sealed mini-antechamber. docs/DESIGN.md §9.
  */
 import type { Cond, SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { LAST_PURGE_START, PURGE_MINUTES } from '../../puzzles/glovebox/logic.ts';
 import { o2At } from '../lab.ts';
 
@@ -16,6 +17,7 @@ export const gloveboxScenes: SceneDef[] = [
   {
     id: 'glovebox.hub',
     location: 'glovebox',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     text: [
       { key: 'glovebox.hub.act1', params: ppm, if: { not: { act: 3 } } },
@@ -77,6 +79,7 @@ export const gloveboxScenes: SceneDef[] = [
   {
     id: 'glovebox.logbook',
     location: 'glovebox',
+    tone: 'uneasy',
     text: [{ key: 'glovebox.logbook.text' }],
     choices: [
       {

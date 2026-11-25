@@ -9,6 +9,7 @@ import { EDGES, LOCATIONS } from '../../src/content/world.ts';
 const simpleHub = (id: string, location: Content['locations'][number]['id']) => ({
   id,
   location,
+  tone: 'calm' as const,
   hub: true,
   text: [{ key: `${id}.text` }],
   choices: [],
@@ -25,6 +26,7 @@ export function miniContent(): Content {
       {
         id: 'office.hub',
         location: 'office',
+        tone: 'calm',
         hub: true,
         text: [{ key: 'office.hub.act1', if: { act: 1 } }, { key: 'office.hub.act2', if: { act: 2 } }],
         onEnter: [{ lflag: 'woke' }],
@@ -50,17 +52,19 @@ export function miniContent(): Content {
       {
         id: 'office.computer',
         location: 'office',
+        tone: 'calm',
         text: [{ key: 'office.computer.text', params: (s) => ({ minute: s.minute }) }],
         choices: [{ id: 'office.email', label: 'c.email', cost: 2, text: [{ key: 'r.email' }], effects: [{ learn: 'nb.email' }] }],
       },
       simpleHub('synth.hub', 'synth'),
       simpleHub('glovebox.hub', 'glovebox'),
       simpleHub('pi.hub', 'pi'),
-      { id: 'pi.door', location: 'pi', hub: true, text: [{ key: 'pi.door.text' }], choices: [] },
+      { id: 'pi.door', location: 'pi', tone: 'calm', hub: true, text: [{ key: 'pi.door.text' }], choices: [] },
       simpleHub('stairs.hub', 'stairs'),
       {
         id: 'nmr.hub',
         location: 'nmr',
+        tone: 'calm',
         hub: true,
         text: [{ key: 'nmr.hub.text' }],
         choices: [{ id: 'nmr.printout', label: 'c.printout', if: { lflag: 'printed' }, effects: [{ give: 'item.printout' }], text: [{ key: 'r.printout' }] }],
@@ -81,6 +85,7 @@ export function miniContent(): Content {
     puzzles: [
       {
         id: 'demo',
+        tone: 'calm',
         par: 2,
         hints: ['p.demo.h1', 'p.demo.h2', 'p.demo.h3'],
         onSolve: [{ learn: 'nb.demo' }],
@@ -89,8 +94,8 @@ export function miniContent(): Content {
         failedText: [{ key: 'p.demo.failed' }],
         leftText: [{ key: 'p.demo.left' }],
       },
-      { id: 'dark', par: 2, hints: ['p.dark.h1', 'p.dark.h2', 'p.dark.h3'], onSolve: [{ ending: 'dark' }] },
-      { id: 'slow', par: 1, hints: ['p.slow.h1', 'p.slow.h2', 'p.slow.h3'], onSolve: [{ time: 7 }, { learn: 'nb.late' }] },
+      { id: 'dark', tone: 'dread', par: 2, hints: ['p.dark.h1', 'p.dark.h2', 'p.dark.h3'], onSolve: [{ ending: 'dark' }] },
+      { id: 'slow', tone: 'calm', par: 1, hints: ['p.slow.h1', 'p.slow.h2', 'p.slow.h3'], onSolve: [{ time: 7 }, { learn: 'nb.late' }] },
     ],
     events: [
       { id: 'ev.printer', minute: 38, if: { at: 'nmr' }, effects: [{ lflag: 'printed' }], text: [{ key: 'ev.printer.text' }] },
@@ -119,5 +124,6 @@ export function miniContent(): Content {
       art: id,
       cue: id,
     })),
+    anomalies: [],
   };
 }

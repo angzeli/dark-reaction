@@ -13,6 +13,13 @@ export type EndingId = 'perfect' | 'honest' | 'clocking' | 'infinite' | 'dark' |
 export type NotebookSection = 'tonight' | 'people' | 'places' | 'data' | 'anomalies';
 export type NotebookKind = 'normal' | 'phantom' | 'fudge';
 
+/**
+ * How a scene or puzzle feels (docs/HUMOUR.md §1). The validator keeps jokes out of `dread` and allows an
+ * `uneasy` one at most one light line. A tag can differ by act: Act III reads darker.
+ */
+export type Tone = 'calm' | 'uneasy' | 'dread';
+export type ToneTag = Tone | Readonly<Record<Act, Tone>>;
+
 /** Conditions are small, serialisable predicates over the game state. */
 export type Cond =
   | { all: Cond[] }
@@ -48,6 +55,12 @@ export type Cond =
   /** A choice has been used this loop / in any loop. */
   | { used: string }
   | { usedEver: string }
+  /** The loop number fits a cycle: `[n, r]` holds when (loop − 1) mod n is r (a poster that changes every night). */
+  | { loopMod: readonly [number, number] }
+  /** An anomaly has been found, in this playthrough or (seeded from the gallery) an earlier one. */
+  | { anomaly: string }
+  /** The game has reached an ending. */
+  | { ended: true }
   | { always: true };
 
 /** Effects change the state. They are applied in order. */
@@ -70,6 +83,10 @@ export type Effect =
   | { rest: string; amount?: number }
   /** Extra minutes on top of the choice's cost. */
   | { time: number }
+  /** Let the clock run on to this loop minute (sitting somewhere until 03:33). Choices only. */
+  | { timeTo: number }
+  /** Record a find from the anomaly registry (src/content/anomalies.ts). Silent. */
+  | { anomaly: string }
   /** Walk somewhere (travel time is added automatically). */
   | { go: LocationId }
   /** Show another scene in the current location. */
@@ -129,6 +146,8 @@ export interface SceneDef {
   backFirst?: boolean;
   /** Details for the location's picture while this scene is shown (`ArtContext.details`), e.g. the locked door's own picture (#123). */
   art?: readonly string[];
+  /** How the scene feels, act by act (docs/HUMOUR.md §3). */
+  tone: ToneTag;
 }
 
 export interface LocationDef {
@@ -175,6 +194,8 @@ export interface PuzzleDef {
   leave?: string;
   /** Margin note key for new game+. */
   margin?: string;
+  /** How the puzzle feels, act by act (docs/HUMOUR.md §3). */
+  tone: ToneTag;
 }
 
 /**
@@ -197,6 +218,8 @@ export interface EventDef {
    * does (#127), even after a wait, which otherwise goes straight on (#153).
    */
   hold?: boolean;
+  /** Background, like the PA: it doesn't cut a wait short (docs/HUMOUR.md §7). */
+  ambient?: boolean;
 }
 
 /** A notebook page in your handwriting that you don't remember writing. */
@@ -235,6 +258,55 @@ export interface EndingDef {
   cue: string;
 }
 
+/** A state to set up before triggering an anomaly in a test: only what the trigger needs. */
+export interface AnomalySetup {
+  act?: Act;
+  loop?: number;
+  minute?: number;
+  scene?: string;
+  known?: readonly string[];
+  inventory?: readonly string[];
+  flags?: readonly string[];
+  lflags?: readonly string[];
+  usedLoop?: readonly string[];
+  solved?: readonly string[];
+}
+
+/** How an anomaly is found. */
+export type AnomalyTrigger =
+  /** Making a choice whose effects include `{ anomaly: id }`. */
+  | { kind: 'choice'; choice: string; setup: AnomalySetup }
+  /** A timed event whose effects include it. */
+  | { kind: 'event'; event: string; setup: AnomalySetup }
+  /** A lights-out rule whose effects include it. */
+  | { kind: 'lightsout'; rule: string; setup: AnomalySetup }
+  /** A console command whose answer is one of the entry's keys. */
+  | { kind: 'command'; command: string }
+  /** A sequence of keys, pressed in a calm scene. */
+  | { kind: 'keys'; keys: readonly string[] }
+  /** Opening the game at this local time (hh:mm). */
+  | { kind: 'clock'; at: string }
+  /** Opening the game on this day of the year. */
+  | { kind: 'date'; month: number; day: number }
+  /** Opening a panel of the UI. */
+  | { kind: 'panel'; panel: string };
+
+/** One entry of the anomaly registry: something in the building that isn't in the manual. */
+export interface AnomalyDef {
+  id: string;
+  trigger: AnomalyTrigger;
+  /** Where it is found: a scene id, `puzzle:<id>`, or `ui:<screen>`. */
+  scene: string;
+  /** Its own register. Never `dread`: nothing hidden for fun lives there. */
+  tone: Exclude<Tone, 'dread'>;
+  /** The locale keys it shows. */
+  keys: readonly string[];
+  /** The acts it can be found in (every act, if absent). */
+  acts?: readonly Act[];
+  /** The achievement finding it earns. */
+  achievement?: string;
+}
+
 export interface Content {
   start: { location: LocationId };
   locations: LocationDef[];
@@ -251,6 +323,8 @@ export interface Content {
   loopStart: TextRef[];
   /** Thresholds for the obsession track. */
   obsession: { decay1: number; decay2: number; infinite: number; infiniteFromLoop: number };
+  /** The anomaly registry. */
+  anomalies: AnomalyDef[];
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -333,6 +407,10 @@ export interface GameState {
   puzzleData: Record<string, unknown>;
   /** Count of choices made (for stats and tests). */
   turns: number;
+  /** Anomalies found: in this playthrough, and seeded from the gallery at a new game (schema 2). */
+  anomalies: string[];
+  /** Achievements earned, likewise (schema 2). */
+  achievements: string[];
 }
 
 // ── Views for the UI ───────────────────────────────────────────────────────

@@ -7,14 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #212 HUMOUR.md, the tone rules, and every joke and egg in both languages (closes #202)
+- **Last merged:** #213 Tone tags, the anomaly registry and the validator's humour checks (closes #203)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#203** tone tags, the anomaly registry, the validator's humour checks, save schema 2. Engine and save code, so a cold review first.
-2. **#204** campus in-jokes and the B12 relabel (most visual baselines change here, once); **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#204** campus in-jokes and the B12 relabel (most visual baselines change here, once); **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -36,6 +35,38 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #203: **tone tags, the anomaly registry and the validator's humour checks.** The machinery the rest of M7 stands on. Nothing a player sees changes.
+  - **Tone tags:** every scene and puzzle has a `tone` (`SceneDef.tone`, `PuzzleDef.tone`), as `docs/HUMOUR.md` §3 tabulates. A tag is one tone or one per act (`src/content/tone.ts`), and the engine's shape check refuses a scene or puzzle without one.
+  - **The validator** gains a *Tone* section:
+    - `checkTone` reads each condition with only the act, the room and the scene known (`canHold`). It fails a joke key that can appear in a dread scene or puzzle; a second one in an uneasy scene in the same act (counting the events that can fire there and the anomalies found there); and any in the 02:47 page, a lights-out rule, an event at 03:33, an act title, or an epilogue other than Fire Alarm's and Clocking Off's lanyard beat.
+    - `checkVariants` fails a joke whose numbers differ between the languages, unless it is flagged `localisedVariant`, which may differ in meaning.
+    - `checkAnomalies` checks that each registry entry lives somewhere real, isn't dread, has its keys in both locales, and is recorded by the choice, event or rule that finds it.
+  - **Joke keys** are the keys of the new humour and terminal tables (`src/i18n/<locale>/humour.ts`, `terminal.ts`), empty for now; `src/content/humour.ts` lists the localised variants and the epilogue exceptions.
+  - **The registry** (`src/content/anomalies.ts`, `AnomalyDef`): id, trigger (a choice, an event, a lights-out rule, a console command, keys, the clock, the date, a panel), scene, tone, keys, acts, achievement. Empty for now.
+  - **The engine:**
+    - `{ anomaly }` records a find silently, and `Game.discover(id)` does the same for the console and the UI;
+    - `{ timeTo }` runs the clock on to a minute (choices only);
+    - `{ loopMod: [n, r] }`, `{ anomaly }` and `{ ended }` conditions;
+    - an `ambient` event shows but doesn't cut a wait short;
+    - `newGameState` takes the gallery's finds.
+  - **Save schema 2:** the state gains `anomalies` and `achievements`. The 1 → 2 migration starts both empty and touches nothing else; a real v1.0.0 save (`tests/fixtures/save-v1.0.0.json`, made by the v1.0.1 engine) loads with every field intact.
+  - **Tests:**
+    - `tests/humour-engine.test.ts`: finds, `timeTo`, ambient events, `loopMod`, the new conditions, tone tags in the shape check;
+    - `tests/validator.test.ts`: each check passing and failing on fixtures, and the game passing its own rules;
+    - `tests/anomalies.test.ts` with `tests/helpers/anomalies.ts`: a harness that triggers every registry entry the way a player would, tested on a fixture;
+    - `tests/save.test.ts`: the v1.0.0 save.
+  - **From the cold review** (a subagent that hadn't seen the work):
+    - `timeTo` lands on its minute, counting the choice's own cost, and a choice shows the whole wait as its cost;
+    - the tone check follows each key to the page it lands on: a choice's result counts on the scene it leads to, a puzzle's results on the scene that opened it, and "Noted:" titles and phantom pages where they are written;
+    - phantom pages, what a lights-out rule writes and the start room's text are part of the 02:47 page, which never has a joke;
+    - an event with no `until` (or one past 46) can fire at 03:33, so it can't carry a joke;
+    - `checkAnomalies` fails an entry in a scene that is dread in an act it can be found in, one whose choice lives elsewhere, and one recorded by a rule that ends the night another way (such rules never apply their effects);
+    - an `{ anomaly }` condition must name a registered entry (a typo would never hold);
+    - `loopMod` is checked as exactly `[n, r]`;
+    - `numbersIn` reads full-width digits and a full-width colon or point;
+    - a new game and a loaded save drop anomaly ids the registry no longer has;
+    - the QA explorer keeps the loop's place in a `loopMod` cycle, and the anomalies conditions ask about, in its state key, and counts `timeTo` in its cost check.
+  - **Playtime** is unchanged at 51.1 min EN / 52.0 min 繁中. That is the floor for the rest of M7.
 - #202: **HUMOUR.md, the tone rules and the full list, in both languages.** M7 opens (milestone 8, issues #202–#211).
   - **The rules:** where humour goes, and where it never goes (the 03:33 transitions, Act III's climax, every epilogue but Fire Alarm and Clocking Off's lanyard beat). Every scene and puzzle gets a `calm` / `uneasy` / `dread` tag, per act where Act III reads darker. A dry voice about research culture, never about the player. No real people, and the university stays unnamed.
   - **Localise, don't translate:** UK lab culture in English, Taiwanese grad school in 繁中, a different joke where one doesn't travel. New signs stay in English in both, with a 繁中 gloss.

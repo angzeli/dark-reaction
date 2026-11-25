@@ -34,6 +34,10 @@ export interface Model {
   usedRefs: Set<string>;
   /** Loop numbers and loops-in-act above these change nothing the content checks. */
   loopCap: number;
+  /** Choices that change with the loop's place in a cycle (`loopMod`) need it in the state key: the cycles' common length. */
+  loopCycle: number;
+  /** Anomalies some condition asks about. */
+  anomalyRefs: Set<string>;
   loopsInActCap: number;
   /** Choices that only show text and pass time: no effects, no scene change, nothing asks whether they were used. */
   inert: Set<string>;
@@ -110,6 +114,9 @@ export function analyse(content: Content): Model {
   const usedRefs = new Set<string>();
   let loopCap = 1;
   let loopsInActCap = 0;
+  let loopCycle = 1;
+  const anomalyRefs = new Set<string>();
+  const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
   for (const { cond, text } of conditions(content)) {
     for (const leaf of leaves(cond)) {
       if ('know' in leaf) {
@@ -120,6 +127,8 @@ export function analyse(content: Content): Model {
       else if ('usedEver' in leaf) usedRefs.add(leaf.usedEver);
       else if ('loopGte' in leaf) loopCap = Math.max(loopCap, leaf.loopGte);
       else if ('loopsInActGte' in leaf) loopsInActCap = Math.max(loopsInActCap, leaf.loopsInActGte);
+      else if ('loopMod' in leaf) loopCycle = (loopCycle * leaf.loopMod[0]) / gcd(loopCycle, leaf.loopMod[0]);
+      else if ('anomaly' in leaf) anomalyRefs.add(leaf.anomaly);
     }
   }
   // Infinite Loop asks how many loops have passed, too.
@@ -168,7 +177,7 @@ export function analyse(content: Content): Model {
   for (const r of content.lightsOut) add({ kind: 'rule', id: r.id }, r.effects);
   for (const p of content.phantoms) add({ kind: 'phantom', id: p.entry }, [{ learn: p.entry }]);
 
-  return { content, choices, knowRefs, playKnow, knowledgeOnly, eventsWithEffects, fragmentRefs, usedRefs, loopCap, loopsInActCap, inert, provenance, produces, takes };
+  return { content, choices, knowRefs, playKnow, knowledgeOnly, eventsWithEffects, fragmentRefs, usedRefs, loopCap, loopCycle, anomalyRefs, loopsInActCap, inert, provenance, produces, takes };
 }
 
 // ── What docs/DESIGN.md says things cost ───────────────────────────────────

@@ -2,15 +2,22 @@ import { describe, expect, it } from 'vitest';
 import type { Route } from '../src/content/routes.ts';
 import type { Content } from '../src/engine/types.ts';
 import type { PuzzleLogic } from '../src/puzzles/types.ts';
+import { CONTENT } from '../src/content/index.ts';
+import { EPILOGUE_JOKES, JOKE_KEYS, LOCALISED_VARIANTS } from '../src/content/humour.ts';
 import {
+  canHold,
+  checkAnomalies,
   checkCoverage,
   checkGraph,
   checkLocales,
   checkRoutes,
   checkSpacing,
+  checkTone,
+  checkVariants,
   chineseChars,
   englishWords,
   fuzz,
+  numbersIn,
   referencedKeys,
   type Render,
 } from '../scripts/lib/validator.ts';
@@ -45,8 +52,8 @@ describe('graph checks', () => {
 
   it('find unreachable scenes, dead ends and choices that do nothing', () => {
     const c: Content = miniContent();
-    c.scenes.push({ id: 'office.attic', location: 'office', text: [{ key: 'x' }], choices: [] });
-    c.scenes.push({ id: 'office.trap', location: 'office', noBack: true, text: [{ key: 'x' }], choices: [{ id: 'office.nothing', label: 'x' }] });
+    c.scenes.push({ tone: 'calm', id: 'office.attic', location: 'office', text: [{ key: 'x' }], choices: [] });
+    c.scenes.push({ tone: 'calm', id: 'office.trap', location: 'office', noBack: true, text: [{ key: 'x' }], choices: [{ id: 'office.nothing', label: 'x' }] });
     c.scenes[0]!.choices.push({ id: 'office.totrap', label: 'x', to: 'office.trap' });
     const messages = checkGraph(c).map((p) => p.message);
     expect(messages).toContain('scene "office.attic" is unreachable from the start');
@@ -57,10 +64,10 @@ describe('graph checks', () => {
   it('never let a choice that ends the game come first, where one Enter would take it (#61)', () => {
     const c: Content = miniContent();
     const end = { id: 'office.end', label: 'x', effects: [{ ending: 'honest' as const }] };
-    c.scenes.push({ id: 'office.brink', location: 'office', text: [{ key: 'x' }], choices: [end] });
-    c.scenes.push({ id: 'office.guarded', location: 'office', text: [{ key: 'x' }], choices: [{ id: 'office.stay', label: 'x', text: [{ key: 'x' }], once: 'loop' }, { ...end, id: 'office.end2' }] });
-    c.scenes.push({ id: 'office.safe', location: 'office', backFirst: true, text: [{ key: 'x' }], choices: [{ ...end, id: 'office.end3' }] });
-    c.scenes.push({ id: 'office.pointless', location: 'office', hub: true, backFirst: true, text: [{ key: 'x' }], choices: [] });
+    c.scenes.push({ tone: 'calm', id: 'office.brink', location: 'office', text: [{ key: 'x' }], choices: [end] });
+    c.scenes.push({ tone: 'calm', id: 'office.guarded', location: 'office', text: [{ key: 'x' }], choices: [{ id: 'office.stay', label: 'x', text: [{ key: 'x' }], once: 'loop' }, { ...end, id: 'office.end2' }] });
+    c.scenes.push({ tone: 'calm', id: 'office.safe', location: 'office', backFirst: true, text: [{ key: 'x' }], choices: [{ ...end, id: 'office.end3' }] });
+    c.scenes.push({ tone: 'calm', id: 'office.pointless', location: 'office', hub: true, backFirst: true, text: [{ key: 'x' }], choices: [] });
     c.scenes[0]!.choices.push(...['brink', 'guarded', 'safe', 'pointless'].map((s) => ({ id: `office.to.${s}`, label: 'x', to: `office.${s}` })));
     const messages = checkGraph(c).map((p) => p.message);
     expect(messages.filter((m) => m.includes('ends the game'))).toEqual([
@@ -160,5 +167,210 @@ describe('reading counts', () => {
   it('count English words and Chinese characters (Latin words count once)', () => {
     expect(englishWords('The *queue* lies — ask it for --all.')).toBe(7);
     expect(chineseChars('跑 NMR 要 8 分鐘。')).toBe(6);
+  });
+});
+
+describe('tone checks (docs/HUMOUR.md, #203)', () => {
+  const JOKES = new Set(['fun.a', 'fun.b', 'fun.c']);
+  const rules = { jokes: JOKES, epilogueJokes: { fire: 'any' as const, clocking: ['fun.c'] } };
+  /** The mini world with a calm-until-Act-III office whose jokes are gated as each test needs. */
+  function world(): Content {
+    const c = miniContent();
+    c.scenes.find((s) => s.id === 'office.hub')!.tone = { 1: 'calm', 2: 'calm', 3: 'uneasy' };
+    return c;
+  }
+  const office = (c: Content) => c.scenes.find((s) => s.id === 'office.hub')!;
+
+  it('pass on the mini world', () => {
+    expect(checkTone(world(), rules)).toEqual([]);
+  });
+
+  it('let a calm scene have its jokes, and an uneasy Act III one, if the rest are gated out of Act III', () => {
+    const c = world();
+    office(c).choices.push(
+      { id: 'office.j1', label: 'x', text: [{ key: 'fun.a' }], if: { not: { act: 3 } } },
+      { id: 'office.j2', label: 'x', text: [{ key: 'fun.b', if: { actGte: 3 } }] },
+    );
+    expect(checkTone(c, rules)).toEqual([]);
+  });
+
+  it('allow an uneasy scene one light line, and fail the second, naming the act', () => {
+    const c = world();
+    office(c).choices.push({ id: 'office.j1', label: 'x', text: [{ key: 'fun.a' }] }, { id: 'office.j2', label: 'x', text: [{ key: 'fun.b' }] });
+    const problems = checkTone(c, rules);
+    expect(problems.map((p) => p.message)).toEqual([expect.stringMatching(/office\.hub" is uneasy in Act 3 .* 2: "fun\.a", "fun\.b"/)]);
+  });
+
+  it('fail any joke where a scene is dread, including a joke an event could bring in', () => {
+    const c = world();
+    c.scenes.find((s) => s.id === 'nmr.hub')!.tone = { 1: 'calm', 2: 'calm', 3: 'dread' };
+    c.events.push({ id: 'ev.pa', minute: 8, until: 11, if: { at: 'nmr' }, text: [{ key: 'fun.a' }] });
+    expect(checkTone(c, rules).map((p) => p.message)).toEqual([expect.stringMatching(/nmr\.hub" is dread in Act 3, but can show "fun\.a"/)]);
+    c.events[c.events.length - 1]!.if = { all: [{ at: 'nmr' }, { not: { act: 3 } }] };
+    expect(checkTone(c, rules)).toEqual([]);
+  });
+
+  it('count an anomaly found in a scene against that scene, in the acts it can be found in', () => {
+    const c = world();
+    c.scenes.find((s) => s.id === 'pi.door')!.tone = 'dread';
+    c.anomalies.push({ id: 'x', trigger: { kind: 'panel', panel: 'x' }, scene: 'pi.door', tone: 'calm', keys: ['fun.a'], acts: [1, 2] });
+    expect(checkTone(c, rules).map((p) => p.message)).toEqual([expect.stringMatching(/pi\.door" is dread in Act 1/), expect.stringMatching(/Act 2/)]);
+  });
+
+  it('keep jokes out of 03:33, the act titles, dread puzzles and the epilogues, but for Fire Alarm and the lanyard beat', () => {
+    const c = world();
+    c.loopStart.push({ key: 'fun.a' });
+    c.lightsOut[0]!.text = [{ key: 'fun.a' }];
+    c.events.push({ id: 'ev.late', minute: 46, text: [{ key: 'fun.b' }] });
+    c.acts[0]!.title = 'fun.a';
+    c.puzzles.find((p) => p.id === 'dark')!.hints[0] = 'fun.a';
+    c.endings.find((e) => e.id === 'fire')!.epilogue.push({ key: 'fun.a' });
+    c.endings.find((e) => e.id === 'clocking')!.epilogue.push({ key: 'fun.c' }, { key: 'fun.b' });
+    c.endings.find((e) => e.id === 'dark')!.epilogue.push({ key: 'fun.a' });
+    const messages = checkTone(c, rules).map((p) => p.message);
+    expect(messages).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/02:47 page/),
+        expect.stringMatching(/lights-out rule "lo\.alarm"/),
+        expect.stringMatching(/event "ev\.late", which can fire at 03:33/),
+        expect.stringMatching(/Act 2's title/),
+        expect.stringMatching(/puzzle "dark" is dread/),
+        expect.stringMatching(/clocking epilogue \(beyond "fun\.c"\) .* "fun\.b"/),
+        expect.stringMatching(/dark epilogue/),
+      ]),
+    );
+    expect(messages.some((m) => /fire epilogue/.test(m))).toBe(false);
+    expect(messages.some((m) => /"fun\.c"$/.test(m))).toBe(false);
+  });
+
+  it('canHold reads only the act and the place; anything else might go either way', () => {
+    expect(canHold({ act: 3 }, { act: 2 })).toBe(false);
+    expect(canHold({ not: { act: 3 } }, { act: 2 })).toBe(true);
+    expect(canHold({ all: [{ flag: 'x' }, { actGte: 2 }] }, { act: 1 })).toBe(false);
+    expect(canHold({ all: [{ flag: 'x' }, { actGte: 2 }] }, { act: 2 })).toBe(true);
+    expect(canHold({ any: [{ at: 'roof' }, { scene: 'office.hub' }] }, { act: 1, scene: 'nmr.hub', location: 'nmr' })).toBe(false);
+    expect(canHold({ not: { flag: 'x' } }, { act: 1 })).toBe(true);
+  });
+});
+
+describe('tone checks follow a key to the page it lands on (#203, from the cold review)', () => {
+  const JOKES = new Set(['fun.a', 'fun.b', 'ph.joke.body', 'nb.joke.title']);
+  const rules = { jokes: JOKES, epilogueJokes: {} };
+  const messages = (c: Content) => checkTone(c, rules).map((p) => p.message);
+
+  it('an event that can still fire at 03:33 (no until, or until past it) never has a joke', () => {
+    const c = miniContent();
+    c.events.push({ id: 'ev.pa', minute: 8, if: { at: 'office' }, text: [{ key: 'fun.a' }] });
+    expect(messages(c)).toEqual([expect.stringMatching(/event "ev\.pa", which can fire at 03:33/)]);
+    c.events[c.events.length - 1]!.until = 12;
+    expect(messages(c)).toEqual([]);
+  });
+
+  it('a choice’s result counts on the page it leads to: a dread scene doesn’t get a joke through the door', () => {
+    const c = miniContent();
+    c.scenes.find((s) => s.id === 'office.computer')!.tone = 'dread';
+    c.scenes[0]!.choices.push({ id: 'office.joke', label: 'x', text: [{ key: 'fun.a' }], to: 'office.computer' });
+    expect(messages(c)).toEqual(expect.arrayContaining([expect.stringMatching(/office\.computer" is dread in Act 1, but can show "fun\.a"/)]));
+  });
+
+  it('a puzzle’s results count on the page of the scene that opened it', () => {
+    const c = miniContent();
+    c.scenes[0]!.tone = { 1: 'calm', 2: 'calm', 3: 'dread' };
+    c.puzzles.find((p) => p.id === 'demo')!.solvedText = [{ key: 'fun.a' }];
+    expect(messages(c)).toEqual([
+      expect.stringMatching(/office\.hub" is dread in Act 3, but can show "fun\.a"/),
+    ]);
+  });
+
+  it('a phantom page never has a joke (it is written at 02:47), and a "Noted:" title counts where it is written', () => {
+    const c = miniContent();
+    c.notebook.push({ id: 'ph.joke', section: 'anomalies', kind: 'phantom', title: 'x', body: 'ph.joke.body' }, { id: 'nb.joke', section: 'data', title: 'nb.joke.title', body: 'x' });
+    c.phantoms.push({ entry: 'ph.joke', when: { loopGte: 3 } });
+    c.scenes.find((s) => s.id === 'pi.door')!.tone = 'dread';
+    c.scenes.find((s) => s.id === 'pi.door')!.choices.push({ id: 'pi.joke', label: 'x', text: [{ key: 'x' }], effects: [{ learn: 'nb.joke' }] });
+    expect(messages(c)).toEqual(
+      expect.arrayContaining([expect.stringMatching(/phantom "ph\.joke".* "ph\.joke\.body"/), expect.stringMatching(/pi\.door" is dread in Act 1, but can show "nb\.joke\.title"/)]),
+    );
+  });
+
+  it('the start room’s own text is on the 02:47 page', () => {
+    const c = miniContent();
+    c.scenes[0]!.text.push({ key: 'fun.b' });
+    expect(messages(c)).toEqual([expect.stringMatching(/the 02:47 page \(the start room\).*"fun\.b"/)]);
+  });
+});
+
+describe('localised variants (#203)', () => {
+  const tables = (en: Record<string, string>, zh: Record<string, string>) => ({ en, 'zh-Hant-TW': zh });
+  it('the same joke keeps its numbers in both languages', () => {
+    const t = tables({ 'fun.y': 'It reads 104 %. Of what?' }, { 'fun.y': '104 %。一百零四趴的什麼？' });
+    expect(checkVariants(t, new Set(['fun.y']), new Set())).toEqual([]);
+  });
+  it('fail a joke whose numbers differ, unless it is flagged localisedVariant, which may differ in meaning', () => {
+    const t = tables({ 'fun.v': 'RESEARCH WRITE-UP ROOM, optimistic on 2 counts.' }, { 'fun.v': '大家都叫它「寫不完的房間」。' });
+    expect(checkVariants(t, new Set(['fun.v']), new Set()).map((p) => p.message)).toEqual([expect.stringMatching(/"fun\.v" has \[2\] in English and \[\] in 繁中/)]);
+    expect(checkVariants(t, new Set(['fun.v']), new Set(['fun.v']))).toEqual([]);
+  });
+  it('read times, decimals and thousands as numbers, and placeholders as nothing', () => {
+    expect(numbersIn('Last service 18:15. It is {clock}. Up 1,247 days; Rf 0.3.')).toEqual(['0.3', '1247', '18:15']);
+  });
+  it('read full-width digits, and a full-width colon or point between digits, as their ASCII twins', () => {
+    expect(numbersIn('末班車：１８：１５。產率１０４％，Rf ０．３。')).toEqual(numbersIn('Last service 18:15; 104 %; Rf 0.3.'));
+  });
+  it('refuse a flag on a key that is not a joke', () => {
+    expect(checkVariants(tables({}, {}), new Set(), new Set(['office.hub.act1'])).map((p) => p.check)).toEqual(['variants']);
+  });
+});
+
+describe('anomaly registry checks (#203)', () => {
+  it('pass when the choice that finds an entry records it', () => {
+    const c = miniContent();
+    c.scenes[0]!.choices.push({ id: 'office.doodle', label: 'c.doodle', text: [{ key: 'r.doodle' }], effects: [{ anomaly: 'doodle' }] });
+    c.anomalies.push({ id: 'doodle', trigger: { kind: 'choice', choice: 'office.doodle', setup: {} }, scene: 'office.hub', tone: 'calm', keys: ['r.doodle'] });
+    const tables = { en: { 'r.doodle': 'x' }, 'zh-Hant-TW': { 'r.doodle': 'x' } };
+    expect(checkAnomalies(c, tables)).toEqual([]);
+  });
+  it('fail an entry that lives in a dread scene, says it lives somewhere its choice isn’t, or rides a rule whose effects never run', () => {
+    const c = miniContent();
+    c.scenes[0]!.choices.push({ id: 'office.doodle', label: 'c.doodle', text: [{ key: 'k' }], effects: [{ anomaly: 'doodle' }] });
+    c.scenes.find((s) => s.id === 'pi.door')!.tone = { 1: 'calm', 2: 'calm', 3: 'dread' };
+    const dark = c.lightsOut.find((r) => r.id === 'lo.dark')!;
+    dark.effects = [{ anomaly: 'alarm' }];
+    c.anomalies.push(
+      { id: 'door', trigger: { kind: 'panel', panel: 'x' }, scene: 'pi.door', tone: 'calm', keys: ['k'] },
+      { id: 'doodle', trigger: { kind: 'choice', choice: 'office.doodle', setup: {} }, scene: 'nmr.hub', tone: 'calm', keys: ['k'] },
+      { id: 'alarm', trigger: { kind: 'lightsout', rule: 'lo.dark', setup: {} }, scene: 'office.hub', tone: 'calm', keys: ['k'] },
+    );
+    const tables = { en: { k: 'x' }, 'zh-Hant-TW': { k: 'x' } };
+    expect(checkAnomalies(c, tables).map((p) => p.message)).toEqual([
+      expect.stringMatching(/"door" lives in "pi\.door", which is dread in Act 3/),
+      expect.stringMatching(/"doodle" says it lives in "nmr\.hub", but its choice is in "office\.hub"/),
+      expect.stringMatching(/"alarm" is recorded by lights-out rule "lo\.dark", which ends the night another way/),
+    ]);
+  });
+
+  it('fail an entry nowhere real, dread, missing a locale, or not recorded by what finds it', () => {
+    const c = miniContent();
+    c.scenes[0]!.choices.push({ id: 'office.plain', label: 'x', text: [{ key: 'x' }] });
+    c.anomalies.push(
+      { id: 'lost', trigger: { kind: 'panel', panel: 'credits' }, scene: 'office.attic', tone: 'calm', keys: ['k'] },
+      { id: 'grim', trigger: { kind: 'panel', panel: 'credits' }, scene: 'ui:title', tone: 'dread' as 'calm', keys: ['k'] },
+      { id: 'quiet', trigger: { kind: 'choice', choice: 'office.plain', setup: {} }, scene: 'office.hub', tone: 'calm', keys: ['k', 'only.en'] },
+    );
+    const tables = { en: { k: 'x', 'only.en': 'x' }, 'zh-Hant-TW': { k: 'x' } };
+    expect(checkAnomalies(c, tables).map((p) => p.message)).toEqual([
+      expect.stringMatching(/"lost" lives in "office\.attic"/),
+      expect.stringMatching(/"grim" is dread/),
+      expect.stringMatching(/"only\.en", which isn't in zh-Hant-TW/),
+      expect.stringMatching(/"quiet" is found by choice "office\.plain", which doesn't record it/),
+    ]);
+  });
+});
+
+describe('the game’s humour passes its own rules', () => {
+  it('tone, variants and the registry', () => {
+    expect(checkTone(CONTENT, { jokes: JOKE_KEYS, epilogueJokes: EPILOGUE_JOKES })).toEqual([]);
+    expect(checkVariants(TABLES, JOKE_KEYS, LOCALISED_VARIANTS)).toEqual([]);
+    expect(checkAnomalies(CONTENT, TABLES)).toEqual([]);
   });
 });

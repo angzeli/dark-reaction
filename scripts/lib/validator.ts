@@ -8,7 +8,8 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { Game } from '../../src/engine/engine.ts';
 import { RouteError, simulate, type Screen } from '../../src/engine/simulate.ts';
-import type { Content, Effect, LocationId, TextRef } from '../../src/engine/types.ts';
+import { LOOP_LENGTH } from '../../src/engine/clock.ts';
+import type { Act, Cond, Content, Effect, EndingId, LocationId, SceneDef, TextRef, Tone, ToneTag } from '../../src/engine/types.ts';
 import { compareTables, placeholders, t, type Locale, type Table } from '../../src/i18n/i18n.ts';
 import type { Route } from '../../src/content/routes.ts';
 import type { PuzzleLogic } from '../../src/puzzles/types.ts';
@@ -197,6 +198,254 @@ export function checkLocales(tables: Record<Locale, Table>, used: Map<string, st
     if (value.includes("'")) problems.push(warn('style', `en "${key}" uses a straight apostrophe; prefer ’`));
     if (value.includes('"')) problems.push(warn('style', `en "${key}" uses a straight double quote; prefer “ ”`));
   }
+  return problems;
+}
+
+// ── Tone (docs/HUMOUR.md) ──────────────────────────────────────────────────
+
+/** What a tone check knows about a moment: the act, and where you are. Nothing else. */
+export interface ToneContext {
+  act: Act;
+  scene?: string;
+  location?: LocationId;
+}
+
+type Tri = 'yes' | 'no' | 'maybe';
+
+/** A condition, evaluated with only the act and the place known: anything else might go either way. */
+function tri(cond: Cond | undefined, ctx: ToneContext): Tri {
+  if (!cond) return 'yes';
+  if ('all' in cond) {
+    const r = cond.all.map((c) => tri(c, ctx));
+    return r.includes('no') ? 'no' : r.every((x) => x === 'yes') ? 'yes' : 'maybe';
+  }
+  if ('any' in cond) {
+    const r = cond.any.map((c) => tri(c, ctx));
+    return r.includes('yes') ? 'yes' : r.every((x) => x === 'no') ? 'no' : 'maybe';
+  }
+  if ('not' in cond) {
+    const r = tri(cond.not, ctx);
+    return r === 'yes' ? 'no' : r === 'no' ? 'yes' : 'maybe';
+  }
+  if ('act' in cond) return ctx.act === cond.act ? 'yes' : 'no';
+  if ('actGte' in cond) return ctx.act >= cond.actGte ? 'yes' : 'no';
+  if ('scene' in cond && ctx.scene) return ctx.scene === cond.scene ? 'yes' : 'no';
+  if ('at' in cond && ctx.location) return ctx.location === cond.at ? 'yes' : 'no';
+  if ('always' in cond) return 'yes';
+  return 'maybe';
+}
+
+/** Whether a condition can hold in this act, in this place. */
+export const canHold = (cond: Cond | undefined, ctx: ToneContext): boolean => tri(cond, ctx) !== 'no';
+
+export const toneIn = (tag: ToneTag, act: Act): Tone => (typeof tag === 'string' ? tag : tag[act]);
+
+const ACTS: readonly Act[] = [1, 2, 3];
+
+/** The keys a scene can show in an act: its text, its choices' labels, and what they say when chosen. */
+export function sceneKeys(scene: SceneDef, act: Act): Set<string> {
+  const ctx: ToneContext = { act, scene: scene.id, location: scene.location };
+  const keys = new Set<string>();
+  for (const r of scene.text) if (canHold(r.if, ctx)) keys.add(r.key);
+  for (const c of scene.choices) {
+    if (!canHold(c.if, ctx)) continue;
+    keys.add(c.label);
+    for (const r of c.text ?? []) if (canHold(r.if, ctx)) keys.add(r.key);
+  }
+  return keys;
+}
+
+export interface HumourRules {
+  /** The joke keys: the humour and terminal tables. */
+  jokes: ReadonlySet<string>;
+  /** Epilogues a joke may appear in, all of it ('any') or only the keys listed. */
+  epilogueJokes: Readonly<Partial<Record<EndingId, 'any' | readonly string[]>>>;
+}
+
+/** Kinds of anomaly the engine records itself: their keys are already in the content where they show. */
+const ENGINE_FOUND = new Set(['choice', 'event', 'lightsout']);
+
+/**
+ * The tone rules (docs/HUMOUR.md §1). Every key is counted on the page it lands on, act by act:
+ * - a scene's page is its text, its choices' labels and results, and the results of choices elsewhere
+ *   that lead to it (a result is printed above the next scene's text); the "Noted:" titles and phantom
+ *   pages written there; the events that can fire there; and the console's and the UI's finds there;
+ * - a puzzle's results land on the page of the scene that opened it.
+ * No joke on a dread page, one at most on an uneasy one. And none, ever, on the 02:47 page (the loop's
+ * own text, its phantom pages, what a lights-out rule writes, the start room), in an event that can fire
+ * at 03:33, an act title, a dread puzzle, or an epilogue other than the ones allowed. Conditions are read
+ * with only the act and the place known, so a joke gated out of Act III doesn't count against Act III.
+ */
+export function checkTone(content: Content, rules: HumourRules): Problem[] {
+  const problems: Problem[] = [];
+  const jokesIn = (keys: Iterable<string>) => [...new Set(keys)].filter((k) => rules.jokes.has(k));
+  const list = (keys: string[]) => keys.map((k) => `"${k}"`).join(', ');
+  const budget = (what: string, tone: Tone, act: Act, keys: Iterable<string>) => {
+    const jokes = jokesIn(keys);
+    if (tone === 'dread' && jokes.length) problems.push(err('tone', `${what} is dread in Act ${act}, but can show ${list(jokes)}`));
+    if (tone === 'uneasy' && jokes.length > 1) problems.push(err('tone', `${what} is uneasy in Act ${act} and gets one light line at most, but can show ${jokes.length}: ${list(jokes)}`));
+  };
+  const notebook = new Map(content.notebook.map((n) => [n.id, n] as const));
+  /** What a page shows when an entry is written there: the phantom page itself, or "Noted:" and the title. */
+  const written = (effects: readonly Effect[] | undefined) =>
+    (effects ?? []).flatMap((e) => {
+      const id = 'learn' in e ? e.learn : 'fudge' in e ? e.fudge : null;
+      const def = id ? notebook.get(id) : undefined;
+      return def ? [def.kind === 'phantom' ? def.body : def.title] : [];
+    });
+  const locations = new Map(content.locations.map((l) => [l.id, l] as const));
+  const roomScenes = (id: LocationId) => {
+    const loc = locations.get(id);
+    return loc ? [loc.hub, ...(loc.entry ?? []).map((e) => e.scene)] : [];
+  };
+  const outside = (where: string, act: Act) =>
+    content.anomalies.filter((a) => a.scene === where && !ENGINE_FOUND.has(a.trigger.kind) && (!a.acts || a.acts.includes(act))).flatMap((a) => a.keys);
+
+  // Every page, act by act.
+  const pages = new Map<string, Set<string>>();
+  const page = (scene: string, act: Act) => {
+    const key = `${scene}|${act}`;
+    let set = pages.get(key);
+    if (!set) pages.set(key, (set = new Set()));
+    return set;
+  };
+  const openers = new Map<string, Array<{ scene: string; act: Act }>>();
+  for (const scene of content.scenes) {
+    for (const act of ACTS) {
+      const ctx: ToneContext = { act, scene: scene.id, location: scene.location };
+      const here = page(scene.id, act);
+      for (const k of sceneKeys(scene, act)) here.add(k);
+      for (const k of written(scene.onEnter)) here.add(k);
+      for (const k of outside(scene.id, act)) here.add(k);
+      for (const c of scene.choices) {
+        if (!canHold(c.if, ctx)) continue;
+        const result = [...(c.text ?? []).filter((r) => canHold(r.if, ctx)).map((r) => r.key), ...written(c.effects)];
+        const next = [scene.id, ...(c.to ? [c.to] : [])];
+        for (const e of c.effects ?? []) {
+          if ('scene' in e) next.push(e.scene);
+          if ('hub' in e) next.push(...roomScenes(scene.location));
+          if ('go' in e) next.push(...roomScenes(e.go));
+          if ('puzzle' in e) openers.set(e.puzzle, [...(openers.get(e.puzzle) ?? []), { scene: scene.id, act }]);
+        }
+        for (const n of next) for (const k of result) page(n, act).add(k);
+      }
+      for (const ev of content.events) {
+        if (!canHold(ev.if, ctx)) continue;
+        for (const r of ev.text) if (canHold(r.if, ctx)) here.add(r.key);
+        for (const k of written(ev.effects)) here.add(k);
+      }
+    }
+  }
+  for (const p of content.puzzles) {
+    const own = [...p.hints, `puzzle.${p.id}.title`, `puzzle.${p.id}.intro`];
+    const results = [...[...(p.solvedText ?? []), ...(p.failedText ?? []), ...(p.leftText ?? [])].map((r) => r.key), ...written([...p.onSolve, ...(p.onFail ?? [])])];
+    for (const act of ACTS) budget(`puzzle "${p.id}"`, toneIn(p.tone, act), act, [...own, ...results, ...outside(`puzzle:${p.id}`, act)]);
+    for (const o of openers.get(p.id) ?? []) for (const k of results) page(o.scene, o.act).add(k);
+  }
+  const scenes = new Map(content.scenes.map((s) => [s.id, s] as const));
+  for (const [key, keys] of pages) {
+    const [id, a] = key.split('|');
+    const act = Number(a) as Act;
+    budget(`scene "${id}"`, toneIn(scenes.get(id!)!.tone, act), act, keys);
+  }
+
+  const never = (keys: readonly string[], what: string) => {
+    const jokes = jokesIn(keys);
+    if (jokes.length) problems.push(err('tone', `${what} never has a joke, but shows ${list(jokes)}`));
+  };
+  const refs = (list: readonly TextRef[] | undefined) => (list ?? []).map((r) => r.key);
+  never(refs(content.loopStart), 'the 02:47 page');
+  for (const ph of content.phantoms) never(written([{ learn: ph.entry }]), `the 02:47 page (phantom "${ph.entry}")`);
+  const start = roomScenes(content.start.location).flatMap((id) => refs(scenes.get(id)?.text));
+  never(start, `the 02:47 page (the start room)`);
+  for (const rule of content.lightsOut) never([...refs(rule.text), ...written(rule.effects)], `lights-out rule "${rule.id}"`);
+  for (const ev of content.events) {
+    // Any event still unfired at 03:33 can fire then (you arrive, or its condition comes true), unless its `until` has passed.
+    if (ev.minute >= LOOP_LENGTH || ev.until === undefined || ev.until > LOOP_LENGTH) never([...refs(ev.text), ...written(ev.effects)], `event "${ev.id}", which can fire at 03:33`);
+    if (ev.minute === 0) never(refs(ev.text), `event "${ev.id}" at 02:47`);
+  }
+  for (const act of content.acts) never([act.title], `Act ${act.act}'s title`);
+  for (const ending of content.endings) {
+    const allowed = rules.epilogueJokes[ending.id];
+    if (allowed === 'any') continue;
+    never(
+      ending.epilogue.filter((r) => !allowed?.includes(r.key)).map((r) => r.key),
+      `the ${ending.id} epilogue${allowed?.length ? ` (beyond ${list([...allowed])})` : ''}`,
+    );
+  }
+  return problems;
+}
+
+/**
+ * The anomaly registry against the content (docs/HUMOUR.md §2): every entry lives somewhere real that
+ * isn't dread in any act it can be found in, shows keys both locales have, and the choice, event or
+ * rule that triggers it really records it, where the entry says it is.
+ */
+export function checkAnomalies(content: Content, tables: Record<Locale, Table>): Problem[] {
+  const problems: Problem[] = [];
+  const scenes = new Map(content.scenes.map((s) => [s.id, s] as const));
+  const puzzles = new Map(content.puzzles.map((p) => [p.id, p] as const));
+  const records = (effects: readonly Effect[] | undefined, id: string) => (effects ?? []).some((e) => 'anomaly' in e && e.anomaly === id);
+  const choices = new Map(content.scenes.flatMap((s) => s.choices.map((c) => [c.id, { c, s }] as const)));
+  for (const a of content.anomalies) {
+    const where = a.scene;
+    const tag = where.startsWith('puzzle:') ? puzzles.get(where.slice(7))?.tone : where.startsWith('ui:') ? (where.length > 3 ? 'calm' : undefined) : scenes.get(where)?.tone;
+    if (!tag) problems.push(err('anomalies', `"${a.id}" lives in "${where}", which doesn't exist`));
+    else for (const act of a.acts ?? ACTS) if (toneIn(tag, act) === 'dread') problems.push(err('anomalies', `"${a.id}" lives in "${where}", which is dread in Act ${act}`));
+    if ((a.tone as Tone) === 'dread') problems.push(err('anomalies', `"${a.id}" is dread: nothing hidden for fun lives there`));
+    if (a.keys.length === 0) problems.push(err('anomalies', `"${a.id}" shows no keys`));
+    for (const k of a.keys) for (const loc of ['en', 'zh-Hant-TW'] as const) if (!(k in tables[loc])) problems.push(err('anomalies', `"${a.id}" shows "${k}", which isn't in ${loc}`));
+    const tr = a.trigger;
+    if (tr.kind === 'choice') {
+      const found = choices.get(tr.choice);
+      if (!records(found?.c.effects, a.id)) problems.push(err('anomalies', `"${a.id}" is found by choice "${tr.choice}", which doesn't record it`));
+      else if (where !== found!.s.id && where !== found!.c.to) problems.push(err('anomalies', `"${a.id}" says it lives in "${where}", but its choice is in "${found!.s.id}"`));
+    }
+    if (tr.kind === 'event' && !records(content.events.find((e) => e.id === tr.event)?.effects, a.id)) problems.push(err('anomalies', `"${a.id}" is found by event "${tr.event}", which doesn't record it`));
+    if (tr.kind === 'lightsout') {
+      const rule = content.lightsOut.find((r) => r.id === tr.rule);
+      if (!records(rule?.effects, a.id)) problems.push(err('anomalies', `"${a.id}" is found by lights-out rule "${tr.rule}", which doesn't record it`));
+      // A rule that ends the game or opens the dark run never applies its effects.
+      else if (rule!.ending || rule!.puzzle) problems.push(err('anomalies', `"${a.id}" is recorded by lights-out rule "${tr.rule}", which ends the night another way and never applies its effects`));
+    }
+  }
+  return problems;
+}
+
+const NUMBER = /\d+(?:[.,:]\d+)*/g;
+/**
+ * The numbers in a string, placeholders aside and thousands commas dropped, sorted. Full-width digits
+ * and a full-width colon or point between digits read as their ASCII twins (「１０４」, 「18：15」).
+ */
+export const numbersIn = (text: string): string[] =>
+  (
+    text
+      .replace(/\{[^}]*\}/g, ' ')
+      .replace(/[\uff10-\uff19]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xfee0))
+      .replace(/(\d)[：．](?=\d)/g, (_, d: string, i: number, all: string) => `${d}${all[i + 1] === '：' ? ':' : '.'}`)
+      .match(NUMBER) ?? []
+  )
+    .map((n) => n.replace(/,(?=\d{3}(?!\d))/g, ''))
+    .sort();
+
+/**
+ * A joke carries the same numbers in both languages (104, 0.3, 284.8, 18:15): that's the same joke.
+ * A key flagged `localisedVariant` tells a different joke in each, and may differ however it likes.
+ */
+export function checkVariants(tables: Record<Locale, Table>, jokes: ReadonlySet<string>, variants: ReadonlySet<string>): Problem[] {
+  const problems: Problem[] = [];
+  for (const key of jokes) {
+    if (variants.has(key)) continue;
+    const en = tables.en[key];
+    const zh = tables['zh-Hant-TW'][key];
+    if (en === undefined || zh === undefined) continue;
+    const a = numbersIn(en);
+    const b = numbersIn(zh);
+    if (a.join(' ') !== b.join(' ')) {
+      problems.push(err('variants', `joke "${key}" has [${a.join(', ')}] in English and [${b.join(', ')}] in 繁中: the same joke keeps its numbers; flag it localisedVariant if it's a different one`));
+    }
+  }
+  for (const key of variants) if (!jokes.has(key)) problems.push(err('variants', `"${key}" is flagged localisedVariant but isn't a joke key`));
   return problems;
 }
 

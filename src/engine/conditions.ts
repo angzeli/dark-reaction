@@ -32,6 +32,9 @@ export function holds(cond: Cond | undefined, state: GameState): boolean {
   if ('loopsInActGte' in cond) return state.loop - state.actLoop >= cond.loopsInActGte;
   if ('used' in cond) return state.usedLoop.includes(cond.used);
   if ('usedEver' in cond) return state.usedEver.includes(cond.usedEver);
+  if ('loopMod' in cond) return (state.loop - 1) % cond.loopMod[0] === cond.loopMod[1];
+  if ('anomaly' in cond) return state.anomalies.includes(cond.anomaly);
+  if ('ended' in cond) return state.ending !== null;
   if ('always' in cond) return true;
   const unknown: never = cond;
   throw new Error(`Unknown condition: ${JSON.stringify(unknown)}`);
@@ -52,5 +55,6 @@ export function condRefs(cond: Cond | undefined, out: Array<{ kind: string; id: 
   else if ('flag' in cond) out.push({ kind: 'flag', id: cond.flag });
   else if ('lflag' in cond) out.push({ kind: 'lflag', id: cond.lflag });
   else if ('scene' in cond) out.push({ kind: 'scene', id: cond.scene });
+  else if ('anomaly' in cond) out.push({ kind: 'anomaly', id: cond.anomaly });
   return out;
 }

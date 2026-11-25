@@ -1,11 +1,13 @@
 /** Puzzle definitions: par times, hints, what solving (or failing) does. docs/DESIGN.md §11. */
 import type { PuzzleDef } from '../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from './tone.ts';
 
 const hints = (id: string): [string, string, string] => [`puzzle.${id}.h1`, `puzzle.${id}.h2`, `puzzle.${id}.h3`];
 
 export const PUZZLE_DEFS: PuzzleDef[] = [
   {
     id: 'tlc',
+    tone: 'calm',
     par: 2.5,
     hints: hints('tlc'),
     onSolve: [{ give: 'item.fractions' }, { lflag: 'fractions.taken' }, { learn: 'nb.tlc' }],
@@ -15,6 +17,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'glovebox',
+    tone: 'uneasy',
     par: 3,
     hints: hints('glovebox'),
     onSolve: [{ take: 'item.vial' }, { give: 'item.tube.own' }, { learn: 'nb.purge' }],
@@ -26,6 +29,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'console',
+    tone: CALM_UNTIL_ACT3,
     par: 3,
     hints: hints('console'),
     onSolve: [{ learn: 'nb.queue.0333' }, { learn: 'nb.holder13' }],
@@ -36,6 +40,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   // ── Act II ──────────────────────────────────────────────────────────────
   {
     id: 'doorlog',
+    tone: 'uneasy',
     par: 3.5,
     hints: hints('doorlog'),
     onSolve: [{ learn: 'nb.porter' }, { learn: 'nb.keeps' }, { fragment: 'yc.badge' }],
@@ -45,6 +50,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'cipher',
+    tone: 'uneasy',
     par: 3,
     hints: hints('cipher'),
     onSolve: [{ learn: 'nb.cipher' }, { fragment: 'yc.notebook' }],
@@ -54,6 +60,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'freezer',
+    tone: 'uneasy',
     par: 3,
     hints: hints('freezer'),
     onSolve: [{ learn: 'nb.freezer' }, { give: 'item.microsd' }],
@@ -67,6 +74,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   // ── Act III ─────────────────────────────────────────────────────────────
   {
     id: 'schlenk',
+    tone: 'uneasy',
     // Three purges now (#125): four more moves than the one it was.
     par: 3.5,
     hints: hints('schlenk'),
@@ -80,6 +88,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'chirp',
+    tone: 'uneasy',
     par: 2.5,
     hints: hints('chirp'),
     // Armed for tonight; later nights key the PIN in again (nmr.ups.again).
@@ -90,6 +99,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   },
   {
     id: 'fabrication',
+    tone: 'uneasy',
     par: 3,
     hints: hints('fabrication'),
     onSolve: [{ learn: 'nb.fabrication' }],
@@ -100,6 +110,7 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
   {
     // Opens at 03:33 in the dark run (LIGHTS_OUT, lo.dark.run); nothing in the rooms opens it.
     id: 'peakmatch',
+    tone: 'dread',
     par: 2,
     hints: hints('peakmatch'),
     onSolve: [{ learn: 'nb.peak' }, { ending: 'dark' }],

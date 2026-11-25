@@ -4,11 +4,13 @@
  * chirp, the printer. docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { CALM_THEN_DREAD } from '../tone.ts';
 
 export const nmrScenes: SceneDef[] = [
   {
     id: 'nmr.hub',
     location: 'nmr',
+    tone: CALM_THEN_DREAD,
     hub: true,
     text: [
       { key: 'nmr.hub.act1', if: { not: { act: 3 } } },

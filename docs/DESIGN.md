@@ -411,4 +411,4 @@ Procedural Web Audio only (no samples). Muted until the player opts in; master, 
 
 ## 20. Technical shape (summary)
 
-Vite + TypeScript, no UI framework. Story, choices, flags, the clock, loop rules and notebook entries live in typed content files under `src/content/`; every string is referenced by key, with one table per locale (`en`, `zh-Hant-TW`). A validator checks graph reachability, dead ends, every ending reachable, locale key and placeholder parity, and the playtime estimate. See `CLAUDE.md` for commands and conventions.
+Vite + TypeScript, no UI framework. Story, choices, flags, the clock, loop rules and notebook entries live in typed content files under `src/content/`; every string is referenced by key, with one table per locale (`en`, `zh-Hant-TW`). A validator checks graph reachability, dead ends, every ending reachable, locale key and placeholder parity, the playtime estimate and, from v1.1.0, the tone rules for humour (`HUMOUR.md` §2). See `CLAUDE.md` for commands and conventions.
