@@ -153,4 +153,20 @@ export const act1 = {
   'office.pencil': 'Pick up the pencil on the floor',
   'office.thesis': 'Open your thesis chapter',
   'nmr.chart': 'Read the chart by the console',
+
+  // ── v1.1.0: the lab’s small things, the dark room, Squiddy ──────────────────
+  'synth.around': 'Look around the lab',
+  'synth.around.text': 'Benches, a balance under its draft shield, a whiteboard by the door, and in the corner a cupboard with a blackout curtain for a door.',
+  'synth.tare': 'Tare the balance',
+  'synth.darkroom': 'Go into the dark room',
+  'synth.darkroom.act3':
+    'The dark room, darker. The lamp is off. You have the feeling it has been off for a long time, and that the dark in here is not the kind anybody switched on.',
+  'synth.darkcontrol': 'Run the dark control: lamp off, until 03:33',
+  'synth.darkcontrol.r': 'You switch off the lamp, draw the curtain and sit in the dark with the stirring flask, because every result needs its control.',
+  'nb.darkcontrol.title': 'Dark control',
+  'nb.squiddy.title': 'Squiddy',
+  'squid.look': 'Look at the doodle',
+  'synth.darkcontrol.late': 'Think about a dark control',
+  'synth.darkcontrol.late.r':
+    'A proper dark control would mean coming straight here at 02:47 and sitting out the whole night with the lamp off. Not tonight, then.',
 } as const;

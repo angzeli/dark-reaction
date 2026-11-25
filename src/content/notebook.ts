@@ -98,4 +98,7 @@ export const NOTEBOOK: NotebookDef[] = [
   entry('nb.ups', 'tonight'),
   entry('nb.fabrication', 'data'),
   entry('nb.peak', 'data'),
+  // v1.1.0 (docs/HUMOUR.md §7)
+  entry('nb.darkcontrol', 'data'),
+  entry('nb.squiddy', 'anomalies'),
 ].map(withAsides);

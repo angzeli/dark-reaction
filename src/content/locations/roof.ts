@@ -4,6 +4,7 @@
  * docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const roofScenes: SceneDef[] = [
@@ -58,6 +59,7 @@ export const roofScenes: SceneDef[] = [
       { id: 'roof.city', label: 'roof.city', cost: 1, once: 'loop', text: [{ key: 'roof.city.r' }] },
       // Act III: the cranes' red lights keep their own time, and sometimes the same time.
       { id: 'roof.cranes', label: 'roof.cranes', cost: 1, once: 'loop', if: { act: 3 }, text: [{ key: 'roof.cranes.r' }] },
+      squid('roof'),
     ],
   },
 ];

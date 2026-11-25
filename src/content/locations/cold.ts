@@ -4,6 +4,7 @@
  * docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const coldScenes: SceneDef[] = [
@@ -61,6 +62,7 @@ export const coldScenes: SceneDef[] = [
       { id: 'cold.fridge', label: 'cold.fridge', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.cold.fridge' }] },
       // Act III: the frost on the floor, all of it pointing upstairs (#69, drawn in #64).
       { id: 'cold.frost', label: 'cold.frost', cost: 1, once: 'loop', if: { act: 3 }, effects: [{ learn: 'nb.frost' }], text: [{ key: 'cold.frost.r' }] },
+      squid('cold'),
     ],
   },
 ];

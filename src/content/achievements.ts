@@ -5,6 +5,7 @@
  * across new games.
  */
 import type { AchievementDef, Cond } from '../engine/types.ts';
+import { CENSUS } from './squid.ts';
 
 const ach = (id: string, how: Partial<Pick<AchievementDef, 'if' | 'choice'>> = {}): AchievementDef => ({ id, title: `ach.${id}.title`, desc: `ach.${id}.desc`, ...how });
 const flags = (...ids: string[]): Cond => ({ all: ids.map((flag) => ({ flag })) });
@@ -23,4 +24,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   ach('writingup', { if: { loopGte: 13 } }),
   // Tea at 02:47, once your own handwriting has told you to make it first.
   ach('tea', { choice: 'office.tea', if: { all: [{ minuteLt: 1 }, { know: 'ph.tea' }] } }),
+  // The hidden eggs (§7).
+  ach('dark'),
+  ach('yield'),
+  ach('slide'),
+  ach('bed'),
+  ach('mole'),
+  // Squiddy in all six rooms, in any playthrough.
+  ach('census', { if: CENSUS }),
 ];

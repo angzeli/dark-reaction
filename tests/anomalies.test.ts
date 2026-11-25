@@ -36,7 +36,8 @@ describe('the trigger harness itself', () => {
     c.anomalies.push(doodle);
     expect(trigger(c, doodle)).toEqual({ found: true, shown: ['r.doodle'] });
     expect(() => trigger(c, { ...doodle, trigger: { ...doodle.trigger, setup: { scene: 'nmr.hub' } } })).toThrow(/isn't offered/);
-    expect(() => trigger(c, { ...doodle, trigger: { kind: 'clock', at: '03:33' } })).toThrow(/nothing triggers a "clock" anomaly yet/);
+    // Opened at an ordinary time, the title has no egg: nothing is found.
+    expect(trigger(c, { ...doodle, id: 'bed', trigger: { kind: 'clock', at: '14:00' } }).found).toBe(false);
     expect(trigger(c, { ...doodle, id: 'cmd.xyzzy', trigger: { kind: 'command', command: 'xyzzy' } })).toEqual({ found: true, shown: ['console.out.xyzzy'] });
     expect(trigger(c, { ...doodle, trigger: { kind: 'command', command: 'queue' } }).found).toBe(false);
   });
