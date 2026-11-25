@@ -360,7 +360,7 @@ If the Dark Reaction setup is in place at 03:33 (you in the NMR suite, her tube 
 ## 15. Writing style guide
 
 - **Voice:** second person, present tense, literary and restrained. Concrete sensory detail over adjectives: acetone, the balance's draft shield clicking shut, the cryocooler's chirp, sodium light through rain, a fume hood's breath, the ¹H NMR's soft fan.
-- **Humour:** dry grad-student humour, mostly in signs, labels, emails and the gap between procedure and reality. Never at the player's expense, never during the true ending.
+- **Humour:** dry grad-student humour, mostly in signs, labels, emails and the gap between procedure and reality. Never at the player's expense, never during the true ending. From v1.1.0, [`HUMOUR.md`](HUMOUR.md) holds the rules (tone tags per scene, where jokes may never go, localising rather than translating) and every joke, egg and achievement.
 - **English:** British spelling (colour, programme, realise; chemistry keeps the IUPAC "sulfur"), British idiom (car park, lift, bins, mobile).
 - **繁體中文：** 國語、臺灣用法，全形標點與「」引號。用臺灣化學系學生真的會說的詞：跑 NMR、打譜、老闆、死線、管柱、抽氣櫃、旋轉濃縮（抽乾）、手套箱、前艙、負八十冰箱、產率、氘代苯、碳-13 衛星峰。不要逐句翻譯英文版：兩個版本都是原創，俚語與文字遊戲各自在地化（例如密碼謎題）。
 - **Restraint:** the theme arrives through choices and their costs. If a sentence explains what the scene means, cut it.
