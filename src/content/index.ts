@@ -3,6 +3,7 @@
  * them, assembled from one file per location. docs/DESIGN.md is the spec.
  */
 import type { Content } from '../engine/types.ts';
+import { ACHIEVEMENTS } from './achievements.ts';
 import { ANOMALIES } from './anomalies.ts';
 import { LANYARD } from './lanyard.ts';
 import { coldScenes } from './locations/cold.ts';
@@ -41,4 +42,5 @@ export const CONTENT: Content = {
   acts: ACTS,
   endings: ENDINGS,
   anomalies: ANOMALIES,
+  achievements: ACHIEVEMENTS,
 };

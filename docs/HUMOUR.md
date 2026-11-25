@@ -204,7 +204,13 @@ Each achievement is named in each language on its own terms. Locked ones show as
 | `writingup` | **Writing-Up Year**: *Thirteen loops and counting.* | **延畢**：「第十三個迴圈了，還在。」 (`localisedVariant`) | reach loop 13 |
 | `tea` | **Make Tea First**: *Did what your own handwriting told you.* | **先泡茶**：「照你自己的筆跡說的做了。」 | make tea at 02:47, once your notebook has told you to |
 
-When an achievement is earned in play, a system line says so: *Achievement: {name}.* /「成就：{name}」. It goes on the page where it happened, never on an ending's epilogue. The ending gallery lists them all, and under them, *Anomalies found: {n}/{total}*.
+When an achievement new to the gallery is earned in play, a system line says so: *Achievement: {name}.* /「成就：{name}」. It goes on the page where it happened, but never on an ending's epilogue or on the 02:47 page just after the dark. One earned there waits in the gallery. The ending gallery lists them all, and under them, *Anomalies found: {n}/{total}*. Both are kept with the gallery across new games, and a new game starts with them, so conditions on finds hold and nothing is announced twice.
+
+Earned three ways (`src/content/achievements.ts`):
+
+- by an anomaly that names it (`AnomalyDef.achievement`);
+- by a condition, judged after anything you do;
+- by a choice, made while a condition holds at that moment (*Make Tea First*).
 
 ## 7. Hidden eggs
 
@@ -214,7 +220,7 @@ When an achievement is earned in play, a system line says so: *Achievement: {nam
 | `bed` | **Opening the game at 03:33 local time.** The title's tagline changes. | *It's 03:33. Go to bed.* | 「03:33 了。去睡覺。」 |
 | `mole` | **23 October.** The title's tagline changes. | *23 October: Mole Day. Somewhere, 6.022 × 10²³ PhD students are still in the lab.* | 「10 月 23 日，莫耳日。全世界大概有 6.022 × 10²³ 個研究生還在實驗室。」 |
 | `squid.*` | **Squiddy.** A squid doodle signed *Squiddy* is in a different room each loop (Acts I–II): loop 1 the synthesis lab, 2 the stairwell, 3 the cold room, 4 the glovebox room, 5 the roof, 6 the Research Write-Up Room, then round again. Each sighting is an anomaly and is kept in the gallery, so the set can be finished across playthroughs. Finding all six writes `nb.squiddy` and earns *Cephalopod Census*. | see below | see below |
-| `credits` | **The credits** (a new *Credits* button on the title). The last line is *Reviewer 2 — uncredited (as requested)*. | *Reviewer 2 — uncredited (as requested)* | 「審稿人二號——應本人要求，不具名」 |
+| `credits` | **The credits** (a new *Credits* button on the title). The last line is *Reviewer 2 — uncredited (as requested)*. Taiwanese academia says "Reviewer 2" in English too. | *Reviewer 2 — uncredited (as requested)* | 「Reviewer 2——應本人要求，不具名」 |
 | `darkcontrol` | **The dark control.** The dark room (`synth.darkroom`, *Go into the dark room* /「進暗房」) offers, once you know about 03:33 and if you came straight there (before 02:51): *Run the dark control: lamp off, until 03:33* /「做暗對照組：關燈，一直待到 03:33」. At 03:33, `lo.darkcontrol` writes `nb.darkcontrol` and earns *Dark Control*. | `nb.darkcontrol`: *Catalyst, CO₂, solvent; no light; 02:47 to 03:33. Result: nothing happened, as expected. (Repeat in triplicate for the SI.)* | 「催化劑、CO₂、溶劑；不照光；02:47 到 03:33。結果：什麼都沒發生，跟預期一樣。（SI 要做三重複。）」 |
 | `balance` | **The balance** in 4.12: *Tare the balance* /「把天平歸零」, three times in one night (1 min each). | 1: *0.0000 g. Then 0.0002. Then 0.0005, climbing gently, as if it's thinking about something.* 2: *0.0000. Then −0.0003, which is worse.* 3: *The display goes blank, thinks, and comes back in percentage mode, which nobody has ever used on purpose: 104 %. Of what, it doesn't say.* | 1:「0.0000 g。然後 0.0002。然後 0.0005，慢慢往上爬，好像在想事情。」2:「0.0000。然後 −0.0003，這更糟。」3:「螢幕暗了一下，想了想，切成了百分比模式。從來沒有人是故意用這個模式的：104 %。一百零四趴的什麼，它沒說。」 |
 | `pa.test` | **PA announcement**, 02:55, in a calm hub (Acts I–II). | *Bing-bong. A recorded voice, very calm: This is a test of the public address system. If you can hear this message, you are in the building. Bing-bong.* | 「叮咚。一個錄好的女聲，非常冷靜：This is a test of the public address system. If you can hear this message, you are in the building. 叮咚。對，你還在。」 |

@@ -338,7 +338,7 @@ If the Dark Reaction setup is in place at 03:33 (you in the NMR suite, her tube 
 
 ## 13. Gallery and new game+
 
-- **Ending gallery (結局一覽):** found endings show title and illustration; unfound ones show a silhouette and the cryptic clue. Stored separately from save slots (`localStorage` key `dark-reaction.gallery.v1`) and persists across new games and slot deletion.
+- **Ending gallery (結局一覽):** found endings show title and illustration; unfound ones show a silhouette and the cryptic clue. Stored separately from save slots (`localStorage` key `dark-reaction.gallery.v1`) and persists across new games and slot deletion. From v1.1.0 (gallery v2, same key) it also keeps every anomaly found and every achievement earned, lists the achievements (locked ones as *Under review*) and counts *Anomalies found: n/N*; a new game starts with them (`HUMOUR.md` §6).
 - **Margin notes:** after the first ending, every new game's notebook carries faint pencil margin notes for each puzzle solved in any previous playthrough (for example, "×3", "lanes 12–14", "Mon: 03:15 / 03:21", "E5", "2413"). Routes to other endings go faster.
 
 ## 14. Phantom entries

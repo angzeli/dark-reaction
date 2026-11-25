@@ -100,6 +100,7 @@ export function checkContent(content: Content): void {
   }
   for (const ph of content.phantoms) cond(ph.when, `phantom ${ph.entry}.when`);
   for (const n of content.notebook) texts(n.asides, `notebook ${n.id}.asides`);
+  for (const a of content.achievements) cond(a.if, `achievement ${a.id}.if`);
   for (const rule of content.lightsOut) {
     cond(rule.if, `lightsOut ${rule.id}.if`);
     all(rule.effects, `lightsOut ${rule.id}.effects`, PASSIVE);
@@ -120,10 +121,18 @@ export function checkReferences(content: Content): void {
   const locations = new Set(content.locations.map((l) => l.id));
   const endings = new Set(content.endings.map((e) => e.id));
   const anomalies = new Set<string>();
+  const achievements = new Set<string>();
   const problems: string[] = [];
+  for (const a of content.achievements) {
+    if (achievements.has(a.id)) problems.push(`achievements: duplicate id "${a.id}"`);
+    achievements.add(a.id);
+  }
+  const choiceIds = new Set(content.scenes.flatMap((sc) => sc.choices.map((c) => c.id)));
+  for (const a of content.achievements) if (a.choice && !choiceIds.has(a.choice)) problems.push(`achievement ${a.id}: unknown choice "${a.choice}"`);
   for (const a of content.anomalies) {
     if (anomalies.has(a.id)) problems.push(`anomalies: duplicate id "${a.id}"`);
     anomalies.add(a.id);
+    if (a.achievement && !achievements.has(a.achievement)) problems.push(`anomaly ${a.id}: unknown achievement "${a.achievement}"`);
   }
   const need = (set: Set<string>, id: string, kind: string, where: string) => {
     if (!set.has(id)) problems.push(`${where}: unknown ${kind} "${id}"`);

@@ -51,8 +51,10 @@ describe('anomalies', () => {
     expect(g.state.anomalies).toEqual(['doodle']);
   });
 
-  it('a new game starts with what the gallery has found, without duplicates', () => {
-    const s = newGameState(world(), [], { anomalies: ['doodle', 'doodle'], achievements: ['a', 'a', 'b'] });
+  it('a new game starts with what the gallery has found, without duplicates, as far as this build knows it', () => {
+    const c = world();
+    c.achievements.push({ id: 'a', title: 'x', desc: 'x' }, { id: 'b', title: 'x', desc: 'x' });
+    const s = newGameState(c, [], { anomalies: ['doodle', 'doodle'], achievements: ['a', 'a', 'b', 'gone'] });
     expect(s.anomalies).toEqual(['doodle']);
     expect(s.achievements).toEqual(['a', 'b']);
     expect(newGameState(world()).anomalies).toEqual([]);
