@@ -108,6 +108,8 @@ export const officeScenes: SceneDef[] = [
       // A COSHH assessment for a pencil (docs/HUMOUR.md §8): the form takes longer than the pencil.
       { id: 'office.pencil', label: 'office.pencil', cost: 2, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'coshh' }], text: [{ key: 'fun.pencil' }] },
       ...lanyard('office'),
+      // Cameo (docs/HUMOUR.md §8): VASP on someone's MacBook, converging; nobody knows how.
+      { id: 'office.macbook', label: 'office.macbook', cost: 1, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'cameo.macbook' }], text: [{ key: 'fun.macbook' }] },
       squid('office'),
     ],
   },

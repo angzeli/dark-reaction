@@ -169,4 +169,14 @@ export const act1 = {
   'synth.darkcontrol.late': 'Think about a dark control',
   'synth.darkcontrol.late.r':
     'A proper dark control would mean coming straight here at 02:47 and sitting out the whole night with the lamp off. Not tonight, then.',
+
+  // ── Cameos (docs/HUMOUR.md §8) ──────────────────────────────────────────────
+  'office.macbook': 'Look at the MacBook on the next desk',
+  'synth.whiteboard': 'Look at the whiteboard',
+  'synth.whiteboard.r':
+    'The whiteboard by the door has been wiped by someone in a hurry: half a band diagram, a conduction band and a valence band, and an electron rubbed out mid-jump. In the corner, still there, underlined twice: ZnIn₂S₄.',
+  'glovebox.terminal': 'Look at the terminal by the door',
+  'glovebox.terminal.r':
+    'The group’s terminal by the door, logged in as nobody in particular. On its bezel, a sticky note in green biro: *ask bo-forge what to run next*.',
+  'nmr.rack': 'Look at the tube rack on the bench',
 } as const;

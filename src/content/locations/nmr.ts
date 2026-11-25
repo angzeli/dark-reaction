@@ -218,6 +218,8 @@ export const nmrScenes: SceneDef[] = [
       { id: 'nmr.printer', once: 'loop', label: 'nmr.printer', cost: 1, text: [{ key: 'nmr.printer.r' }] },
       // Ian's table of the peaks that aren't yours (Gottlieb's values), with one row added (docs/HUMOUR.md §8).
       { id: 'nmr.chart', once: 'loop', label: 'nmr.chart', cost: 1, if: { not: { act: 3 } }, text: [{ key: 'fun.chart' }] },
+      // Cameo (docs/HUMOUR.md §8): a 3D-printed rack for forty-eight tubes, the one thing down here not laminated.
+      { id: 'nmr.rack', once: 'loop', label: 'nmr.rack', cost: 1, if: { not: { act: 3 } }, effects: [{ anomaly: 'cameo.rack' }], text: [{ key: 'fun.rack' }] },
     ],
   },
 ];

@@ -75,6 +75,8 @@ export const gloveboxScenes: SceneDef[] = [
         effects: [{ give: 'item.tube.jy' }, { fragment: 'yc.tube' }, { learn: 'nb.tube' }],
         text: [{ key: 'glovebox.mini.open.r.1' }, { key: 'glovebox.mini.open.r.2' }],
       },
+      // Cameo (docs/HUMOUR.md §8): a sticky note on the group's terminal. Quiet; there in every act.
+      { id: 'glovebox.terminal', label: 'glovebox.terminal', cost: 1, once: 'loop', effects: [{ anomaly: 'cameo.boforge' }], text: [{ key: 'glovebox.terminal.r' }] },
       squid('glovebox'),
     ],
   },

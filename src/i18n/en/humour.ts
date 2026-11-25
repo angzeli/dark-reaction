@@ -79,4 +79,10 @@ export const humour = {
   'slide.close': 'No questions',
   'title.egg.bed': 'It’s 03:33. Go to bed.',
   'title.egg.mole': '23 October: Mole Day. Somewhere, 6.022 × 10²³ PhD students are still in the lab.',
+
+  // ── Cameos (§8) ─────────────────────────────────────────────────────────────
+  'fun.macbook':
+    'On the desk beside yours, somebody’s MacBook, lid open, fan whispering, running VASP. The output scrolls slowly past: energies, forces, a number getting smaller. It’s converging. Nobody knows how.',
+  'fun.rack':
+    'On the bench by the console, a 3D-printed rack for NMR tubes: forty-eight positions in six neat rows, each one numbered, in the particular orange only a 3D printer would choose. Someone designed it properly. It is the only thing down here that isn’t laminated.',
 } as const;
