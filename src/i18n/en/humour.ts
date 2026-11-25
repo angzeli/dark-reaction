@@ -24,4 +24,17 @@ export const humour = {
   'fun.labdoor.poster.4': 'In the middle, this month’s safety poster: *KNOW WHERE YOUR NEAREST EYEWASH IS.* The arrow points at a wall.',
   'fun.corridor':
     'Along this end of the corridor, three more professors’ doors, all dark, none with a name on it. Each has a sign. *Big OP is here.* *Running out of money soon.* *Don’t laugh at students.*',
+
+  // ── The Act I rooms (§8) ────────────────────────────────────────────────────
+  'synth.sorry': 'Apologise to the fume hood',
+  'fun.sorry':
+    'Its sash alarm has been beeping since you lifted the sash to look in. You lower it to the yellow line and say sorry, out loud, to a fume hood. It stops. You’ve never been sure which of you that says more about.',
+  'fun.synth.tlc':
+    'In Tom’s hood, propped against his beaker, a TLC plate he has clearly given up on: starting material, product and co-spot all sitting at exactly Rf 0.3, side by side, as if they’ve agreed something. Down the sash, in his capitals, a column of attempts: *TRY 4:1. TRY 9:1. TRY 19:1. TRY A DIFFERENT PROJECT.*',
+  'fun.pencil':
+    'Department policy, laminated by the door, is that nothing is handled without a COSHH assessment, so you fill one in. *Substance:* pencil (graphite, clay, cedar). *Hazard:* splinters. *Route of exposure:* you will chew it. *Control measures:* don’t. *PPE:* gloves, goggles, lab coat. *Supervisor’s signature:* Dan is in Boston. You pick it up anyway, which is how most things in this building get done.',
+  'fun.thesis':
+    'Chapter 4, which you have been writing since June. *The catalyst outperforms commercial P25 by a factor of 3.7 under visible light (λ > 420 nm) and remains stable for 5 cycles. Binding energies were calibrated to C 1s at 284.8 eV. The apparent quantum yield was not determined.* You read it back. It sounds exactly like every paper you have ever rolled your eyes at, and it’s yours.',
+  'fun.chart':
+    'Taped by the console, Ian’s laminated table: *PEAKS THAT ARE NOT YOUR PRODUCT.* In CDCl₃: 7.26, the solvent; 1.56, water; 2.17, acetone; 0.86 and 1.26, grease. In C₆D₆: 7.16, 0.40, 1.55, 0.92 and 1.36. At the bottom, someone has added a row in biro: *8.41 — hope.*',
 } as const;

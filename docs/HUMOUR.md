@@ -240,13 +240,13 @@ Lines are calm and Acts I–II unless the entry says otherwise. *(new)* marks a 
 ### 4.08 Research Write-Up Room
 
 - `office.plate` *(new)*: see §4.2.
-- `office.pencil` *(new)*, *Pick up the pencil on the floor* /「撿起地上的鉛筆」 (2 min). This is an anomaly (`coshh`) and earns *Risk Assessed*.
+- `office.pencil` *(new, under Look around the room)*, *Pick up the pencil on the floor* /「撿起地上的鉛筆」 (2 min, a `localisedVariant`). This is an anomaly (`coshh`) and earns *Risk Assessed*.
   - EN: *Department policy, laminated by the door, is that nothing is handled without a COSHH assessment, so you fill one in. Substance: pencil (graphite, clay, cedar). Hazard: splinters. Route of exposure: you will chew it. Control measures: don't. PPE: gloves, goggles, lab coat. Supervisor's signature: Dan is in Boston. You pick it up anyway, which is how most things in this building get done.*
   - 繁中：「門邊護貝的系上規定說，任何東西都要先做 COSHH 風險評估才能碰。（英國的 COSHH，大概等於毒化物申報加一張核銷單，再乘以三。）你還是填了一張。Substance：鉛筆（石墨、黏土、雪松木）。Hazard：木刺。Route of exposure：你會咬它。Control measures：不要咬。PPE：手套、護目鏡、實驗衣。Supervisor's signature：老闆在波士頓。你沒等簽名就撿起來了，這棟樓裡大部分的事都是這樣辦成的。」
 - `office.thesis` *(new, on the monitor)*, *Open your thesis chapter* /「打開你的論文第四章」 (1 min). This is the photocatalysis one.
   - EN: *Chapter 4, which you have been writing since June. The catalyst outperforms commercial P25 by a factor of 3.7 under visible light (λ > 420 nm) and remains stable for 5 cycles. Binding energies were calibrated to C 1s at 284.8 eV. The apparent quantum yield was not determined. You read it back. It sounds exactly like every paper you have ever rolled your eyes at, and it's yours.*
   - 繁中：「第四章，你從六月寫到現在。本催化劑在可見光（λ > 420 nm）下活性為商用 P25 的 3.7 倍，可穩定循環 5 次。結合能以 C 1s 284.8 eV 校正。表觀量子效率未測定。你從頭讀了一遍。聽起來跟每一篇你翻過白眼的 paper 一模一樣，而這篇是你寫的。」
-- `office.macbook` *(new, cameo)*, *Look at the MacBook on the next desk* /「看隔壁桌的 MacBook」 (1 min). This is an anomaly (`cameo.macbook`).
+- `office.macbook` *(new, cameo, under Look around the room)*, *Look at the MacBook on the next desk* /「看隔壁桌的 MacBook」 (1 min). This is an anomaly (`cameo.macbook`).
   - EN: *On the desk beside yours, somebody's MacBook, lid open, fan whispering, running VASP. The output scrolls slowly past: energies, forces, a number getting smaller. It's converging. Nobody knows how.*
   - 繁中：「隔壁桌上，某人的 MacBook 開著，風扇小聲地轉，在跑 VASP。輸出一行一行慢慢捲過去：能量、力，一個越來越小的數字。它在收斂。沒有人知道為什麼。」
 - `office.lanyard.off`: see §4.4. Available in every act, and it is Act III's one light line here.

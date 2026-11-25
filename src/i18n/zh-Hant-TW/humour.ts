@@ -21,4 +21,15 @@ export const humour: Record<keyof typeof en, string> = {
   'fun.labdoor.poster.4': '正中間是這個月的安全海報：*KNOW WHERE YOUR NEAREST EYEWASH IS.* 箭頭指著一面牆。',
   'fun.corridor':
     '這一段走廊還有三扇教授的門，都暗著，都沒有名牌，只各貼了一張紙：*Big OP is here.* *Running out of money soon.* *Don’t laugh at students.* 第一張大概是說裡面的人很強。第二張你太熟了。第三張是寫給誰看的，你不太敢想。',
+
+  // ── 第一幕的房間（§8） ──────────────────────────────────────────────────────────────
+  'synth.sorry': '在抽氣櫃上放一包乖乖',
+  'fun.sorry': '剛剛把拉門拉太高，它就一直嗶嗶叫。你把拉門拉回黃線，從抽屜拿出一包綠色的乖乖（一定要綠色的），立在窗框上。它不叫了。學長說，這招對 NMR 也有效。',
+  'fun.synth.tlc':
+    'Tom 的抽氣櫃裡，燒杯旁邊靠著一片他顯然已經放棄的 TLC 片：起始物、產物、co-spot 全停在 Rf 0.3，並排，好像私下講好了。拉門上是他一行一行的大寫字：*TRY 4:1。TRY 9:1。TRY 19:1。TRY A DIFFERENT PROJECT.* 最後一個，在台灣叫做換老闆。',
+  'fun.pencil':
+    '門邊護貝的系上規定說，任何東西都要先做 COSHH 風險評估才能碰。（英國的 COSHH，大概等於毒化物申報加一張核銷單，再乘以三。）你還是填了一張。*Substance*：鉛筆（石墨、黏土、雪松木）。*Hazard*：木刺。*Route of exposure*：你會咬它。*Control measures*：不要咬。*PPE*：手套、護目鏡、實驗衣。*Supervisor’s signature*：老闆在波士頓。你沒等簽名就撿起來了，這棟樓裡大部分的事都是這樣辦成的。',
+  'fun.thesis': '第 4 章，你從六月寫到現在。*本催化劑在可見光（λ > 420 nm）下活性為商用 P25 的 3.7 倍，可穩定循環 5 次。結合能以 C 1s 284.8 eV 校正。表觀量子效率未測定。* 你從頭讀了一遍。聽起來跟每一篇你翻過白眼的 paper 一模一樣，而這篇是你寫的。',
+  'fun.chart':
+    '控制台旁邊貼著 Ian 護貝的表：*PEAKS THAT ARE NOT YOUR PRODUCT.* CDCl₃：7.26 溶劑、1.56 水、2.17 丙酮、0.86 和 1.26 油脂。C₆D₆：7.16、0.40、1.55、0.92 和 1.36。最底下有人用原子筆加了一行：*8.41 — hope.* 再底下，另一個人的字：*許願池*。',
 };
