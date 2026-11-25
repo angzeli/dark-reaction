@@ -46,7 +46,7 @@ describe('B.05', () => {
 
 describe('the PA', () => {
   it('at 02:55, in a calm room: heard, found, and the wait goes on', () => {
-    const g = at('stairs.hub', 5);
+    const g = at('office.hub', 5);
     wait(g, 5);
     expect(g.state.minute).toBe(10);
     expect(keys(g)).toContain('fun.pa.test');
@@ -54,17 +54,19 @@ describe('the PA', () => {
   });
 
   it('at 03:12 too, about a car that has been there since September', () => {
-    const g = at('roof.hub', 22);
+    const g = at('cold.hub', 22);
     wait(g, 5);
     expect(keys(g)).toContain('fun.pa.car');
     expect(t('fun.pa.car')).toContain('since September');
   });
 
-  it('isn’t heard in the toilets, at her desk, or in Act III', () => {
+  it('isn’t heard in the toilets, at her desk, over the porter’s radio, on the roof, or in Act III', () => {
     for (const [scene, act] of [
       ['stairs.toilets', 1],
       ['office.desk7', 1],
-      ['stairs.hub', 3],
+      ['stairs.hub', 1],
+      ['roof.hub', 1],
+      ['office.hub', 3],
     ] as const) {
       const g = at(scene, 7, act);
       g.state.minute = 8;
@@ -80,16 +82,16 @@ describe('the PA', () => {
 });
 
 describe('past-you’s margins', () => {
-  it('appear beside five entries from the third night, in both languages', () => {
+  it('appear beside three entries from the third night, in both languages, and never beside 03:33 (#211)', () => {
     const asides = CONTENT.notebook.filter((n) => n.asides?.length);
-    expect(asides.map((n) => n.id).sort()).toEqual(['nb.ian', 'nb.purge', 'nb.reset', 'nb.tlc', 'nb.yield']);
+    expect(asides.map((n) => n.id).sort()).toEqual(['nb.ian', 'nb.tlc', 'nb.yield']);
     const g = at('office.hub', 0);
     const shown = (loop: number) => {
       g.state.loop = loop;
       return asides.filter((n) => n.asides!.every((a) => holds(a.if, g.state))).length;
     };
     expect(shown(2)).toBe(0);
-    expect(shown(3)).toBe(5);
+    expect(shown(3)).toBe(3);
     for (const n of asides) for (const l of ['en', 'zh-Hant-TW'] as const) expect(t(n.asides![0]!.key, undefined, l)).not.toContain('[[');
     expect(t('nb.aside.tlc')).toBe('label your vials. you didn’t.');
   });

@@ -52,12 +52,12 @@ describe('the title, by the clock and the calendar', () => {
     expect(titleEgg(new Date(2026, 9, 23, 3, 33))).toBe('bed');
     expect(titleEgg(new Date(2026, 9, 23, 12, 0))).toBe('mole');
     expect(titleEgg(new Date(2026, 10, 25, 3, 34))).toBeNull();
-    expect(t('title.egg.mole')).toContain('6.022 × 10²³');
+    expect(t('title.egg.mole')).toContain('a mole of PhD students');
   });
 });
 
 describe('Squiddy', () => {
-  it('is in one room a loop, round the six rooms in turn, in Acts I–II only', () => {
+  it('is in one room a loop, round the three rooms in turn, in Acts I–II only', () => {
     for (let loop = 1; loop <= 12; loop++) {
       const where = CONTENT.scenes.filter((s) => {
         const g = fresh();
@@ -65,7 +65,7 @@ describe('Squiddy', () => {
         to(g, s.id);
         return g.choices().some((c) => c.id.startsWith('squid.'));
       });
-      expect(where.map((s) => s.location), `loop ${loop}`).toEqual([SQUID_ROOMS[(loop - 1) % 6]]);
+      expect(where.map((s) => s.location), `loop ${loop}`).toEqual([SQUID_ROOMS[(loop - 1) % SQUID_ROOMS.length]]);
     }
     const g = fresh();
     g.state.act = 3;
@@ -73,9 +73,9 @@ describe('Squiddy', () => {
     expect(ids(g).some((id) => id.startsWith('squid.'))).toBe(false);
   });
 
-  it('all six, in any playthrough: Cephalopod Census, and a page at the next 02:47', () => {
+  it('all three, in any playthrough: Cephalopod Census, and a page at the next 02:47', () => {
     const g = fresh();
-    for (const room of SQUID_ROOMS.slice(0, 5)) g.discover(squidId(room));
+    for (const room of SQUID_ROOMS.slice(0, -1)) g.discover(squidId(room));
     expect(g.state.achievements).not.toContain('census');
     g.discover(squidId('office'));
     expect(g.state.achievements).toContain('census');

@@ -4,7 +4,6 @@
  * docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
-import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const roofScenes: SceneDef[] = [
@@ -59,9 +58,10 @@ export const roofScenes: SceneDef[] = [
       { id: 'roof.city', label: 'roof.city', cost: 1, once: 'loop', text: [{ key: 'roof.city.r' }] },
       // Act III: the cranes' red lights keep their own time, and sometimes the same time.
       { id: 'roof.cranes', label: 'roof.cranes', cost: 1, once: 'loop', if: { act: 3 }, text: [{ key: 'roof.cranes.r' }] },
-      // Cameo (docs/HUMOUR.md §8): words scratched into the railing. A quiet moment, not a joke; every act.
-      { id: 'roof.railing', label: 'roof.railing', cost: 1, once: 'loop', effects: [{ anomaly: 'cameo.railing' }], text: [{ key: 'roof.railing.r' }] },
-      squid('roof'),
+      // Cameo (docs/HUMOUR.md §8): words scratched into the water tank, seen from the deckchair. A quiet moment,
+      // not a joke; every act. Not the railing: with a vanished researcher, a line about the sea on a roof's
+      // edge could read as something the game never means (DESIGN.md §1; the 繁中 read-through, #211).
+      { id: 'roof.tank', label: 'roof.tank', cost: 1, once: 'loop', effects: [{ anomaly: 'cameo.tank' }], text: [{ key: 'roof.tank.r' }] },
     ],
   },
 ];

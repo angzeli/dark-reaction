@@ -188,8 +188,9 @@ export const act2 = {
   // ── v1.1.0: B.05 ────────────────────────────────────────────────────────────
   'cold.fridge': 'Open the fridge marked NO FOOD',
 
-  // ── v1.1.0: the roof’s railing ──────────────────────────────────────────────
-  'roof.railing': 'Look at the railing',
-  'roof.railing.r':
-    'Scratched small and careful into the paint of the railing, a line of Chinese: 下一秒想去看海. The rain has been at it for years and hasn’t got it out. You don’t know who wrote it. You stand next to it for a while anyway.',
+  // ── v1.1.0: the roof’s water tank ─────────────────────────────────────────────
+  'roof.tank': 'Look at the water tank',
+  'roof.tank.r':
+    'Scratched small and careful into the paint on the side of the water tank, at the height you’d see it from the deckchair, a line of Chinese: 下一秒想去看海. The rain has been at it for years and hasn’t got it out. You don’t know who wrote it. You sit with it for a while anyway.',
+  'stairs.timetable': 'Read the shuttle timetable by the doors',
 } as const;

@@ -16,8 +16,8 @@ const out = (command: string, act: 1 | 2 | 3 = 1) => {
 const commands = CONTENT.anomalies.filter((a) => a.trigger.kind === 'command');
 
 describe('the hidden commands', () => {
-  it('are eighteen, every one answered in both languages and recorded as its own anomaly', () => {
-    expect(commands).toHaveLength(18);
+  it('are fifteen, every one answered in both languages and recorded as its own anomaly', () => {
+    expect(commands).toHaveLength(15);
     for (const a of commands) {
       const r = out((a.trigger as { command: string }).command)!;
       expect(HIDDEN[r.key], a.id).toBe(a.id);
@@ -37,8 +37,10 @@ describe('the hidden commands', () => {
     expect(t('console.out.shuttle', out('shuttle')!.params)).toBe('Last service: 18:15. It is 02:51.');
     expect(t('console.out.shuttle', out('shuttle')!.params, 'zh-Hant-TW')).toBe('末班車：18:15。現在是 02:51。');
     expect(t('console.out.vasp')).toContain('ZBRENT: fatal error in bracketing');
-    expect(t('console.out.orca')).toContain('error termination in SCF');
-    expect(t('console.out.coffee')).toContain('No rule to make target ‘coffee’');
+    // Cut in the read-through (#211): three computational packages on a spectrometer was two too many.
+    expect(out('orca')?.key).toBe('console.out.unknown');
+    expect(out('make coffee')?.key).toBe('console.out.unknown');
+    expect(t('console.out.blame')).toContain('ar4217');
     expect(t('console.out.sudo')).toContain('reported to your PI');
     expect(t('console.out.top')).toMatch(/ar4217\s+100\.0\s+46:00\s+you/);
     expect(t('console.out.uptime', out('uptime')!.params)).toContain('up 1247 days');
@@ -49,7 +51,6 @@ describe('the hidden commands', () => {
       ['  SUDO  rm -rf  ', 'console.out.sudo'],
       ['rm -rf /*', 'console.out.rm'],
       ['mpirun -np 8 vasp_std', 'console.out.vasp'],
-      ['orca input.inp', 'console.out.orca'],
       ['g16 < opt.gjf', 'console.out.g16'],
       ['htop', 'console.out.top'],
       ['ls -la', 'console.out.ls'],
@@ -57,6 +58,8 @@ describe('the hidden commands', () => {
       ['git blame figure3.tex', 'console.out.blame'],
       ['cat thesis_final_v7_FINAL_actually.docx', 'console.out.thesis'],
       ['cat thesis_final_v2.docx', 'console.out.superseded'],
+      ['cat 論文_最終版_老闆改過_真的不改了.docx', 'console.out.thesis'],
+      ['cat 論文_最終版_v2.docx', 'console.out.superseded'],
     ] as const) {
       expect(out(typed)?.key, typed).toBe(key);
     }

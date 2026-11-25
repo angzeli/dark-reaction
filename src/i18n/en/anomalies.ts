@@ -40,5 +40,5 @@ export const anomalies = {
   'ach.mole.title': 'Mole Day',
   'ach.mole.desc': 'Played on 23 October.',
   'ach.census.title': 'Cephalopod Census',
-  'ach.census.desc': 'Found Squiddy in all six rooms.',
+  'ach.census.desc': 'Found Squiddy in all three rooms.',
 } as const;

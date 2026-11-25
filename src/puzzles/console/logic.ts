@@ -18,9 +18,7 @@ export const HIDDEN: Readonly<Record<string, string>> = {
   'console.out.rm': 'cmd.rm',
   'console.out.xyzzy': 'cmd.xyzzy',
   'console.out.vasp': 'cmd.vasp',
-  'console.out.orca': 'cmd.orca',
   'console.out.g16': 'cmd.g16',
-  'console.out.coffee': 'cmd.coffee',
   'console.out.ping': 'cmd.ping',
   'console.out.history': 'cmd.history',
   'console.out.uptime': 'cmd.uptime',
@@ -32,7 +30,6 @@ export const HIDDEN: Readonly<Record<string, string>> = {
   'console.out.superseded': 'cmd.thesis',
   'console.out.shuttle': 'cmd.shuttle',
   'console.out.who': 'cmd.who',
-  'console.out.coshh': 'cmd.coshh',
 };
 
 /** The answer to a hidden command, or null (`c` is normalised: trimmed, lower case, single spaces). */
@@ -41,9 +38,7 @@ function hidden(c: string): string | null {
   if (/^rm -(rf|fr) \/\*?$/.test(c)) return 'console.out.rm';
   if (c === 'xyzzy') return 'console.out.xyzzy';
   if (/^(mpirun( -np \d+)? )?vasp(_std|_gam|_ncl)?$/.test(c)) return 'console.out.vasp';
-  if (c === 'orca' || c.startsWith('orca ')) return 'console.out.orca';
   if (c === 'g16' || c.startsWith('g16 ')) return 'console.out.g16';
-  if (c === 'make coffee') return 'console.out.coffee';
   if (/^ping (supervisor|dan|pi|boss|ridley)$/.test(c)) return 'console.out.ping';
   if (c === 'history') return 'console.out.history';
   if (c === 'uptime') return 'console.out.uptime';
@@ -51,11 +46,11 @@ function hidden(c: string): string | null {
   if (c === 'man sleep') return 'console.out.man';
   if (c === 'git blame' || c.startsWith('git blame ')) return 'console.out.blame';
   if (c === 'ls' || /^ls -[a-z]+$/.test(c)) return 'console.out.ls';
-  if (c === 'cat thesis_final_v7_final_actually.docx') return 'console.out.thesis';
-  if (/^cat thesis_final[a-z0-9_]*\.docx$/.test(c)) return 'console.out.superseded';
+  // The real one, in whichever language ls listed it.
+  if (c === 'cat thesis_final_v7_final_actually.docx' || c === 'cat 論文_最終版_老闆改過_真的不改了.docx') return 'console.out.thesis';
+  if (/^cat (thesis_final|論文_最終版)[^ ]*\.docx$/u.test(c)) return 'console.out.superseded';
   if (c === 'shuttle') return 'console.out.shuttle';
   if (c === 'who') return 'console.out.who';
-  if (c === 'coshh') return 'console.out.coshh';
   return null;
 }
 

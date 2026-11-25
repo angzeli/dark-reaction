@@ -151,7 +151,8 @@ describe('the lift on 0', () => {
     goTo(g, 'stairs');
     g.choose('stairs.lift');
     expect(keys(g)).toEqual(['stairs.lift.act3']);
-    expect(ids(g)).toEqual(['stairs.toilets', 'meta:back']);
+    // The timetable stays: Act III's one light line here.
+    expect(ids(g)).toEqual(['stairs.timetable', 'stairs.toilets', 'meta:back']);
   });
 
   it('nothing in the game has it going anywhere any more', () => {
@@ -219,12 +220,15 @@ describe('the corridor and the shuttle', () => {
     expect(g.state.anomalies).toContain('corridor');
   });
 
-  it('the shuttle’s timetable is by the main entrance, with the time it is now', () => {
+  it('the shuttle’s timetable is by the main doors, a look of its own, with the time it is now (#211)', () => {
     const g = fresh();
     goTo(g, 'stairs');
     g.choose('stairs.entrance');
+    expect(keys(g)).toEqual(['stairs.entrance.r', 'ui.noted']);
+    g.choose('stairs.lift');
+    g.choose('stairs.timetable');
     const p = g.state.display.find((x) => x.key === 'fun.shuttle.timetable')!;
-    expect(t(p.key, p.params, 'en')).toBe('Beside the doors, behind scratched perspex, the shuttle timetable: *LAST SERVICE 18:15*. It is 02:48.');
+    expect(t(p.key, p.params, 'en')).toBe('Beside the doors, behind scratched perspex, the shuttle timetable: *LAST SERVICE 18:15*. It is 02:49.');
     expect(t(p.key, p.params, 'zh-Hant-TW')).toContain('LAST SERVICE 18:15');
   });
 });

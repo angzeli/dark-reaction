@@ -16,7 +16,7 @@ const saved = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getIte
 
 for (const [locale, w] of [
   ['en', { title: '4.08 Research Write-Up Room (preliminary)', close: 'No questions', promising: 'Results look very promising!!', bed: 'It’s 03:33. Go to bed.', mole: '23 October: Mole Day.' }],
-  ['zh-Hant-TW', { title: '4.08 Research Write-Up Room （初步）', close: '沒有問題', promising: '結果看起來非常有希望！！', bed: '03:33 了。去睡覺。', mole: '10 月 23 日，莫耳日。' }],
+  ['zh-Hant-TW', { title: '4.08 Research Write-Up Room （初步）', close: 'Q&A（請不要）', promising: '結果蠻 promising 的！！', bed: '03:33 了。去睡覺。', mole: '10 月 23 日，莫耳日。' }],
 ] as const) {
   test(`${locale}: the Konami code makes a calm room a slide, and does nothing at her desk`, async ({ page }) => {
     await newGame(page, locale);
