@@ -77,10 +77,6 @@ export class App {
   /** How far into the Konami code the keys so far have got. */
   private konami = 0;
   private readonly now: () => Date;
-  /** Pages drawn by actions so far: every action (a choice, a puzzle's end, a strike) makes a new one. */
-  private page = 0;
-  /** Achievements new to the gallery, said once on the page they belong to (re-renders keep them). */
-  private announced: { page: number; ids: string[] } | null = null;
   /** The action under way crossed the dark: what it earned waits in the gallery, unsaid. */
   private quietFinds = false;
   settings: Settings;
@@ -202,7 +198,7 @@ export class App {
     state.achievements = merge(state.achievements, finds.achievements, this.content.achievements);
     // What the save had found joins the gallery now, quietly: nothing it brings is news.
     this.gallery.recordFinds(state.anomalies, state.achievements);
-    this.announced = null;
+
     // A saved scene that no longer exists falls back to its room.
     const game = new Game(this.content, state);
     if (!game.index.scenes.has(state.scene)) state.scene = game.entrySceneFor(state.location);
@@ -228,7 +224,6 @@ export class App {
     const game = this.game;
     if (!game || this.busy) return;
     const before = { location: game.state.location, ending: game.state.ending, phantoms: this.phantomCount(), loop: game.state.loop };
-    this.page += 1;
     action(game);
     if (game.state.ending && !before.ending) this.gallery.recordEnding(game.state.ending, game.state.solved);
     // An action that ran into 03:33 (or ended the game) says nothing of what it earned: the 02:47 page and
@@ -265,9 +260,9 @@ export class App {
     if (!this.game) return;
     const fresh = this.gallery.recordFinds(this.game.state.anomalies, this.game.state.achievements);
     if (!fresh.length || this.quietFinds) return;
-    // Found inside a puzzle (the console), it's said on the page the puzzle closes onto.
-    const page = this.game.state.puzzle ? this.page + 1 : this.page;
-    this.announced = { page, ids: [...(this.announced?.page === page ? this.announced.ids : []), ...fresh] };
+    // Said once, quietly, at the foot of the screen (a polite status), never in the passage itself:
+    // the page's own words keep their silence (the cold read-through, #211).
+    this.flash(() => fresh.map((id) => t('ui.achievement', { name: `@ach.${id}.title` })).join(' · '));
   }
 
   private autosave(): void {
@@ -755,9 +750,7 @@ export class App {
     );
     const art = h('div', { class: 'play__art' });
     const paras = s.display.length > 0 ? s.display : game.sceneText(s.scene);
-    // An achievement new to the gallery is said once, on the page where it was earned (docs/HUMOUR.md §6).
-    const earned = this.announced?.page === this.page ? this.announced.ids.map((id): Paragraph => ({ key: 'ui.achievement', params: { name: `@ach.${id}.title` }, style: 'system' })) : [];
-    const text = h('div', { class: 'narrative__text' }, ...[...paras, ...earned].map((p) => this.paragraph(p)));
+    const text = h('div', { class: 'narrative__text' }, ...paras.map((p) => this.paragraph(p)));
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
     const choicesHeading = h('h2', { class: 'sr-only', id: 'choices-heading' }, t('ui.choices'));
     const choices = h('ol', { class: 'choices', 'aria-labelledby': 'choices-heading', tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
@@ -767,7 +760,9 @@ export class App {
     const worn = s.inventory.filter((i) => WORN.has(i));
     const held = s.inventory.filter((i) => !WORN.has(i));
     const carrying = held.length ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: list(held) })) : null;
-    const wearing = worn.length ? h('p', { class: 'narrative__worn' }, t('ui.wearing', { items: list(worn) })) : null;
+    // Said only where it can come off: on every screen it was noise (the cold read-through, #211).
+    const lanyardHere = game.scene.choices.some((c) => c.label === 'lanyard.off' || c.label === 'lanyard.on');
+    const wearing = worn.length && lanyardHere ? h('p', { class: 'narrative__worn' }, t('ui.wearing', { items: list(worn) })) : null;
     // Headings a screen reader can jump by (#112): the room (h1, in the header) and what you can do.
     const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choicesHeading, choices, wearing ?? '', live);
     const app = this.shell('play', hud, art, narrative);
@@ -817,7 +812,7 @@ export class App {
     if (withReveal) {
       // What a screen reader hears of the new page: plain words (no *asterisks*), every line that's on
       // screen including what you carry, and then gone, so browse mode doesn't meet it all twice (#109).
-      live.textContent = [...[...paras, ...earned].map((p) => plain(t(p.key, p.params))), ...(carrying ? [carrying.textContent ?? ''] : [])].join(' ');
+      live.textContent = [...paras.map((p) => plain(t(p.key, p.params))), ...(carrying ? [carrying.textContent ?? ''] : [])].join(' ');
       window.setTimeout(() => {
         if (live.isConnected) live.textContent = '';
       }, LIVE_MS);

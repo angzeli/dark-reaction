@@ -32,7 +32,7 @@ describe('the Research Write-Up Room', () => {
     expect(g.state.minute).toBe(14);
     expect(keys(g)).toEqual(['fun.pencil']);
     expect(g.state.anomalies).toContain('coshh');
-    expect(t('fun.pencil', undefined, 'zh-Hant-TW')).toContain('核銷');
+    expect(t('fun.pencil', undefined, 'zh-Hant-TW')).toContain('風險評估');
   });
 
   it('your chapter 4, on your monitor, says everything photocatalysis papers say, until Act III', () => {

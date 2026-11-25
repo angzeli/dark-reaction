@@ -19,8 +19,11 @@ export const ACTS: ActDef[] = [
   { act: 3, when: { all: [{ know: 'nb.raw' }, { know: 'nb.email' }, { flag: 'perfect.offered' }] }, title: 'act.3.title' },
 ];
 
-/** Where the PA is heard: the calm rooms (not her desk, not Dan's office, not the toilets). */
-const PA_HEARD: Cond = { any: ['office.hub', 'office.around', 'synth.hub', 'glovebox.hub', 'pi.door', 'stairs.hub', 'stairs.lift', 'nmr.hub', 'cold.hub', 'roof.hub'].map((scene) => ({ scene })) };
+/**
+ * Where the PA is heard: the calm rooms indoors. Not her desk, not Dan's office, not the toilets; not the
+ * roof; and not the stairwell's hub, where the porter's radio has the shipping forecast on (#211).
+ */
+const PA_HEARD: Cond = { any: ['office.hub', 'office.around', 'synth.hub', 'glovebox.hub', 'pi.door', 'stairs.lift', 'nmr.hub', 'cold.hub'].map((scene) => ({ scene })) };
 
 export const EVENTS: EventDef[] = [
   // 02:50: Dan's email (21:50 in Boston). If you're elsewhere, it's waiting when you get back.

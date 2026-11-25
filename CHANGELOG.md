@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.1.0 (25 November 2026)
+
+**Anomalies.** The building has a sense of humour now, in the margins, where a tired person might notice it at three in the morning. Nothing on the way to any ending has changed, and none of it is needed to finish the game.
+
+**Play:** <https://angzeli.github.io/dark-reaction/>
+
+### Added
+
+- **40 anomalies:** things in the building that aren't in the manual. The ending gallery counts the ones you've found, across every playthrough.
+- **16 achievements**, named in each language on its own terms, kept with the gallery.
+- **About fifty new lines** to find in the rooms, written separately for each language: British lab culture in English, Taiwanese grad school in 繁中.
+- **Credits**, on the title screen.
+
+### Changed
+
+- **Room names.** The NMR suite is B12. The write-up office has its full name now.
+- **Your lanyard** is round your neck, every night.
+
+### Under the hood
+
+- Every scene and puzzle has a tone tag, and the content validator keeps jokes out of the moments that need to stay quiet: the 03:33 transitions, the end of Act III and the epilogues.
+- Saves from 1.0.x load with nothing lost (save schema 3), and so does the gallery.
+- No network, no telemetry: unchanged.
+
 ## 1.0.1 (23 November 2026)
 
 **A playtest pass.** Three layers of QA tools played the game far more thoroughly than people can: a headless state explorer and fuzzer, AI playtesters in a real browser, and a screenshot sweep. Their findings were fixed over three passes. `docs/qa/PLAYTEST-REPORT.md` has the whole story.

@@ -44,23 +44,25 @@ for (const [locale, words] of [
     await expect(g.locator('.gal__ach[data-achievement="uncredited"] .gal__ach-title')).toHaveText(words.uncredited);
   });
 
-  test(`${locale}: an achievement is said once, on its page, and kept for the next game`, async ({ page }) => {
+  test(`${locale}: an achievement is said once, quietly, at the foot of the screen, and kept for the next game`, async ({ page }) => {
     test.setTimeout(60_000);
     await newGame(page, locale);
     await pick(page, 'office.around');
     await pick(page, 'office.pencil');
-    await expect(page.locator('.narrative__text')).toContainText(words.earned);
-    await pick(page, 'office.plate');
+    // Never in the passage itself (#211): the status line at the foot, which a screen reader hears.
+    await expect(page.locator('.app__status')).toHaveText(words.earned);
     await expect(page.locator('.narrative__text')).not.toContainText(words.earned);
+    await expect(page.locator('.app__status')).toHaveText('', { timeout: 8_000 });
+    await pick(page, 'office.plate');
+    await expect(page.locator('.app__status')).toHaveText('');
     const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('dark-reaction.gallery.v1') ?? '{}') as { anomalies?: string[]; achievements?: Record<string, string> });
     expect(kept.anomalies).toEqual(expect.arrayContaining(['coshh', 'plate']));
     expect(Object.keys(kept.achievements ?? {})).toEqual(['coshh']);
   });
 }
 
-// From the cold review: a find inside a puzzle is said once, on the page the puzzle closes onto, and
-// not again on the pages after it.
-test('en: sudo at the console is said when you log out, and only then', async ({ page }) => {
+// A find inside a puzzle is said at once, at the foot of the screen, and never in the passage.
+test('en: sudo at the console is said at the foot of the screen, not in the passage', async ({ page }) => {
   test.setTimeout(60_000);
   await newGame(page, 'en');
   await pick(page, 'meta:travel');
@@ -70,9 +72,8 @@ test('en: sudo at the console is said when you log out, and only then', async ({
   await input.fill('sudo make me a sandwich');
   await input.press('Enter');
   await expect(page.locator('.con__log')).toContainText('reported to your PI');
+  await expect(page.locator('.app__status')).toHaveText('Achievement: This Incident Will Be Reported.');
   await input.fill('exit');
   await input.press('Enter');
-  await expect(page.locator('.narrative__text')).toContainText('Achievement: This Incident Will Be Reported.');
-  await pick(page, 'nmr.magnet');
   await expect(page.locator('.narrative__text')).not.toContainText('Achievement:');
 });

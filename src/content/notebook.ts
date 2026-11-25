@@ -16,8 +16,6 @@ const entry = (id: string, section: NotebookDef['section'], kind?: NotebookDef['
 const ASIDES: Readonly<Record<string, string>> = {
   'nb.tlc': 'nb.aside.tlc',
   'nb.yield': 'nb.aside.yield',
-  'nb.purge': 'nb.aside.purge',
-  'nb.reset': 'nb.aside.reset',
   'nb.ian': 'nb.aside.ian',
 };
 const withAsides = (def: NotebookDef): NotebookDef => (ASIDES[def.id] ? { ...def, asides: [{ key: ASIDES[def.id]!, if: { loopGte: 3 } }] } : def);

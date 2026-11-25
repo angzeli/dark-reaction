@@ -7,7 +7,6 @@
 import { clockLabel } from '../../engine/clock.ts';
 import type { SceneDef } from '../../engine/types.ts';
 import { lanyard } from '../lanyard.ts';
-import { squid } from '../squid.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { EXIT_B_OPEN } from '../world.ts';
 
@@ -48,9 +47,8 @@ export const stairsScenes: SceneDef[] = [
         label: 'stairs.entrance',
         cost: 1,
         once: 'loop',
-        effects: [{ learn: 'nb.entrance' }, { anomaly: 'shuttle.timetable' }],
-        // Beside the doors, the shuttle's timetable (docs/HUMOUR.md §4.3): Act III's one light line here.
-        text: [{ key: 'stairs.entrance.r' }, { key: 'fun.shuttle.timetable', params: (st) => ({ clock: clockLabel(st.minute) }) }],
+        effects: [{ learn: 'nb.entrance' }],
+        text: [{ key: 'stairs.entrance.r' }],
       },
       { id: 'stairs.exitb', label: 'stairs.exitb', cost: 1, if: { not: exitOpen }, text: [{ key: 'stairs.exitb.r' }] },
       {
@@ -145,8 +143,17 @@ export const stairsScenes: SceneDef[] = [
     choices: [
       { id: 'stairs.lift.press', label: 'stairs.lift.press', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.lift.press' }] },
       { id: 'stairs.plan', label: 'stairs.plan', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.plan' }] },
+      // By the main doors, the shuttle's timetable (docs/HUMOUR.md §4.3): its own look, not the line after
+      // you find you're locked in (#211). Act III's one light line here.
+      {
+        id: 'stairs.timetable',
+        label: 'stairs.timetable',
+        cost: 1,
+        once: 'loop',
+        effects: [{ anomaly: 'shuttle.timetable' }],
+        text: [{ key: 'fun.shuttle.timetable', params: (st) => ({ clock: clockLabel(st.minute) }) }],
+      },
       { id: 'stairs.toilets', label: 'stairs.toilets', cost: 1, effects: [{ anomaly: 'toilets' }], to: 'stairs.toilets' },
-      squid('stairs'),
     ],
   },
   {

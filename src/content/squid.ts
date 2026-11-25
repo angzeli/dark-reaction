@@ -1,12 +1,12 @@
 /**
  * Squiddy (docs/HUMOUR.md §7): a squid doodle, signed, in a different room each loop (Acts I–II).
- * Each sighting is an anomaly, kept in the gallery, so the six can be found across playthroughs;
- * all six earn Cephalopod Census and a page in the notebook.
+ * Each sighting is an anomaly, kept in the gallery, so the three can be found across playthroughs;
+ * all three earn Cephalopod Census and a page in the notebook.
  */
 import type { ChoiceDef, Cond } from '../engine/types.ts';
 
-/** In order: loop 1 the lab, 2 the stairwell, 3 B.05, 4 the glovebox room, 5 the roof, 6 the office. */
-export const SQUID_ROOMS = ['synth', 'stairs', 'cold', 'glovebox', 'roof', 'office'] as const;
+/** In order: loop 1 the lab, 2 the glovebox room, 3 the office, then round again. */
+export const SQUID_ROOMS = ['synth', 'glovebox', 'office'] as const;
 export type SquidRoom = (typeof SQUID_ROOMS)[number];
 
 export const squidId = (room: SquidRoom) => `squid.${room}`;

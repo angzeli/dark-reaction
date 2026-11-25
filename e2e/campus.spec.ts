@@ -38,8 +38,10 @@ for (const [locale, lift, again, wearing, off, office, nmr] of [
   test(`${locale}: your lanyard is round your neck, comes off, and is back at the next 02:47`, async ({ page }) => {
     test.setTimeout(90_000);
     await newGame(page, locale);
-    await expect(carry(page)).toHaveText(wearing);
+    // Said only where it can come off (#211).
+    await expect(carry(page)).toHaveCount(0);
     await pick(page, 'office.around');
+    await expect(carry(page)).toHaveText(wearing);
     await pick(page, 'office.lanyard.off');
     await expect(text(page)).toContainText(off);
     await expect(carry(page)).toHaveCount(0);
@@ -47,8 +49,8 @@ for (const [locale, lift, again, wearing, off, office, nmr] of [
     await pick(page, 'meta:back');
     await play(page, [{ night: true }]);
     await expect(page.locator('.hud__loop')).toContainText('2');
-    await expect(carry(page)).toHaveText(wearing);
     await pick(page, 'office.around');
+    await expect(carry(page)).toHaveText(wearing);
     await expect(page.locator('.choice[data-choice="office.lanyard.off"]')).toBeVisible();
   });
 }

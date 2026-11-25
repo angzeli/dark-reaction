@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #220 Cameos (closes #210)
+- **Last merged:** #221 Final localisation pass, cold read-throughs, and v1.1.0 (closes #211). After it merges: tag `v1.1.0` on its commit and publish the release with the changelog's section, then close M7.
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. Tag `v1.1.0` and publish the GitHub Release (a count of anomalies, never a list); close M7.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,27 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #211: **the cold read-throughs, the final pass, and v1.1.0.**
+  - **The read-throughs.** Two subagents that hadn't seen the work played through cold: one in English only, one in 繁中 only, each with the game through the headless driver and a one-language list of every new line. What they flagged was cut or rewritten, not defended. `docs/HUMOUR.md` §10 has every item and why. The big ones:
+    - **the roof's 下一秒想去看海** moves from the railing to the water tank (seen from the deckchair), because a line about the sea on a roof's edge, with a researcher who vanished, can read as a hint of a fall (`DESIGN.md` §1). The floor plan's *nobody goes up there* goes too;
+    - **achievements** go to the status line at the foot of the screen, never inside a passage;
+    - **the lanyard's line** shows only where it can come off;
+    - **the shuttle's timetable** is its own look, not the line after *CARD NOT VALID*;
+    - **the PA** isn't heard over the porter's radio, or on the roof;
+    - **4.12** is lighter: a shorter door, three squid instead of six;
+    - **the console** loses `coshh`, `orca` and `make coffee` (fifteen remain) and every 繁中 gloss line; `git blame` is in-world and blames you; the thesis file agrees with chapter 4; 繁中 `ls` lists 論文_最終版_老闆改過_真的不改了.docx;
+    - **the 繁中 translator's notes** are cut, and two margins and one poster go;
+    - **rewrites** of the fume hood's cause, the lab's fire door (a chemist's catch), the −80's box (no clue-like initial), Tom's crisps, Mole Day's mole.
+  - **Kept because the brief asked for them:** the professors' signs, verbatim; `shuttle`; the thesis file and `git blame` (rewritten); the bo-forge note and the tube rack (trimmed).
+  - **HUMOUR.md** §4–§8 now quote every line as shipped, in both languages, from the tables.
+  - **README:** *There are things in the building that aren't in the manual. / 這棟樓裡，有些東西不在手冊上。*
+  - **CHANGELOG 1.1.0** gives counts, never a list. `package.json` is 1.1.0.
+  - **Final totals:**
+    - 40 anomalies;
+    - 16 achievements;
+    - about fifty new lines in the rooms (38 jokes, 14 quiet);
+    - 15 console commands;
+    - playtime 51.8 min EN / 52.6 min 繁中 (v1.0.1: 51.1 / 52.0).
 - #210: **the cameos** (`docs/HUMOUR.md` §8), subtle, at most one in each place:
   - in B12, a 3D-printed rack for forty-eight NMR tubes, *the only thing down here that isn't laminated*;
   - on the glovebox room's terminal, *ask bo-forge what to run next*;

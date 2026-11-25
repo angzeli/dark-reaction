@@ -12,7 +12,7 @@ const cameos = CONTENT.anomalies.filter((a) => a.id.startsWith('cameo.'));
 
 describe('the cameos', () => {
   it('are five, at most one in each place', () => {
-    expect(cameos.map((a) => a.id).sort()).toEqual(['cameo.boforge', 'cameo.macbook', 'cameo.rack', 'cameo.railing', 'cameo.whiteboard']);
+    expect(cameos.map((a) => a.id).sort()).toEqual(['cameo.boforge', 'cameo.macbook', 'cameo.rack', 'cameo.tank', 'cameo.whiteboard']);
     const places = cameos.map((a) => CONTENT.scenes.find((s) => s.id === a.scene)!.location);
     expect(new Set(places).size).toBe(places.length);
   });
@@ -25,16 +25,16 @@ describe('the cameos', () => {
     for (const l of ['en', 'zh-Hant-TW'] as const) expect(t('synth.whiteboard.r', undefined, l)).toContain('ZnIn₂S₄');
   });
 
-  it('the railing: the same words in both languages, untranslated, in every act, and not a joke', () => {
-    for (const l of ['en', 'zh-Hant-TW'] as const) expect(t('roof.railing.r', undefined, l)).toContain('下一秒想去看海');
-    expect(JOKE_KEYS.has('roof.railing.r')).toBe(false);
+  it('the water tank: the same words in both languages, untranslated, in every act, and not a joke', () => {
+    for (const l of ['en', 'zh-Hant-TW'] as const) expect(t('roof.tank.r', undefined, l)).toContain('下一秒想去看海');
+    expect(JOKE_KEYS.has('roof.tank.r')).toBe(false);
     for (const act of [1, 2, 3] as const) {
       const g = new Game(CONTENT);
       while (g.takeCard());
       g.state.act = act;
       g.state.scene = 'roof.hub';
       g.state.location = 'roof';
-      expect(g.choices().map((c) => c.id), `Act ${act}`).toContain('roof.railing');
+      expect(g.choices().map((c) => c.id), `Act ${act}`).toContain('roof.tank');
     }
   });
 });
