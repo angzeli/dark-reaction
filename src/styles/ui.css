@@ -701,7 +701,9 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
 
 /* ── 結局一覽: the ending gallery ───────────────────────────────────────── */
 
-.overlay--gallery .overlay__sheet {
+/* The credits sit on the same sheet as the gallery they're found beside. */
+.overlay--gallery .overlay__sheet,
+.overlay--credits .overlay__sheet {
   background: #0d1926;
   border-top: 2px solid var(--copper);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
@@ -715,6 +717,35 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   letter-spacing: 0.06em;
   color: var(--text-dim);
 }
+/* Achievements and the anomaly counter, under the endings (docs/HUMOUR.md §6). */
+.gal__subheading {
+  margin: 2rem 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.gal__achievements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gal__ach { display: flex; flex-direction: column; gap: 0.1rem; padding: 0.4rem 0; border-top: 1px solid var(--rule); }
+.gal__ach-title { font-weight: 600; }
+.gal__ach-desc { font-size: 0.85rem; color: var(--text-dim); }
+.gal__ach--locked .gal__ach-title { font-weight: 400; font-style: italic; color: var(--text-dim); }
+.gal__anomalies {
+  margin: 1.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+/* The credits: plain lines, the last one a little apart. */
+.credits__title { margin: 0 0 1rem; }
+.credits__line { margin: 0.6rem 0; }
+.credits__line--last { margin-top: 1.5rem; color: var(--text-dim); font-style: italic; }
 .gal__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));

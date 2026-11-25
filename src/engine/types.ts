@@ -311,6 +311,19 @@ export interface AnomalyDef {
   achievement?: string;
 }
 
+/**
+ * An achievement (docs/HUMOUR.md §6). Earned one of three ways: when an anomaly that names it is found;
+ * when `if` holds after anything you do; or when you make `choice` while `if` holds at that moment.
+ */
+export interface AchievementDef {
+  id: string;
+  /** Locale keys: its name, and what it was for. Each language names it on its own terms. */
+  title: string;
+  desc: string;
+  if?: Cond;
+  choice?: string;
+}
+
 export interface Content {
   start: { location: LocationId };
   locations: LocationDef[];
@@ -331,6 +344,8 @@ export interface Content {
   obsession: { decay1: number; decay2: number; infinite: number; infiniteFromLoop: number };
   /** The anomaly registry. */
   anomalies: AnomalyDef[];
+  /** The achievements. */
+  achievements: AchievementDef[];
 }
 
 // ── State ──────────────────────────────────────────────────────────────────

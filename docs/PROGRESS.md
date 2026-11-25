@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #217 Examine lines: the cold room, the PA, the notebook's margins, and a quiet Act III (closes #207)
+- **Last merged:** #218 Achievements, the anomaly counter and the credits (closes #208)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,36 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #208: **achievements, the anomaly counter and the credits** (`docs/HUMOUR.md` §6–7).
+  - **Ten achievements now**, the rest with the eggs in #209 (`src/content/achievements.ts`, `AchievementDef`). Each is named in each language on its own terms: *Writing-Up Year* /「延畢」, *Instant Reply* /「老闆秒回」, *Sorry* /「乖乖保佑」. They are earned three ways:
+    - by an anomaly that names it: *Normal Termination* (`g16`), *Instant Reply* (`ping supervisor`), *This Incident Will Be Reported* (`sudo`), *Risk Assessed* (the pencil), *Sorry* (the fume hood), *Uncredited (As Requested)* (the credits);
+    - by a condition after anything you do: *Visible at All Times* (any ending, lanyard never off), *Mandatory Training* (all five posters), *Writing-Up Year* (the thirteenth 02:47);
+    - by a choice made while a condition holds: *Make Tea First* (tea at 02:47, once your own hand has said so).
+  - **The engine:**
+    - `choose`, `completePuzzle`, `correctFudge`, `discover` and every 02:47 judge achievements after the action;
+    - `checkAchievements()` is public;
+    - the shape check refuses an unknown choice or an anomaly naming an unknown achievement.
+  - **The gallery (v2, same key):**
+    - it keeps anomalies and achievements (with when each was first earned), merged into what's there and never replacing it, with newer builds' fields kept (`Gallery.recordFinds`, `finds()`);
+    - a v1.0 gallery is read with nothing lost and becomes v2 when it first gains a find;
+    - a new game starts with the gallery's finds, and a loaded save gains them.
+  - **The UI:**
+    - finds go to the gallery at every autosave;
+    - an achievement new to the gallery is said once (*Achievement: Risk Assessed.*) on the page of the turn that earned it, but never on an epilogue or on the 02:47 page after the dark;
+    - the gallery lists the achievements (locked ones say *Under review* /「審查中」 and nothing else) and *Anomalies found: n/N*.
+  - **The credits** (a *Credits* button on the title): three lines of who made it and with what, then *Reviewer 2 — uncredited (as requested)*. Opening them is an anomaly. On the title screen, with no game running, the gallery keeps the find (`src/ui/eggs.ts`, shared with the tests).
+  - **The parity check** caught 「審稿人二號」 against *Reviewer 2*. Taiwanese academia says it in English too.
+  - **From the cold review** (a subagent that hadn't seen the work):
+    - the achievement line is keyed on a page counter the App bumps per action, so a strike or a puzzle's end after it doesn't repeat it, and a find inside a puzzle is said on the page the puzzle closes onto;
+    - screen readers hear the line (it's in the live region);
+    - "after the dark" is decided by whether the action crossed it, not by the clock;
+    - a loaded or imported save's finds join the gallery quietly on load, not at the next unrelated action;
+    - the gallery never replaces unreadable text it couldn't back up first, never lowers a newer build's version, and keeps a newer build's entries as they are;
+    - *Achievements* is a heading of its own level, not a seventh ending.
+  - **Tests:**
+    - `tests/achievements.test.ts`: every way of earning, the gallery's merge, a v1.0 gallery read and extended;
+    - `e2e/achievements.spec.ts`: the credits and the counter, and an achievement said once and kept, in both languages; `sudo` at the console said once, when you log out.
+  - **Baselines:** the title (it has a fifth button).
 - #207: **the rest of the building** (`docs/HUMOUR.md` §7–8).
   - **B.05:**
     - the −80's top shelf has had *DO NOT THROW AWAY — K., 2009* longer than anyone has been in the group (繁中: 「學長的，勿丟」);

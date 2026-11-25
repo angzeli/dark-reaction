@@ -125,5 +125,6 @@ export function miniContent(): Content {
       cue: id,
     })),
     anomalies: [],
+    achievements: [],
   };
 }

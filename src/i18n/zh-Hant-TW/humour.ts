@@ -44,4 +44,7 @@ export const humour: Record<keyof typeof en, string> = {
   'nb.aside.purge': '三次。戴著手套就不要用手指數了。',
   'nb.aside.reset': '帶手電筒。（你不會帶的。）',
   'nb.aside.ian': '這個他也有一張告示。',
+
+  // ── 製作名單（§7） ────────────────────────────────────────────────────────────────
+  'credits.reviewer': 'Reviewer 2——應本人要求，不具名',
 };

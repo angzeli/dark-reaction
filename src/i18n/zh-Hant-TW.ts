@@ -9,9 +9,10 @@ import { endings } from './zh-Hant-TW/endings.ts';
 import { items } from './zh-Hant-TW/items.ts';
 import { notebook } from './zh-Hant-TW/notebook.ts';
 import { puzzles } from './zh-Hant-TW/puzzles.ts';
+import { anomalies } from './zh-Hant-TW/anomalies.ts';
 import { humour } from './zh-Hant-TW/humour.ts';
 import { terminal } from './zh-Hant-TW/terminal.ts';
 import { world } from './zh-Hant-TW/world.ts';
 import { ui } from './zh-Hant-TW/ui.ts';
 
-export const zhHantTW: Record<Key, string> = { ...ui, ...puzzles, ...world, ...act1, ...act2, ...act2puzzles, ...act3, ...act3puzzles, ...notebook, ...items, ...endings, ...humour, ...terminal };
+export const zhHantTW: Record<Key, string> = { ...ui, ...puzzles, ...world, ...act1, ...act2, ...act2puzzles, ...act3, ...act3puzzles, ...notebook, ...items, ...endings, ...humour, ...terminal, ...anomalies };

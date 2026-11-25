@@ -135,7 +135,7 @@ export function newGameState(content: Content, margins: string[] = [], found: Fo
     puzzleData: {},
     turns: 0,
     anomalies: [...new Set(found.anomalies ?? [])].filter((id) => content.anomalies.some((a) => a.id === id)),
-    achievements: [...new Set(found.achievements ?? [])],
+    achievements: [...new Set(found.achievements ?? [])].filter((id) => content.achievements.some((a) => a.id === id)),
   };
   new Game(content, state).startLoop([]);
   return state;
@@ -251,7 +251,17 @@ export class Game {
 
   // ── Acting ───────────────────────────────────────────────────────────────
 
+  /** Make a choice: the action itself, then the achievements it earned (docs/HUMOUR.md §6). */
   choose(id: string): void {
+    const s = this.state;
+    // An achievement tied to this choice is judged at the moment of choosing, before it changes anything.
+    const earned = this.content.achievements.filter((a) => a.choice === id && holds(a.if, s) && this.choices().some((c) => c.id === id));
+    this.act(id);
+    for (const a of earned) this.grant(a.id);
+    this.checkAchievements();
+  }
+
+  private act(id: string): void {
     const available = this.choices();
     if (!available.some((c) => c.id === id)) {
       throw new Error(`Choice "${id}" is not available in scene ${this.state.scene} (menu ${this.state.menu}).`);
@@ -331,6 +341,11 @@ export class Game {
 
   /** Called by a puzzle view when the puzzle is solved or abandoned. */
   completePuzzle(result: Result): void {
+    this.finishPuzzle(result);
+    this.checkAchievements();
+  }
+
+  private finishPuzzle(result: Result): void {
     const s = this.state;
     const id = s.puzzle;
     if (!id) throw new Error('No puzzle is open.');
@@ -369,13 +384,32 @@ export class Game {
    */
   discover(id: string): boolean {
     const s = this.state;
-    if (s.anomalies.includes(id) || !this.content.anomalies.some((a) => a.id === id)) return false;
+    const def = this.content.anomalies.find((a) => a.id === id);
+    if (s.anomalies.includes(id) || !def) return false;
     s.anomalies.push(id);
+    if (def.achievement) this.grant(def.achievement);
+    this.checkAchievements();
     return true;
+  }
+
+  /** Earn an achievement (silent: the UI announces what's new to the gallery). */
+  private grant(id: string): void {
+    if (!this.state.achievements.includes(id) && this.content.achievements.some((a) => a.id === id)) this.state.achievements.push(id);
+  }
+
+  /** Earn every achievement whose condition now holds (the ones not tied to a choice or an anomaly). */
+  checkAchievements(): void {
+    for (const a of this.content.achievements) if (a.if && !a.choice && !this.state.achievements.includes(a.id) && holds(a.if, this.state)) this.grant(a.id);
   }
 
   /** Strike a fudge through, initial and date it. Costs a minute. */
   correctFudge(id: string): boolean {
+    const done = this.strike(id);
+    if (done) this.checkAchievements();
+    return done;
+  }
+
+  private strike(id: string): boolean {
     const s = this.state;
     const fudge = s.fudges.find((f) => f.id === id && !f.corrected);
     if (!fudge || this.busy) return false;
@@ -655,6 +689,7 @@ export class Game {
     this.navigate(this.entrySceneFor(c.start.location));
     s.display = [...carried, ...this.paragraphs(c.loopStart, 'text'), ...phantoms, ...this.notices, ...this.sceneText(s.scene)];
     this.fireEvents();
+    this.checkAchievements();
   }
 }
 

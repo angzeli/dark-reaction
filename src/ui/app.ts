@@ -17,6 +17,7 @@ import { mountPuzzleFrame, type FrameHandle } from '../puzzles/frame.ts';
 import type { PuzzleModule } from '../puzzles/types.ts';
 import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
 import { LANYARD } from '../content/lanyard.ts';
+import { keepOutside, PANEL_ANOMALIES } from './eggs.ts';
 import { holds } from '../engine/conditions.ts';
 import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
@@ -28,7 +29,7 @@ import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.t
 
 /** Items worn rather than carried: said as what's round your neck (docs/HUMOUR.md §4.4). */
 const WORN: ReadonlySet<string> = new Set([LANYARD]);
-type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery';
+type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery' | 'credits';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
 const SECTIONS: NotebookSection[] = ['tonight', 'people', 'places', 'data', 'anomalies'];
@@ -61,6 +62,12 @@ export class App {
   private readonly kv: KV;
   private readonly saves: SaveStore;
   private readonly gallery: Gallery;
+  /** Pages drawn by actions so far: every action (a choice, a puzzle's end, a strike) makes a new one. */
+  private page = 0;
+  /** Achievements new to the gallery, said once on the page they belong to (re-renders keep them). */
+  private announced: { page: number; ids: string[] } | null = null;
+  /** The action under way crossed the dark: what it earned waits in the gallery, unsaid. */
+  private quietFinds = false;
   settings: Settings;
   game: Game | null = null;
 
@@ -149,7 +156,8 @@ export class App {
   // ── Game lifecycle ───────────────────────────────────────────────────────
 
   newGame(): void {
-    const state = newGameState(this.content, this.gallery.margins());
+    // What earlier playthroughs found carries into this one (docs/HUMOUR.md §2).
+    const state = newGameState(this.content, this.gallery.margins(), this.gallery.finds());
     this.enterGame(state);
   }
 
@@ -170,6 +178,15 @@ export class App {
   }
 
   private enterGame(state: GameState): void {
+    // A save knows what it found; the gallery knows what every playthrough found. Both, from here on,
+    // as far as this build's registries go.
+    const finds = this.gallery.finds();
+    const merge = (mine: string[], kept: string[], all: Array<{ id: string }>) => [...new Set([...mine, ...kept])].filter((id) => all.some((x) => x.id === id));
+    state.anomalies = merge(state.anomalies, finds.anomalies, this.content.anomalies);
+    state.achievements = merge(state.achievements, finds.achievements, this.content.achievements);
+    // What the save had found joins the gallery now, quietly: nothing it brings is news.
+    this.gallery.recordFinds(state.anomalies, state.achievements);
+    this.announced = null;
     // A saved scene that no longer exists falls back to its room.
     const game = new Game(this.content, state);
     if (!game.index.scenes.has(state.scene)) state.scene = game.entrySceneFor(state.location);
@@ -194,10 +211,15 @@ export class App {
   private async act(action: (g: Game) => void): Promise<void> {
     const game = this.game;
     if (!game || this.busy) return;
-    const before = { location: game.state.location, ending: game.state.ending, phantoms: this.phantomCount() };
+    const before = { location: game.state.location, ending: game.state.ending, phantoms: this.phantomCount(), loop: game.state.loop };
+    this.page += 1;
     action(game);
     if (game.state.ending && !before.ending) this.gallery.recordEnding(game.state.ending, game.state.solved);
+    // An action that ran into 03:33 (or ended the game) says nothing of what it earned: the 02:47 page and
+    // the epilogue stay the night's (docs/HUMOUR.md §6). The gallery keeps it.
+    this.quietFinds = game.state.loop !== before.loop || !!game.state.ending || game.state.cards.some((c) => c.kind === 'lightsout');
     this.autosave();
+    this.quietFinds = false;
     if (this.phantomCount() > before.phantoms && game.state.cards.length === 0) audio.cue('phantom');
     // When the lights are about to go out, the room stays as it was until the dark (#71); 02:47 is drawn at onBlack.
     if (game.state.cards[0]?.kind !== 'lightsout') this.render({ reveal: true });
@@ -210,7 +232,30 @@ export class App {
     return g.state.known.filter((k) => g.index.notebook.get(k.id)?.kind === 'phantom').length;
   }
 
+  /**
+   * Find something outside a game's actions (the console, the keyboard, a panel): in a game, the game
+   * records it; on the title screen, the gallery does, with the achievement it earns.
+   */
+  private discover(id: string): void {
+    if (this.game) {
+      if (this.game.discover(id)) this.autosave();
+      return;
+    }
+    keepOutside(this.content, this.gallery, id);
+  }
+
+  /** Keep the playthrough's finds with the gallery; what's new to it is announced on the next page. */
+  private keepFinds(): void {
+    if (!this.game) return;
+    const fresh = this.gallery.recordFinds(this.game.state.anomalies, this.game.state.achievements);
+    if (!fresh.length || this.quietFinds) return;
+    // Found inside a puzzle (the console), it's said on the page the puzzle closes onto.
+    const page = this.game.state.puzzle ? this.page + 1 : this.page;
+    this.announced = { page, ids: [...(this.announced?.page === page ? this.announced.ids : []), ...fresh] };
+  }
+
   private autosave(): void {
+    this.keepFinds();
     if (!this.game || this.autosavePaused) return;
     this.saves.write('auto', this.game.state, getLocale());
   }
@@ -499,6 +544,8 @@ export class App {
     this.lastFocusKey = this.lastFocus?.dataset?.['focusKey'];
     this.overlay = overlay;
     this.menuPanel = 'main';
+    const panel = PANEL_ANOMALIES[overlay];
+    if (panel) this.discover(panel);
     this.render();
   }
 
@@ -630,6 +677,7 @@ export class App {
         h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-gallery' }, onclick: () => this.openOverlay('gallery') }, t('ui.gallery')),
         h('button', { type: 'button', class: 'title__btn', onclick: () => void this.importSave() }, t('ui.import')),
         h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-settings' }, onclick: () => this.openOverlay('settings') }, t('ui.settings')),
+        h('button', { type: 'button', class: 'title__btn', dataset: { focusKey: 'title-credits' }, onclick: () => this.openOverlay('credits') }, t('ui.credits')),
       );
     }
     const panel = h(
@@ -679,7 +727,9 @@ export class App {
     );
     const art = h('div', { class: 'play__art' });
     const paras = s.display.length > 0 ? s.display : game.sceneText(s.scene);
-    const text = h('div', { class: 'narrative__text' }, ...paras.map((p) => this.paragraph(p)));
+    // An achievement new to the gallery is said once, on the page where it was earned (docs/HUMOUR.md §6).
+    const earned = this.announced?.page === this.page ? this.announced.ids.map((id): Paragraph => ({ key: 'ui.achievement', params: { name: `@ach.${id}.title` }, style: 'system' })) : [];
+    const text = h('div', { class: 'narrative__text' }, ...[...paras, ...earned].map((p) => this.paragraph(p)));
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
     const choicesHeading = h('h2', { class: 'sr-only', id: 'choices-heading' }, t('ui.choices'));
     const choices = h('ol', { class: 'choices', 'aria-labelledby': 'choices-heading', tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
@@ -739,7 +789,7 @@ export class App {
     if (withReveal) {
       // What a screen reader hears of the new page: plain words (no *asterisks*), every line that's on
       // screen including what you carry, and then gone, so browse mode doesn't meet it all twice (#109).
-      live.textContent = [...paras.map((p) => plain(t(p.key, p.params))), ...(carrying ? [carrying.textContent ?? ''] : [])].join(' ');
+      live.textContent = [...[...paras, ...earned].map((p) => plain(t(p.key, p.params))), ...(carrying ? [carrying.textContent ?? ''] : [])].join(' ');
       window.setTimeout(() => {
         if (live.isConnected) live.textContent = '';
       }, LIVE_MS);
@@ -826,9 +876,7 @@ export class App {
         this.puzzleFrame = null;
         void this.act((g) => g.completePuzzle(r));
       },
-      onDiscover: (anomaly) => {
-        if (game.discover(anomaly)) this.autosave();
-      },
+      onDiscover: (anomaly) => this.discover(anomaly),
       onSaveData: (data) => {
         game.state.puzzleData[id] = data;
         this.autosave();
@@ -885,7 +933,9 @@ export class App {
               ? this.conflictPanel()
               : this.overlay === 'gallery'
                 ? this.galleryPanel()
-                : this.menuPanelEl();
+                : this.overlay === 'credits'
+                  ? this.creditsPanel()
+                  : this.menuPanelEl();
     const close = this.overlay === 'conflict' ? null : h('button', { type: 'button', class: 'overlay__close', onclick: () => this.closeOverlay() }, t('ui.close'));
     const dialog = h(
       'section',
@@ -926,6 +976,29 @@ export class App {
       h('h2', { id: 'overlay-title', class: 'gal__heading', tabindex: '-1' }, t('gallery.title')),
       h('p', { class: 'gal__count' }, t('gallery.count', { n: found, total: ENDING_ORDER.length })),
       h('ul', { class: 'gal__list' }, ...items),
+      // Achievements and anomalies, kept across playthroughs (docs/HUMOUR.md §6). Locked ones give nothing away.
+      h('h2', { class: 'gal__subheading' }, t('gallery.achievements')),
+      h(
+        'ul',
+        { class: 'gal__achievements' },
+        ...this.content.achievements.map((a) =>
+          data.achievements[a.id]
+            ? h('li', { class: 'gal__ach', dataset: { achievement: a.id } }, h('span', { class: 'gal__ach-title' }, t(a.title)), h('span', { class: 'gal__ach-desc' }, t(a.desc)))
+            : h('li', { class: 'gal__ach gal__ach--locked' }, h('span', { class: 'gal__ach-title' }, t('gallery.locked'))),
+        ),
+      ),
+      h('p', { class: 'gal__anomalies' }, t('gallery.anomalies', { n: data.anomalies.filter((id) => this.content.anomalies.some((a) => a.id === id)).length, total: this.content.anomalies.length })),
+    );
+  }
+
+  /** The credits; their last line is an anomaly (docs/HUMOUR.md §7). Opening them finds it. */
+  private creditsPanel(): HTMLElement {
+    return h(
+      'div',
+      { class: 'credits' },
+      h('h2', { id: 'overlay-title', class: 'credits__title', tabindex: '-1' }, t('credits.title')),
+      ...['credits.1', 'credits.2', 'credits.3'].map((k) => h('p', { class: 'credits__line' }, t(k))),
+      h('p', { class: 'credits__line credits__line--last' }, t('credits.reviewer')),
     );
   }
 

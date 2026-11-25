@@ -7,6 +7,10 @@
 import { Game } from '../../src/engine/engine.ts';
 import type { AnomalyDef, AnomalySetup, Content } from '../../src/engine/types.ts';
 import { HIDDEN, respond } from '../../src/puzzles/console/logic.ts';
+import { CONTENT } from '../../src/content/index.ts';
+import { Gallery } from '../../src/save/gallery.ts';
+import { memoryStorage } from '../../src/save/storage.ts';
+import { keepOutside, PANEL_ANOMALIES } from '../../src/ui/eggs.ts';
 
 /** A game at 02:47 of loop 1, then moved to where the setup says. */
 export function placed(content: Content, setup: AnomalySetup): Game {
@@ -53,6 +57,15 @@ export const OUTSIDE: Partial<Record<AnomalyDef['trigger']['kind'], (a: AnomalyD
     const reply = respond(a.trigger.command, '02:51', 1);
     const key = reply && typeof reply === 'object' ? reply.key : '';
     return { found: HIDDEN[key] === a.id, shown: key ? [key] : [] };
+  },
+  // Opened on the title screen: the gallery keeps the find, and its achievement.
+  panel: (a) => {
+    if (a.trigger.kind !== 'panel') throw new Error('not a panel');
+    const gallery = new Gallery(memoryStorage());
+    const id = PANEL_ANOMALIES[a.trigger.panel];
+    if (id) keepOutside(CONTENT, gallery, id);
+    const data = gallery.data();
+    return { found: data.anomalies.includes(a.id) && (!a.achievement || a.achievement in data.achievements), shown: [...a.keys] };
   },
 };
 

@@ -52,4 +52,7 @@ export const humour = {
   'nb.aside.purge': 'three. stop counting on your fingers inside the gloves.',
   'nb.aside.reset': 'bring a torch. (you won’t.)',
   'nb.aside.ian': 'he has a sign for this too.',
+
+  // ── The credits (§7) ────────────────────────────────────────────────────────
+  'credits.reviewer': 'Reviewer 2 — uncredited (as requested)',
 } as const;
