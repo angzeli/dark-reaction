@@ -7,14 +7,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #221 Final localisation pass, cold read-throughs, and v1.1.0 (closes #211). After it merges: tag `v1.1.0` on its commit and publish the release with the changelog's section, then close M7.
+- **Last merged:** #223, the freezer test's race (closes #222), after #221 Final localisation pass, cold read-throughs, and v1.1.0 (closes #211). After it merges: tag `v1.1.0` on its commit and publish the release with the changelog's section, then close M7.
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
+- **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211 → #222.
 
 ## Next
 
 1. Tag `v1.1.0` and publish the GitHub Release (a count of anomalies, never a list); close M7.
-3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
+2. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -23,7 +23,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
-- **M7 Anomalies (v1.1.0):** #202 HUMOUR.md, #203 tone tags + registry + validator, #204 campus in-jokes, #205 the console, #206 Act I rooms, #207 the rest of the building, #208 achievements + counter, #209 hidden eggs, #210 cameos, #211 final pass + v1.1.0
+- **M7 Anomalies (v1.1.0):** #202 HUMOUR.md, #203 tone tags + registry + validator, #204 campus in-jokes, #205 the console, #206 Act I rooms, #207 the rest of the building, #208 achievements + counter, #209 hidden eggs, #210 cameos, #211 final pass + v1.1.0, #222 the freezer test's race (flaky e2e)
 - **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep, glyphs and visual baselines, #98 the affordance check (the canary). The first pass's findings: #101–#129 (majors #101–#107 and #127; `needs-decision` #124, #125). The second pass's: #140–#162 (majors #140, #156; `needs-decision` #153, #161, #162; #154 a record of what was left as designed). From cold reviews: #141, #163. The third pass's: #185.
 
 ## Open decisions and blockers
@@ -35,6 +35,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #222: **the freezer test's race.** *Six wrong tubes set off the alarm* failed once on #221's first CI run (02:50 for 02:47) and passed on retry. Its wait through 03:33 read the loop while it was still dark, and the 02:47 page is already drawn under the dark, so it could press loop 2's *Wait…* (the race #192 fixed in `shell.spec.ts`). It now waits for the dark to lift before it reads anything, and so does `act2-content.spec.ts`'s wait into Act II. Both specs passed three runs each locally.
 - #211: **the cold read-throughs, the final pass, and v1.1.0.**
   - **The read-throughs.** Two subagents that hadn't seen the work played through cold: one in English only, one in 繁中 only, each with the game through the headless driver and a one-language list of every new line. What they flagged was cut or rewritten, not defended. `docs/HUMOUR.md` §10 has every item and why. The big ones:
     - **the roof's 下一秒想去看海** moves from the railing to the water tank (seen from the deckchair), because a line about the sea on a roof's edge, with a researcher who vanished, can read as a hint of a fall (`DESIGN.md` §1). The floor plan's *nobody goes up there* goes too;
