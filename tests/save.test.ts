@@ -190,11 +190,13 @@ describe('migrations', () => {
     if (!r.ok) return;
     expect(r.migrated).toBe(true);
     expect(r.envelope).toMatchObject({ schema: SAVE_SCHEMA, locale: before.locale, savedAt: before.savedAt });
-    // Every field the v1.0.0 state had is still there, unchanged; the new ones start empty.
-    const { v: _v, anomalies, achievements, ...rest } = r.envelope.state;
-    const { v: _old, ...was } = before.state;
+    // Every field the v1.0.0 state had is still there, unchanged; the new ones start empty; and, being
+    // mid-night, it is wearing its lanyard (schema 3, #204).
+    const { v: _v, anomalies, achievements, inventory, ...rest } = r.envelope.state;
+    const { v: _old, inventory: had, ...was } = before.state as { inventory: string[] } & Record<string, unknown>;
     expect(rest).toEqual(was);
     expect({ anomalies, achievements }).toEqual({ anomalies: [], achievements: [] });
+    expect(inventory).toEqual(['item.lanyard', ...had]);
     // And it plays on in this build: the same choices are offered as before.
     const g = new Game(CONTENT, r.envelope.state);
     expect(g.choices().length).toBeGreaterThan(0);

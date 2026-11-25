@@ -4,7 +4,9 @@
  * on Mondays, 03:21–03:24), the fire alarm call point (Fire Alarm, once
  * the door log has shown you what the building keeps). docs/DESIGN.md §9.
  */
+import { clockLabel } from '../../engine/clock.ts';
 import type { SceneDef } from '../../engine/types.ts';
+import { lanyard } from '../lanyard.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { EXIT_B_OPEN } from '../world.ts';
 
@@ -40,7 +42,15 @@ export const stairsScenes: SceneDef[] = [
         tags: ['rest'],
         text: [{ key: 'stairs.radio.r' }],
       },
-      { id: 'stairs.entrance', label: 'stairs.entrance', cost: 1, once: 'loop', effects: [{ learn: 'nb.entrance' }], text: [{ key: 'stairs.entrance.r' }] },
+      {
+        id: 'stairs.entrance',
+        label: 'stairs.entrance',
+        cost: 1,
+        once: 'loop',
+        effects: [{ learn: 'nb.entrance' }, { anomaly: 'shuttle.timetable' }],
+        // Beside the doors, the shuttle's timetable (docs/HUMOUR.md §4.3): Act III's one light line here.
+        text: [{ key: 'stairs.entrance.r' }, { key: 'fun.shuttle.timetable', params: (st) => ({ clock: clockLabel(st.minute) }) }],
+      },
       { id: 'stairs.exitb', label: 'stairs.exitb', cost: 1, if: { not: exitOpen }, text: [{ key: 'stairs.exitb.r' }] },
       {
         id: 'stairs.exitb.open',
@@ -83,6 +93,8 @@ export const stairsScenes: SceneDef[] = [
       },
       // Act III: two of the green running men have gone out (#69, drawn in #64).
       { id: 'stairs.signs', label: 'stairs.signs', cost: 1, once: 'loop', if: { act: 3 }, text: [{ key: 'stairs.signs.r' }] },
+      // v1.1.0 (docs/HUMOUR.md §4.5, §4.7): over by the lift, the floor plan and the toilets.
+      { id: 'stairs.lift', label: 'stairs.lift', effects: [{ anomaly: 'lift' }], to: 'stairs.lift' },
     ],
   },
   {
@@ -117,6 +129,32 @@ export const stairsScenes: SceneDef[] = [
         to: 'stairs.hub',
       },
     ],
+  },
+  {
+    // On 0 the lift waits with its doors open, always, even after 03:33; in Act III it is only waiting.
+    // Its floor plan puts B12 on the building's own signs.
+    id: 'stairs.lift',
+    location: 'stairs',
+    tone: CALM_UNTIL_ACT3,
+    text: [
+      { key: 'fun.lift.r', if: { not: { act: 3 } } },
+      { key: 'fun.lift.again', if: { all: [{ loopGte: 2 }, { not: { act: 3 } }] } },
+      { key: 'stairs.lift.act3', if: { act: 3 } },
+    ],
+    choices: [
+      { id: 'stairs.lift.press', label: 'stairs.lift.press', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.lift.press' }] },
+      { id: 'stairs.plan', label: 'stairs.plan', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.plan' }] },
+      { id: 'stairs.toilets', label: 'stairs.toilets', cost: 1, effects: [{ anomaly: 'toilets' }], to: 'stairs.toilets' },
+    ],
+  },
+  {
+    // The toilets: the one place the building can't reach you. The notebook records nothing in here.
+    id: 'stairs.toilets',
+    location: 'stairs',
+    tone: 'calm',
+    unrecorded: true,
+    text: [{ key: 'stairs.toilets.text' }],
+    choices: lanyard('stairs.toilets'),
   },
   {
     // Thumb on the glass of the one thing in the building built to get everybody out.

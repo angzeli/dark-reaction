@@ -1,5 +1,5 @@
 /**
- * B.03 NMR suite: the console (puzzle) and the locked queue, the magnet,
+ * B12 NMR suite: the console (puzzle) and the locked queue, the magnet,
  * the carousel with its empty holder 13, Ian's signs, the compressor and its
  * chirp, the printer. docs/DESIGN.md §9.
  */

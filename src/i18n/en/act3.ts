@@ -58,4 +58,8 @@ export const act3 = {
     'Tonight the magnet’s song has a second note under it, lower, almost too low to hear, the way a fridge hums under a conversation. When you put your palm flat on the cold shell the second note stops, and when you take your hand away it starts again.',
   'roof.deckchair.act3':
     'Tonight there is one more line under the last entry, in pencil, the graphite still bright: *03:00 — mist — waiting for someone to run it.*',
+
+  // ── v1.1.0 ──────────────────────────────────────────────────────────────────
+  'stairs.lift.act3':
+    'On 0 the lift is waiting with its doors open. It has been waiting all night, every night. Tonight, for the first time, you wonder who for.',
 } as const;

@@ -43,7 +43,7 @@ for (const locale of ['en', 'zh-Hant-TW'] as const) {
     await expect(page.locator('article.ending[data-ending="clocking"]')).toBeVisible();
     await expect(page.locator('.ending__title')).toHaveText(locale === 'en' ? 'Clocking Off' : '下班');
     await expect(page.locator('.ending__title')).toBeFocused();
-    await expect(paragraphs(page)).toHaveCount(11); // no rain line: the rain log was never found
+    await expect(paragraphs(page)).toHaveCount(13); // the shuttle stop and the lanyard; no rain line: the rain log was never found
     await expect(page.locator('.ending__text')).toContainText(locale === 'en' ? 'You step out.' : '你走了出去。');
     await expect(page.locator('.ending__text')).not.toContainText('[[');
     expect((await gallery(page))?.endings['clocking']?.count).toBe(1);

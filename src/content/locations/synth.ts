@@ -2,7 +2,7 @@
  * 4.12 Synthesis lab: tonight's fractions (TLC puzzle), the rotavap and the
  * yield you write down, the fume hoods, the Kraken, the poster. docs/DESIGN.md §9.
  */
-import type { Cond, SceneDef } from '../../engine/types.ts';
+import type { ChoiceDef, Cond, SceneDef } from '../../engine/types.ts';
 import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { CLEAN_MINUTES as SCHLENK_MINUTES } from '../../puzzles/schlenk/logic.ts';
 
@@ -118,6 +118,19 @@ export const synthScenes: SceneDef[] = [
       },
       { id: 'synth.poster', once: 'loop', label: 'synth.poster', cost: 1, text: [{ key: 'synth.poster.r' }, { key: 'synth.poster.act3', if: { act: 3 } }] },
       { id: 'synth.shelf', once: 'loop', label: 'synth.shelf', cost: 1, text: [{ key: 'synth.shelf.r' }] },
+      // The lab door (docs/HUMOUR.md §4.6): its notices every night, and this month's poster, which
+      // changes every loop. Each poster seen is kept (Mandatory Training, #208).
+      ...[0, 1, 2, 3, 4].map(
+        (k): ChoiceDef => ({
+          id: `synth.door.${k}`,
+          label: 'synth.door',
+          cost: 3,
+          once: 'loop',
+          if: { all: [{ loopMod: [5, k] }, { not: { act: 3 } }] },
+          effects: [{ anomaly: 'labdoor' }, { flag: `poster.${k}` }],
+          text: [{ key: 'fun.labdoor' }, { key: `fun.labdoor.poster.${k}` }],
+        }),
+      ),
     ],
   },
 ];

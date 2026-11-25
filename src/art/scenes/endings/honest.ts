@@ -1,5 +1,5 @@
 /**
- * Ending: Honest Noise. The write-up office some time after 03:34, still in
+ * Ending: Honest Noise. The Research Write-Up Room some time after 03:34, still in
  * full November dark. Your monitor is still lit: the portal, a grey and noisy
  * spectrum with nothing in it, and "Submission received". A mug of tea
  * steams on the windowsill. Below, in the drizzle, the bus shelter is full

@@ -1,6 +1,6 @@
 /** Act II: the second half of the building, her traces, and the night's offer. British English. CC BY-NC-SA 4.0. */
 export const act2 = {
-  // ── 4.08 Write-up office, Act II ──────────────────────────────────────────
+  // ── 4.08 Research Write-Up Room, Act II ──────────────────────────────────────────
   'office.microsd': 'Read the microSD card',
   'office.microsd.r.1':
     'The card reader takes the little card with a click. One folder, *YCL_DARK*, and inside it nineteen more, one a week from November 2018 to March 2019, each holding a single spectrum of the same sample, run at the same hour of the night.',
@@ -38,7 +38,7 @@ export const act2 = {
   'office.declare.clear': 'Nothing in your notebook stands against it. The box is there to be ticked, if you are going to tick it.',
   'office.upload': 'Tick the box and upload',
 
-  // ── B.03 NMR suite, Act II ────────────────────────────────────────────────
+  // ── B12 NMR suite, Act II ────────────────────────────────────────────────
   'nmr.run': 'Run your sample with the priority code',
   'nmr.run.late': 'Run your sample with the priority code anyway, though 03:33 will come before it finishes',
   'nmr.code': 'Type Ian’s priority code into the console',
@@ -173,4 +173,15 @@ export const act2 = {
     'The bar finds you and the messages fall in. Priya: *ok random question* — *wasn’t there someone in your group who just stopped coming in? before our time* — *my old flatmate says the ridley group has a ghost* — *she also says crystals cure hangovers so*',
   'roof.priya.act2.2':
     'You type *there was someone. Lin. 2019.* and look at it for a long time before you send it. The dots come and go twice. Then: *that’s not a ghost story, then. that’s a person.* And, a minute later: *go home. nobody should end up as a story about a building x*',
+
+  // ── v1.1.0: the lobby, the corridor, her lanyard ────────────────────────────
+  'stairs.lift': 'Go over to the lift',
+  'stairs.lift.press': 'Press 4',
+  'stairs.plan': 'Read the floor plan by the lift',
+  'stairs.toilets': 'Go into the toilets',
+  'stairs.toilets.text':
+    'A laminated sign on the door: *NO NETWORK ACCESS*. Inside it is warm and very quiet, and the hand dryer’s little light is the only thing awake. You take your notebook out from habit and find there is nothing to write. For a minute nothing is keeping a record of you, not even you.',
+  'pi.corridor': 'Look along the corridor',
+  'pi.photo.lanyard': 'She is the only one in the photo still wearing her lanyard.',
+  'pi.box.lanyard': 'Her lanyard isn’t in the box.',
 } as const;

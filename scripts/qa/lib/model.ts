@@ -13,6 +13,8 @@ export type Target = string;
 /** Somewhere a target can come from. */
 export type Source =
   | { kind: 'choice'; id: string }
+  /** What every 02:47 gives you (`Content.onLoopStart`: your lanyard). */
+  | { kind: 'loopstart'; id: '02:47' }
   | { kind: 'puzzle'; id: string }
   | { kind: 'event'; id: string }
   | { kind: 'rule'; id: string }
@@ -176,6 +178,7 @@ export function analyse(content: Content): Model {
   for (const e of content.events) add({ kind: 'event', id: e.id }, e.effects);
   for (const r of content.lightsOut) add({ kind: 'rule', id: r.id }, r.effects);
   for (const p of content.phantoms) add({ kind: 'phantom', id: p.entry }, [{ learn: p.entry }]);
+  add({ kind: 'loopstart', id: '02:47' }, content.onLoopStart);
 
   return { content, choices, knowRefs, playKnow, knowledgeOnly, eventsWithEffects, fragmentRefs, usedRefs, loopCap, loopCycle, anomalyRefs, loopsInActCap, inert, provenance, produces, takes };
 }

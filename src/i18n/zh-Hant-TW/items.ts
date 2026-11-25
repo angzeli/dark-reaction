@@ -13,4 +13,11 @@ export const items: Record<keyof typeof en, string> = {
   'item.tube.jy': '她那支空的 J. Young 管',
   'item.tube.dark': '她那支裝好、包著鋁箔的 J. Young 管',
   'item.microsd': '冷凍小管裡的一張 microSD 卡',
+
+  // ── 你的識別證（docs/HUMOUR.md §4.4） ──────────────────────────────────────────────
+  'item.lanyard': '你的識別證',
+  'ui.wearing': '脖子上掛著：{items}。',
+  'lanyard.off': '把識別證拿下來',
+  'lanyard.on': '把識別證戴回去',
+  'lanyard.on.r': '你把它戴回去。好了，你又是你了。',
 };

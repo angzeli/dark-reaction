@@ -71,6 +71,7 @@ export function checkContent(content: Content): void {
     (refs ?? []).forEach((r, i) => cond(r.if, `${where}[${i}].if`));
 
   texts(content.loopStart, 'loopStart');
+  all(content.onLoopStart, 'onLoopStart', PASSIVE);
   for (const loc of content.locations) (loc.entry ?? []).forEach((e, i) => cond(e.if, `location ${loc.id}.entry[${i}]`));
   for (const scene of content.scenes) {
     checkTone(scene.tone, `scene ${scene.id}`);
@@ -140,6 +141,7 @@ export function checkReferences(content: Content): void {
     }
   };
   need(locations, content.start.location, 'location', 'start');
+  effects(content.onLoopStart, 'onLoopStart');
   for (const loc of content.locations) {
     need(scenes, loc.hub, 'scene', `location ${loc.id}.hub`);
     for (const entry of loc.entry ?? []) need(scenes, entry.scene, 'scene', `location ${loc.id}.entry`);

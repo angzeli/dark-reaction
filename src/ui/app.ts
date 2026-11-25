@@ -16,6 +16,7 @@ import { getLocale, onLocaleChange, t, type Locale } from '../i18n/i18n.ts';
 import { mountPuzzleFrame, type FrameHandle } from '../puzzles/frame.ts';
 import type { PuzzleModule } from '../puzzles/types.ts';
 import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
+import { LANYARD } from '../content/lanyard.ts';
 import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
 import type { KV } from '../save/storage.ts';
@@ -24,6 +25,8 @@ import { reveal, type Reveal } from './reveal.ts';
 import { applySettings, loadSettings, revealDelay, saveSettings, type Settings } from './settings.ts';
 import { contentNote, settingsPanel, type SettingsApi } from './settings-panel.ts';
 
+/** Items worn rather than carried: said as what's round your neck (docs/HUMOUR.md §4.4). */
+const WORN: ReadonlySet<string> = new Set([LANYARD]);
 type Overlay = 'none' | 'notebook' | 'menu' | 'settings' | 'note' | 'conflict' | 'gallery';
 type MenuPanel = 'main' | 'save' | 'load' | 'newgame';
 
@@ -679,11 +682,15 @@ export class App {
     const live = h('div', { class: 'sr-only', 'aria-live': 'polite' });
     const choicesHeading = h('h2', { class: 'sr-only', id: 'choices-heading' }, t('ui.choices'));
     const choices = h('ol', { class: 'choices', 'aria-labelledby': 'choices-heading', tabindex: '-1', onkeydown: (e: KeyboardEvent) => this.choiceArrows(e, choices) });
-    const carrying = s.inventory.length
-      ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: s.inventory.map((i) => t(i)).join(t('ui.list.sep')) }))
-      : null;
+    // What you carry sits above the choices, as it always has; what you wear (your lanyard, docs/HUMOUR.md
+    // §4.4) is a line after them, so the first five choices still fit at 1440 × 900 (#152).
+    const list = (items: string[]) => items.map((i) => t(i)).join(t('ui.list.sep'));
+    const worn = s.inventory.filter((i) => WORN.has(i));
+    const held = s.inventory.filter((i) => !WORN.has(i));
+    const carrying = held.length ? h('p', { class: 'narrative__carry' }, t('ui.carrying', { items: list(held) })) : null;
+    const wearing = worn.length ? h('p', { class: 'narrative__worn' }, t('ui.wearing', { items: list(worn) })) : null;
     // Headings a screen reader can jump by (#112): the room (h1, in the header) and what you can do.
-    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choicesHeading, choices, live);
+    const narrative = h('main', { class: 'narrative', id: 'narrative' }, text, carrying ?? '', choicesHeading, choices, wearing ?? '', live);
     const app = this.shell('play', hud, art, narrative);
     this.watchHud(hud);
     app.dataset['decay'] = String(decay);
@@ -972,8 +979,15 @@ export class App {
     );
     const entries = h('div', { class: 'nb__page', role: 'tabpanel', id: 'nb-panel', 'aria-labelledby': `nb-tab-${this.notebookSection}`, tabindex: '0' });
     if (this.notebookSection === 'loops') {
+      // A night that ended in the toilets is logged with no place: the notebook records nothing there.
       const rows = s.loops.map((l) =>
-        h('li', { class: 'nb__loop' }, t('nb.loops.row', { loop: l.loop, clock: clockLabel(l.minute), place: `@${this.content.locations.find((x) => x.id === l.location)!.name}` })),
+        h(
+          'li',
+          { class: 'nb__loop' },
+          l.unrecorded
+            ? t('nb.loops.row.unrecorded', { loop: l.loop, clock: clockLabel(l.minute) })
+            : t('nb.loops.row', { loop: l.loop, clock: clockLabel(l.minute), place: `@${this.content.locations.find((x) => x.id === l.location)!.name}` }),
+        ),
       );
       entries.append(rows.length ? h('ol', { class: 'nb__loops' }, ...rows) : h('p', { class: 'nb__empty' }, t('nb.loops.none')));
     } else {
@@ -991,6 +1005,7 @@ export class App {
       'div',
       { class: 'nb' },
       h('h2', { id: 'overlay-title', class: 'nb__title', tabindex: '-1' }, t('ui.notebook')),
+      game.index.scenes.get(s.scene)?.unrecorded ? h('p', { class: 'nb__unrecorded' }, t('ui.notebook.unrecorded')) : null,
       tabs,
       entries,
       margins.length ? h('aside', { class: 'nb__margins', 'aria-label': t('nb.margins.title') }, h('h3', {}, t('nb.margins.title')), h('ul', {}, ...margins)) : null,

@@ -11,4 +11,11 @@ export const items = {
   'item.tube.jy': 'her J. Young tube, empty',
   'item.tube.dark': 'her J. Young tube, filled and wrapped in foil',
   'item.microsd': 'a microSD card in a cryovial',
+
+  // ── Your lanyard (docs/HUMOUR.md §4.4) ──────────────────────────────────────
+  'item.lanyard': 'your lanyard',
+  'ui.wearing': 'Around your neck: {items}.',
+  'lanyard.off': 'Take your lanyard off',
+  'lanyard.on': 'Put your lanyard back on',
+  'lanyard.on.r': 'You put it back on. There you are.',
 } as const;

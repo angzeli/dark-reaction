@@ -45,9 +45,9 @@ test('title screen, then a new game at 02:47 in the office', async ({ page }) =>
   await expect(page.locator('.title__name')).toContainText('Dark Reaction');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
   await newGame(page);
-  await expect(page.locator('.hud__place')).toHaveText('4.08 Write-up office');
+  await expect(page.locator('.hud__place')).toHaveText('4.08 Research Write-Up Room');
   await expect(page.locator('.narrative__text')).toContainText('cheek on the keyboard');
-  await expect(page.locator('.narrative__text')).toContainText('write-up office holds eleven desks');
+  await expect(page.locator('.narrative__text')).toContainText('Research Write-Up Room holds eleven desks');
   await expect(page.locator('.play__art svg[data-art="office"]')).toHaveCount(1);
   expect(errors).toEqual([]);
   expect(outside).toEqual([]);
@@ -59,7 +59,8 @@ test('choices work by number keys and by tap; walking and waiting cost minutes; 
   // Keyboard: the hub's last two choices are "Go somewhere else…" and "Wait…".
   const labels = await page.locator('.choice__label').allTextContents();
   const waitIndex = labels.indexOf('Wait…') + 1;
-  await page.keyboard.press(String(waitIndex));
+  // Number keys 1–9, and 0 for a tenth (README).
+  await page.keyboard.press(String(waitIndex % 10));
   await page.keyboard.press('2'); // Wait 5 minutes…
   // …but Dan's email lands at 02:50 and the wait stops there.
   await expect(clock(page)).toHaveText('02:50');
@@ -67,9 +68,9 @@ test('choices work by number keys and by tap; walking and waiting cost minutes; 
   await expect(page.locator('.narrative__text')).toContainText('Your monitor chimes');
   // Tap: walk to the NMR suite (3 minutes).
   await choose(page, 'Go somewhere else…');
-  await choose(page, 'B.03 NMR suite');
+  await choose(page, 'B12 NMR suite');
   await expect(clock(page)).toHaveText('02:53');
-  await expect(page.locator('.hud__place')).toHaveText('B.03 NMR suite');
+  await expect(page.locator('.hud__place')).toHaveText('B12 NMR suite');
   await expect(page.locator('.narrative__text')).toContainText('cryocooler chirps');
 });
 
@@ -119,7 +120,7 @@ test('save to a slot, quit, and load it back from the title', async ({ page }) =
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await page.locator('.slot[data-slot="1"] .slot__btn').click();
   await expect(page.locator('.app__status')).toHaveText('Saved to Slot 1.');
-  await expect(page.locator('.slot[data-slot="1"] .slot__label')).toContainText('loop 1 · 02:48 · 4.08 Write-up office');
+  await expect(page.locator('.slot[data-slot="1"] .slot__label')).toContainText('loop 1 · 02:48 · 4.08 Research Write-Up Room');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Quit to title' }).click();
   await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
@@ -147,7 +148,7 @@ test('a Chinese-speaking browser starts in 繁中', async ({ page }) => {
   await start(page, { locale: 'zh-Hant-TW' });
   await expect(page.getByRole('button', { name: '新遊戲' })).toBeVisible();
   await newGame(page);
-  await expect(page.locator('.hud__place')).toHaveText('4.08 研究生辦公室');
+  await expect(page.locator('.hud__place')).toHaveText('4.08 Research Write-Up Room');
 });
 
 test('with full motion the text reveals and any key completes it', async ({ page }) => {

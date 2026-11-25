@@ -75,6 +75,19 @@ export const MIGRATIONS: Record<number, (raw: Raw) => Raw> = {
     state['v'] = 2;
     return { ...raw, schema: 2, state };
   },
+  /**
+   * Your lanyard (docs/HUMOUR.md §4.4) goes round your neck at every 02:47. A save from before it
+   * existed is mid-night, so it gets it now, unless the game has ended or the save has it off.
+   */
+  2: (raw) => {
+    const state = { ...(raw['state'] as Raw) };
+    const inventory = Array.isArray(state['inventory']) ? [...(state['inventory'] as unknown[])] : state['inventory'];
+    const off = Array.isArray(state['lflags']) && (state['lflags'] as unknown[]).includes('lanyard.off');
+    if (Array.isArray(inventory) && state['ending'] === null && !off && !inventory.includes('item.lanyard')) inventory.unshift('item.lanyard');
+    state['inventory'] = inventory;
+    state['v'] = 3;
+    return { ...raw, schema: 3, state };
+  },
 };
 
 /**

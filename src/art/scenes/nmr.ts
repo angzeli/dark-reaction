@@ -1,5 +1,5 @@
 /**
- * B.03 NMR suite, 02:47. A basement room with no windows: the 400 MHz
+ * B12 NMR suite, 02:47. A basement room with no windows: the 400 MHz
  * magnet, a pale drum on its legs with the autosampler carousel on top
  * (holder 13 is the empty one) and its ladder folded against its side; the
  * helium compressor behind it with its LED keeping time; the printer; the

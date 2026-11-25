@@ -129,7 +129,7 @@ export const puzzles: Record<keyof typeof en, string> = {
   'puzzle.console.transcript': '主控台輸出',
   'puzzle.console.done': '寫進筆記本',
   'puzzle.console.solvedNote': '你把備註那一行讀了兩遍。',
-  'console.out.motd': 'Kingsmere NMR Facility · 400 MHz\n上次登入：11 月 23 日（一）02:41，來自 4.08-desk-04\n輸入 help 查看指令。',
+  'console.out.motd': 'NMR 設施 · B12 · 400 MHz\n上次登入：11 月 23 日（一）02:41，來自 4.08-desk-04\n輸入 help 查看指令。',
   'console.out.help': 'queue           你的預約\nqueue --all     所有人的預約\ninfo <樣品槽>    預約細節\nlog             最近紀錄\nwhoami · date · clear · exit',
   'console.out.whoami': 'ar4217（Ridley 組）· 權限：一般使用者 · 本月預約：31 次',
   'console.out.date': '2026 年 11 月 23 日（一）{clock}:00 GMT',

@@ -68,7 +68,7 @@ test('the whole Act I chain: plate, rotavap, antechamber, console, a locked queu
   await d.getByRole('button', { name: 'Bring the NMR tube out' }).click();
   await expect(page.locator('.narrative__carry')).toContainText('your NMR tube');
 
-  await go(page, 'B.03 NMR suite');
+  await go(page, 'B12 NMR suite');
   await choose(page, 'Sit down at the console');
   const c = page.getByRole('dialog', { name: 'The NMR console' });
   const input = c.getByRole('textbox', { name: 'Type a command' });
@@ -154,7 +154,7 @@ test('the TLC trap: lane 11 looks clean until the UV lamp is on, and wrong guess
 
 test('the console works by touch alone', async ({ page }) => {
   await begin(page);
-  await go(page, 'B.03 NMR suite');
+  await go(page, 'B12 NMR suite');
   await choose(page, 'Sit down at the console');
   const c = page.getByRole('dialog', { name: 'The NMR console' });
   await c.locator('.con__chip[data-command="queue --all"]').click();

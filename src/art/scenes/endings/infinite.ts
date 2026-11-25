@@ -1,5 +1,5 @@
 /**
- * Ending: Infinite Loop. Your desk in the write-up office: the notebook open,
+ * Ending: Infinite Loop. Your desk in the Research Write-Up Room: the notebook open,
  * every page in your handwriting; the wall clock stopped at 03:33; on hot
  * desk 7 two mugs now, hers with 晨 on it and yours; the monitor showing the
  * page of j's. The room has started to come loose: it is drawn twice, the

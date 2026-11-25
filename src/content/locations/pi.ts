@@ -25,6 +25,8 @@ export const piScenes: SceneDef[] = [
       // Waiting at the door through 03:15 has to open it too, not only arriving then (playtest).
       { id: 'pi.enter', label: 'pi.enter', if: cleaning, to: 'pi.hub' },
       { id: 'pi.knock', label: 'pi.knock', cost: 1, once: 'loop', if: { not: cleaning }, text: [{ key: 'pi.knock.r' }] },
+      // The professors' corridor (docs/HUMOUR.md §4.8): three more doors, their signs verbatim, no names.
+      { id: 'pi.corridor', label: 'pi.corridor', cost: 1, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'corridor' }], text: [{ key: 'fun.corridor' }] },
     ],
   },
   {
@@ -63,7 +65,7 @@ export const piScenes: SceneDef[] = [
         once: 'loop',
         effects: [{ fragment: 'yc.photo' }, { learn: 'nb.photo' }],
         // Once you know the building keeps whoever is inside at 03:33, you look at the windows too.
-        text: [{ key: 'pi.photo.r' }, { key: 'pi.photo.keeps', if: { know: 'nb.keeps' } }],
+        text: [{ key: 'pi.photo.r' }, { key: 'pi.photo.lanyard' }, { key: 'pi.photo.keeps', if: { know: 'nb.keeps' } }],
       },
       { id: 'pi.books', label: 'pi.books', cost: 1, once: 'loop', text: [{ key: 'pi.books.r' }] },
       // Act III: the framed paper hangs crooked and won't stay straight (#69, drawn in #64).
@@ -78,7 +80,8 @@ export const piScenes: SceneDef[] = [
     location: 'pi',
     tone: 'dread',
     noBack: true,
-    text: [{ key: 'pi.box.text' }],
+    // Her lanyard isn't in the box: wherever she is, she is still wearing it (docs/HUMOUR.md §4.4).
+    text: [{ key: 'pi.box.text' }, { key: 'pi.box.lanyard' }],
     choices: [
       { id: 'pi.tin', label: 'pi.tin', cost: 1, once: 'loop', text: [{ key: 'pi.tin.r' }] },
       { id: 'pi.cardigan', label: 'pi.cardigan', cost: 1, once: 'loop', text: [{ key: 'pi.cardigan.r' }] },

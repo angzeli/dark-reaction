@@ -526,7 +526,7 @@ describe('Act II puzzles in the building', () => {
     goTo(g, 'cold');
     g.choose('cold.rack1');
     solveOpen(g);
-    expect(g.state.inventory).toEqual(['item.microsd']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.microsd']);
     expect(known(g)).toContain('nb.freezer');
     expect(ids(g)).not.toContain('cold.rack1');
     expect(ids(g)).not.toContain('cold.e5');
@@ -535,7 +535,7 @@ describe('Act II puzzles in the building', () => {
     const before = g.state.minute;
     g.choose('cold.e5');
     expect(g.state.minute - before).toBe(2);
-    expect(g.state.inventory).toEqual(['item.microsd']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.microsd']);
     expect(ids(g)).not.toContain('cold.e5');
   });
 

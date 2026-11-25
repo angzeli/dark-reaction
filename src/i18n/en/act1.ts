@@ -1,6 +1,6 @@
 /** Act I: choices and what happens when you make them. British English. CC BY-NC-SA 4.0. */
 export const act1 = {
-  // ── 4.08 Write-up office ──────────────────────────────────────────────────
+  // ── 4.08 Research Write-Up Room ──────────────────────────────────────────────────
   'office.monitor': 'Look at your monitor',
   'office.monitor.text':
     'Four windows, stacked like plates in a sink. The NMR queue, refreshed every minute by a script Tom wrote and nobody knows how to stop. Your inbox. The journal’s portal, with its countdown. The data folder, open on a list of files that all begin with your initials.',
@@ -27,7 +27,7 @@ export const act1 = {
   'office.tea.r.told': 'Your own handwriting told you to do this. It was right.',
   'office.sofa': 'Lie down on the sofa',
   'office.sofa.r':
-    'The sofa has been in this office longer than anyone in it and has taken the shape of all of them. You lie down with your arm across your eyes. The dying tube ticks. The building makes its small night noises: a pipe, a door a long way off, the lift going somewhere on its own. You don’t sleep. You stop, which is nearly as good. When you sit up, ten minutes have gone, and so has the ache behind your eyes.',
+    'The sofa has been in this office longer than anyone in it and has taken the shape of all of them. You lie down with your arm across your eyes. The dying tube ticks. The building makes its small night noises: a pipe, a door a long way off, the lift, somewhere below, holding its doors open for nobody. You don’t sleep. You stop, which is nearly as good. When you sit up, ten minutes have gone, and so has the ache behind your eyes.',
   'office.window': 'Look out of the window',
   'office.window.r':
     'Below, the bus shelter glows like an aquarium. The timetable says the N68 comes every twenty minutes, a lie it tells with total confidence. Across the road the building opposite is dark except for one window on its fourth floor, where somebody else is also still at a desk. You don’t wave. Neither do they.',
@@ -100,7 +100,7 @@ export const act1 = {
   'glovebox.mini.r':
     'On the box’s left flank there is a mini-antechamber no wider than a thermos flask, its door wound in so much masking tape it looks bandaged. On the tape, in marker gone the colour of weak tea: *DO NOT OPEN — YCL 14/03/19*. The little gauge beside it still reads vacuum. Seven years of vacuum. You don’t touch it, and you notice that you don’t.',
 
-  // ── B.03 NMR suite ────────────────────────────────────────────────────────
+  // ── B12 NMR suite ────────────────────────────────────────────────────────
   'nmr.console': 'Sit down at the console',
   'nmr.console.r': 'The chair is still warm. It always is.',
   'nmr.console.again': 'Check the queue on the console again',
@@ -142,4 +142,10 @@ export const act1 = {
   'office.postit': 'Read the Post-it on your monitor',
   'office.postit.r':
     'A yellow Post-it on the edge of your monitor, in Tom’s capitals, from Friday: *BACKED UP YOUR DATA TO THE GROUP DRIVE. YOU’RE WELCOME. ALSO: SLEEP IS A REAL THING, LOOK IT UP. — T.* Underneath, smaller, as if added on his way out of the door: *ALSO ALSO: DON’T RUN ANYTHING AT 3. IT GETS WEIRD DOWN THERE.*',
+
+  // ── v1.1.0: the building’s own signs ────────────────────────────────────────
+  'office.plate': 'Read the plate on the door',
+  'synth.door': 'Read the notices on the lab door',
+  'office.around': 'Look around the room',
+  'office.around.text': 'Eleven desks, ten of them empty. For the first time in weeks you look round the room properly, the way a visitor would.',
 } as const;

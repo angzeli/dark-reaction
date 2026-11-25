@@ -166,7 +166,7 @@ describe('Act I: the work', () => {
     goTo(g, 'glovebox');
     g.choose('glovebox.antechamber');
     solve(g);
-    expect(g.state.inventory).toEqual(['item.tube.own']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.tube.own']);
     goTo(g, 'nmr');
     g.choose('nmr.console');
     solve(g);

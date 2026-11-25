@@ -466,7 +466,7 @@ describe('Act III puzzles in the building', () => {
     g.choose('synth.kraken.fill');
     expect(g.state.puzzle).toBe('schlenk');
     solveOpen(g);
-    expect(g.state.inventory).toEqual(['item.foil', 'item.tube.dark']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.foil', 'item.tube.dark']);
     expect(known(g)).toContain('nb.schlenk');
     expect(ids(g)).not.toContain('synth.kraken.fill');
   });
@@ -476,11 +476,11 @@ describe('Act III puzzles in the building', () => {
     g.state.solved.push('glovebox');
     goTo(g, 'glovebox');
     g.choose('glovebox.mini.open');
-    expect(g.state.inventory).toEqual(['item.tube.jy']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.tube.jy']);
     goTo(g, 'synth');
     g.choose('synth.kraken.fill');
     g.completePuzzle({ solved: false, failed: true, minutes: 6 });
-    expect(g.state.inventory).toEqual([]);
+    expect(g.state.inventory).toEqual(['item.lanyard']);
     expect(g.state.lflags).toContain('tube.spoiled');
     expect(g.state.display.map((p) => p.key)).toContain('puzzle.schlenk.failed');
     goTo(g, 'glovebox');
@@ -499,7 +499,7 @@ describe('Act III puzzles in the building', () => {
     g.choose('glovebox.mini.open');
     goTo(g, 'synth');
     g.choose('synth.kraken.again');
-    expect(g.state.inventory).toEqual(['item.foil', 'item.tube.dark']);
+    expect(g.state.inventory).toEqual(['item.lanyard', 'item.foil', 'item.tube.dark']);
     goTo(g, 'glovebox');
     expect(ids(g)).not.toContain('glovebox.mini.open');
   });

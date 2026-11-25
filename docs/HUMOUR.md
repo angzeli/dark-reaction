@@ -77,7 +77,8 @@ For anyone who studied in a building like this one. They should mean nothing to 
 ### 4.2 The Research Write-Up Room
 
 - **The rename:** `loc.office.name` becomes *4.08 Research Write-Up Room* in both locales (it's the door plate). The English narration says *the Research Write-Up Room*, and the 繁中 narration says 「Write-Up Room」, as a Taiwanese student abroad would. Only display strings change, so ids and saves stay stable.
-- **The door plate:** `office.plate` (calm, Acts I–II, 1 min). This is an anomaly (`plate`) and a `localisedVariant`.
+- **Look around the room** /「環顧這個房間」 (`office.around`): the room's small new things sit one look away, so the hub keeps its number keys. It is quiet (*Eleven desks, ten of them empty…*), and holds the door plate, your lanyard, and later the pencil and the MacBook.
+- **The door plate:** `office.plate`, in `office.around` (calm, Acts I–II, 1 min). This is an anomaly (`plate`) and a `localisedVariant`.
   - EN: *RESEARCH WRITE-UP ROOM, says the plate on the door, which is optimistic on both counts.*
   - 繁中：「門牌上寫著 RESEARCH WRITE-UP ROOM。大家都叫它『寫不完的房間』。」
 
@@ -96,7 +97,7 @@ For anyone who studied in a building like this one. They should mean nothing to 
 ### 4.4 Lanyards
 
 - **The item:** your lanyard is an inventory item, `item.lanyard` (*your lanyard* / 「你的識別證」). You wear it by default, and the play screen says so under the passage: *Around your neck: your lanyard.* /「脖子上掛著：你的識別證。」 It's back around your neck at every 02:47 (`Content.onLoopStart`).
-- **Taking it off** in the Research Write-Up Room or the toilets (`office.lanyard.off`, `stairs.toilets.lanyard.off`, 0 min). This is an anomaly (`lanyard.off`), and taking it off sets the persistent flag `lanyard.offEver`.
+- **Taking it off** in the Research Write-Up Room (under *Look around the room*) or the toilets (`office.lanyard.off`, `stairs.toilets.lanyard.off`, 0 min). This is an anomaly (`lanyard.off`), and taking it off sets the persistent flag `lanyard.offEver`.
   - EN: *You take it off. You feel slightly less like yourself.*
   - 繁中：「你把它拿下來。整個人好像少了一點自己。」
 - **Putting it back on** (plain, not a joke): *You put it back on. There you are.* /「你把它戴回去。好了，你又是你了。」
@@ -110,14 +111,13 @@ For anyone who studied in a building like this one. They should mean nothing to 
 
 ### 4.5 The lift, and a floor plan
 
-- **The lift:** `stairs.lift`, *Take the lift* /「搭電梯」 (1 min). It's calm in Acts I–II, with a quiet version in Act III. This is an anomaly (`lift`).
-  - EN, loop 1: *On 0 the lift is waiting with its doors open, as it always is. You step in and press 4. The doors think about it and stay open. After a while you step out again and take the stairs, like everyone does.*
-  - EN, from loop 2: *It was waiting like this at 03:33, too. Whatever the night does to the building, nobody has told the lift.*
-  - 繁中, loop 1: 「電梯停在 0 樓，門開著，跟平常一樣在等。你走進去，按了 4。門考慮了一下，決定繼續開著。過了一會兒你走出來，跟大家一樣爬樓梯。（英國的一樓叫 0 樓，你花了一整個學期才習慣。）」
-  - 繁中, from loop 2: 「03:33 的時候，它也是這樣開著門在等。不管這一夜對這棟樓做了什麼，好像都沒人通知電梯。」
+- **The lift:** *Go over to the lift* /「走到電梯那邊」 (`stairs.lift`, a spot of its own in the lobby, so the stairwell's hub stays short). It's calm in Acts I–II, with a quiet version in Act III. Going over is an anomaly (`lift`). The floor plan and the toilets' door are there too.
+  - EN: *On 0 the lift is waiting with its doors open, as it always is.* /「電梯停在 0 樓，門開著，跟平常一樣在等。」
+  - EN, from loop 2: *It was waiting like this at 03:33, too. Whatever the night does to the building, nobody has told the lift.* /「03:33 的時候，它也是這樣開著門在等。不管這一夜對這棟樓做了什麼，好像都沒人通知電梯。」
+  - *Press 4* /「按 4」 (`stairs.lift.press`, Acts I–II, 1 min, a `localisedVariant`): *You step in and press 4. The doors think about it and stay open. After a while you step out again and take the stairs, like everyone does.* /「你走進去，按了 4。門考慮了一下，決定繼續開著。過了一會兒你走出來，跟大家一樣爬樓梯。（英國的一樓叫 0 樓，你花了一整個學期才習慣。）」
   - Act III (quiet, `stairs.lift.act3`): *On 0 the lift is waiting with its doors open. It has been waiting all night, every night. Tonight, for the first time, you wonder who for.* /「電梯停在 0 樓，門開著。它等了一整夜，每一夜都是。今晚你第一次想：它在等誰。」
 - **Two lines made consistent with the lift.** The sofa's *the lift going somewhere on its own* becomes *the lift, somewhere below, holding its doors open for nobody*. In Fire Alarm, the lift that *sinks to the ground floor* is now already there: *On 0 the lift, which has held its doors open all night, goes on holding them open, now officially.*
-- **The floor plan:** `stairs.plan`, *Read the floor plan by the lift* /「看電梯旁的樓層圖」 (calm, Acts I–II, 1 min). This puts B12 on the building's own signage.
+- **The floor plan:** `stairs.plan`, by the lift, *Read the floor plan by the lift* /「看電梯旁的樓層圖」 (calm, Acts I–II, 1 min). This puts B12 on the building's own signage.
   - EN: *A fire evacuation plan in a steel frame, one panel per floor, YOU ARE HERE on 0. On 4, the Research Write-Up Room in full. In the basement, B.05 COLD ROOM and B12 NMR, numbered in two different systems, depending on who was in charge of signs that year. The roof isn't on it. Officially, nobody goes up there.*
   - 繁中：「鋼框裡一張逃生平面圖，一層一格，YOU ARE HERE 標在 0 樓。四樓那格，Research Write-Up Room 整個寫出來。地下室是 B.05 COLD ROOM 和 B12 NMR，兩種編號系統，看那一年是誰負責做門牌。頂樓不在圖上。官方說法是，沒有人會上去。」
 
@@ -141,7 +141,7 @@ For anyone who studied in a building like this one. They should mean nothing to 
 
 ### 4.7 The toilets
 
-- **The scene:** `stairs.toilets`, on the ground floor by the lobby, opened from `stairs.hub` with *Go into the toilets* /「去廁所」 (1 min). Its tone is calm in every act. This is an anomaly (`toilets`). It is a quiet beat, and none of its keys are joke keys.
+- **The scene:** `stairs.toilets`, on the ground floor by the lift, opened with *Go into the toilets* /「去廁所」 (1 min). Its tone is calm in every act. This is an anomaly (`toilets`). It is a quiet beat, and none of its keys are joke keys.
   - EN: *A laminated sign on the door: NO NETWORK ACCESS. Inside it is warm and very quiet, and the hand dryer's little light is the only thing awake. You take your notebook out from habit and find there is nothing to write. For a minute nothing is keeping a record of you, not even you.*
   - 繁中：「門上貼著一張護貝的告示：NO NETWORK ACCESS。裡面很暖，很安靜，只有烘手機的小燈還醒著。你習慣性地拿出筆記本，發現沒有什麼可以寫。有一分鐘，沒有任何東西在記錄你，連你自己也沒有。」
 - **The notebook records nothing.** The scene is `unrecorded`. Opened in here, the notebook shows *Nothing is being written down in here.* /「在這裡，什麼都不會被記下來。」 If 03:33 finds you in here, the Loops page records the loop with no place.

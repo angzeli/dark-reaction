@@ -537,6 +537,12 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   text-transform: uppercase;
 }
 .nb__margins ul { margin: 0; padding-left: 1rem; font-style: italic; }
+/* In the toilets: nothing is being written down (docs/HUMOUR.md §4.7). Pencil-faint, like the margins. */
+.nb__unrecorded {
+  margin: 0 0 0.75rem;
+  font-style: italic;
+  opacity: 0.75;
+}
 .nb__standing {
   margin-top: 1rem;
   font-size: 0.85rem;
@@ -817,7 +823,15 @@ html { scroll-padding-top: calc(var(--hud-h, 0px) + 0.75rem); }
   font-size: 0.75rem;
   color: var(--copper);
 }
-.narrative--puzzle > .narrative__carry { display: none; }
+/* What you wear: after the choices, quieter than what you carry (docs/HUMOUR.md §4.4). */
+.narrative__worn {
+  margin: 1rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.narrative--puzzle > .narrative__carry,
+.narrative--puzzle > .narrative__worn { display: none; }
 
 /* In high contrast a focused choice gets the full yellow outline, not only its bar (#111). */
 :root[data-contrast='high'] .choice:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
