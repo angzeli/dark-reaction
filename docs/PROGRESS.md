@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #219 Hidden eggs: the slide, 03:33, Mole Day, Squiddy, the dark control, the balance (closes #209)
+- **Last merged:** #220 Cameos (closes #210)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,14 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #210: **the cameos** (`docs/HUMOUR.md` §8), subtle, at most one in each place:
+  - in B12, a 3D-printed rack for forty-eight NMR tubes, *the only thing down here that isn't laminated*;
+  - on the glovebox room's terminal, *ask bo-forge what to run next*;
+  - in the Research Write-Up Room (under *Look around the room*), someone's MacBook running VASP: *It's converging. Nobody knows how.*;
+  - in 4.12 (under *Look around the lab*), half a ZnIn₂S₄ band diagram, an electron rubbed out mid-jump;
+  - on the roof, 下一秒想去看海 scratched into the railing, untranslated in both languages. A quiet moment, not a joke key, there in every act.
+
+  Each is an anomaly (`cameo.*`): 46 in all, as `HUMOUR.md` planned. Tests: `tests/cameos.test.ts`.
 - #209: **the hidden eggs** (`docs/HUMOUR.md` §7).
   - **The Konami code** (↑ ↑ ↓ ↓ ← → ← → B A) turns a calm room into a badly made group-meeting slide:
     - the room's name *(preliminary)* as the title;

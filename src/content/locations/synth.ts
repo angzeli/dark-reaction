@@ -174,6 +174,8 @@ export const synthScenes: SceneDef[] = [
         text: [{ key: 'fun.tare.3' }],
       },
       { id: 'synth.darkroom', label: 'synth.darkroom', to: 'synth.darkroom' },
+      // Cameo (docs/HUMOUR.md §8): a band diagram, half-erased. Quiet; there in every act.
+      { id: 'synth.whiteboard', label: 'synth.whiteboard', cost: 1, once: 'loop', effects: [{ anomaly: 'cameo.whiteboard' }], text: [{ key: 'synth.whiteboard.r' }] },
       squid('synth'),
     ],
   },

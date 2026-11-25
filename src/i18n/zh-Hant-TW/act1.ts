@@ -160,4 +160,12 @@ export const act1: Record<keyof typeof en, string> = {
   'squid.look': '看那個塗鴉',
   'synth.darkcontrol.late': '想想暗對照組',
   'synth.darkcontrol.late.r': '要做一個像樣的暗對照組，得在 02:47 就直接過來，關著燈坐滿一整夜。今晚是來不及了。',
+
+  // ── 客串（docs/HUMOUR.md §8） ───────────────────────────────────────────────────
+  'office.macbook': '看隔壁桌的 MacBook',
+  'synth.whiteboard': '看白板',
+  'synth.whiteboard.r': '門邊的白板被誰匆匆擦過：一張能帶圖只剩一半，導帶、價帶，一顆電子跳到一半被擦掉了。角落還留著，底下畫了兩條線：ZnIn₂S₄。',
+  'glovebox.terminal': '看門邊的終端機',
+  'glovebox.terminal.r': '門邊組上的那台終端機，登入的帳號不屬於任何人。螢幕邊框貼著一張便利貼，綠色原子筆：*ask bo-forge what to run next*。',
+  'nmr.rack': '看桌上的 NMR 管架',
 };

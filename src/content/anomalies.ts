@@ -52,6 +52,12 @@ export const ANOMALIES: AnomalyDef[] = [
   { id: 'sorry', trigger: { kind: 'choice', choice: 'synth.sorry', setup: hub('synth.hub', { usedLoop: ['synth.hoods'] }) }, scene: 'synth.hub', tone: 'calm', keys: ['synth.sorry', 'fun.sorry'], acts: [1, 2], achievement: 'sorry' },
   { id: 'pa.test', trigger: { kind: 'event', event: 'ev.pa.test', setup: hub('stairs.hub', { minute: 7 }) }, scene: 'stairs.hub', tone: 'calm', keys: ['fun.pa.test'], acts: [1, 2] },
   { id: 'pa.car', trigger: { kind: 'event', event: 'ev.pa.car', setup: hub('roof.hub', { minute: 24 }) }, scene: 'roof.hub', tone: 'calm', keys: ['fun.pa.car'], acts: [1, 2] },
+  // ── Cameos (§8): at most one in each place ──────────────────────────────────
+  { id: 'cameo.macbook', trigger: { kind: 'choice', choice: 'office.macbook', setup: hub('office.around') }, scene: 'office.around', tone: 'calm', keys: ['fun.macbook'], acts: [1, 2] },
+  { id: 'cameo.whiteboard', trigger: { kind: 'choice', choice: 'synth.whiteboard', setup: hub('synth.around') }, scene: 'synth.around', tone: 'calm', keys: ['synth.whiteboard.r'] },
+  { id: 'cameo.boforge', trigger: { kind: 'choice', choice: 'glovebox.terminal', setup: hub('glovebox.hub') }, scene: 'glovebox.hub', tone: 'calm', keys: ['glovebox.terminal.r'] },
+  { id: 'cameo.rack', trigger: { kind: 'choice', choice: 'nmr.rack', setup: hub('nmr.hub') }, scene: 'nmr.hub', tone: 'calm', keys: ['fun.rack'], acts: [1, 2] },
+  { id: 'cameo.railing', trigger: { kind: 'choice', choice: 'roof.railing', setup: hub('roof.hub') }, scene: 'roof.hub', tone: 'calm', keys: ['roof.railing.r'] },
   // ── The console's hidden commands (§5): Acts I–II; in Act III it stops joking ─
   cmd('sudo', 'sudo', 'console.out.sudo', [], 'reported'),
   cmd('rm', 'rm -rf /', 'console.out.rm'),
