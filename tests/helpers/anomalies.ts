@@ -6,6 +6,7 @@
  */
 import { Game } from '../../src/engine/engine.ts';
 import type { AnomalyDef, AnomalySetup, Content } from '../../src/engine/types.ts';
+import { HIDDEN, respond } from '../../src/puzzles/console/logic.ts';
 
 /** A game at 02:47 of loop 1, then moved to where the setup says. */
 export function placed(content: Content, setup: AnomalySetup): Game {
@@ -45,7 +46,15 @@ export interface Triggered {
 }
 
 /** Triggers for the kinds found outside the engine, keyed by kind. */
-export const OUTSIDE: Partial<Record<AnomalyDef['trigger']['kind'], (a: AnomalyDef) => Triggered>> = {};
+export const OUTSIDE: Partial<Record<AnomalyDef['trigger']['kind'], (a: AnomalyDef) => Triggered>> = {
+  // Typed at the console, in Act I: its answer is the anomaly (the view calls discover with it).
+  command: (a) => {
+    if (a.trigger.kind !== 'command') throw new Error('not a command');
+    const reply = respond(a.trigger.command, '02:51', 1);
+    const key = reply && typeof reply === 'object' ? reply.key : '';
+    return { found: HIDDEN[key] === a.id, shown: key ? [key] : [] };
+  },
+};
 
 export function trigger(content: Content, a: AnomalyDef): Triggered {
   const tr = a.trigger;

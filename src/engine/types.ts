@@ -128,8 +128,8 @@ export interface ChoiceDef {
   text?: TextRef[];
   /** Move to another scene afterwards (its text follows the result). */
   to?: string;
-  /** Tags used by the validator and the bot. */
-  tags?: Array<'chase' | 'rest' | 'fudge' | 'honest' | 'shortcut' | 'ending'>;
+  /** Tags used by the validator and the bot. `revisit`: opens a puzzle that is already solved, on purpose. */
+  tags?: Array<'chase' | 'rest' | 'fudge' | 'honest' | 'shortcut' | 'ending' | 'revisit'>;
 }
 
 export interface SceneDef {

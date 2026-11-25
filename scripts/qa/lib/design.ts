@@ -41,6 +41,8 @@ export function solvedStaysSolved(model: Model, state: GameState): Finding[] {
   const visible = new Set(new Game(model.content, state).choices().map((c) => c.id));
   for (const id of visible) {
     const def = model.choices.get(id)?.choice;
+    // A choice tagged `revisit` opens its solved puzzle on purpose (logging back in to the console, #205).
+    if (def?.tags?.includes('revisit')) continue;
     for (const e of def?.effects ?? []) {
       if ('puzzle' in e && state.solved.includes(e.puzzle)) {
         out.push({ level: 'error', check: 'solved', sig: `solved|reopen|${id}`, message: `${id} opens ${e.puzzle} again although it is solved (${state.scene}, loop ${state.loop})` });

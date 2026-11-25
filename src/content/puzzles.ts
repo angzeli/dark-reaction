@@ -33,7 +33,8 @@ export const PUZZLE_DEFS: PuzzleDef[] = [
     par: 3,
     hints: hints('console'),
     onSolve: [{ learn: 'nb.queue.0333' }, { learn: 'nb.holder13' }],
-    solvedText: [{ key: 'puzzle.console.solved' }],
+    // Logged back in later (nmr.terminal), there's nothing new to find out about holder 13: you just log out.
+    solvedText: [{ key: 'puzzle.console.solved', if: { not: { used: 'nmr.terminal' } } }, { key: 'puzzle.console.left', if: { used: 'nmr.terminal' } }],
     leftText: [{ key: 'puzzle.console.left' }],
     margin: 'puzzle.console.margin',
   },

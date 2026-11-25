@@ -5,7 +5,7 @@
  */
 import { h } from '../../ui/dom.ts';
 import type { PuzzleView } from '../types.ts';
-import { consoleLogic, consoleSave, type ConsoleState } from './logic.ts';
+import { consoleLogic, consoleSave, HIDDEN, type ConsoleState } from './logic.ts';
 
 const PROMPT = 'ar4217@nmr400:~$';
 
@@ -34,6 +34,9 @@ export const consoleView: PuzzleView = {
 
     const submit = (command: string) => {
       state = consoleLogic.apply(state, command);
+      // A hidden command's answer is an anomaly found (docs/HUMOUR.md §5).
+      const last = state.lines[state.lines.length - 1];
+      if (last && 'out' in last && HIDDEN[last.out.key] && state.lines.at(-2) && 'input' in state.lines.at(-2)!) api.discover(HIDDEN[last.out.key]!);
       api.saveData(consoleSave(state));
       api.setMinutes(consoleLogic.minutes(state));
       if (state.closed) {

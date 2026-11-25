@@ -141,4 +141,6 @@ export const act1: Record<keyof typeof en, string> = {
   'synth.door': '看實驗室門上的告示',
   'office.around': '環顧這個房間',
   'office.around.text': '十一張桌子，十張沒有人。好幾個禮拜以來，你第一次好好地把這個房間看了一遍，像個來參觀的人那樣。',
+  'nmr.terminal': '重新登入控制台',
+  'nmr.terminal.r': '椅子還是溫的。提示符號在等你。',
 };

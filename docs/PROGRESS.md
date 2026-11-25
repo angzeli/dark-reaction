@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #214 Campus in-jokes: B12, the Research Write-Up Room, lanyards, the lift, the lab door, the toilets, the corridor (closes #204)
+- **Last merged:** #215 The console's hidden commands (closes #205)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,21 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #205: **the console's hidden commands** (`docs/HUMOUR.md` §5). The B12 console answers to more than `help` admits.
+  - **The commands:** `sudo`, `rm -rf /`, `xyzzy`, `vasp`, `orca`, `g16`, `make coffee`, `ping supervisor`, `history`, `uptime`, `top`, `man sleep`, `git blame`, `ls`, `cat thesis_final_v7_FINAL_actually.docx` (any other thesis is *Superseded*), `shuttle`, `who`, `coshh`. Eighteen in all, each its own anomaly (`cmd.*`).
+    - Software output is as the software prints it (ZBRENT, ORCA's `qcmsg.cpp`, Gaussian's *Normal termination*, GNU make), with the console's own clock where it has one.
+    - In 繁中 the output stays in English, with a gloss line where it helps (學長, 爆肝). What's written for people is localised (`ping` 老闆: 「進度？」).
+    - They take the obvious variants: `sudo …`, `htop`, `ls -la`, `ping dan`, `mpirun -np 8 vasp_std`.
+  - **Quiet in Act III:** the console remembers the act it was opened in, and from Act III the hidden commands are `command not found`, so they aren't found there.
+  - **Logging back in:** a solved console can be opened again in Acts I–II with *Log back in to the console* (`nmr.terminal`, tagged `revisit`, which the QA check for reopened puzzles allows). Logging out there says only that you log out.
+  - **Plumbing:**
+    - `PuzzleApi.discover` (through the frame's `onDiscover`) records a find from inside a puzzle;
+    - `sudo` moved to the terminal table, and now reports to your PI, not to Ian;
+    - the trigger harness types commands.
+  - **Totals:** 25 anomalies, 34 joke keys.
+  - **Tests:**
+    - `tests/console-eggs.test.ts`: all eighteen in both languages, none in help, the variants, Act III, logging back in;
+    - `e2e/console-eggs.spec.ts`: `shuttle` and `xyzzy` at the console in both languages, saved with the game.
 - #204: **campus in-jokes.** `docs/HUMOUR.md` §4, for anyone who studied in a building like this one.
   - **B12:**
     - the NMR suite is *B12 NMR suite* /「B12 NMR 室」 in the location name, the e2e selectors, the art notes and `DESIGN.md`;

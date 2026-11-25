@@ -40,6 +40,8 @@ export interface FrameOptions {
   onMinutes?(minute: number): void;
   /** Key for the leave button (default `puzzle.leave`). */
   leaveKey?: string;
+  /** An anomaly turned up (default: nowhere to keep it). */
+  onDiscover?(id: string): void;
 }
 
 export interface FrameHandle {
@@ -139,6 +141,7 @@ export function mountPuzzleFrame(host: HTMLElement, o: FrameOptions): FrameHandl
     },
     saveData: (data) => o.onSaveData(data),
     cue: (cueId) => o.cue(cueId),
+    discover: (anomaly) => o.onDiscover?.(anomaly),
   };
 
   hintButton.addEventListener('click', () => {

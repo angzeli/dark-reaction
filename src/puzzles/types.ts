@@ -64,6 +64,8 @@ export interface PuzzleApi {
   saveData(data: unknown): void;
   /** Play an audio cue if sound is on. */
   cue(id: 'solve' | 'fail' | 'hint' | 'chirp'): void;
+  /** Record an anomaly the puzzle turned up (the console's hidden commands, docs/HUMOUR.md §5). Silent. */
+  discover(id: string): void;
 }
 
 export interface PuzzleViewHandle {
