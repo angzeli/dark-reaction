@@ -115,7 +115,7 @@ describe('NMR console', () => {
     expect(respond('date', '02:52')).toEqual({ key: 'console.out.date', params: { clock: '02:52' } });
     expect(respond('info 9', '02:52')).toEqual({ key: 'console.out.info.empty', params: { n: 9 } });
     expect(respond('eject 13', '02:52')).toEqual({ key: 'console.out.eject' });
-    expect(respond('make coffee', '02:52')).toEqual({ key: 'console.out.unknown', params: { command: 'make coffee' } });
+    expect(respond('make tea', '02:52')).toEqual({ key: 'console.out.unknown', params: { command: 'make tea' } });
     expect(consoleMinutes(0)).toBe(2);
     expect(consoleMinutes(4)).toBe(3);
     expect(type(['help', 'whoami', 'clear']).lines).toEqual([]);

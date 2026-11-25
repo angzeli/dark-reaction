@@ -144,7 +144,6 @@ export const puzzles: Record<keyof typeof en, string> = {
   'console.out.info.usage': '用法：info <樣品槽>',
   'console.out.log': '03:33  ar4217  submit 13 PROTON_DARK\n02:41  ar4217  session timeout\n01:12  tom_h   eject 09 (own sample)\n00:30  ian_o   shim 13 (no sample)',
   'console.out.eject': 'eject：權限不足。\n此事件已回報給 Ian。',
-  'console.out.sudo': 'ar4217 不在 sudoers 名單裡。此事件已回報給 Ian（再一次）。',
   'console.out.unknown': '{command}：找不到指令',
   'puzzle.console.h1': 'Ian 的快速參考卡就貼在螢幕上，上面提到怎麼看所有人的預約。',
   'puzzle.console.h2': '「queue」只會列出它認為你能管理的預約。加上「--all」。',

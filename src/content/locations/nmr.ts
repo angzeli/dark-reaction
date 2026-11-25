@@ -38,6 +38,16 @@ export const nmrScenes: SceneDef[] = [
         ],
       },
       {
+        // A solved console can still be logged into (docs/HUMOUR.md §5): it answers to more than help admits.
+        id: 'nmr.terminal',
+        label: 'nmr.terminal',
+        cost: 1,
+        if: { all: [{ solved: 'console' }, { not: { act: 3 } }] },
+        text: [{ key: 'nmr.terminal.r' }],
+        effects: [{ puzzle: 'console' }],
+        tags: ['revisit'],
+      },
+      {
         id: 'nmr.load',
         label: 'nmr.load',
         cost: 1,

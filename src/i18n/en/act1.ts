@@ -148,4 +148,6 @@ export const act1 = {
   'synth.door': 'Read the notices on the lab door',
   'office.around': 'Look around the room',
   'office.around.text': 'Eleven desks, ten of them empty. For the first time in weeks you look round the room properly, the way a visitor would.',
+  'nmr.terminal': 'Log back in to the console',
+  'nmr.terminal.r': 'The chair is still warm. The prompt is waiting.',
 } as const;

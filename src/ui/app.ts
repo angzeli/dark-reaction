@@ -825,6 +825,9 @@ export class App {
         this.puzzleFrame = null;
         void this.act((g) => g.completePuzzle(r));
       },
+      onDiscover: (anomaly) => {
+        if (game.discover(anomaly)) this.autosave();
+      },
       onSaveData: (data) => {
         game.state.puzzleData[id] = data;
         this.autosave();

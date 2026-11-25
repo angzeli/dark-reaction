@@ -147,7 +147,6 @@ export const puzzles = {
   'console.out.info.usage': 'usage: info <holder>',
   'console.out.log': '03:33  ar4217  submit 13 PROTON_DARK\n02:41  ar4217  session timeout\n01:12  tom_h   eject 09 (own sample)\n00:30  ian_o   shim 13 (no sample)',
   'console.out.eject': 'eject: permission denied.\nThis incident has been reported to Ian.',
-  'console.out.sudo': 'ar4217 is not in the sudoers file. This incident has been reported to Ian (again).',
   'console.out.unknown': '{command}: command not found',
   'puzzle.console.h1': 'Ian’s quick-reference card is taped to the monitor. It says something about seeing everyone’s bookings.',
   'puzzle.console.h2': '“queue” only lists bookings it thinks are yours to manage. Add “--all”.',
