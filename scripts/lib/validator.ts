@@ -140,6 +140,7 @@ export function referencedKeys(content: Content): Map<string, string> {
   for (const n of content.notebook) {
     add(n.title, `notebook ${n.id}`);
     add(n.body, `notebook ${n.id}`);
+    refs(n.asides as TextRef[] | undefined, `notebook ${n.id}`);
   }
   for (const p of content.puzzles) {
     p.hints.forEach((h) => add(h, `puzzle ${p.id}`));

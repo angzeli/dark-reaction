@@ -32,4 +32,16 @@ export const humour: Record<keyof typeof en, string> = {
   'fun.thesis': '第 4 章，你從六月寫到現在。*本催化劑在可見光（λ > 420 nm）下活性為商用 P25 的 3.7 倍，可穩定循環 5 次。結合能以 C 1s 284.8 eV 校正。表觀量子效率未測定。* 你從頭讀了一遍。聽起來跟每一篇你翻過白眼的 paper 一模一樣，而這篇是你寫的。',
   'fun.chart':
     '控制台旁邊貼著 Ian 護貝的表：*PEAKS THAT ARE NOT YOUR PRODUCT.* CDCl₃：7.26 溶劑、1.56 水、2.17 丙酮、0.86 和 1.26 油脂。C₆D₆：7.16、0.40、1.55、0.92 和 1.36。最底下有人用原子筆加了一行：*8.41 — hope.* 再底下，另一個人的字：*許願池*。',
+
+  // ── 大樓的其他地方：B.05、廣播、過去的你寫在邊上的字（§7–8） ────────────────────────────────────────
+  'fun.cold.box': '最上層最前面，待得比組上任何人都久的一個盒子：*DO NOT THROW AWAY — K., 2009*。沒有人知道 K. 是誰，也沒有人敢丟。每個實驗室都有一盒；台灣的通常寫「學長的，勿丟」。',
+  'fun.cold.fridge':
+    '門上是 Ian 的大寫字：*NO FOOD OR DRINK — CHEMICALS ONLY*。裡面：一瓶硼酸、三瓶氘代溶劑，和一份 meal deal（三明治、洋芋片、飲料），貼著「Tom 的——別碰（就是在說你）」，賞味期限是上週二。英國超商的三明治套餐，第一年覺得划算，第二年吃到想哭。',
+  'fun.pa.test': '叮咚。一個錄好的女聲，非常冷靜：*This is a test of the public address system. If you can hear this message, you are in the building.* 叮咚。對，你還在。',
+  'fun.pa.car': '叮咚。*停車場那台藍色旅行車的車主，請移車。這台車從九月就停在這裡了。這是最後一次廣播。* 叮咚。上個月也說是最後一次。',
+  'nb.aside.tlc': '瓶子要貼標籤。你沒貼。',
+  'nb.aside.yield': '天平沒有在飄。是你在飄。',
+  'nb.aside.purge': '三次。戴著手套就不要用手指數了。',
+  'nb.aside.reset': '帶手電筒。（你不會帶的。）',
+  'nb.aside.ian': '這個他也有一張告示。',
 };

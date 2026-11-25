@@ -37,4 +37,19 @@ export const humour = {
     'Chapter 4, which you have been writing since June. *The catalyst outperforms commercial P25 by a factor of 3.7 under visible light (λ > 420 nm) and remains stable for 5 cycles. Binding energies were calibrated to C 1s at 284.8 eV. The apparent quantum yield was not determined.* You read it back. It sounds exactly like every paper you have ever rolled your eyes at, and it’s yours.',
   'fun.chart':
     'Taped by the console, Ian’s laminated table: *PEAKS THAT ARE NOT YOUR PRODUCT.* In CDCl₃: 7.26, the solvent; 1.56, water; 2.17, acetone; 0.86 and 1.26, grease. In C₆D₆: 7.16, 0.40, 1.55, 0.92 and 1.36. At the bottom, someone has added a row in biro: *8.41 — hope.*',
+
+  // ── The rest of the building: B.05, the PA, past-you’s margins (§7–8) ───────
+  'fun.cold.box':
+    'On the top shelf, at the front, where it has been for longer than anyone in the group: a box labelled *DO NOT THROW AWAY — K., 2009*. Nobody knows who K. was. Nobody has thrown it away.',
+  'fun.cold.fridge':
+    '*NO FOOD OR DRINK — CHEMICALS ONLY*, says the door, in Ian’s capitals. Inside: a boronic acid, three NMR solvents and a meal deal (sandwich, crisps, drink), labelled *TOM’S — DO NOT TOUCH (this means you)*, best before last Tuesday.',
+  'fun.pa.test':
+    '*Bing-bong.* A recorded voice, very calm: *This is a test of the public address system. If you can hear this message, you are in the building.* *Bing-bong.*',
+  'fun.pa.car':
+    '*Bing-bong.* *Would the owner of the blue estate car in the car park please move it. It has been there since September. This is the final announcement.* *Bing-bong.*',
+  'nb.aside.tlc': 'label your vials. you didn’t.',
+  'nb.aside.yield': 'the balance isn’t drifting. you are.',
+  'nb.aside.purge': 'three. stop counting on your fingers inside the gloves.',
+  'nb.aside.reset': 'bring a torch. (you won’t.)',
+  'nb.aside.ian': 'he has a sign for this too.',
 } as const;

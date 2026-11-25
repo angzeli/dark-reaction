@@ -164,4 +164,7 @@ export const act2: Record<keyof typeof en, string> = {
   'pi.corridor': '看看走廊上其他的門',
   'pi.photo.lanyard': '照片裡，只有她還戴著識別證。',
   'pi.box.lanyard': '箱子裡沒有她的識別證。',
+
+  // ── v1.1.0：B.05 ─────────────────────────────────────────────────────────────
+  'cold.fridge': '打開寫著 NO FOOD 的冰箱',
 };

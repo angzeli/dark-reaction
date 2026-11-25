@@ -17,7 +17,15 @@ export const coldScenes: SceneDef[] = [
       { key: 'cold.hub.act3', if: { act: 3 } },
     ],
     choices: [
-      { id: 'cold.freezer', label: 'cold.freezer', cost: 1, once: 'loop', if: { not: { know: 'nb.cipher' } }, text: [{ key: 'cold.freezer.r' }] },
+      {
+        id: 'cold.freezer',
+        label: 'cold.freezer',
+        cost: 1,
+        once: 'loop',
+        if: { not: { know: 'nb.cipher' } },
+        // The box nobody has thrown away since 2009 (docs/HUMOUR.md §8), until Act III.
+        text: [{ key: 'cold.freezer.r' }, { key: 'fun.cold.box', if: { not: { act: 3 } } }],
+      },
       {
         // P4: her box in rack 1, once her notebook has told you where to look.
         // After the alarm the lid stays shut until the next 02:47.
@@ -49,6 +57,8 @@ export const coldScenes: SceneDef[] = [
         ],
       },
       { id: 'cold.tom', label: 'cold.tom', cost: 1, once: 'loop', text: [{ key: 'cold.tom.r' }] },
+      // The fridge marked NO FOOD, which has food in it (docs/HUMOUR.md §8).
+      { id: 'cold.fridge', label: 'cold.fridge', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.cold.fridge' }] },
       // Act III: the frost on the floor, all of it pointing upstairs (#69, drawn in #64).
       { id: 'cold.frost', label: 'cold.frost', cost: 1, once: 'loop', if: { act: 3 }, effects: [{ learn: 'nb.frost' }], text: [{ key: 'cold.frost.r' }] },
     ],

@@ -176,6 +176,8 @@ export interface NotebookDef {
   body: string;
   /** Pencilled margin note shown in a new game+ when this puzzle has been solved before. */
   marginFor?: string;
+  /** Marginalia beside the entry, shown while their condition holds (past-you's pencil, docs/HUMOUR.md §8). */
+  asides?: ReadonlyArray<{ key: string; if?: Cond }>;
 }
 
 export interface PuzzleDef {

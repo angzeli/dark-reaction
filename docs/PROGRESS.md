@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #216 Examine lines: the Act I rooms (closes #206)
+- **Last merged:** #217 Examine lines: the cold room, the PA, the notebook's margins, and a quiet Act III (closes #207)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#207** the rest of the building; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -29,12 +29,33 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Open decisions and blockers
 
 - **Repository settings are set** (2026-11-23, from a local session signed in to `gh` as the owner; the cloud proxy still blocks settings writes). The Pages source is "GitHub Actions", and `main` is protected: the seven CI checks from GitHub Actions, the branch up to date, no admin bypass, no force pushes. #89 drops `deploy.yml`'s wait for the branch build and records this in `CLAUDE.md`.
-- **Squashing without force-pushing.** This session's auto mode refuses `git push --force-with-lease` on PR branches, which the squash in `CLAUDE.md` §2 needs after any change. So each PR is pushed already squashed (one commit, `(#n)` subject, PROGRESS entry), and a PR that needs changes is replaced by a new one. The owner can allow force-pushes to this repo's PR branches to go back to the documented flow.
+- **Squashing.** In the cloud session `git push --force-with-lease` on PR branches was refused, so each PR was pushed already squashed and a PR that needed changes was replaced. In the local session that runs M7 it works, so the documented flow is back: amend, `--force-with-lease`, rebase-merge (#214's visual baselines went in that way).
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
 
 ### 2026-11-25
+- #207: **the rest of the building** (`docs/HUMOUR.md` §7–8).
+  - **B.05:**
+    - the −80's top shelf has had *DO NOT THROW AWAY — K., 2009* longer than anyone has been in the group (繁中: 「學長的，勿丟」);
+    - *Open the fridge marked NO FOOD* finds a boronic acid, three NMR solvents and Tom's meal deal (繁中 glosses the meal deal).
+    - Acts I–II.
+  - **The PA** (`ev.pa.test` at 02:55, `ev.pa.car` at 03:12; anomalies `pa.test`, `pa.car`):
+    - *If you can hear this message, you are in the building*;
+    - the blue estate car in the car park since September, *final announcement* (繁中: 上個月也說是最後一次).
+    - They are `ambient`, so they don't cut a wait short, and have an `until`, so they can't fire at 03:33.
+    - They are heard only in the calm rooms in Acts I–II: never at her desk, in Dan's office, or in the toilets, the one place the building can't reach.
+  - **Past-you's margins** (`NotebookDef.asides`): from the third night, faint pencil beside five entries, in your hand:
+    - *label your vials. you didn't.*
+    - *the balance isn't drifting. you are.*
+    - *three. stop counting on your fingers inside the gloves.*
+    - *bring a torch. (you won't.)*
+    - *he has a sign for this too.*
+
+    They are styled in the notebook (`.nb__aside`), and in high contrast too.
+  - **Act III stays quiet:** none of these show there.
+  - **Totals:** 29 anomalies, 49 joke keys, 14 localised variants. Playtime 51.9 min EN / 52.8 min 繁中: the PA is heard on the timed route.
+  - **Tests:** `tests/building.test.ts` (7).
 - #206: **the Act I rooms' new lines** (`docs/HUMOUR.md` §8), all optional looks, all Acts I–II:
   - **The Research Write-Up Room:**
     - a COSHH assessment for the pencil on the floor (`office.pencil`, 2 min, under *Look around the room*; anomaly `coshh`). The 繁中 glosses COSHH as hazardous-chemicals paperwork plus a 核銷 form, times three.

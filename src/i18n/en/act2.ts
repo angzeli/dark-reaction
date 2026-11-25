@@ -184,4 +184,7 @@ export const act2 = {
   'pi.corridor': 'Look along the corridor',
   'pi.photo.lanyard': 'She is the only one in the photo still wearing her lanyard.',
   'pi.box.lanyard': 'Her lanyard isn’t in the box.',
+
+  // ── v1.1.0: B.05 ────────────────────────────────────────────────────────────
+  'cold.fridge': 'Open the fridge marked NO FOOD',
 } as const;

@@ -17,6 +17,7 @@ import { mountPuzzleFrame, type FrameHandle } from '../puzzles/frame.ts';
 import type { PuzzleModule } from '../puzzles/types.ts';
 import { downloadText, pickTextFile, saveFilename } from '../save/file.ts';
 import { LANYARD } from '../content/lanyard.ts';
+import { holds } from '../engine/conditions.ts';
 import { ENDING_ORDER, Gallery } from '../save/gallery.ts';
 import { SaveStore, SLOTS, type ReadResult, type SlotId } from '../save/saves.ts';
 import type { KV } from '../save/storage.ts';
@@ -1029,6 +1030,8 @@ export class App {
       body,
     );
     if (def.kind === 'phantom') entry.append(h('p', { class: 'nb__note' }, t('nb.phantom.note')));
+    // Past-you's pencil in the margin (docs/HUMOUR.md §8).
+    for (const a of def.asides ?? []) if (holds(a.if, game.state)) entry.append(h('p', { class: 'nb__aside' }, t(a.key)));
     if (fudge && !fudge.corrected) {
       entry.append(
         h(
