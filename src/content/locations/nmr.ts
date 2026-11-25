@@ -216,6 +216,8 @@ export const nmrScenes: SceneDef[] = [
         text: [{ key: 'nmr.holder13.r' }],
       },
       { id: 'nmr.printer', once: 'loop', label: 'nmr.printer', cost: 1, text: [{ key: 'nmr.printer.r' }] },
+      // Ian's table of the peaks that aren't yours (Gottlieb's values), with one row added (docs/HUMOUR.md §8).
+      { id: 'nmr.chart', once: 'loop', label: 'nmr.chart', cost: 1, if: { not: { act: 3 } }, text: [{ key: 'fun.chart' }] },
     ],
   },
 ];

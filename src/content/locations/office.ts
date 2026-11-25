@@ -104,6 +104,8 @@ export const officeScenes: SceneDef[] = [
     text: [{ key: 'office.around.text' }],
     choices: [
       { id: 'office.plate', label: 'office.plate', cost: 1, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'plate' }], text: [{ key: 'fun.plate' }] },
+      // A COSHH assessment for a pencil (docs/HUMOUR.md §8): the form takes longer than the pencil.
+      { id: 'office.pencil', label: 'office.pencil', cost: 2, once: 'loop', if: { not: { act: 3 } }, effects: [{ anomaly: 'coshh' }], text: [{ key: 'fun.pencil' }] },
       ...lanyard('office'),
     ],
   },
@@ -128,6 +130,8 @@ export const officeScenes: SceneDef[] = [
       { id: 'office.data', once: 'loop', label: 'office.data', cost: 1, effects: [{ learn: 'nb.paper' }], text: [{ key: 'office.data.r' }] },
       { id: 'office.submit.own', label: 'office.submit.own', if: { item: 'item.spectrum.own' }, to: 'office.declare.own' },
       { id: 'office.submit.printout', label: 'office.submit.printout', if: { item: 'item.printout' }, to: 'office.declare.printout' },
+      // Your own chapter 4 (docs/HUMOUR.md §8): every photocatalysis paper you've rolled your eyes at.
+      { id: 'office.thesis', label: 'office.thesis', cost: 1, once: 'loop', if: { not: { act: 3 } }, text: [{ key: 'fun.thesis' }] },
     ],
   },
   {

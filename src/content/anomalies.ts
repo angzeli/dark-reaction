@@ -24,6 +24,9 @@ export const ANOMALIES: AnomalyDef[] = [
   { id: 'lift', trigger: { kind: 'choice', choice: 'stairs.lift', setup: hub('stairs.hub', { loop: 2 }) }, scene: 'stairs.lift', tone: 'calm', keys: ['fun.lift.r', 'fun.lift.again', 'stairs.lift.act3'] },
   { id: 'labdoor', trigger: { kind: 'choice', choice: 'synth.door.0', setup: hub('synth.hub') }, scene: 'synth.hub', tone: 'calm', keys: ['fun.labdoor', 'fun.labdoor.poster.0'], acts: [1, 2] },
   { id: 'toilets', trigger: { kind: 'choice', choice: 'stairs.toilets', setup: hub('stairs.lift') }, scene: 'stairs.toilets', tone: 'calm', keys: ['stairs.toilets.text'] },
+  // ── The rooms (§8) ────────────────────────────────────────────────────────
+  { id: 'coshh', trigger: { kind: 'choice', choice: 'office.pencil', setup: hub('office.around') }, scene: 'office.around', tone: 'calm', keys: ['fun.pencil'], acts: [1, 2] },
+  { id: 'sorry', trigger: { kind: 'choice', choice: 'synth.sorry', setup: hub('synth.hub', { usedLoop: ['synth.hoods'] }) }, scene: 'synth.hub', tone: 'calm', keys: ['synth.sorry', 'fun.sorry'], acts: [1, 2] },
   // ── The console's hidden commands (§5): Acts I–II; in Act III it stops joking ─
   cmd('sudo', 'sudo', 'console.out.sudo'),
   cmd('rm', 'rm -rf /', 'console.out.rm'),

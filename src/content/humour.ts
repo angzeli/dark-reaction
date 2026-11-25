@@ -25,6 +25,15 @@ export const LOCALISED_VARIANTS: ReadonlySet<string> = new Set<JokeKey>([
   'fun.labdoor.poster.3',
   // 繁中: a gloss on each sign, where English leaves them bare.
   'fun.corridor',
+  // 繁中: not an apology but a green 乖乖 (coconut, always green) on the frame, which works on the NMR too.
+  'synth.sorry',
+  'fun.sorry',
+  // 繁中: the last attempt, in Taiwan, is called changing your PI.
+  'fun.synth.tlc',
+  // 繁中: below "hope", someone else has written 許願池.
+  'fun.chart',
+  // 繁中: COSHH glossed as hazardous-chemicals paperwork plus a reimbursement form, times three.
+  'fun.pencil',
 ]);
 
 /** The only epilogues a joke may appear in: Fire Alarm's, all of it; Clocking Off's, only its lanyard beat. */

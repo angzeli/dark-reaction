@@ -107,7 +107,25 @@ export const synthScenes: SceneDef[] = [
         text: [{ key: 'synth.kraken.again.light.r' }],
         effects: [{ take: 'item.tube.jy' }, { lflag: 'tube.spoiled' }],
       },
-      { id: 'synth.hoods', once: 'loop', label: 'synth.hoods', cost: 1, effects: [{ learn: 'nb.tom' }], text: [{ key: 'synth.hoods.r' }, { key: 'synth.hoods.act3', if: { act: 3 } }] },
+      {
+        id: 'synth.hoods',
+        once: 'loop',
+        label: 'synth.hoods',
+        cost: 1,
+        effects: [{ learn: 'nb.tom' }],
+        // Tom's plate, everything at Rf 0.3 (docs/HUMOUR.md §8), until Act III.
+        text: [{ key: 'synth.hoods.r' }, { key: 'fun.synth.tlc', if: { not: { act: 3 } } }, { key: 'synth.hoods.act3', if: { act: 3 } }],
+      },
+      {
+        // Lifting the sash to look in set its alarm off: say sorry (in 繁中, a green 乖乖 on the frame).
+        id: 'synth.sorry',
+        once: 'loop',
+        label: 'synth.sorry',
+        cost: 1,
+        if: { all: [{ used: 'synth.hoods' }, { not: { act: 3 } }] },
+        effects: [{ anomaly: 'sorry' }],
+        text: [{ key: 'fun.sorry' }],
+      },
       {
         id: 'synth.kraken',
         once: 'loop',

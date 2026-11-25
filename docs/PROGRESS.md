@@ -7,13 +7,13 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
 - **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
-- **Last merged:** #215 The console's hidden commands (closes #205)
+- **Last merged:** #216 Examine lines: the Act I rooms (closes #206)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
 - **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+1. **#207** the rest of the building; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
 3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
@@ -35,6 +35,17 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 ## Log
 
 ### 2026-11-25
+- #206: **the Act I rooms' new lines** (`docs/HUMOUR.md` §8), all optional looks, all Acts I–II:
+  - **The Research Write-Up Room:**
+    - a COSHH assessment for the pencil on the floor (`office.pencil`, 2 min, under *Look around the room*; anomaly `coshh`). The 繁中 glosses COSHH as hazardous-chemicals paperwork plus a 核銷 form, times three.
+    - your own chapter 4, on your monitor (`office.thesis`): P25 beaten by 3.7×, λ > 420 nm, 5 cycles, C 1s at 284.8 eV, AQY not determined. *It sounds exactly like every paper you have ever rolled your eyes at, and it's yours.*
+  - **4.12:**
+    - Tom's plate in his hood, every spot at Rf 0.3, his attempts down the sash ending *TRY A DIFFERENT PROJECT* (繁中: 換老闆);
+    - once you've lifted the sash to look in, *Apologise to the fume hood* (`synth.sorry`; anomaly `sorry`). In 繁中 the choice is a different joke: 「在抽氣櫃上放一包乖乖」, green, and 學長 says it works on the NMR too.
+  - **B12:** Ian's laminated *PEAKS THAT ARE NOT YOUR PRODUCT* (`nmr.chart`). Gottlieb's residual peaks in CDCl₃ and C₆D₆, and a row in biro: *8.41 — hope.* (繁中 adds a second hand: 許願池.)
+  - **The parity check caught one:** *Chapter 4* against 「第四章」. The 繁中 is now 「第 4 章」.
+  - **A guard** (`tests/act1-rooms.test.ts`): in Acts I–II no hub but the stairwell has more than ten choices, so *Wait…* keeps a number key.
+  - **Totals:** 27 anomalies, 40 joke keys, 11 localised variants. Playtime unchanged.
 - #205: **the console's hidden commands** (`docs/HUMOUR.md` §5). The B12 console answers to more than `help` admits.
   - **The commands:** `sudo`, `rm -rf /`, `xyzzy`, `vasp`, `orca`, `g16`, `make coffee`, `ping supervisor`, `history`, `uptime`, `top`, `man sleep`, `git blame`, `ls`, `cat thesis_final_v7_FINAL_actually.docx` (any other thesis is *Superseded*), `shuttle`, `who`, `coshh`. Eighteen in all, each its own anomaly (`cmd.*`).
     - Software output is as the software prints it (ZBRENT, ORCA's `qcmsg.cpp`, Gaussian's *Normal termination*, GNU make), with the console's own clock where it has one.
