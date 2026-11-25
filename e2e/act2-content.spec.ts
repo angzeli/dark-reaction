@@ -73,6 +73,9 @@ test('into Act II: the doors, Dan’s office at 03:15, your noise, and the spect
 
   // The first 03:33, then Act II.
   for (let i = 0; i < 15; i++) {
+    // Not while it's dark: the 02:47 page is already drawn underneath, Wait and all, and the act card comes
+    // only as the dark lifts (#192, #222).
+    await expect(page.locator('.dr-lightsout')).toHaveCount(0, { timeout: 10_000 });
     if ((await page.locator('.act-card').count()) > 0) break;
     const wait = page.locator('.choice').filter({ hasText: 'Wait…' });
     if ((await wait.count()) === 0) {

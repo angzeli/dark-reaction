@@ -332,6 +332,9 @@ test('six wrong tubes set off the alarm; the lid stays shut until the next 02:47
 
   // The night runs out; at 02:47 the freezer has forgotten, and you haven't.
   for (let i = 0; i < 15; i++) {
+    // The 02:47 page is drawn under the dark before it lifts: read the loop only once it has, or it can still
+    // say loop 1 while loop 2's Wait is there to press (#192, #222).
+    await expect(page.locator('.dr-lightsout')).toHaveCount(0, { timeout: 10_000 });
     if ((await page.locator('.hud__loop').textContent()) === 'Loop 2') break;
     if ((await choice(page, 'Wait…').count()) === 0) {
       await page.waitForTimeout(250); // the lights-out card is playing
