@@ -6,15 +6,16 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 
 - **Released:** [v1.0.1](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.1), tagged on #188's commit, after [v1.0.0](https://github.com/angzeli/dark-reaction/releases/tag/v1.0.0) (2b71b0a, #88). M1–M6 are closed; the Playtest (v1.0.1) milestone stays open for what the owner decided after it, and the art pass.
 - **The playtest pass is done:** three layers of tools, three passes, 53 issues; the report is [`docs/qa/PLAYTEST-REPORT.md`](qa/PLAYTEST-REPORT.md).
-- **Last merged:** #201 Refused at the NMR queue, you remember the sticky note on Dan's monitor (closes #197)
+- **Working on:** **M7 Anomalies (v1.1.0)**, humour, campus in-jokes and hidden things, as the owner asked on 2026-11-25. The rules and the full list are in [`docs/HUMOUR.md`](HUMOUR.md) (spoilers).
+- **Last merged:** #212 HUMOUR.md, the tone rules, and every joke and egg in both languages (closes #202)
 - **The owner decided the five proposals** (2026-11-24): #124 the one-line reason; #125 all of it, the Kraken's three purges included; #153 yes; #161 yes; #162 no (closed as not planned).
-- **In flight:** nothing. The issues from triaging the real player's report (#196, #197, #198) are closed.
+- **In flight:** M7, one PR per issue, in this order: #203 → #204 → #205 → #206 → #207 → #208 → #209 → #210 → #211.
 
 ## Next
 
-1. Close the Playtest (v1.0.1) milestone, and decide whether these changes make a v1.0.2 (tag and release from a session signed in to `gh` as the owner).
-2. On a phone at the largest text sizes the choices still start below the fold: the passage itself is long there, and a new page starts at its top on purpose (#116). A way to reach the choices sooner (a skip link, say) would be a design decision for the owner.
-3. Watch the nightly QA run (`nightly-qa.yml`); a finding there gets an issue, with its seed.
+1. **#203** tone tags, the anomaly registry, the validator's humour checks, save schema 2. Engine and save code, so a cold review first.
+2. **#204** campus in-jokes and the B12 relabel (most visual baselines change here, once); **#205** the console; **#206**, **#207** the rooms; **#208** achievements and the counter; **#209** the eggs; **#210** cameos; **#211** two cold read-throughs (English only, 繁中 only), the final pass, and `v1.1.0`.
+3. Still open from before M7: close the Playtest (v1.0.1) milestone. On a phone at the largest text sizes the choices still start below the fold (#116), which is a design decision for the owner. Watch the nightly QA run (`nightly-qa.yml`).
 
 ### Issue map
 - **M1 Foundation:** #1 design docs (done), #3 scaffold, #4 fonts
@@ -23,6 +24,7 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **M4 Act II:** #17 content, #18 puzzles (door log, cipher, freezer), #19 art + ambience
 - **M5 Act III & Endings:** #20 Act III content, #21 Act III puzzles (Schlenk, chirp, fabrication, peak match), #22 six endings, #23 gallery + new game+, #24 Playwright bot
 - **M6 Polish & Release:** #25 accessibility, #26 polish, #27 README, credits, v1.0.0
+- **M7 Anomalies (v1.1.0):** #202 HUMOUR.md, #203 tone tags + registry + validator, #204 campus in-jokes, #205 the console, #206 Act I rooms, #207 the rest of the building, #208 achievements + counter, #209 hidden eggs, #210 cameos, #211 final pass + v1.1.0
 - **Playtest (v1.0.1):** #90 Layer 1 explorer and fuzzer, #91 nightly run, #92 Layer 2 playtest driver, #93 Layer 3 sweep, glyphs and visual baselines, #98 the affordance check (the canary). The first pass's findings: #101–#129 (majors #101–#107 and #127; `needs-decision` #124, #125). The second pass's: #140–#162 (majors #140, #156; `needs-decision` #153, #161, #162; #154 a record of what was left as designed). From cold reviews: #141, #163. The third pass's: #185.
 
 ## Open decisions and blockers
@@ -32,6 +34,17 @@ A running log so a fresh session can resume cold. Newest first. Update it in eve
 - **Merge method.** GitHub's server-side squash commits are authored under the profile display name ("Squiddy"), which would break the attribution rule. We squash locally to one commit and merge with the rebase method so authorship is preserved. See `CLAUDE.md` §2.
 
 ## Log
+
+### 2026-11-25
+- #202: **HUMOUR.md, the tone rules and the full list, in both languages.** M7 opens (milestone 8, issues #202–#211).
+  - **The rules:** where humour goes, and where it never goes (the 03:33 transitions, Act III's climax, every epilogue but Fire Alarm and Clocking Off's lanyard beat). Every scene and puzzle gets a `calm` / `uneasy` / `dread` tag, per act where Act III reads darker. A dry voice about research culture, never about the player. No real people, and the university stays unnamed.
+  - **Localise, don't translate:** UK lab culture in English, Taiwanese grad school in 繁中, a different joke where one doesn't travel. New signs stay in English in both, with a 繁中 gloss.
+  - **The list:** the campus in-jokes (B12, the Research Write-Up Room, lanyards, the lift on 0, the lab door, the toilets, the professors' corridor); 18 hidden console commands; about 44 examine and flavour lines; 46 anomalies; 16 achievements; five cameos.
+  - **How it will be enforced:** joke keys are the humour tables' keys; the validator reads tone tags act by act and checks number parity unless a key is a `localisedVariant`. Unit tests trigger every registry entry, and the Playwright suite triggers a sample in both languages.
+  - **Decided on the way:**
+    - the console's banner stops naming a (fictional) university;
+    - there was no floor plan and the door log has no basement doors, so B12 goes on a new fire plan by the lift;
+    - two v1.0 lines that had the lift moving are made consistent with it waiting on 0.
 
 ### 2026-11-24
 - #197: **refused at the NMR queue, you remember the sticky note on Dan's monitor.** The owner left the choice among the three options to Claude, which chose the one at the point of need.
