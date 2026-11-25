@@ -3,6 +3,7 @@
  * them, assembled from one file per location. docs/DESIGN.md is the spec.
  */
 import type { Content } from '../engine/types.ts';
+import { ANOMALIES } from './anomalies.ts';
 import { coldScenes } from './locations/cold.ts';
 import { gloveboxScenes } from './locations/glovebox.ts';
 import { nmrScenes } from './locations/nmr.ts';
@@ -36,4 +37,5 @@ export const CONTENT: Content = {
   lightsOut: LIGHTS_OUT,
   acts: ACTS,
   endings: ENDINGS,
+  anomalies: ANOMALIES,
 };

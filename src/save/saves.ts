@@ -65,6 +65,16 @@ export const MIGRATIONS: Record<number, (raw: Raw) => Raw> = {
     state['v'] = 1;
     return { ...raw, schema: 1, state };
   },
+  /**
+   * v1.0.x → v1.1.0: the state keeps the anomalies and achievements found (docs/HUMOUR.md §2). A v1.0
+   * save has found none in itself (the gallery's own finds are its business, #208). Nothing else changes.
+   */
+  1: (raw) => {
+    const state = { ...(raw['state'] as Raw) };
+    for (const k of ['anomalies', 'achievements']) if (!Array.isArray(state[k])) state[k] = [];
+    state['v'] = 2;
+    return { ...raw, schema: 2, state };
+  },
 };
 
 /**
@@ -131,7 +141,7 @@ export function stateProblem(s: unknown): string | null {
   if (!isStr(st['scene'])) return 'scene is not a string';
   if (!['none', 'travel', 'wait'].includes(st['menu'] as string)) return 'menu is invalid';
   for (const k of ['chasedThisLoop', 'restedThisLoop', 'darkRun']) if (typeof st[k] !== 'boolean') return `${k} is not a boolean`;
-  for (const k of ['inventory', 'flags', 'lflags', 'solved', 'usedLoop', 'usedEver', 'firedEvents', 'fragments', 'chaseUsed', 'restUsed', 'margins']) {
+  for (const k of ['inventory', 'flags', 'lflags', 'solved', 'usedLoop', 'usedEver', 'firedEvents', 'fragments', 'chaseUsed', 'restUsed', 'margins', 'anomalies', 'achievements']) {
     const list = st[k];
     if (!Array.isArray(list) || !list.every(isStr)) return `${k} is not a list of strings`;
   }
@@ -172,6 +182,9 @@ export function fitToContent(state: GameState, content: Content): string | null 
   if (state.ending && !endings.has(state.ending)) return `ending "${state.ending}" no longer exists`;
   state.cards = state.cards.filter((c) => c.kind !== 'ending' || endings.has(c.ending));
   for (const l of state.loops) if (!locations.has(l.location)) l.location = content.start.location;
+  // An anomaly this build's registry no longer has can't be counted or found again: drop it.
+  const anomalies = new Set(content.anomalies.map((a) => a.id));
+  state.anomalies = state.anomalies.filter((id) => anomalies.has(id));
   return null;
 }
 

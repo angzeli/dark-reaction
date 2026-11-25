@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
+import { CONTENT } from '../src/content/index.ts';
 import { Game } from '../src/engine/engine.ts';
 import type { GameState } from '../src/engine/types.ts';
 import { t } from '../src/i18n/i18n.ts';
@@ -168,7 +169,7 @@ describe('migrations', () => {
     if (!r.ok) return;
     expect(r.migrated).toBe(true);
     expect(r.envelope.schema).toBe(SAVE_SCHEMA);
-    expect(r.envelope.state).toMatchObject({ v: 1, actLoop: 1, loop: 1, minute: 2 });
+    expect(r.envelope.state).toMatchObject({ v: SAVE_SCHEMA, actLoop: 1, loop: 1, minute: 2, anomalies: [], achievements: [] });
     // The migrated save loads into the engine and plays on.
     const g = new Game(miniContent(), r.envelope.state);
     g.choose('office.sofa');
@@ -178,6 +179,26 @@ describe('migrations', () => {
     expect(stored.ok).toBe(true);
     expect(stored.ok && stored.migrated).toBe(false);
     expect(JSON.parse(kv.get(SaveStore.key('1'))!).schema).toBe(SAVE_SCHEMA);
+  });
+
+  it('load a real v1.0.0 save (schema 1, made by the v1.0.1 engine) with nothing lost (#203)', () => {
+    const text = readFileSync(new URL('./fixtures/save-v1.0.0.json', import.meta.url), 'utf8');
+    const before = JSON.parse(text) as { schema: number; locale: string; savedAt: string; state: Record<string, unknown> };
+    expect(before.schema).toBe(1);
+    const r = parseSave(text, CONTENT);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.migrated).toBe(true);
+    expect(r.envelope).toMatchObject({ schema: SAVE_SCHEMA, locale: before.locale, savedAt: before.savedAt });
+    // Every field the v1.0.0 state had is still there, unchanged; the new ones start empty.
+    const { v: _v, anomalies, achievements, ...rest } = r.envelope.state;
+    const { v: _old, ...was } = before.state;
+    expect(rest).toEqual(was);
+    expect({ anomalies, achievements }).toEqual({ anomalies: [], achievements: [] });
+    // And it plays on in this build: the same choices are offered as before.
+    const g = new Game(CONTENT, r.envelope.state);
+    expect(g.choices().length).toBeGreaterThan(0);
+    expect(g.state.inventory).toContain('item.vial');
   });
 
   it('give a v0 save from a later act its act loop as the current loop', () => {

@@ -167,6 +167,7 @@ export function stateKey(model: Model, s: GameState): string {
   };
   return JSON.stringify([
     Math.min(s.loop, model.loopCap + 1),
+    (s.loop - 1) % model.loopCycle,
     Math.min(s.loop - s.actLoop, model.loopsInActCap + 1),
     s.minute,
     s.act,
@@ -193,6 +194,7 @@ export function stateKey(model: Model, s: GameState): string {
     s.puzzle,
     s.darkRun,
     s.ending,
+    sorted(s.anomalies.filter((id) => model.anomalyRefs.has(id))),
   ]);
 }
 

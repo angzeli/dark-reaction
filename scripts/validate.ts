@@ -16,7 +16,9 @@ import { CONTENT } from '../src/content/index.ts';
 import { ROUTES, type Route } from '../src/content/routes.ts';
 import { TABLES } from '../src/i18n/i18n.ts';
 import { PUZZLE_LOGIC } from '../src/puzzles/logic.ts';
+import { EPILOGUE_JOKES, JOKE_KEYS, LOCALISED_VARIANTS } from '../src/content/humour.ts';
 import {
+  checkAnomalies,
   checkCoverage,
   checkGlyphs,
   checkGraph,
@@ -24,6 +26,8 @@ import {
   checkLocales,
   checkRoutes,
   checkSpacing,
+  checkTone,
+  checkVariants,
   codeKeys,
   contentSize,
   CPM_ZH,
@@ -58,6 +62,11 @@ section('Locales');
 const used = new Map([...referencedKeys(CONTENT), ...codeKeys(join(root, 'src'))]);
 report(checkLocales(TABLES, used), `${Object.keys(TABLES.en).length} keys in both locales with matching placeholders; ${used.size} keys used by content and code all present`);
 report(checkSpacing(TABLES), 'Latin text and Han characters are spaced apart throughout 繁中');
+
+section('Tone');
+report(checkTone(CONTENT, { jokes: JOKE_KEYS, epilogueJokes: EPILOGUE_JOKES }), `${JOKE_KEYS.size} joke keys: none where a scene is dread, one at most where it is uneasy, none at 03:33 or in an epilogue but Fire Alarm's and Clocking Off's lanyard`);
+report(checkVariants(TABLES, JOKE_KEYS, LOCALISED_VARIANTS), `the same joke keeps its numbers in both languages; ${LOCALISED_VARIANTS.size} localised variant(s) tell their own`);
+report(checkAnomalies(CONTENT, TABLES), `${CONTENT.anomalies.length} anomalies, each somewhere real, never dread, recorded by what finds it`);
 
 section('Routes');
 const routes = Object.values(ROUTES).filter((r): r is Route => !!r);

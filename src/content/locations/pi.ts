@@ -5,6 +5,7 @@
  * docs/DESIGN.md §9.
  */
 import type { Cond, SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3, UNEASY_THEN_DREAD } from '../tone.ts';
 import { PI_OPEN } from '../world.ts';
 
 /** The porter's Monday clean: the door stands unlocked (03:15–03:18). */
@@ -15,6 +16,7 @@ export const piScenes: SceneDef[] = [
     // Outside the door: locked except during the porter's Monday clean (03:15–03:18).
     id: 'pi.door',
     location: 'pi',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     // Its own picture: this side of the frosted door, not the room behind it (#123).
     art: ['door'],
@@ -28,6 +30,7 @@ export const piScenes: SceneDef[] = [
   {
     id: 'pi.hub',
     location: 'pi',
+    tone: UNEASY_THEN_DREAD,
     hub: true,
     text: [
       { key: 'pi.hub.text', if: { not: { act: 3 } } },
@@ -73,6 +76,7 @@ export const piScenes: SceneDef[] = [
     // scene leads back to the room itself rather than to the entry scene.
     id: 'pi.box',
     location: 'pi',
+    tone: 'dread',
     noBack: true,
     text: [{ key: 'pi.box.text' }],
     choices: [

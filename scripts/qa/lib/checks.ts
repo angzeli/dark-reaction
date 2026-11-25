@@ -81,9 +81,11 @@ function gains(before: GameState, after: GameState): { gained: Target[]; lost: s
   return { gained, lost };
 }
 
-function costOf(choice: ChoiceDef): number {
+/** What a choice costs at this minute: its cost and `time` effects, or, sitting until a minute (`timeTo`), the wait to it. */
+function costOf(choice: ChoiceDef, minute: number): number {
   let n = choice.cost ?? 0;
   for (const e of choice.effects ?? []) if ('time' in e) n += e.time;
+  for (const e of choice.effects ?? []) if ('timeTo' in e) n = Math.max(n, e.timeTo - minute);
   return n;
 }
 
@@ -144,7 +146,7 @@ export function checkStep(model: Model, before: GameState, action: Action, step:
       const entry = model.choices.get(action.id);
       if (entry) {
         const { choice } = entry;
-        const expected = costOf(choice);
+        const expected = costOf(choice, before.minute);
         const opened = !before.puzzle && after.puzzle;
         if (!opened && spent !== expected) out.push(f('error', 'cost', action.id, `${action.id} costs ${expected} min in the content but took ${spent} (${at})`));
         if (opened && spent !== (choice.cost ?? 0)) out.push(f('error', 'cost', action.id, `${action.id} opened ${after.puzzle} after ${spent} min, not its ${choice.cost ?? 0}`));

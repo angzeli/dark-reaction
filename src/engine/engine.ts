@@ -41,7 +41,7 @@ import type {
   TextRef,
 } from './types.ts';
 
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 export const WAIT_OPTIONS = [1, 5, 10] as const;
 
 interface Index {
@@ -86,8 +86,17 @@ export function buildIndex(content: Content): Index {
   return index;
 }
 
-/** A fresh game at 02:47 of loop 1. `margins` are puzzles solved in earlier playthroughs (new game+). */
-export function newGameState(content: Content, margins: string[] = []): GameState {
+/** What earlier playthroughs found, kept with the gallery and carried into a new game. */
+export interface Found {
+  anomalies?: readonly string[];
+  achievements?: readonly string[];
+}
+
+/**
+ * A fresh game at 02:47 of loop 1. `margins` are puzzles solved in earlier playthroughs (new game+);
+ * `found`, the anomalies and achievements already in the gallery.
+ */
+export function newGameState(content: Content, margins: string[] = [], found: Found = {}): GameState {
   const index = buildIndex(content);
   const location = content.start.location;
   const state: GameState = {
@@ -125,6 +134,8 @@ export function newGameState(content: Content, margins: string[] = []): GameStat
     margins: [...new Set(margins)],
     puzzleData: {},
     turns: 0,
+    anomalies: [...new Set(found.anomalies ?? [])].filter((id) => content.anomalies.some((a) => a.id === id)),
+    achievements: [...new Set(found.achievements ?? [])],
   };
   new Game(content, state).startLoop([]);
   return state;
@@ -134,6 +145,8 @@ interface Applied {
   minutes: number;
   go?: LocationId;
   scene?: string;
+  /** Run the clock on to this minute, counting the choice's own cost (`{ timeTo }`). */
+  timeTo?: number;
 }
 
 export class Game {
@@ -188,6 +201,12 @@ export class Game {
     return this.paragraphs(scene.text, 'text');
   }
 
+  /** The minutes a choice says it costs: its own, or, for one that sits until a minute, all of them. */
+  private shownCost(choice: ChoiceDef): number {
+    const until = (choice.effects ?? []).find((e): e is { timeTo: number } => 'timeTo' in e)?.timeTo;
+    return until === undefined ? (choice.cost ?? 0) : Math.max(choice.cost ?? 0, until - this.state.minute);
+  }
+
   private visible(choice: ChoiceDef): boolean {
     if (!holds(choice.if, this.state)) return false;
     if (choice.once === 'loop' && this.state.usedLoop.includes(choice.id)) return false;
@@ -217,7 +236,7 @@ export class Game {
     const scene = this.scene;
     const out: ChoiceView[] = scene.choices
       .filter((c) => this.visible(c))
-      .map((c) => ({ id: c.id, label: c.label, cost: c.cost ?? 0, kind: 'normal' }));
+      .map((c) => ({ id: c.id, label: c.label, cost: this.shownCost(c), kind: 'normal' }));
     if (scene.hub) {
       out.push({ id: 'meta:travel', label: 'ui.travel', cost: 0, kind: 'meta' });
       out.push({ id: 'meta:wait', label: 'ui.wait', cost: 0, kind: 'meta' });
@@ -279,12 +298,16 @@ export class Game {
     let minutes = choice.cost ?? 0;
     let walkTo: LocationId | undefined;
     let sceneTo = choice.to;
+    let until: number | undefined;
     for (const effect of choice.effects ?? []) {
       const r = this.apply(effect);
       minutes += r.minutes;
       if (r.go) walkTo = r.go;
       if (r.scene) sceneTo = r.scene;
+      if (r.timeTo !== undefined) until = r.timeTo;
     }
+    // A choice that sits until a minute takes the clock there, its own cost included.
+    if (until !== undefined) minutes = Math.max(minutes, until - s.minute);
     if (sceneTo) this.navigate(sceneTo);
     s.display = [...result, ...this.notices, ...(sceneTo ? this.sceneText(s.scene) : [])];
     if (s.ending) return;
@@ -337,6 +360,18 @@ export class Game {
       return;
     }
     this.advance(minutes);
+  }
+
+  /**
+   * Record an anomaly from the registry (src/content/anomalies.ts): the console and the UI call this
+   * for what they find, and content does it through `{ anomaly }` effects. Silent; returns whether it
+   * was new. An id the registry doesn't know is ignored, so a stale caller can't corrupt the state.
+   */
+  discover(id: string): boolean {
+    const s = this.state;
+    if (s.anomalies.includes(id) || !this.content.anomalies.some((a) => a.id === id)) return false;
+    s.anomalies.push(id);
+    return true;
   }
 
   /** Strike a fudge through, initial and date it. Costs a minute. */
@@ -444,6 +479,8 @@ export class Game {
         s.restedThisLoop = true;
       }
     } else if ('time' in effect) return { minutes: effect.time };
+    else if ('timeTo' in effect) return { minutes: 0, timeTo: effect.timeTo };
+    else if ('anomaly' in effect) this.discover(effect.anomaly);
     else if ('go' in effect) return { minutes: 0, go: effect.go };
     else if ('scene' in effect) return { minutes: 0, scene: effect.scene };
     else if ('hub' in effect) return { minutes: 0, scene: this.entrySceneFor(s.location) };
@@ -498,7 +535,7 @@ export class Game {
     return true;
   }
 
-  /** Fire every due event. Returns whether any fired. */
+  /** Fire every due event. Returns whether any fired that should cut a wait short (not an ambient one). */
   private fireEvents(): boolean {
     const s = this.state;
     let fired = false;
@@ -508,7 +545,7 @@ export class Game {
       if (event.until !== undefined && s.minute >= event.until) continue;
       if (!holds(event.if, s)) continue;
       s.firedEvents.push(event.id);
-      fired = true;
+      if (!event.ambient) fired = true;
       if (event.hold && s.minute >= LOOP_LENGTH) this.holdDark = true;
       this.notices = [];
       for (const effect of event.effects ?? []) this.apply(effect);

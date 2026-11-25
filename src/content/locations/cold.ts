@@ -4,11 +4,13 @@
  * docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const coldScenes: SceneDef[] = [
   {
     id: 'cold.hub',
     location: 'cold',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     text: [
       { key: 'cold.hub.act1', if: { not: { act: 3 } } },

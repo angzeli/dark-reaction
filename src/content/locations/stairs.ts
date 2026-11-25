@@ -5,6 +5,7 @@
  * the door log has shown you what the building keeps). docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from '../tone.ts';
 import { EXIT_B_OPEN } from '../world.ts';
 
 const exitOpen = { all: [{ minuteGte: EXIT_B_OPEN.from }, { minuteLt: EXIT_B_OPEN.to }] };
@@ -13,6 +14,7 @@ export const stairsScenes: SceneDef[] = [
   {
     id: 'stairs.hub',
     location: 'stairs',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     text: [
       { key: 'stairs.hub.act1', if: { not: { act: 3 } } },
@@ -88,6 +90,7 @@ export const stairsScenes: SceneDef[] = [
     // given, the step out is there however late in the window you pushed it.
     id: 'stairs.door',
     location: 'stairs',
+    tone: 'uneasy',
     noBack: true,
     text: [{ key: 'stairs.door.text' }],
     // The way back comes first: keyboard focus and key 1 land on it, so a stray Enter can't end the run (#61).
@@ -119,6 +122,7 @@ export const stairsScenes: SceneDef[] = [
     // Thumb on the glass of the one thing in the building built to get everybody out.
     id: 'stairs.alarm',
     location: 'stairs',
+    tone: 'uneasy',
     noBack: true,
     text: [{ key: 'stairs.alarm.text' }],
     // The way back comes first: keyboard focus and key 1 land on it, so a stray Enter can't end the run.

@@ -1,0 +1,160 @@
+{
+  "game": "dark-reaction",
+  "schema": 1,
+  "savedAt": "2026-11-20T03:12:00.000Z",
+  "summary": {
+    "loop": 2,
+    "act": 2,
+    "minute": 12,
+    "location": "synth",
+    "ending": null,
+    "known": 12
+  },
+  "state": {
+    "v": 1,
+    "loop": 2,
+    "minute": 12,
+    "act": 2,
+    "actLoop": 2,
+    "location": "synth",
+    "scene": "synth.hub",
+    "menu": "none",
+    "inventory": [
+      "item.vial"
+    ],
+    "flags": [],
+    "lflags": [
+      "fractions.taken",
+      "synth.weighed"
+    ],
+    "known": [
+      {
+        "id": "nb.mug",
+        "loop": 1,
+        "minute": 1
+      },
+      {
+        "id": "nb.drawer",
+        "loop": 1,
+        "minute": 2
+      },
+      {
+        "id": "nb.tlc",
+        "loop": 1,
+        "minute": 5
+      },
+      {
+        "id": "nb.yield",
+        "loop": 1,
+        "minute": 12
+      },
+      {
+        "id": "nb.sop",
+        "loop": 1,
+        "minute": 13
+      },
+      {
+        "id": "nb.purge",
+        "loop": 1,
+        "minute": 14
+      },
+      {
+        "id": "nb.queue.0333",
+        "loop": 1,
+        "minute": 27
+      },
+      {
+        "id": "nb.holder13",
+        "loop": 1,
+        "minute": 27
+      },
+      {
+        "id": "nb.queue.locked",
+        "loop": 1,
+        "minute": 29
+      },
+      {
+        "id": "nb.reset",
+        "loop": 1,
+        "minute": 46
+      },
+      {
+        "id": "ph.tea",
+        "loop": 2,
+        "minute": 0
+      },
+      {
+        "id": "ph.door",
+        "loop": 2,
+        "minute": 0
+      }
+    ],
+    "solved": [
+      "tlc",
+      "glovebox",
+      "console"
+    ],
+    "hints": {
+      "cipher": 1
+    },
+    "usedLoop": [
+      "office.tea",
+      "synth.combine",
+      "synth.rotavap",
+      "synth.poster"
+    ],
+    "usedEver": [
+      "office.desk7",
+      "office.mug",
+      "office.drawer",
+      "synth.plate",
+      "synth.rotavap",
+      "synth.yield.honest",
+      "glovebox.sop",
+      "glovebox.antechamber",
+      "nmr.console",
+      "nmr.load",
+      "office.tea",
+      "synth.combine",
+      "synth.poster"
+    ],
+    "firedEvents": [
+      "ev.mail"
+    ],
+    "fudges": [],
+    "fudgesEver": 0,
+    "fragments": [
+      "yc.mug",
+      "yc.desk",
+      "yc.sop"
+    ],
+    "obsession": 0,
+    "chasedThisLoop": false,
+    "restedThisLoop": true,
+    "chaseUsed": [],
+    "restUsed": [
+      "tea"
+    ],
+    "loops": [
+      {
+        "loop": 1,
+        "location": "nmr",
+        "minute": 46
+      }
+    ],
+    "display": [
+      {
+        "key": "synth.poster.r",
+        "style": "result"
+      }
+    ],
+    "cards": [],
+    "puzzle": null,
+    "darkRun": false,
+    "ending": null,
+    "margins": [],
+    "puzzleData": {},
+    "turns": 33
+  },
+  "locale": "zh-Hant-TW"
+}

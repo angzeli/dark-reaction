@@ -5,35 +5,44 @@
  * checks reject such objects, and effects used where they cannot work, the
  * moment content is loaded.
  */
+import { LOOP_LENGTH } from './clock.ts';
 import type { Content, Cond, Effect } from './types.ts';
 
 const COND_KEYS = new Set([
   'all', 'any', 'not', 'flag', 'lflag', 'know', 'item', 'solved', 'act', 'actGte', 'loopGte', 'minuteGte', 'minuteLt',
   'at', 'obsessionGte', 'obsessionLt', 'uncorrectedGte', 'fudgedEver', 'fragment', 'fragmentsGte', 'loopsInActGte',
-  'used', 'usedEver', 'always', 'scene',
+  'used', 'usedEver', 'always', 'scene', 'loopMod', 'anomaly', 'ended',
 ]);
 
 const EFFECT_KEYS = new Set([
   'learn', 'flag', 'unflag', 'lflag', 'unlflag', 'give', 'take', 'fragment', 'fudge', 'chase', 'rest', 'time', 'go',
-  'scene', 'hub', 'puzzle', 'solve', 'ending',
+  'scene', 'hub', 'puzzle', 'solve', 'ending', 'timeTo', 'anomaly',
 ]);
 
+const TONES = new Set(['calm', 'uneasy', 'dread']);
+
 /** Effects that move the player or the clock can only run inside a choice (and `time` in a puzzle's onSolve). */
-const NAVIGATION = new Set(['time', 'go', 'scene', 'hub']);
+const NAVIGATION = new Set(['time', 'timeTo', 'go', 'scene', 'hub']);
 /** Events, onEnter and lights-out effects also may not open puzzles (rules use `puzzle:` instead). */
 const PASSIVE = new Set([...NAVIGATION, 'puzzle']);
 
-/** Checks a condition's shape, and with `scenes`, that every scene it names exists. */
-export function checkCond(cond: Cond | undefined, where: string, scenes?: ReadonlySet<string>): void {
+/** Checks a condition's shape, and with `scenes` (and `anomalies`), that every scene (and anomaly) it names exists. */
+export function checkCond(cond: Cond | undefined, where: string, scenes?: ReadonlySet<string>, anomalies?: ReadonlySet<string>): void {
   if (cond === undefined) return;
   const keys = Object.keys(cond);
   if (keys.length !== 1 || !COND_KEYS.has(keys[0]!)) {
     throw new Error(`${where}: a condition must have exactly one known key, got {${keys.join(', ')}}`);
   }
   if ('scene' in cond && scenes && !scenes.has(cond.scene)) throw new Error(`${where}: no scene "${cond.scene}"`);
-  if ('all' in cond) cond.all.forEach((c, i) => checkCond(c, `${where}.all[${i}]`, scenes));
-  if ('any' in cond) cond.any.forEach((c, i) => checkCond(c, `${where}.any[${i}]`, scenes));
-  if ('not' in cond) checkCond(cond.not, `${where}.not`, scenes);
+  if ('anomaly' in cond && anomalies && !anomalies.has(cond.anomaly)) throw new Error(`${where}: no anomaly "${cond.anomaly}" in the registry`);
+  if ('loopMod' in cond) {
+    const m: unknown = cond.loopMod;
+    const ok = Array.isArray(m) && m.length === 2 && Number.isInteger(m[0]) && Number.isInteger(m[1]) && m[0] >= 2 && m[1] >= 0 && m[1] < m[0];
+    if (!ok) throw new Error(`${where}: loopMod must be [n, r] with n ≥ 2 and 0 ≤ r < n`);
+  }
+  if ('all' in cond) cond.all.forEach((c, i) => checkCond(c, `${where}.all[${i}]`, scenes, anomalies));
+  if ('any' in cond) cond.any.forEach((c, i) => checkCond(c, `${where}.any[${i}]`, scenes, anomalies));
+  if ('not' in cond) checkCond(cond.not, `${where}.not`, scenes, anomalies);
 }
 
 export function checkEffect(effect: Effect, where: string, forbid: ReadonlySet<string> = new Set()): void {
@@ -44,9 +53,18 @@ export function checkEffect(effect: Effect, where: string, forbid: ReadonlySet<s
   if (forbid.has(keys[0]!)) throw new Error(`${where}: "${keys[0]}" effects are not allowed here`);
 }
 
+/** A tone tag is one of the three tones, or one tone for each act. */
+export function checkTone(tag: unknown, where: string): void {
+  const ok =
+    (typeof tag === 'string' && TONES.has(tag)) ||
+    (!!tag && typeof tag === 'object' && [1, 2, 3].every((a) => TONES.has((tag as Record<number, unknown>)[a] as string)) && Object.keys(tag).length === 3);
+  if (!ok) throw new Error(`${where}: tone must be calm, uneasy or dread, or one of them for each act`);
+}
+
 export function checkContent(content: Content): void {
   const sceneIds = new Set(content.scenes.map((x) => x.id));
-  const cond = (c: Cond | undefined, where: string) => checkCond(c, where, sceneIds);
+  const anomalyIds = new Set(content.anomalies.map((a) => a.id));
+  const cond = (c: Cond | undefined, where: string) => checkCond(c, where, sceneIds, anomalyIds);
   const all = (effects: readonly Effect[] | undefined, where: string, forbid?: ReadonlySet<string>) =>
     (effects ?? []).forEach((e, i) => checkEffect(e, `${where}[${i}]`, forbid));
   const texts = (refs: ReadonlyArray<{ if?: Cond }> | undefined, where: string) =>
@@ -55,6 +73,7 @@ export function checkContent(content: Content): void {
   texts(content.loopStart, 'loopStart');
   for (const loc of content.locations) (loc.entry ?? []).forEach((e, i) => cond(e.if, `location ${loc.id}.entry[${i}]`));
   for (const scene of content.scenes) {
+    checkTone(scene.tone, `scene ${scene.id}`);
     texts(scene.text, `scene ${scene.id}.text`);
     all(scene.onEnter, `scene ${scene.id}.onEnter`, PASSIVE);
     for (const choice of scene.choices) {
@@ -66,8 +85,9 @@ export function checkContent(content: Content): void {
     }
   }
   for (const p of content.puzzles) {
-    all(p.onSolve, `puzzle ${p.id}.onSolve`, new Set(['go', 'scene', 'hub']));
-    all(p.onFail, `puzzle ${p.id}.onFail`, new Set(['go', 'scene', 'hub', 'puzzle']));
+    checkTone(p.tone, `puzzle ${p.id}`);
+    all(p.onSolve, `puzzle ${p.id}.onSolve`, new Set(['go', 'scene', 'hub', 'timeTo']));
+    all(p.onFail, `puzzle ${p.id}.onFail`, new Set(['go', 'scene', 'hub', 'puzzle', 'timeTo']));
     texts(p.solvedText, `puzzle ${p.id}.solvedText`);
     texts(p.failedText, `puzzle ${p.id}.failedText`);
     texts(p.leftText, `puzzle ${p.id}.leftText`);
@@ -97,7 +117,12 @@ export function checkReferences(content: Content): void {
   const puzzles = new Set(content.puzzles.map((p) => p.id));
   const locations = new Set(content.locations.map((l) => l.id));
   const endings = new Set(content.endings.map((e) => e.id));
+  const anomalies = new Set<string>();
   const problems: string[] = [];
+  for (const a of content.anomalies) {
+    if (anomalies.has(a.id)) problems.push(`anomalies: duplicate id "${a.id}"`);
+    anomalies.add(a.id);
+  }
   const need = (set: Set<string>, id: string, kind: string, where: string) => {
     if (!set.has(id)) problems.push(`${where}: unknown ${kind} "${id}"`);
   };
@@ -110,6 +135,8 @@ export function checkReferences(content: Content): void {
       else if ('puzzle' in e) need(puzzles, e.puzzle, 'puzzle', where);
       else if ('solve' in e) need(puzzles, e.solve, 'puzzle', where);
       else if ('ending' in e) need(endings, e.ending, 'ending', where);
+      else if ('anomaly' in e) need(anomalies, e.anomaly, 'anomaly', where);
+      else if ('timeTo' in e && !(Number.isInteger(e.timeTo) && e.timeTo > 0 && e.timeTo <= LOOP_LENGTH)) problems.push(`${where}: timeTo must be a loop minute from 1 to ${LOOP_LENGTH}`);
     }
   };
   need(locations, content.start.location, 'location', 'start');

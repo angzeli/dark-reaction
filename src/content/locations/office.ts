@@ -4,11 +4,13 @@
  * window, hot desk 7 (Y.C.'s mug and drawer), your phone. docs/DESIGN.md §9.
  */
 import type { SceneDef } from '../../engine/types.ts';
+import { CALM_UNTIL_ACT3 } from '../tone.ts';
 
 export const officeScenes: SceneDef[] = [
   {
     id: 'office.hub',
     location: 'office',
+    tone: CALM_UNTIL_ACT3,
     hub: true,
     text: [
       { key: 'office.hub.act1', if: { act: 1 } },
@@ -93,6 +95,7 @@ export const officeScenes: SceneDef[] = [
   {
     id: 'office.monitor',
     location: 'office',
+    tone: CALM_UNTIL_ACT3,
     text: [{ key: 'office.monitor.text' }],
     choices: [
       { id: 'office.queue', once: 'loop', label: 'office.queue', cost: 1, effects: [{ learn: 'nb.booking' }], text: [{ key: 'office.queue.r' }] },
@@ -116,6 +119,7 @@ export const officeScenes: SceneDef[] = [
     // Your own spectrum, from the 400: what you do to it is up to you.
     id: 'office.process',
     location: 'office',
+    tone: 'uneasy',
     text: [{ key: 'office.process.text' }],
     choices: [
       {
@@ -169,6 +173,7 @@ export const officeScenes: SceneDef[] = [
     // The portal's last page, with your spectrum attached. Uploading it ends the night.
     id: 'office.declare.own',
     location: 'office',
+    tone: 'dread',
     backFirst: true,
     text: [
       { key: 'office.declare.own.text' },
@@ -188,6 +193,7 @@ export const officeScenes: SceneDef[] = [
   {
     id: 'office.declare.printout',
     location: 'office',
+    tone: 'dread',
     backFirst: true,
     text: [
       { key: 'office.declare.printout.text' },
@@ -207,6 +213,7 @@ export const officeScenes: SceneDef[] = [
   {
     id: 'office.desk7',
     location: 'office',
+    tone: 'uneasy',
     // From Act II the picture shows the top box open; the page says so too (#129).
     text: [{ key: 'office.desk7.text' }, { key: 'office.desk7.open', if: { actGte: 2 } }],
     choices: [
